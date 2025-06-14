@@ -17,7 +17,7 @@ pub struct ContemporaryDark;
 impl ContemporaryTheme for ContemporaryDark {
     const BACKGROUND: Rgba = rgb_tuple(40, 40, 40);
     const FOREGROUND: Rgba = rgb_tuple(255, 255, 255);
-    const LAYER: Rgba = rgba_tuple(255, 255, 255, 0.1);
+    const LAYER: Rgba = rgba_tuple(255, 255, 255, 0.06);
     const BORDER_RADIUS: Pixels = px(4.0);
 }
 
@@ -26,7 +26,7 @@ pub struct ContemporaryLight;
 impl ContemporaryTheme for ContemporaryLight {
     const BACKGROUND: Rgba = rgb_tuple(255, 255, 255);
     const FOREGROUND: Rgba = rgb_tuple(0, 0, 0);
-    const LAYER: Rgba = rgba_tuple(0, 0, 0, 0.15);
+    const LAYER: Rgba = rgba_tuple(0, 0, 0, 0.1);
     const BORDER_RADIUS: Pixels = px(4.0);
 }
 

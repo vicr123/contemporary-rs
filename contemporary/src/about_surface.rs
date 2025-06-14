@@ -2,6 +2,7 @@ use crate::application::{Details, Versions};
 use crate::constrainer::constrainer;
 use crate::grandstand::grandstand;
 use crate::layer::layer;
+use crate::styling::theme::Theme;
 use crate::window::{ContemporaryWindow, PushPop};
 use gpui::{
     App, AppContext, Context, Entity, FontWeight, IntoElement, ParentElement, Render, Styled,
@@ -30,6 +31,7 @@ where
 {
     fn render(&mut self, _window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
         let window = self.window.clone();
+        let theme = cx.global::<Theme>();
         let details = cx.global::<Details>();
         let versions = cx.global::<Versions>();
 
@@ -55,8 +57,25 @@ where
                         div()
                             .pt(px(64.))
                             .pb(px(64.))
-                            .child(div().text_size(px(35.)).child(details.application_name))
-                            .child(div().child(details.application_generic_name)),
+                            .child(
+                                div()
+                                    .flex()
+                                    .gap(px(6.))
+                                    .child(div().w(px(48.))) // TODO: Icon goes here
+                                    .child(
+                                        div().text_size(px(35.)).child(details.application_name),
+                                    ),
+                            )
+                            .child(
+                                div()
+                                    .flex()
+                                    .gap(px(6.))
+                                    .child(div().w(px(48.)))
+                                    .child(div().child(details.application_generic_name)),
+                            )
+                            .child(div().flex().gap(px(6.)).child(div().w(px(48.))).child(
+                                div().flex().bg(theme.button_background).gap(px(2.)), // TODO: Buttons go here
+                            )),
                     )
                     .child(
                         layer("software-layer").child(
@@ -111,7 +130,7 @@ where
                                         .child("Copyright".to_uppercase()),
                                 )
                                 .child(format!(
-                                    "Copyright (c) {} {}",
+                                    "Copyright © {} {}",
                                     details.copyright_holder, details.copyright_year
                                 )),
                         ),

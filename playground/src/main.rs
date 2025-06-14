@@ -1,13 +1,14 @@
-use std::rc::Rc;
+use std::{collections::HashMap, rc::Rc};
 
 use contemporary::{
     about_surface::AboutSurface,
-    application::{Details, License, Versions},
+    application::{ApplicationLink, Details, License, Versions},
     setup::{Contemporary, ContemporaryMenus, setup_contemporary},
     surface::Surface,
     window::{ContemporaryWindow, PushPop, contemporary_window_options},
 };
-use gpui::{App, AppContext, Application, Bounds, WindowBounds, WindowOptions, px, size};
+use gpui::{App, AppContext, Application, Bounds, Menu, WindowBounds, WindowOptions, px, size};
+use indexmap::IndexMap;
 
 use crate::surface_list::{HelloWorld, SurfaceList};
 
@@ -39,9 +40,26 @@ fn main() {
                             copyright_year: "2025",
                             application_version: "3.0",
                             license: License::Gpl3OrLater,
+                            links: IndexMap::from([
+                                (
+                                    ApplicationLink::HelpContents,
+                                    "https://github.com/vicr123/contemporary-rs/",
+                                ),
+                                (
+                                    ApplicationLink::FileBug,
+                                    "https://github.com/vicr123/contemporary-rs/issues",
+                                ),
+                                (
+                                    ApplicationLink::SourceCode,
+                                    "https://github.com/vicr123/contemporary-rs",
+                                ),
+                            ]),
                         },
                         menus: ContemporaryMenus {
-                            menus: vec![],
+                            menus: vec![Menu {
+                                name: "File".into(),
+                                items: vec![],
+                            }],
                             on_about: Rc::new(move |cx| {
                                 let about_surface = AboutSurface::new(cx, weak_widow.clone());
                                 let a_surface = cx.new(|_| SurfaceList::About(about_surface));

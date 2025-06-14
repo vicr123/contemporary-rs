@@ -3,7 +3,30 @@ use std::{
     sync::{Arc, Mutex},
 };
 
-use gpui::{Global, SharedString};
+use gpui::{App, Global, SharedString};
+use indexmap::IndexMap;
+
+#[derive(Hash, Eq, Clone, PartialEq, Debug)]
+pub enum ApplicationLink {
+    FileBug,
+    SourceCode,
+    HelpContents,
+    Other {
+        icon: &'static str,
+        text: SharedString,
+    },
+}
+
+impl ApplicationLink {
+    pub fn get_name(&self, _cx: &mut App) -> SharedString {
+        match self {
+            ApplicationLink::FileBug => "File Bug".into(),
+            ApplicationLink::SourceCode => "Source Code".into(),
+            ApplicationLink::HelpContents => "Help".into(),
+            ApplicationLink::Other { icon, text } => text.clone(),
+        }
+    }
+}
 
 pub struct Details {
     pub application_name: &'static str,
@@ -13,6 +36,7 @@ pub struct Details {
     pub copyright_year: &'static str,
     pub desktop_entry: &'static str,
     pub license: License,
+    pub links: IndexMap<ApplicationLink, &'static str>,
 }
 
 impl Global for Details {}

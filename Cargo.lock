@@ -844,6 +844,10 @@ name = "contemporary"
 version = "0.1.0"
 dependencies = [
  "gpui",
+ "indexmap",
+ "schemars",
+ "serde",
+ "serde_json",
 ]
 
 [[package]]
@@ -3222,6 +3226,7 @@ version = "0.1.0"
 dependencies = [
  "contemporary",
  "gpui",
+ "indexmap",
 ]
 
 [[package]]

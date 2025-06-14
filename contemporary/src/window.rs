@@ -78,7 +78,7 @@ pub fn contemporary_window_options(cx: &mut App) -> WindowOptions {
     WindowOptions {
         window_bounds: Some(WindowBounds::Windowed(bounds)),
         titlebar: Some(TitlebarOptions {
-            title: Some("Title".into()),
+            title: Some("Contemporary Playground".into()),
             appears_transparent: true,
             traffic_light_position: Some(point(px(10.0), px(10.0))),
         }),

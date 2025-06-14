@@ -1,11 +1,20 @@
-use crate::application::{Details, Versions};
+use crate::application::{ApplicationLink, Details, Versions};
 use crate::styling::theme::Theme;
-use gpui::{App, Global, KeyBinding, Menu, MenuItem, SharedString, actions};
+use gpui::{App, Global, KeyBinding, Menu, MenuItem, actions, impl_actions};
+use schemars::JsonSchema;
+use serde::Deserialize;
 use std::collections::HashMap;
 use std::rc::Rc;
 use std::sync::{Arc, Mutex};
 
 actions!(contemporary, [Quit, HideSelf, HideOthers, ShowAll, About]);
+
+#[derive(PartialEq, Clone, Default, Deserialize, JsonSchema)]
+struct OpenLink {
+    #[serde(default)]
+    link: String,
+}
+impl_actions!(contemporary, [OpenLink]);
 
 pub struct Contemporary {
     pub details: Details,
@@ -30,9 +39,24 @@ pub fn setup_contemporary(cx: &mut App, mut application: Contemporary) {
     cx.on_action(hide_others);
     cx.on_action(show_all);
     cx.on_action(about);
+    cx.on_action(open_link);
     cx.bind_keys([KeyBinding::new("cmd-h", HideSelf, None)]);
     cx.bind_keys([KeyBinding::new("cmd-alt-h", HideOthers, None)]);
     cx.bind_keys([KeyBinding::new("cmd-q", Quit, None)]);
+
+    if let Some(link) = application
+        .details
+        .links
+        .get(&ApplicationLink::HelpContents)
+    {
+        cx.bind_keys([KeyBinding::new(
+            "F1",
+            OpenLink {
+                link: link.to_string(),
+            },
+            None,
+        )])
+    }
 
     let mut menus = vec![Menu {
         name: application.details.application_name.into(),
@@ -61,6 +85,43 @@ pub fn setup_contemporary(cx: &mut App, mut application: Contemporary) {
         ],
     }];
     menus.append(&mut application.menus.menus);
+
+    let help_menu_items = application
+        .details
+        .links
+        .iter()
+        .map(|(key, url)| {
+            if *key == ApplicationLink::HelpContents {
+                [
+                    Some(MenuItem::action(
+                        format!("{} Help", application.details.application_name),
+                        OpenLink {
+                            link: url.to_string(),
+                        },
+                    )),
+                    Some(MenuItem::separator()),
+                ]
+            } else {
+                [
+                    Some(MenuItem::action(
+                        key.get_name(cx),
+                        OpenLink {
+                            link: url.to_string(),
+                        },
+                    )),
+                    None,
+                ]
+            }
+        })
+        .flatten()
+        .filter(|something| something.is_some())
+        .map(|something| something.unwrap())
+        .collect();
+
+    menus.push(Menu {
+        name: "Help".into(),
+        items: help_menu_items,
+    });
 
     cx.set_menus(menus);
 
@@ -94,4 +155,12 @@ fn show_all(_: &ShowAll, cx: &mut App) {
 fn about(_: &About, cx: &mut App) {
     let callbacks = cx.global::<Callbacks>();
     callbacks.on_about.clone()(cx);
+}
+
+// fn help_contents(action: &HelpContents, cx: &mut App) {
+//     cx.open_url(&action.link);
+// }
+
+fn open_link(action: &OpenLink, cx: &mut App) {
+    cx.open_url(&action.link);
 }

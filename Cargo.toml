@@ -4,3 +4,4 @@ members = ["contemporary", "playground"]
 
 [workspace.dependencies]
 gpui = { git = "https://github.com/zed-industries/zed" }
+indexmap = "2"
