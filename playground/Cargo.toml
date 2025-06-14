@@ -1,0 +1,8 @@
+[package]
+name = "playground"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+contemporary = { path = "../contemporary" }
+gpui = { workspace = true }
