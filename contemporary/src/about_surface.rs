@@ -1,13 +1,43 @@
-use crate::application::{Details, Versions};
+use crate::application::{ApplicationLink, Details, Versions};
+use crate::button::button;
 use crate::constrainer::constrainer;
 use crate::grandstand::grandstand;
 use crate::layer::layer;
 use crate::styling::theme::Theme;
 use crate::window::{ContemporaryWindow, PushPop};
 use gpui::{
-    App, AppContext, Context, Entity, FontWeight, IntoElement, ParentElement, Render, Styled,
-    WeakEntity, Window, div, px,
+    App, AppContext, Context, Entity, FontWeight, IntoElement, ParentElement, Render, RenderOnce,
+    Styled, WeakEntity, Window, div, px,
 };
+
+#[derive(IntoElement)]
+struct AboutSurfaceButtons;
+
+impl RenderOnce for AboutSurfaceButtons {
+    fn render(self, _window: &mut Window, cx: &mut App) -> impl IntoElement {
+        let theme = cx.global::<Theme>();
+        let details = cx.global::<Details>();
+
+        div()
+            .flex()
+            .bg(theme.button_background)
+            .gap(px(2.))
+            .rounded(theme.border_radius)
+            .children(
+                details
+                    .links
+                    .iter()
+                    .filter(|link| *link.0 != ApplicationLink::HelpContents)
+                    .enumerate()
+                    .map(|(idx, link)| {
+                        button(("help-link", idx))
+                            .child(link.0.get_name())
+                            .on_click(|_, _, cx| cx.open_url(*link.1))
+                            .into_any_element()
+                    }),
+            )
+    }
+}
 
 pub struct AboutSurface<T>
 where
@@ -31,7 +61,6 @@ where
 {
     fn render(&mut self, _window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
         let window = self.window.clone();
-        let theme = cx.global::<Theme>();
         let details = cx.global::<Details>();
         let versions = cx.global::<Versions>();
 
@@ -73,9 +102,13 @@ where
                                     .child(div().w(px(48.)))
                                     .child(div().child(details.application_generic_name)),
                             )
-                            .child(div().flex().gap(px(6.)).child(div().w(px(48.))).child(
-                                div().flex().bg(theme.button_background).gap(px(2.)), // TODO: Buttons go here
-                            )),
+                            .child(
+                                div()
+                                    .flex()
+                                    .gap(px(6.))
+                                    .child(div().w(px(48.)))
+                                    .child(AboutSurfaceButtons),
+                            ),
                     )
                     .child(
                         layer("software-layer").child(

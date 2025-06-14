@@ -104,7 +104,7 @@ pub fn setup_contemporary(cx: &mut App, mut application: Contemporary) {
             } else {
                 [
                     Some(MenuItem::action(
-                        key.get_name(cx),
+                        key.get_name(),
                         OpenLink {
                             link: url.to_string(),
                         },
@@ -156,10 +156,6 @@ fn about(_: &About, cx: &mut App) {
     let callbacks = cx.global::<Callbacks>();
     callbacks.on_about.clone()(cx);
 }
-
-// fn help_contents(action: &HelpContents, cx: &mut App) {
-//     cx.open_url(&action.link);
-// }
 
 fn open_link(action: &OpenLink, cx: &mut App) {
     cx.open_url(&action.link);

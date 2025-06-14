@@ -18,7 +18,7 @@ pub enum ApplicationLink {
 }
 
 impl ApplicationLink {
-    pub fn get_name(&self, _cx: &mut App) -> SharedString {
+    pub fn get_name(&self) -> SharedString {
         match self {
             ApplicationLink::FileBug => "File Bug".into(),
             ApplicationLink::SourceCode => "Source Code".into(),
