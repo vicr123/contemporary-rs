@@ -5,6 +5,7 @@ use crate::grandstand::grandstand;
 use crate::layer::layer;
 use crate::styling::theme::Theme;
 use crate::window::{ContemporaryWindow, PushPop};
+use contemporary_i18n::I18nManager;
 use gpui::{
     App, AppContext, Context, Entity, FontWeight, IntoElement, ParentElement, Render, RenderOnce,
     Styled, WeakEntity, Window, div, px,

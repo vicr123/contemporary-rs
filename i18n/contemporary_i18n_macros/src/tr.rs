@@ -1,5 +1,7 @@
 use std::collections::HashMap;
+use std::sync::{Arc, Mutex};
 
+use once_cell::sync::Lazy;
 use proc_macro::TokenStream;
 
 use quote::quote;
@@ -13,6 +15,9 @@ use syn::punctuated::Punctuated;
 use syn::{Expr, Ident, LitStr, Token, parse_macro_input};
 
 use crate::config::I18N_CONFIG;
+
+static IS_TRANSLATION_CATALOG_ERASED: Lazy<Arc<Mutex<bool>>> =
+    Lazy::new(|| Arc::new(Mutex::new(false)));
 
 struct TrMacroInput {
     translation_id: LitStr,
@@ -79,9 +84,7 @@ struct Meta {
     description: Option<String>,
 }
 
-pub fn insert_into_translation_catalog(key: &str, value: Value) {
-    let config = &*I18N_CONFIG;
-
+fn translation_directory() -> PathBuf {
     // Get the project root from the CARGO_MANIFEST_DIR environment variable
     let project_root = env::var("CARGO_MANIFEST_DIR").expect("CARGO_MANIFEST_DIR is not set");
     let mut file_path = PathBuf::from(&project_root);
@@ -89,15 +92,40 @@ pub fn insert_into_translation_catalog(key: &str, value: Value) {
 
     fs::create_dir_all(&file_path).expect("Unable to create translations directory");
 
+    file_path
+}
+
+fn translation_meta_file() -> PathBuf {
+    let mut file_path = translation_directory();
+    file_path.push("meta.json");
+
+    file_path
+}
+
+fn translation_catalog_file() -> PathBuf {
+    let config = &*I18N_CONFIG;
+
+    let mut file_path = translation_directory();
     file_path.push(format!("{}.json", config.i18n.default_language));
 
+    file_path
+}
+
+fn insert_into_translation_catalog(key: &str, value: Value) {
+    let mut catalog_erased = IS_TRANSLATION_CATALOG_ERASED
+        .lock()
+        .expect("could not lock catalog erased state");
+
+    let file_path = translation_catalog_file();
+
     // Read the existing JSON file or create a new one
-    let mut translations: Value = if file_path.exists() {
+    let mut translations: Value = if file_path.exists() && *catalog_erased {
         let mut file = OpenOptions::new().read(true).open(&file_path).unwrap();
         let mut contents = String::new();
         file.read_to_string(&mut contents).unwrap();
         serde_json::from_str(&contents).unwrap_or_else(|_| json!({}))
     } else {
+        *catalog_erased = true;
         json!({})
     };
 
@@ -117,6 +145,9 @@ pub fn insert_into_translation_catalog(key: &str, value: Value) {
             .as_bytes(),
     )
     .unwrap();
+    
+    // this needs to live for the whole duration of the function
+    drop(catalog_erased)
 }
 
 /// Returns a translated string for the given key.
@@ -153,3 +184,4 @@ pub fn tr(body: TokenStream) -> TokenStream {
 // i18n.lookup("KEY", )
 // trn!("KEY", "String Singular", "String Plural", count=9, )
 // trn!("KEY", "String Singular", "String Plural", "String Plural", count=9)
+// tr_define!("KEY", "String", #description="asdasd")

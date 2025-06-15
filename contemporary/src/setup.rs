@@ -80,7 +80,7 @@ pub fn setup_contemporary(cx: &mut App, mut application: Contemporary) {
                 HideSelf,
             ),
             MenuItem::action(tr!("APPLE_APP_MENU_HIDE_OTHERS", "Hide Others"), HideOthers),
-            MenuItem::action("Show All", ShowAll),
+            MenuItem::action(tr!("APPLE_APP_MENU_SHOW_ALL", "Show All"), ShowAll),
             MenuItem::separator(),
             MenuItem::action(
                 tr!(
@@ -127,7 +127,7 @@ pub fn setup_contemporary(cx: &mut App, mut application: Contemporary) {
         .collect();
 
     menus.push(Menu {
-        name: "Help".into(),
+        name: tr!("MENU_HELP", "Help").into(),
         items: help_menu_items,
     });
 

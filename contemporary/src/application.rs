@@ -3,6 +3,7 @@ use std::{
     sync::{Arc, Mutex},
 };
 
+use contemporary_i18n::I18nManager;
 use gpui::{Global, SharedString};
 use indexmap::IndexMap;
 
