@@ -1,9 +1,9 @@
-use crate::styling::contemporary::{make_contemporary_base_theme, ContemporaryDark, ContemporaryTheme};
+use crate::styling::contemporary::{ContemporaryDark, make_contemporary_base_theme};
 use gpui::{Global, Pixels, Rgba};
 
 #[cfg(target_os = "macos")]
 use crate::styling::macos::create_macos_theme;
-use crate::styling::rgb::{rgb, rgb_tuple};
+use crate::styling::rgb::rgb_tuple;
 
 pub struct Theme {
     pub background: Rgba,
@@ -17,7 +17,7 @@ pub struct Theme {
     pub button_foreground: Rgba,
     pub button_hover_background: Rgba,
     pub button_active_background: Rgba,
-    
+
     pub layer_background: Rgba,
 
     pub border_radius: Pixels,

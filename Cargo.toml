@@ -1,7 +1,17 @@
 [workspace]
 resolver = "3"
-members = ["contemporary", "playground"]
+members = [
+    "contemporary",
+    "i18n/contemporary_i18n",
+    "i18n/contemporary_i18n_core",
+    "i18n/contemporary_i18n_macros",
+    "playground",
+]
 
 [workspace.dependencies]
 gpui = { git = "https://github.com/zed-industries/zed" }
 indexmap = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+intl_pluralrules = "7"
+locale_config = "*"

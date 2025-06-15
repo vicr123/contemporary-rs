@@ -4,6 +4,7 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+contemporary_i18n = { path = "../i18n/contemporary_i18n", features = ["gpui"] }
 contemporary = { path = "../contemporary" }
 gpui = { workspace = true }
 indexmap = { workspace = true }

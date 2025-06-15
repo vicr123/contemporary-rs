@@ -1,5 +1,6 @@
 use crate::application::{ApplicationLink, Details, Versions};
 use crate::styling::theme::Theme;
+use contemporary_i18n::{I18nManager, tr};
 use gpui::{App, Global, KeyBinding, Menu, MenuItem, actions, impl_actions};
 use schemars::JsonSchema;
 use serde::Deserialize;
@@ -33,6 +34,9 @@ struct Callbacks {
 impl Global for Callbacks {}
 
 pub fn setup_contemporary(cx: &mut App, mut application: Contemporary) {
+    cx.set_global(I18nManager::new());
+    let i18n = cx.global::<I18nManager>();
+
     // TODO: Set up event handlers for system theme changes
     cx.on_action(quit);
     cx.on_action(hide_self);
@@ -75,11 +79,15 @@ pub fn setup_contemporary(cx: &mut App, mut application: Contemporary) {
                 format!("Hide {}", application.details.application_name),
                 HideSelf,
             ),
-            MenuItem::action("Hide Others", HideOthers),
+            MenuItem::action(tr!("APPLE_APP_MENU_HIDE_OTHERS", "Hide Others"), HideOthers),
             MenuItem::action("Show All", ShowAll),
             MenuItem::separator(),
             MenuItem::action(
-                format!("Quit {}", application.details.application_name),
+                tr!(
+                    "APPLE_APP_MENU_QUIT",
+                    "Quit {{application}}",
+                    application = application.details.application_name
+                ),
                 Quit,
             ),
         ],

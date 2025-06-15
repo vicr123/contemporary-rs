@@ -3,7 +3,7 @@ use std::{
     sync::{Arc, Mutex},
 };
 
-use gpui::{App, Global, SharedString};
+use gpui::{Global, SharedString};
 use indexmap::IndexMap;
 
 #[derive(Hash, Eq, Clone, PartialEq, Debug)]
@@ -23,7 +23,7 @@ impl ApplicationLink {
             ApplicationLink::FileBug => "File Bug".into(),
             ApplicationLink::SourceCode => "Source Code".into(),
             ApplicationLink::HelpContents => "Help".into(),
-            ApplicationLink::Other { icon, text } => text.clone(),
+            ApplicationLink::Other { icon: _, text } => text.clone(),
         }
     }
 }

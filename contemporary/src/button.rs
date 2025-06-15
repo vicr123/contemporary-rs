@@ -1,9 +1,8 @@
 use crate::styling::theme::Theme;
 use gpui::prelude::FluentBuilder;
 use gpui::{
-    AnyElement, App, ClickEvent, Div, Element, ElementId, InteractiveElement, IntoElement,
-    ParentElement, RenderOnce, SharedString, Stateful, StatefulInteractiveElement, Styled, Window,
-    div, px, rgb, rgba,
+    AnyElement, App, ClickEvent, Div, ElementId, InteractiveElement, IntoElement, ParentElement,
+    RenderOnce, Stateful, StatefulInteractiveElement, Styled, Window, div, px,
 };
 
 #[derive(IntoElement)]
@@ -50,7 +49,7 @@ impl ParentElement for Button {
 }
 
 impl RenderOnce for Button {
-    fn render(self, window: &mut Window, cx: &mut App) -> impl IntoElement {
+    fn render(self, _window: &mut Window, cx: &mut App) -> impl IntoElement {
         let theme = cx.global::<Theme>();
 
         self.div

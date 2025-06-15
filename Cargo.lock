@@ -843,11 +843,47 @@ dependencies = [
 name = "contemporary"
 version = "0.1.0"
 dependencies = [
+ "contemporary_i18n",
  "gpui",
  "indexmap",
  "schemars",
  "serde",
  "serde_json",
+]
+
+[[package]]
+name = "contemporary_i18n"
+version = "0.1.0"
+dependencies = [
+ "contemporary_i18n_core",
+ "contemporary_i18n_macros",
+ "gpui",
+ "intl_pluralrules",
+ "locale_config",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
+name = "contemporary_i18n_core"
+version = "0.1.0"
+dependencies = [
+ "intl_pluralrules",
+ "locale_config",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
+name = "contemporary_i18n_macros"
+version = "0.1.0"
+dependencies = [
+ "once_cell",
+ "quote",
+ "serde",
+ "serde_json",
+ "syn 2.0.103",
+ "toml",
 ]
 
 [[package]]
@@ -2290,6 +2326,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "intl_pluralrules"
+version = "7.0.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "078ea7b7c29a2b4df841a7f6ac8775ff6074020c6776d48491ce2268e068f972"
+dependencies = [
+ "unic-langid",
+]
+
+[[package]]
 name = "inventory"
 version = "0.3.20"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2497,6 +2542,19 @@ name = "litemap"
 version = "0.8.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "241eaef5fd12c88705a01fc1066c48c4b36e0dd4377dcdc7ec3942cea7a69956"
+
+[[package]]
+name = "locale_config"
+version = "0.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "08d2c35b16f4483f6c26f0e4e9550717a2f6575bcd6f12a53ff0c490a94a6934"
+dependencies = [
+ "lazy_static",
+ "objc",
+ "objc-foundation",
+ "regex",
+ "winapi",
+]
 
 [[package]]
 name = "lock_api"
@@ -3225,6 +3283,7 @@ name = "playground"
 version = "0.1.0"
 dependencies = [
  "contemporary",
+ "contemporary_i18n",
  "gpui",
  "indexmap",
 ]
@@ -4664,6 +4723,24 @@ dependencies = [
  "memoffset",
  "tempfile",
  "winapi",
+]
+
+[[package]]
+name = "unic-langid"
+version = "0.9.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a28ba52c9b05311f4f6e62d5d9d46f094bd6e84cb8df7b3ef952748d752a7d05"
+dependencies = [
+ "unic-langid-impl",
+]
+
+[[package]]
+name = "unic-langid-impl"
+version = "0.9.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "dce1bf08044d4b7a94028c93786f8566047edc11110595914de93362559bc658"
+dependencies = [
+ "tinystr",
 ]
 
 [[package]]

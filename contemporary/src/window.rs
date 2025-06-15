@@ -55,7 +55,7 @@ impl<T> Render for ContemporaryWindow<T>
 where
     T: Render,
 {
-    fn render(&mut self, window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
+    fn render(&mut self, _window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
         let theme = cx.global::<Theme>();
 
         self.surfaces.iter().fold(

@@ -1,7 +1,7 @@
 use crate::styling::theme::Theme;
 use gpui::{
     App, AppContext, Context, Entity, InteractiveElement, IntoElement, ParentElement, Render,
-    Styled, Window, div, px, rgb,
+    Styled, Window, div, px,
 };
 
 pub struct Surface<T>
@@ -24,7 +24,7 @@ impl<T> Render for Surface<T>
 where
     T: Render,
 {
-    fn render(&mut self, window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
+    fn render(&mut self, _window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
         let theme = cx.global::<Theme>();
 
         div()

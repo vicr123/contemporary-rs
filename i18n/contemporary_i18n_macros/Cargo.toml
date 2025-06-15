@@ -1,0 +1,17 @@
+[package]
+name = "contemporary_i18n_macros"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+name = "contemporary_i18n_macros"
+path = "src/lib.rs"
+proc-macro = true
+
+[dependencies]
+serde = { workspace = true }
+serde_json = { workspace = true }
+toml = "0.8"
+syn = "2"
+quote = "1"
+once_cell = "1"

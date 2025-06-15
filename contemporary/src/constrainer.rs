@@ -31,7 +31,7 @@ impl Styled for Constrainer {
 }
 
 impl RenderOnce for Constrainer {
-    fn render(self, window: &mut Window, cx: &mut App) -> impl IntoElement {
+    fn render(self, _window: &mut Window, _cx: &mut App) -> impl IntoElement {
         div()
             .id(self.id)
             .flex()

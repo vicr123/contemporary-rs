@@ -1,0 +1,17 @@
+[package]
+name = "contemporary_i18n"
+version = "0.1.0"
+edition = "2024"
+
+[features]
+gpui = ["dep:gpui"]
+default = ["gpui"]
+
+[dependencies]
+gpui = { workspace = true, optional = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+contemporary_i18n_core = { path = "../contemporary_i18n_core" }
+contemporary_i18n_macros = { path = "../contemporary_i18n_macros" }
+intl_pluralrules = { workspace = true }
+locale_config = { workspace = true }

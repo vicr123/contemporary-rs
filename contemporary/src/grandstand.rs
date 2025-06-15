@@ -1,16 +1,11 @@
 use std::rc::Rc;
 
 use gpui::{
-    AnyElement, App, ClickEvent, Div, Element, ElementId, InteractiveElement, IntoElement,
-    ParentElement, RenderOnce, SharedString, StyleRefinement, Styled, Window, div,
-    prelude::FluentBuilder, px,
+    App, ClickEvent, Div, ElementId, IntoElement, ParentElement, RenderOnce, SharedString,
+    StyleRefinement, Styled, Window, div, prelude::FluentBuilder, px,
 };
 
-use crate::{
-    button::button,
-    layer::{Layer, layer},
-    styling::theme::Theme,
-};
+use crate::{button::button, layer::layer, styling::theme::Theme};
 
 #[derive(IntoElement)]
 pub struct Grandstand {
@@ -48,7 +43,7 @@ impl Styled for Grandstand {
 }
 
 impl RenderOnce for Grandstand {
-    fn render(self, window: &mut Window, cx: &mut App) -> impl IntoElement {
+    fn render(self, _window: &mut Window, cx: &mut App) -> impl IntoElement {
         let theme = cx.global::<Theme>();
 
         layer(self.id).child(
