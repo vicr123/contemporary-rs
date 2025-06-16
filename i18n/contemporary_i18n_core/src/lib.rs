@@ -1,3 +1,5 @@
+pub mod config;
+
 use std::collections::HashMap;
 
 use intl_pluralrules::PluralCategory;

@@ -2,10 +2,11 @@
 resolver = "3"
 members = [
     "contemporary",
+    "i18n/cargo_cntp_i18n",
     "i18n/contemporary_i18n",
     "i18n/contemporary_i18n_core",
     "i18n/contemporary_i18n_macros",
-    "i18n/cargo_cntp_i18n",
+    "i18n/contemporary_i18n_parse",
     "playground",
 ]
 

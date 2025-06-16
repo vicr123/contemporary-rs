@@ -1,9 +1,13 @@
 mod generate;
 
+use std::process::exit;
+
 use cargo_metadata::camino::Utf8PathBuf;
-use clap::{CommandFactory, Parser, Subcommand};
+use clap::{Parser, Subcommand};
 use clap_cargo::style::CLAP_STYLING;
+use clap_verbosity_flag::InfoLevel;
 use generate::generate;
+use tracing::error;
 
 #[derive(Parser, Debug)]
 #[command(name = "cargo")] // all of this is necessary so things work as expected wrt. cargo
@@ -17,6 +21,9 @@ enum Command {
 struct CntpI18nArgs {
     #[clap(flatten)]
     manifest: clap_cargo::Manifest,
+
+    #[clap(flatten)]
+    verbosity: clap_verbosity_flag::Verbosity<InfoLevel>,
 
     #[clap(subcommand)]
     command: CntpI18nSubCommand,
@@ -42,22 +49,23 @@ fn get_manifest_path(args: &CntpI18nArgs) -> anyhow::Result<Utf8PathBuf> {
 
 fn main() {
     let Command::CntpI18n(args) = Command::parse();
-    println!("{:?}", args);
+
+    tracing_subscriber::fmt()
+        .with_target(false)
+        .without_time()
+        .with_max_level(args.verbosity)
+        .init();
 
     let path = get_manifest_path(&args);
 
     if let Err(reason) = path {
-        let mut cmd = Command::command();
+        error!(
+            "failed to discover cargo manifest path: {:?}, \
+            hint: is the working directory a cargo project?",
+            reason
+        );
 
-        cmd.error(
-            clap::error::ErrorKind::Io,
-            format!(
-                "failed to discover cargo manifest path, \
-                is the working directory a cargo project? {:?}",
-                reason
-            ),
-        )
-        .exit()
+        exit(1);
     }
 
     match args.command {
