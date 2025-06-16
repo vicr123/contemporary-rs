@@ -5,6 +5,7 @@ members = [
     "i18n/contemporary_i18n",
     "i18n/contemporary_i18n_core",
     "i18n/contemporary_i18n_macros",
+    "i18n/cargo_cntp_i18n",
     "playground",
 ]
 
@@ -15,3 +16,4 @@ serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 intl_pluralrules = "7"
 locale_config = "*"
+syn = "2"
