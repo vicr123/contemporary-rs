@@ -7,23 +7,36 @@ pub trait I18nSource {
     fn lookup(&self, id: &str) -> Option<I18nEntry>;
 }
 
-struct I18nStringEntry {
-    entry: String,
+pub struct I18nStringEntry {
+    pub entry: String,
 }
 
-struct I18nPluralStringEntry {
+pub struct I18nPluralStringEntry {
     entries: HashMap<PluralCategory, String>,
 }
 
 impl I18nPluralStringEntry {
-    fn lookup(&self, locale: Locale, count: i64) -> String {
-        "Looked up string".to_string()
+    pub fn lookup(&self, locale: &Locale, count: isize) -> String {
+        format!("Looked up plural string with count {}", count)
     }
 }
 
-enum I18nEntry {
+pub enum I18nEntry {
     Entry(I18nStringEntry),
     PluralEntry(I18nPluralStringEntry),
+}
+
+impl I18nEntry {
+    pub fn is_singular(&self) -> bool {
+        match self {
+            I18nEntry::Entry(_) => true,
+            I18nEntry::PluralEntry(_) => false
+        }
+    }
+    
+    pub fn is_plural(&self) -> bool {
+        !self.is_singular()
+    }
 }
 
 struct ContemporaryI18nSource;
