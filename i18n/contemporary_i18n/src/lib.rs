@@ -31,19 +31,17 @@ impl I18nManager {
         self.sources.push(Box::new(source));
     }
 
-    pub fn lookup(&self, key: &str, variables: Option<FxHashMap<String, Variable>>) -> String {
+    pub fn lookup(&self, key: &str, variables: Vec<(&str, Variable)>) -> String {
         for source in &self.sources {
             let Some(entry) = source.lookup(&self.locale, key) else {
                 continue;
             };
 
-            let variables = variables.unwrap_or(FxHashMap::default());
-
             // TODO: Cache the resolved string
             let mut resolved = match &entry {
                 I18nEntry::Entry(entry) => entry.entry.clone(),
                 I18nEntry::PluralEntry(entry) => {
-                    let count = variables.get("count").expect(
+                    let (_, count) = variables.iter().find(|(name, _)| *name == "count").expect(
                         format!(
                             "Resolved plural string for {}, but no count variable provided for \
                             substitution",

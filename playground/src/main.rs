@@ -7,6 +7,7 @@ use contemporary::{
     surface::Surface,
     window::{ContemporaryWindow, PushPop, contemporary_window_options},
 };
+use contemporary_i18n::{I18N_MANAGER, tr_load};
 use gpui::{App, AppContext, Application, Bounds, Menu, WindowBounds, WindowOptions, px, size};
 use indexmap::IndexMap;
 
@@ -16,6 +17,7 @@ mod surface_list;
 
 fn main() {
     Application::new().run(|cx: &mut App| {
+        I18N_MANAGER.write().unwrap().load_source(tr_load!());
         let bounds = Bounds::centered(None, size(px(800.0), px(600.0)), cx);
 
         let default_window_options = contemporary_window_options(cx);

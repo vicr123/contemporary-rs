@@ -2,13 +2,11 @@ use contemporary_i18n_parse::{tr::TrMacroInput, trn::TrnMacroInput};
 use proc_macro::TokenStream;
 
 use quote::quote;
-use syn::parse_macro_input;
+use syn::{Error, parse_macro_input};
 
 use crate::config::I18N_CONFIG;
 
 /// Returns a translated string for the given key.
-/// Must be called in a context where a variable, `i18n` is available, which represents the
-/// `I18nManager` to lookup the string from.
 ///
 /// Examples:
 /// ```rs
@@ -18,26 +16,68 @@ use crate::config::I18N_CONFIG;
 pub fn tr(body: TokenStream) -> TokenStream {
     let input = parse_macro_input!(body as TrMacroInput);
 
+    let mut z = Vec::new();
+    for variable in input.variables {
+        // Ensure the variable is used
+        if let Some(default_string) = &input.default_string {
+            if !default_string
+                .value()
+                .contains(format!("{{{{{}}}}}", variable.name.to_string()).as_str())
+            {
+                return Error::new(
+                    variable.name.span(),
+                    format!(
+                        "Translation variable {} specified when rendering key {} but not used",
+                        variable.name.to_string(),
+                        input.translation_id.value()
+                    ),
+                )
+                .to_compile_error()
+                .into();
+            }
+        }
+
+        if variable.name.to_string() == "count" {
+            // Special handling
+            let var_name = variable.name.to_string();
+            let expr = variable.value;
+            z.push(quote! {
+                (
+                    #var_name,
+                    {
+                        use contemporary_i18n::Variable;
+                        Variable::Count(#expr)
+                    }
+                ),
+            });
+        } else {
+            let var_name = variable.name.to_string();
+            let expr = variable.value;
+            z.push(quote! {
+                (
+                    #var_name,
+                    {
+                        use contemporary_i18n::Variable;
+                        Variable::String(#expr.to_string())
+                    }
+                ),
+            });
+        }
+    }
+
     let key = input.translation_id.value();
     quote! {
         {
             use contemporary_i18n::I18N_MANAGER as i18n;
-            i18n.read().unwrap().lookup(#key, None)
+            i18n.read().unwrap().lookup(#key, vec![
+                #( #z )*
+            ])
         }
     }
     .into()
-
-    // if let Some(default_string) = input.default_string.map(|token| token.value()) {
-    //     quote! { #default_string }.into()
-    // } else {
-    //     let key = input.translation_id.value();
-    //     quote! { #key }.into()
-    // }
 }
 
 /// Returns a translated, plural-matched string for the given key.
-/// Must be called in a context where a variable, `i18n` is available, which represents the
-/// `I18nManager` to lookup the string from.
 ///
 /// If default strings are provided, the amount of provided strings much match the amount of
 /// strings required for the default language.

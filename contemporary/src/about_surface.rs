@@ -72,7 +72,11 @@ where
             .h_full()
             .child(
                 grandstand("about-grandstand")
-                    .text(format!("About {}", details.application_name))
+                    .text(tr!(
+                        "ABOUT_TITLE",
+                        "About {{application}}",
+                        application = details.application_name
+                    ))
                     .on_click(move |_, _, cx| {
                         window.upgrade().unwrap().pop(cx);
                     })

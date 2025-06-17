@@ -20,7 +20,7 @@ where
     surfaces: Vec<Entity<Surface<T>>>,
 }
 
-impl<T> ContemporaryWindow<T>
+impl<T> ContemporaryWindow<T> 
 where
     T: Render,
 {
