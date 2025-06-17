@@ -5,7 +5,7 @@ use crate::grandstand::grandstand;
 use crate::layer::layer;
 use crate::styling::theme::Theme;
 use crate::window::{ContemporaryWindow, PushPop};
-use contemporary_i18n::I18nManager;
+use contemporary_i18n::{tr, I18nManager};
 use gpui::{
     App, AppContext, Context, Entity, FontWeight, IntoElement, ParentElement, Render, RenderOnce,
     Styled, WeakEntity, Window, div, px,
@@ -64,6 +64,7 @@ where
         let window = self.window.clone();
         let details = cx.global::<Details>();
         let versions = cx.global::<Versions>();
+        let i18n = cx.global::<I18nManager>();
 
         div()
             .flex()
@@ -120,7 +121,7 @@ where
                                 .child(
                                     div()
                                         .font_weight(FontWeight::BLACK)
-                                        .child("Software".to_uppercase()),
+                                        .child(tr!("ABOUT_SOFTWARE", "Software").to_uppercase()),
                                 )
                                 .child(
                                     div()
@@ -133,21 +134,21 @@ where
                                     div()
                                         .flex()
                                         .justify_between()
-                                        .child("Contemporary")
+                                        .child(tr!("ABOUT_CONTEMPORARY", "Contemporary"))
                                         .child(versions.contemporary_version),
                                 )
                                 .child(
                                     div()
                                         .flex()
                                         .justify_between()
-                                        .child("Platform")
+                                        .child(tr!("ABOUT_PLATFORM", "Platform"))
                                         .child(std::env::consts::OS),
                                 )
                                 .child(
                                     div()
                                         .flex()
                                         .justify_between()
-                                        .child("Architecture")
+                                        .child(tr!("ABOUT_ARCH", "Architecture"))
                                         .child(std::env::consts::ARCH),
                                 ),
                         ),
@@ -161,7 +162,7 @@ where
                                 .child(
                                     div()
                                         .font_weight(FontWeight::BOLD)
-                                        .child("Copyright".to_uppercase()),
+                                        .child(tr!("ABOUT_COPYRIGHT", "Copyright").to_uppercase()),
                                 )
                                 .child(format!(
                                     "Copyright © {} {}",

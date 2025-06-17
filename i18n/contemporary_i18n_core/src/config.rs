@@ -55,6 +55,24 @@ impl I18n {
         file_path
     }
 
+    pub fn catalog_files(&self, manifest_Directory: &Path) -> Vec<PathBuf> {
+        let dir_contents = self
+            .translation_directory(manifest_Directory)
+            .read_dir()
+            .unwrap();
+        dir_contents
+            .enumerate()
+            .filter(|(_size, entry)| {
+                entry.as_ref().is_ok_and(|entry| {
+                    entry.metadata().is_ok_and(|meta| meta.is_file())
+                        && entry.file_name().to_str().unwrap().ends_with(".json")
+                        && entry.file_name().to_str().unwrap() != "meta.json"
+                })
+            })
+            .map(|(_size, entry)| entry.unwrap().path())
+            .collect()
+    }
+
     pub fn translation_catalog_file(&self, manifest_directory: &Path) -> PathBuf {
         self.translation_directory(manifest_directory)
             .join(format!("{}.json", self.default_language))

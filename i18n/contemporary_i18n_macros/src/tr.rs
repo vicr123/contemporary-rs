@@ -16,17 +16,20 @@ use crate::config::I18N_CONFIG;
 /// tr!("BUTTON_LOG_OUT", "Log Out {{user}}", user=user.name);
 /// ```
 pub fn tr(body: TokenStream) -> TokenStream {
-    // let invocation_line = proc_macro::Span::call_site().start().line;
-
-    let config = &*I18N_CONFIG;
     let input = parse_macro_input!(body as TrMacroInput);
 
-    if let Some(default_string) = input.default_string.map(|token| token.value()) {
-        quote! { #default_string }.into()
-    } else {
-        let key = input.translation_id.value();
-        quote! { #key }.into()
+    let key = input.translation_id.value();
+    quote! {
+        i18n.lookup(#key, None)
     }
+    .into()
+
+    // if let Some(default_string) = input.default_string.map(|token| token.value()) {
+    //     quote! { #default_string }.into()
+    // } else {
+    //     let key = input.translation_id.value();
+    //     quote! { #key }.into()
+    // }
 }
 
 /// Returns a translated, plural-matched string for the given key.

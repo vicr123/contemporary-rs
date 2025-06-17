@@ -1,12 +1,11 @@
-pub use contemporary_i18n_macros::{tr, trn};
+pub use contemporary_i18n_macros::{tr, tr_load, trn};
 use fxhash::FxHashMap;
-use std::collections::HashMap;
 use std::fmt::Display;
 
 #[cfg(feature = "gpui")]
 use gpui::Global;
 
-use contemporary_i18n_core::{I18nEntry, I18nSource};
+pub use contemporary_i18n_core::{I18nEntry, I18nSource, I18nStringEntry, I18nPluralStringEntry};
 
 use locale_config::Locale;
 
@@ -28,11 +27,17 @@ impl I18nManager {
         }
     }
 
-    pub fn lookup(&self, key: &str, variables: FxHashMap<String, Variable>) -> String {
+    pub fn load_source(&mut self, source: impl I18nSource + 'static) {
+        self.sources.push(Box::new(source));
+    }
+
+    pub fn lookup(&self, key: &str, variables: Option<FxHashMap<String, Variable>>) -> String {
         for source in &self.sources {
             let Some(entry) = source.lookup(key) else {
                 continue;
             };
+
+            let variables = variables.unwrap_or(FxHashMap::default());
 
             // TODO: Cache the resolved string
             let mut resolved = match &entry {

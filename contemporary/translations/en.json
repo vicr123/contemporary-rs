@@ -1,4 +1,9 @@
 {
+  "ABOUT_ARCH": "Architecture",
+  "ABOUT_CONTEMPORARY": "Contemporary",
+  "ABOUT_COPYRIGHT": "Copyright",
+  "ABOUT_PLATFORM": "Platform",
+  "ABOUT_SOFTWARE": "Software",
   "APPLE_APP_MENU_HIDE_OTHERS": "Hide Others",
   "APPLE_APP_MENU_QUIT": "Quit {{application}}",
   "APPLE_APP_MENU_SHOW_ALL": "Show All",
