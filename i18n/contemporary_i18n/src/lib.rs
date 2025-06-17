@@ -1,4 +1,5 @@
 pub use contemporary_i18n_macros::{tr, trn};
+use fxhash::FxHashMap;
 use std::collections::HashMap;
 use std::fmt::Display;
 
@@ -27,7 +28,7 @@ impl I18nManager {
         }
     }
 
-    pub fn lookup(&self, key: &str, variables: HashMap<String, Variable>) -> String {
+    pub fn lookup(&self, key: &str, variables: FxHashMap<String, Variable>) -> String {
         for source in &self.sources {
             let Some(entry) = source.lookup(key) else {
                 continue;
@@ -65,13 +66,16 @@ impl I18nManager {
                             key
                         )
                     }
-                    
+
                     // Special case the count variable which should be handled in a plural entry
                     continue;
                 }
 
                 resolved = match substitution {
-                    Variable::Count(count) => panic!("Substitution variable ({}) not of type string (is {})", name, count),
+                    Variable::Count(count) => panic!(
+                        "Substitution variable ({}) not of type string (is {})",
+                        name, count
+                    ),
                     Variable::String(string) => {
                         resolved.replace(format!("{{{{{}}}}}", name).as_str(), string.as_str())
                     }
