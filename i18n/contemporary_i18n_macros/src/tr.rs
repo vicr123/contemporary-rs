@@ -20,7 +20,10 @@ pub fn tr(body: TokenStream) -> TokenStream {
 
     let key = input.translation_id.value();
     quote! {
-        i18n.lookup(#key, None)
+        {
+            use contemporary_i18n::I18N_MANAGER as i18n;
+            i18n.read().unwrap().lookup(#key, None)
+        }
     }
     .into()
 

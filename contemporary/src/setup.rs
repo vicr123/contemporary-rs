@@ -1,6 +1,6 @@
 use crate::application::{ApplicationLink, Details, Versions};
 use crate::styling::theme::Theme;
-use contemporary_i18n::{I18nManager, tr, tr_load};
+use contemporary_i18n::{I18N_MANAGER, I18nManager, tr, tr_load};
 use gpui::{App, Global, KeyBinding, Menu, MenuItem, actions, impl_actions};
 use schemars::JsonSchema;
 use serde::Deserialize;
@@ -34,8 +34,6 @@ struct Callbacks {
 impl Global for Callbacks {}
 
 pub fn setup_contemporary(cx: &mut App, mut application: Contemporary) {
-    cx.set_global(I18nManager::new());
-
     // TODO: Set up event handlers for system theme changes
     cx.on_action(quit);
     cx.on_action(hide_self);
@@ -61,8 +59,7 @@ pub fn setup_contemporary(cx: &mut App, mut application: Contemporary) {
         )])
     }
 
-    let i18n = cx.global_mut::<I18nManager>();
-    i18n.load_source(tr_load!());
+    I18N_MANAGER.write().unwrap().load_source(tr_load!());
     let mut menus = vec![Menu {
         name: application.details.application_name.into(),
         items: vec![

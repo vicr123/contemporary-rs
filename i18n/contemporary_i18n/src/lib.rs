@@ -1,13 +1,13 @@
 pub use contemporary_i18n_macros::{tr, tr_load, trn};
 use fxhash::FxHashMap;
-use std::fmt::Display;
+use once_cell::sync::Lazy;
+use std::{fmt::Display, sync::RwLock};
 
-#[cfg(feature = "gpui")]
-use gpui::Global;
+pub use contemporary_i18n_core::{I18nEntry, I18nPluralStringEntry, I18nSource, I18nStringEntry};
 
-pub use contemporary_i18n_core::{I18nEntry, I18nSource, I18nStringEntry, I18nPluralStringEntry};
+pub use locale_config::{LanguageRange, Locale};
 
-use locale_config::Locale;
+pub static I18N_MANAGER: Lazy<RwLock<I18nManager>> = Lazy::new(|| RwLock::new(I18nManager::new()));
 
 pub struct I18nManager {
     sources: Vec<Box<dyn I18nSource>>,
@@ -33,7 +33,7 @@ impl I18nManager {
 
     pub fn lookup(&self, key: &str, variables: Option<FxHashMap<String, Variable>>) -> String {
         for source in &self.sources {
-            let Some(entry) = source.lookup(key) else {
+            let Some(entry) = source.lookup(&self.locale, key) else {
                 continue;
             };
 
@@ -53,7 +53,7 @@ impl I18nManager {
                     );
 
                     match count {
-                        Variable::Count(count) => entry.lookup(&self.locale, *count),
+                        Variable::Count(count) => entry.lookup(*count),
                         Variable::String(string) => {
                             panic!("Count variable ({}) not of type isize", string)
                         }
@@ -98,6 +98,3 @@ impl I18nManager {
         format!("\"{}\"", string.to_string())
     }
 }
-
-#[cfg(feature = "gpui")]
-impl Global for I18nManager {}

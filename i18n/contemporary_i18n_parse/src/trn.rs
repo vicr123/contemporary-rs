@@ -1,8 +1,6 @@
-use std::default;
-
 use syn::parse::{Parse, ParseStream};
 use syn::punctuated::Punctuated;
-use syn::{Expr, Ident, LitStr, Token};
+use syn::{LitStr, Token};
 
 use crate::NamedArg;
 

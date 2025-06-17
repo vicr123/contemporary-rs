@@ -5,7 +5,7 @@ use crate::grandstand::grandstand;
 use crate::layer::layer;
 use crate::styling::theme::Theme;
 use crate::window::{ContemporaryWindow, PushPop};
-use contemporary_i18n::{tr, I18nManager};
+use contemporary_i18n::{I18nManager, tr};
 use gpui::{
     App, AppContext, Context, Entity, FontWeight, IntoElement, ParentElement, Render, RenderOnce,
     Styled, WeakEntity, Window, div, px,
@@ -64,7 +64,6 @@ where
         let window = self.window.clone();
         let details = cx.global::<Details>();
         let versions = cx.global::<Versions>();
-        let i18n = cx.global::<I18nManager>();
 
         div()
             .flex()
