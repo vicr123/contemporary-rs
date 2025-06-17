@@ -7,7 +7,7 @@ use std::{
 
 use cargo_metadata::camino::Utf8PathBuf;
 use contemporary_i18n_core::config::get_i18n_config;
-use contemporary_i18n_parse::TrMacroInput;
+use contemporary_i18n_parse::tr::TrMacroInput;
 use serde_json::json;
 use syn::{Expr, Macro, Token, parse_file, visit::Visit};
 use syn::{parse::Parse, punctuated::Punctuated};

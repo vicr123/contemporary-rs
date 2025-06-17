@@ -10,6 +10,5 @@ pub fn tr(body: TokenStream) -> TokenStream {
 
 #[proc_macro]
 pub fn trn(body: TokenStream) -> TokenStream {
-    // dead comment to prevent formatting
-    body
+    tr::trn(body)
 }
