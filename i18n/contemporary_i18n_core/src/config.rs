@@ -1,5 +1,5 @@
 use std::{
-    fs::OpenOptions,
+    fs::{OpenOptions, create_dir_all},
     io::Read,
     path::{Path, PathBuf},
 };
@@ -36,12 +36,32 @@ pub struct Config {
 #[serde(default)]
 pub struct I18n {
     pub default_language: String,
+    translation_directory: PathBuf,
 }
 
 impl Default for I18n {
     fn default() -> Self {
         Self {
             default_language: "en".into(),
+            translation_directory: "translations".into(),
         }
+    }
+}
+
+impl I18n {
+    pub fn translation_directory(&self, manifest_directory: &Path) -> PathBuf {
+        let file_path = manifest_directory.join(&self.translation_directory);
+        create_dir_all(&file_path).expect("Unable to create translations directory");
+        file_path
+    }
+
+    pub fn translation_catalog_file(&self, manifest_directory: &Path) -> PathBuf {
+        self.translation_directory(manifest_directory)
+            .join(format!("{}.json", self.default_language))
+    }
+
+    pub fn translation_meta_file(&self, manifest_directory: &Path) -> PathBuf {
+        self.translation_directory(manifest_directory)
+            .join("meta.json")
     }
 }

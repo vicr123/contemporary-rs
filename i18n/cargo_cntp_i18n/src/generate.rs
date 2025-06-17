@@ -1,14 +1,16 @@
 use std::{
     collections::HashMap,
     ffi::OsStr,
-    fs::{self, create_dir_all},
+    fs::{self, OpenOptions},
+    process::exit,
 };
 
 use cargo_metadata::camino::Utf8PathBuf;
-use contemporary_i18n_core::config::{Config, get_i18n_config};
+use contemporary_i18n_core::config::get_i18n_config;
 use contemporary_i18n_parse::TrMacroInput;
+use serde_json::json;
 use syn::{Expr, Macro, Token, parse_file, visit::Visit};
-use syn::{Ident, parse::Parse, punctuated::Punctuated};
+use syn::{parse::Parse, punctuated::Punctuated};
 use tracing::{debug, error, info, trace};
 use walkdir::WalkDir;
 
@@ -89,22 +91,6 @@ impl<'ast> Visit<'ast> for TrMacroVisitor {
     }
 }
 
-fn translation_directory(manifest_directory: Utf8PathBuf) -> Utf8PathBuf {
-    let file_path = manifest_directory.join("translations");
-
-    create_dir_all(&file_path).expect("Unable to create translations directory");
-
-    file_path
-}
-
-fn translation_catalog_file(manifest_directory: Utf8PathBuf, config: Config) -> Utf8PathBuf {
-    translation_directory(manifest_directory).join(format!("{}.json", config.i18n.default_language))
-}
-
-fn translation_meta_file(manifest_directory: Utf8PathBuf) -> Utf8PathBuf {
-    translation_directory(manifest_directory).join("meta.json")
-}
-
 pub fn generate(manifest_directory: Utf8PathBuf) {
     let config = get_i18n_config(manifest_directory.as_std_path());
 
@@ -156,5 +142,41 @@ pub fn generate(manifest_directory: Utf8PathBuf) {
         .collect::<Vec<_>>()
         .join(", ");
 
-    debug!("located string key(s): {}", keys)
+    debug!("located string key(s): {}", keys);
+
+    // TODO: add option to only modify the existing file instead of erasing and regenerating every time
+    let catalog = visitor
+        .strings
+        .iter()
+        .fold(json!({}), |mut catalog, (key, value)| {
+            catalog[key] = json!(value.as_str());
+            catalog
+        });
+
+    let catalog_path = config
+        .i18n
+        .translation_catalog_file(manifest_directory.as_std_path());
+
+    let Ok(file) = OpenOptions::new()
+        .write(true)
+        .create(true)
+        .truncate(true)
+        .open(&catalog_path)
+    else {
+        error!("failed to open catalog file, exiting");
+        exit(1);
+    };
+
+    let write_result = serde_json::to_writer_pretty(file, &catalog);
+
+    if let Err(error) = write_result {
+        error!("failed to write catalog file: {:?}, exiting", error);
+        exit(1);
+    }
+
+    info!(
+        "successfully wrote {} key/string pairs to {:#?}",
+        visitor.strings.len(),
+        catalog_path
+    );
 }

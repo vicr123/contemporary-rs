@@ -674,6 +674,8 @@ dependencies = [
  "clap-verbosity-flag",
  "contemporary_i18n_core",
  "contemporary_i18n_parse",
+ "serde",
+ "serde_json",
  "syn 2.0.103",
  "tracing",
  "tracing-subscriber",
