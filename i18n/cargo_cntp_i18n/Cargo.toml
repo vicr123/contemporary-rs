@@ -17,3 +17,4 @@ contemporary_i18n_parse = { path = "../contemporary_i18n_parse" }
 walkdir = "2"
 serde = { workspace = true }
 serde_json = { workspace = true }
+icu = { workspace = true }

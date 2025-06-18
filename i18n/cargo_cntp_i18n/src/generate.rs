@@ -7,7 +7,11 @@ use std::{
 
 use cargo_metadata::camino::Utf8PathBuf;
 use contemporary_i18n_core::config::get_i18n_config;
-use contemporary_i18n_parse::tr::TrMacroInput;
+use contemporary_i18n_parse::{tr::TrMacroInput, trn::TrnMacroInput};
+use icu::{
+    locale::Locale,
+    plurals::{PluralCategory, PluralRules, PluralRulesPreferences},
+};
 use serde_json::json;
 use syn::{Expr, Macro, Token, parse_file, visit::Visit};
 use syn::{parse::Parse, punctuated::Punctuated};
@@ -28,63 +32,67 @@ impl Parse for CommaSeperatedExpr {
     }
 }
 
+enum TrString {
+    Single(String),
+    Plural(Vec<(PluralCategory, String)>),
+}
+
 struct TrMacroVisitor {
-    pub strings: HashMap<String, String>,
+    pub strings: HashMap<String, TrString>,
+    pub plural_rules: PluralRules,
 }
 
 impl<'ast> Visit<'ast> for TrMacroVisitor {
     fn visit_macro(&mut self, mac: &'ast Macro) {
-        if mac.path.is_ident("tr") {
-            if let Ok(contents) = syn::parse2::<TrMacroInput>(mac.tokens.clone()) {
-                if let Some(default_string) = contents.default_string {
-                    self.strings
-                        .insert(contents.translation_id.value(), default_string.value());
+        match mac.path.segments.last().unwrap().ident.to_string().as_str() {
+            "tr" => {
+                if let Ok(contents) = syn::parse2::<TrMacroInput>(mac.tokens.clone()) {
+                    if let Some(default_string) = contents.default_string {
+                        self.strings.insert(
+                            contents.translation_id.value(),
+                            TrString::Single(default_string.value()),
+                        );
+                    }
                 }
             }
-        } else {
-            trace!("non-tr macro, attempting to enter");
+            "trn" => {
+                if let Ok(contents) = syn::parse2::<TrnMacroInput>(mac.tokens.clone()) {
+                    let category_count = self.plural_rules.categories().count();
+                    let string_count = contents.default_strings.len();
+                    let id = contents.translation_id.value();
 
-            if let Ok(CommaSeperatedExpr { exprs }) =
-                syn::parse2::<CommaSeperatedExpr>(mac.tokens.clone())
-            {
-                trace!(
-                    "found expr list, trying to enter {}",
-                    mac.path.segments.last().unwrap().ident
-                );
-                for expr in exprs.iter() {
-                    self.visit_expr(expr);
+                    if category_count != string_count {
+                        error!(
+                            "expected category count {} but recieved actual string count {} for {}",
+                            category_count, string_count, id,
+                        )
+                    } else {
+                        let forms = self
+                            .plural_rules
+                            .categories()
+                            .zip(contents.default_strings.iter())
+                            .map(|(category, lit_str)| (category, lit_str.value()))
+                            .collect();
+
+                        self.strings.insert(id, TrString::Plural(forms));
+                    }
                 }
             }
-            // // Heuristically try to parse macro tokens as common Rust constructs
-            // // Try block (e.g., macro_rules! foo { { ... } })
-            // if let Ok(block) = syn::parse2::<syn::Block>(mac.tokens.clone()) {
-            //     self.visit_block(&block);
-            // }
-            // // Try array (e.g., vec![...])
-            // else if let Ok(expr_array) = syn::parse2::<syn::ExprArray>(mac.tokens.clone()) {
-            //     trace!(
-            //         "found expr_array, trying to enter {}",
-            //         mac.path.segments.last().unwrap().ident
-            //     );
-            //     for expr in expr_array.elems.iter() {
-            //         self.visit_expr(expr);
-            //     }
-            // }
-            // // Try tuple (e.g., macro!(a, b, c))
-            // else if let Ok(expr_tuple) = syn::parse2::<syn::ExprTuple>(mac.tokens.clone()) {
-            //     trace!(
-            //         "found expr_tuple, trying to enter {}",
-            //         mac.path.segments.last().unwrap().ident
-            //     );
-            //     for expr in expr_tuple.elems.iter() {
-            //         self.visit_expr(expr);
-            //     }
-            // }
-            // // Try parsing as a group of statements (e.g., macro! { ... })
-            // else if let Ok(file) = syn::parse2::<syn::File>(mac.tokens.clone()) {
-            //     self.visit_file(&file);
-            // }
-            // You can add more heuristics here if needed
+            _ => {
+                trace!("non-tr(n) macro, attempting to enter");
+
+                if let Ok(CommaSeperatedExpr { exprs }) =
+                    syn::parse2::<CommaSeperatedExpr>(mac.tokens.clone())
+                {
+                    trace!(
+                        "found expr list, trying to enter {}",
+                        mac.path.segments.last().unwrap().ident
+                    );
+                    for expr in exprs.iter() {
+                        self.visit_expr(expr);
+                    }
+                }
+            }
         }
 
         syn::visit::visit_macro(self, mac);
@@ -94,8 +102,20 @@ impl<'ast> Visit<'ast> for TrMacroVisitor {
 pub fn generate(manifest_directory: Utf8PathBuf) {
     let config = get_i18n_config(manifest_directory.as_std_path());
 
+    let Ok(locale) = Locale::try_from_str(&config.i18n.default_language) else {
+        error!(
+            "invalid locale {} in configuration, exiting",
+            config.i18n.default_language
+        );
+        exit(1);
+    };
+
+    let plural_rules = PluralRules::try_new(locale.into(), Default::default())
+        .expect("could not create plural_rules");
+
     let mut visitor = TrMacroVisitor {
         strings: HashMap::new(),
+        plural_rules: plural_rules,
     };
 
     let mut errors_encountered: usize = 0;
@@ -149,7 +169,28 @@ pub fn generate(manifest_directory: Utf8PathBuf) {
         .strings
         .iter()
         .fold(json!({}), |mut catalog, (key, value)| {
-            catalog[key] = json!(value.as_str());
+            match value {
+                TrString::Single(string) => {
+                    catalog[key] = json!(string.as_str());
+                }
+                TrString::Plural(strings) => {
+                    catalog[key] = strings
+                        .iter()
+                        .fold(json!({}), |mut key, (category, string)| {
+                            let category_id = match category {
+                                PluralCategory::Zero => "zero",
+                                PluralCategory::One => "one",
+                                PluralCategory::Two => "two",
+                                PluralCategory::Few => "few",
+                                PluralCategory::Many => "many",
+                                PluralCategory::Other => "other",
+                            };
+
+                            key[category_id] = json!(string.as_str());
+                            key
+                        })
+                }
+            }
             catalog
         });
 
