@@ -50,7 +50,7 @@ pub fn tr_load(_body: TokenStream) -> TokenStream {
 
                     quote! {
                         #key => Some(I18nEntry::Entry(I18nPluralStringEntry {
-                            locale: locale,
+                            locale: language,
                             zero: #zero,
                             one: #one,
                             two: #two,

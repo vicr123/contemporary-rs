@@ -1,6 +1,8 @@
 pub mod config;
 pub mod load;
 
+use anyhow::anyhow;
+use icu::plurals::{PluralCategory, PluralRules};
 use locale_config::Locale;
 
 pub trait I18nSource: Send + Sync {
@@ -12,7 +14,7 @@ pub struct I18nStringEntry {
 }
 
 pub struct I18nPluralStringEntry {
-    locale: Locale,
+    locale: String,
     zero: Option<String>,
     one: Option<String>,
     two: Option<String>,
@@ -23,7 +25,21 @@ pub struct I18nPluralStringEntry {
 
 impl I18nPluralStringEntry {
     pub fn lookup(&self, count: isize) -> String {
-        format!("Looked up plural string with count {}", count)
+        let lookup_core = || -> anyhow::Result<String> {
+            let locale = icu::locale::Locale::try_from_str(&*self.locale)?;
+            let pr = PluralRules::try_new(locale.into(), Default::default())?;
+
+            Ok(match pr.category_for(count) {
+                PluralCategory::Zero => self.zero.as_ref().ok_or(anyhow!("Zero case required but not present"))?.replace("{{count}}", &*count.to_string()),
+                PluralCategory::One => self.one.as_ref().ok_or(anyhow!("One case required but not present"))?.replace("{{count}}", &*count.to_string()),
+                PluralCategory::Two => self.two.as_ref().ok_or(anyhow!("Two case required but not present"))?.replace("{{count}}", &*count.to_string()),
+                PluralCategory::Few => self.few.as_ref().ok_or(anyhow!("Few case required but not present"))?.replace("{{count}}", &*count.to_string()),
+                PluralCategory::Many => self.many.as_ref().ok_or(anyhow!("Many case required but not present"))?.replace("{{count}}", &*count.to_string()),
+                PluralCategory::Other => self.other.replace("{{count}}", &*count.to_string())
+            })
+        };
+        
+        lookup_core().unwrap_or_else(|_| self.other.replace("{{count}}", &*count.to_string()))
     }
 }
 
@@ -42,15 +58,5 @@ impl I18nEntry {
 
     pub fn is_plural(&self) -> bool {
         !self.is_singular()
-    }
-}
-
-struct ContemporaryI18nSource;
-
-impl I18nSource for ContemporaryI18nSource {
-    fn lookup(&self, locale: &Locale, id: &str) -> Option<I18nEntry> {
-        Some(I18nEntry::Entry(I18nStringEntry {
-            entry: "Looked up string".to_string(),
-        }))
     }
 }

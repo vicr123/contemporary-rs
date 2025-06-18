@@ -1090,6 +1090,7 @@ dependencies = [
 name = "contemporary_i18n_core"
 version = "0.1.0"
 dependencies = [
+ "anyhow",
  "icu",
  "locale_config",
  "serde",

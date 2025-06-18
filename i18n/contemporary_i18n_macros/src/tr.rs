@@ -2,9 +2,7 @@ use contemporary_i18n_parse::{tr::TrMacroInput, trn::TrnMacroInput};
 use proc_macro::TokenStream;
 
 use quote::quote;
-use syn::{Error, parse_macro_input};
-
-use crate::config::I18N_CONFIG;
+use syn::{parse_macro_input, Error};
 
 /// Returns a translated string for the given key.
 ///

@@ -1,12 +1,12 @@
 use crate::styling::rgb::{rgb_tuple, rgba_tuple};
 use crate::styling::theme::Theme;
-use gpui::{Pixels, Rgba, px};
+use gpui::{px, Pixels, Rgba};
 
 pub trait ContemporaryTheme {
     const BACKGROUND: Rgba;
     const FOREGROUND: Rgba;
     const LAYER: Rgba;
-    const SYSTEM_FONT_FAMILY: &'static str = "Contemporary";
+    const SYSTEM_FONT_FAMILY: &'static str = "Sofia Sans";
     const SYSTEM_FONT_SIZE: Pixels = px(14.0);
     const HEADING_FONT_SIZE: Pixels = px(16.0);
     const BORDER_RADIUS: Pixels;
