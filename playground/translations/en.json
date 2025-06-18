@@ -1,3 +1,6 @@
 {
-  "BUTTONG": "Buttong!!!"
+  "BUTTON": {
+    "one": "There is {{count}} stringling",
+    "other": "There are {{count}} stringlings"
+  }
 }

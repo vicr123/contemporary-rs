@@ -1,15 +1,12 @@
 use contemporary::about_surface::AboutSurface;
 use contemporary::button::button;
-use contemporary::surface::Surface;
-use contemporary::window::{ContemporaryWindow, PushPop};
-use contemporary_i18n::tr;
-use gpui::{
-    AppContext, Context, Entity, IntoElement, ParentElement, Render, Styled, WeakEntity, Window,
-    div,
-};
+use contemporary::window::ContemporaryWindow;
+use contemporary_i18n::trn;
+use gpui::{div, Context, Entity, IntoElement, ParentElement, Render, Styled, WeakEntity, Window};
 
 pub struct HelloWorld {
     pub window: WeakEntity<ContemporaryWindow<SurfaceList>>,
+    pub count: isize,
 }
 
 impl Render for HelloWorld {
@@ -17,13 +14,16 @@ impl Render for HelloWorld {
         let window = self.window.clone();
         div().flex().flex_col().child(
             button("x")
-                .child(tr!("BUTTONG", "Buttong", stringling = "thingling"))
-                .on_click(move |_, _, cx| {
-                    let about_surface = AboutSurface::new(cx, window.clone());
-                    let a_surface = cx.new(|_| SurfaceList::About(about_surface));
-                    let sf = Surface::new(cx, a_surface);
-                    window.upgrade().unwrap().push(cx, sf);
-                }),
+                .child(trn!(
+                    "BUTTON",
+                    "There is {{count}} stringling",
+                    "There are {{count}} stringlings",
+                    count = self.count
+                ))
+                .on_click(cx.listener(move |me, _, _, cx| {
+                    me.count = (me.count + 1) % 11;
+                    cx.notify();
+                })),
         )
     }
 }

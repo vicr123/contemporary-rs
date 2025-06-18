@@ -44,6 +44,7 @@ pub fn translation(path: &Path) -> io::Result<Vec<(String, TranslationEntry)>> {
                         || *cat == "two"
                         || *cat == "few"
                         || *cat == "many"
+                        || *cat == "other"
                 })
                 .filter_map(|(cat, v)| v.as_str().map(|string| (cat.clone(), string.to_string())))
                 .collect();

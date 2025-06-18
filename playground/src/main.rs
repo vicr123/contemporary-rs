@@ -82,6 +82,7 @@ fn main() {
                 let window_contents = cx.new(|cx| {
                     SurfaceList::HelloWorld(cx.new(|_| HelloWorld {
                         window: weak_window,
+                        count: 0,
                     }))
                 });
                 let surface = Surface::new(cx, window_contents);
