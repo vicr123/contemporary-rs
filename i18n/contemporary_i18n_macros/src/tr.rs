@@ -100,12 +100,66 @@ pub fn tr(body: TokenStream) -> TokenStream {
 /// );
 /// ```
 pub fn trn(body: TokenStream) -> TokenStream {
-    // let invocation_line = proc_macro::Span::call_site().start().line;
-
-    let config = &*I18N_CONFIG;
     let input = parse_macro_input!(body as TrnMacroInput);
 
-    quote! { "Pluralized String" }.into()
+    let mut z = Vec::new();
+    for variable in input.variables {
+        let is_used = input.default_strings.iter().any(|default_string| {
+            default_string
+                .value()
+                .contains(format!("{{{{{}}}}}", variable.name.to_string()).as_str())
+        });
+        if !is_used {
+            return Error::new(
+                variable.name.span(),
+                format!(
+                    "Translation variable {} specified when rendering key {} but not used",
+                    variable.name.to_string(),
+                    input.translation_id.value()
+                ),
+            )
+            .to_compile_error()
+            .into();
+        }
+
+        if variable.name.to_string() == "count" {
+            // Special handling
+            let var_name = variable.name.to_string();
+            let expr = variable.value;
+            z.push(quote! {
+                (
+                    #var_name,
+                    {
+                        use contemporary_i18n::Variable;
+                        Variable::Count(#expr)
+                    }
+                ),
+            });
+        } else {
+            let var_name = variable.name.to_string();
+            let expr = variable.value;
+            z.push(quote! {
+                (
+                    #var_name,
+                    {
+                        use contemporary_i18n::Variable;
+                        Variable::String(#expr.to_string())
+                    }
+                ),
+            });
+        }
+    }
+
+    let key = input.translation_id.value();
+    quote! {
+        {
+            use contemporary_i18n::I18N_MANAGER as i18n;
+            i18n.read().unwrap().lookup(#key, vec![
+                #( #z )*
+            ])
+        }
+    }
+    .into()
 }
 
 // tr!("KEY", "String", thing="a", other=thingy.into(), thing="a", #description="asdasd")
