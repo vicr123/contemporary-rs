@@ -1,9 +1,12 @@
 pub use contemporary_i18n_macros::{tr, tr_load, trn};
 use once_cell::sync::Lazy;
-use std::{fmt::Display, sync::RwLock};
+use std::sync::RwLock;
 
-pub use contemporary_i18n_core::{I18nEntry, I18nPluralStringEntry, I18nSource, I18nStringEntry};
+pub use contemporary_i18n_core::{
+    I18nEntry, I18nPluralStringEntry, I18nSource, I18nString, I18nStringEntry,
+};
 pub use contemporary_localesupport::Locale;
+pub use phf;
 
 pub static I18N_MANAGER: Lazy<RwLock<I18nManager>> = Lazy::new(|| RwLock::new(I18nManager::new()));
 
@@ -44,7 +47,7 @@ impl I18nManager {
 
             // TODO: Cache the resolved string
             let mut resolved = match &entry {
-                I18nEntry::Entry(entry) => entry.entry.clone(),
+                I18nEntry::Entry(entry) => entry.entry.read().to_string(),
                 I18nEntry::PluralEntry(entry) => {
                     let (_, count) = variables.iter().find(|(name, _)| *name == "count").expect(
                         format!(

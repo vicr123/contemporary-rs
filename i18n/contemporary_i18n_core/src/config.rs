@@ -55,9 +55,9 @@ impl I18n {
         file_path
     }
 
-    pub fn catalog_files(&self, manifest_Directory: &Path) -> Vec<PathBuf> {
+    pub fn catalog_files(&self, manifest_directory: &Path) -> Vec<PathBuf> {
         let dir_contents = self
-            .translation_directory(manifest_Directory)
+            .translation_directory(manifest_directory)
             .read_dir()
             .unwrap();
         dir_contents

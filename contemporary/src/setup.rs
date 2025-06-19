@@ -1,7 +1,7 @@
 use crate::application::{ApplicationLink, Details, Versions};
 use crate::styling::theme::Theme;
-use contemporary_i18n::{tr, tr_load, I18nManager, I18N_MANAGER};
-use gpui::{actions, impl_actions, App, Global, KeyBinding, Menu, MenuItem};
+use contemporary_i18n::{I18N_MANAGER, I18nManager, tr, tr_load};
+use gpui::{App, Global, KeyBinding, Menu, MenuItem, actions, impl_actions};
 use schemars::JsonSchema;
 use serde::Deserialize;
 use std::collections::HashMap;
