@@ -1,8 +1,12 @@
 use contemporary::about_surface::AboutSurface;
 use contemporary::button::button;
-use contemporary::window::ContemporaryWindow;
+use contemporary::surface::Surface;
+use contemporary::window::{ContemporaryWindow, PushPop};
 use contemporary_i18n::trn;
-use gpui::{div, Context, Entity, IntoElement, ParentElement, Render, Styled, WeakEntity, Window};
+use gpui::{
+    div, AppContext, Context, Entity, IntoElement, ParentElement, Render, Styled, WeakEntity,
+    Window,
+};
 
 pub struct HelloWorld {
     pub window: WeakEntity<ContemporaryWindow<SurfaceList>>,
@@ -20,10 +24,12 @@ impl Render for HelloWorld {
                     "There are {{count}} stringlings",
                     count = self.count
                 ))
-                .on_click(cx.listener(move |me, _, _, cx| {
-                    me.count = (me.count + 1) % 11;
-                    cx.notify();
-                })),
+                .on_click(move |_, _, cx| {
+                    let about_surface = AboutSurface::new(cx, window.clone());
+                    let a_surface = cx.new(|_| SurfaceList::About(about_surface));
+                    let sf = Surface::new(cx, a_surface);
+                    window.upgrade().unwrap().push(cx, sf);
+                }),
         )
     }
 }

@@ -14,6 +14,6 @@ serde_json = { workspace = true }
 contemporary_i18n_core = { path = "../contemporary_i18n_core" }
 contemporary_i18n_macros = { path = "../contemporary_i18n_macros" }
 icu = { workspace = true }
-locale_config = { workspace = true }
+contemporary_localesupport = { path = "../../localesupport/contemporary_localesupport" }
 fxhash = "0.2"
 once_cell = { workspace = true }

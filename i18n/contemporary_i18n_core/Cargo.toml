@@ -7,6 +7,6 @@ edition = "2024"
 serde = { workspace = true }
 serde_json = { workspace = true }
 icu = { workspace = true, features = ["compiled_data"] }
-locale_config = { workspace = true }
+contemporary_localesupport = { path = "../../localesupport/contemporary_localesupport" }
 toml = "0.8"
 anyhow = "1"

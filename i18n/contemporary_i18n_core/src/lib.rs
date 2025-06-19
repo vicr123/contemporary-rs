@@ -2,8 +2,8 @@ pub mod config;
 pub mod load;
 
 use anyhow::anyhow;
+use contemporary_localesupport::Locale;
 use icu::plurals::{PluralCategory, PluralRules};
-use locale_config::Locale;
 
 pub trait I18nSource: Send + Sync {
     fn lookup(&self, locale: &Locale, id: &str) -> Option<I18nEntry>;

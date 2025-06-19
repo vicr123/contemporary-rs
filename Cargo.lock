@@ -1078,9 +1078,9 @@ version = "0.1.0"
 dependencies = [
  "contemporary_i18n_core",
  "contemporary_i18n_macros",
+ "contemporary_localesupport",
  "fxhash",
  "icu",
- "locale_config",
  "once_cell",
  "serde",
  "serde_json",
@@ -1091,8 +1091,8 @@ name = "contemporary_i18n_core"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "contemporary_localesupport",
  "icu",
- "locale_config",
  "serde",
  "serde_json",
  "toml",
@@ -1117,6 +1117,14 @@ name = "contemporary_i18n_parse"
 version = "0.1.0"
 dependencies = [
  "syn 2.0.103",
+]
+
+[[package]]
+name = "contemporary_localesupport"
+version = "0.1.0"
+dependencies = [
+ "icu",
+ "locale_config",
 ]
 
 [[package]]

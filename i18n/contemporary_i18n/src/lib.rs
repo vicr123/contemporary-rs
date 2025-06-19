@@ -1,11 +1,9 @@
 pub use contemporary_i18n_macros::{tr, tr_load, trn};
-use fxhash::FxHashMap;
 use once_cell::sync::Lazy;
 use std::{fmt::Display, sync::RwLock};
 
 pub use contemporary_i18n_core::{I18nEntry, I18nPluralStringEntry, I18nSource, I18nStringEntry};
-
-pub use locale_config::{LanguageRange, Locale};
+pub use contemporary_localesupport::Locale;
 
 pub static I18N_MANAGER: Lazy<RwLock<I18nManager>> = Lazy::new(|| RwLock::new(I18nManager::new()));
 
@@ -90,9 +88,5 @@ impl I18nManager {
 
         // None of the translation sources we have were able to find a key so just return the key
         key.to_string()
-    }
-
-    pub fn quote_string(&self, string: impl Display) -> String {
-        format!("\"{}\"", string.to_string())
     }
 }
