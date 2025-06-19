@@ -1,0 +1,14 @@
+[package]
+name = "contemporary_i18n_gen"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+syn = { workspace = true, features = ["visit", "parsing", "full"] }
+contemporary_i18n_core = { path = "../contemporary_i18n_core" }
+tracing = { workspace = true }
+contemporary_i18n_parse = { path = "../contemporary_i18n_parse" }
+walkdir = "2"
+serde = { workspace = true }
+serde_json = { workspace = true }
+icu = { workspace = true }

@@ -7,6 +7,7 @@ members = [
     "i18n/contemporary_i18n_core",
     "i18n/contemporary_i18n_macros",
     "i18n/contemporary_i18n_parse",
+    "i18n/contemporary_i18n_gen",
     "localesupport/contemporary_localesupport",
     "playground",
 ]
@@ -20,3 +21,5 @@ locale_config = "*"
 syn = "2"
 once_cell = "1"
 icu = "2"
+anyhow = "1"
+tracing = "0.1"

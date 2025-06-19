@@ -2,15 +2,15 @@ use std::{
     collections::HashMap,
     ffi::OsStr,
     fs::{self, OpenOptions},
+    path::Path,
     process::exit,
 };
 
-use cargo_metadata::camino::Utf8PathBuf;
 use contemporary_i18n_core::config::get_i18n_config;
 use contemporary_i18n_parse::{tr::TrMacroInput, trn::TrnMacroInput};
 use icu::{
     locale::Locale,
-    plurals::{PluralCategory, PluralRules, PluralRulesPreferences},
+    plurals::{PluralCategory, PluralRules},
 };
 use serde_json::json;
 use syn::{Expr, Macro, Token, parse_file, visit::Visit};
@@ -99,8 +99,8 @@ impl<'ast> Visit<'ast> for TrMacroVisitor {
     }
 }
 
-pub fn generate(manifest_directory: Utf8PathBuf) {
-    let config = get_i18n_config(manifest_directory.as_std_path());
+pub fn generate(manifest_directory: &Path) {
+    let config = get_i18n_config(manifest_directory);
 
     let Ok(locale) = Locale::try_from_str(&config.i18n.default_language) else {
         error!(
@@ -194,9 +194,7 @@ pub fn generate(manifest_directory: Utf8PathBuf) {
             catalog
         });
 
-    let catalog_path = config
-        .i18n
-        .translation_catalog_file(manifest_directory.as_std_path());
+    let catalog_path = config.i18n.translation_catalog_file(manifest_directory);
 
     let Ok(file) = OpenOptions::new()
         .write(true)

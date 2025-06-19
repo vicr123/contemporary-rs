@@ -10,3 +10,6 @@ serde_json = "1"
 schemars = "0.8"
 gpui = { workspace = true }
 indexmap = { workspace = true }
+
+[build-dependencies]
+contemporary_i18n_gen = { path = "../i18n/contemporary_i18n_gen" }

@@ -682,15 +682,10 @@ dependencies = [
  "clap",
  "clap-cargo",
  "clap-verbosity-flag",
- "contemporary_i18n_core",
- "contemporary_i18n_parse",
- "icu",
- "serde",
- "serde_json",
+ "contemporary_i18n_gen",
  "syn 2.0.103",
  "tracing",
  "tracing-subscriber",
- "walkdir",
 ]
 
 [[package]]
@@ -1065,6 +1060,7 @@ name = "contemporary"
 version = "0.1.0"
 dependencies = [
  "contemporary_i18n",
+ "contemporary_i18n_gen",
  "gpui",
  "indexmap",
  "schemars",
@@ -1096,6 +1092,20 @@ dependencies = [
  "serde",
  "serde_json",
  "toml",
+]
+
+[[package]]
+name = "contemporary_i18n_gen"
+version = "0.1.0"
+dependencies = [
+ "contemporary_i18n_core",
+ "contemporary_i18n_parse",
+ "icu",
+ "serde",
+ "serde_json",
+ "syn 2.0.103",
+ "tracing",
+ "walkdir",
 ]
 
 [[package]]

@@ -1,12 +1,10 @@
-mod generate;
-
 use std::process::exit;
 
 use cargo_metadata::camino::Utf8PathBuf;
 use clap::{Parser, Subcommand};
 use clap_cargo::style::CLAP_STYLING;
 use clap_verbosity_flag::InfoLevel;
-use generate::generate;
+use contemporary_i18n_gen::generate;
 use tracing::error;
 
 #[derive(Parser, Debug)]
@@ -69,6 +67,6 @@ fn main() {
     }
 
     match args.command {
-        CntpI18nSubCommand::Generate => generate(path.unwrap()),
+        CntpI18nSubCommand::Generate => generate(path.unwrap().as_std_path()),
     }
 }

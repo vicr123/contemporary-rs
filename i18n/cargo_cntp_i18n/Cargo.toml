@@ -8,13 +8,8 @@ syn = { workspace = true, features = ["visit", "parsing", "full"] }
 clap = { version = "4", features = ["derive"] }
 clap-cargo = { version = "0.15", features = ["cargo_metadata"] }
 cargo_metadata = "0.20"
-anyhow = "1"
-contemporary_i18n_core = { path = "../contemporary_i18n_core" }
-tracing = "0.1"
+tracing = { workspace = true }
+anyhow = { workspace = true }
 tracing-subscriber = "0.3"
 clap-verbosity-flag = { version = "3.0.3", default-features = false, features = ["tracing"] }
-contemporary_i18n_parse = { path = "../contemporary_i18n_parse" }
-walkdir = "2"
-serde = { workspace = true }
-serde_json = { workspace = true }
-icu = { workspace = true }
+contemporary_i18n_gen = { path = "../contemporary_i18n_gen" }
