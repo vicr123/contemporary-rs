@@ -2,7 +2,7 @@ use contemporary::about_surface::AboutSurface;
 use contemporary::button::button;
 use contemporary::surface::Surface;
 use contemporary::window::{ContemporaryWindow, PushPop};
-use contemporary_i18n::{i18n_manager, Locale, I18N_MANAGER};
+use contemporary_i18n::Locale;
 use gpui::{
     div, AppContext, Context, Entity, IntoElement, ParentElement, Render, Styled, WeakEntity,
     Window,
@@ -24,10 +24,15 @@ impl Render for HelloWorld {
                 //     "There are {{count}} stringlings",
                 //     count = self.count
                 // ))
+                // .child(
+                //     i18n_manager!()
+                //         .locale
+                //         .human_readable_language_name_in(&Locale::new_from_locale_identifier("en")),
+                // )
                 .child(
-                    i18n_manager!()
-                        .locale
-                        .human_readable_language_name_in(&Locale::new_from_locale_identifier("en")),
+                    Locale::new_from_locale_identifier("en-US").human_readable_locale_name_of(
+                        &Locale::new_from_locale_identifier("de-DE"),
+                    ),
                 )
                 .on_click(move |_, _, cx| {
                     let about_surface = AboutSurface::new(cx, window.clone());
