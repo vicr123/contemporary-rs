@@ -4,5 +4,5 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-icu = { workspace = true }
+icu = { workspace = true, features = ["experimental"] }
 locale_config = { workspace = true }

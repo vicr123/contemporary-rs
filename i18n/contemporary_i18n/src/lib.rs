@@ -7,9 +7,16 @@ pub use contemporary_localesupport::Locale;
 
 pub static I18N_MANAGER: Lazy<RwLock<I18nManager>> = Lazy::new(|| RwLock::new(I18nManager::new()));
 
+#[macro_export]
+macro_rules! i18n_manager {
+    () => {
+        I18N_MANAGER.read().unwrap()
+    };
+}
+
 pub struct I18nManager {
     sources: Vec<Box<dyn I18nSource>>,
-    locale: Locale,
+    pub locale: Locale,
 }
 
 pub enum Variable {

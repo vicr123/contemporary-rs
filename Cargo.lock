@@ -2531,6 +2531,7 @@ dependencies = [
  "icu_plurals",
  "icu_provider",
  "icu_time",
+ "litemap",
  "potential_utf",
  "smallvec",
  "tinystr",
