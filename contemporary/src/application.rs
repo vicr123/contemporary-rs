@@ -3,9 +3,9 @@ use std::{
     sync::{Arc, Mutex},
 };
 
-use contemporary_i18n::I18nManager;
-use gpui::{Global, SharedString};
+use gpui::{Application, Global, SharedString};
 use indexmap::IndexMap;
+use crate::assets::IconAssetSource;
 
 #[derive(Hash, Eq, Clone, PartialEq, Debug)]
 pub enum ApplicationLink {
@@ -61,3 +61,8 @@ pub struct Versions {
 }
 
 impl Global for Versions {}
+
+pub fn new_contemporary_application() -> Application {
+    Application::new()
+        .with_assets(IconAssetSource)
+}

@@ -1,8 +1,10 @@
 pub mod about_surface;
 pub mod application;
+pub mod assets;
 pub mod button;
 pub mod constrainer;
 pub mod grandstand;
+pub mod icon;
 pub mod layer;
 pub mod setup;
 pub mod styling;

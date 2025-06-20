@@ -1,9 +1,7 @@
 use crate::styling::theme::Theme;
 use gpui::prelude::FluentBuilder;
-use gpui::{
-    AnyElement, App, ClickEvent, Div, ElementId, InteractiveElement, IntoElement, ParentElement,
-    RenderOnce, Stateful, StatefulInteractiveElement, Styled, Window, div, px,
-};
+use gpui::{AnyElement, App, ClickEvent, Div, ElementId, InteractiveElement, IntoElement, ParentElement, RenderOnce, Stateful, StatefulInteractiveElement, Styled, Window, div, px, StyleRefinement};
+use crate::constrainer::Constrainer;
 
 #[derive(IntoElement)]
 pub struct Button {
@@ -71,5 +69,11 @@ impl RenderOnce for Button {
                 })
                 .active(|div| div.bg(theme.button_active_background))
             })
+    }
+}
+
+impl Styled for Button {
+    fn style(&mut self) -> &mut StyleRefinement {
+        self.div.style()
     }
 }

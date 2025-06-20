@@ -13,8 +13,8 @@ use icu::{
     plurals::{PluralCategory, PluralRules},
 };
 use serde_json::json;
-use syn::{Expr, Macro, Token, parse_file, visit::Visit};
 use syn::{parse::Parse, punctuated::Punctuated};
+use syn::{parse_file, visit::Visit, Expr, Macro, Token};
 use tracing::{debug, error, info, trace};
 use walkdir::WalkDir;
 

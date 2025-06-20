@@ -1,10 +1,11 @@
 use std::rc::Rc;
 
 use gpui::{
-    App, ClickEvent, Div, ElementId, IntoElement, ParentElement, RenderOnce, SharedString,
-    StyleRefinement, Styled, Window, div, prelude::FluentBuilder, px,
+    div, prelude::FluentBuilder, px, App, ClickEvent, Div, ElementId, IntoElement,
+    ParentElement, RenderOnce, SharedString, StyleRefinement, Styled, Window,
 };
 
+use crate::icon::icon;
 use crate::{button::button, layer::layer, styling::theme::Theme};
 
 #[derive(IntoElement)]
@@ -56,7 +57,7 @@ impl RenderOnce for Grandstand {
                         div.child(
                             button("back-button")
                                 .flat()
-                                .child("this is the back button")
+                                .child(icon("go-previous".into()))
                                 .on_click(move |ev, window, cx| {
                                     (on_click)(ev, window, cx);
                                 }),

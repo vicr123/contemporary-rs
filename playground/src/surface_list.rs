@@ -4,8 +4,8 @@ use contemporary::surface::Surface;
 use contemporary::window::{ContemporaryWindow, PushPop};
 use contemporary_i18n::Locale;
 use gpui::{
-    div, AppContext, Context, Entity, IntoElement, ParentElement, Render, Styled, WeakEntity,
-    Window,
+    div, px, AppContext, Context, Entity, IntoElement, ParentElement, Render, Styled,
+    WeakEntity, Window,
 };
 
 pub struct HelloWorld {
@@ -16,7 +16,7 @@ pub struct HelloWorld {
 impl Render for HelloWorld {
     fn render(&mut self, _window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
         let window = self.window.clone();
-        div().flex().flex_col().child(
+        div().flex().flex_col().pt(px(36.)).child(
             button("x")
                 // .child(trn!(
                 //     "BUTTON",
@@ -30,7 +30,7 @@ impl Render for HelloWorld {
                 //         .human_readable_language_name_in(&Locale::new_from_locale_identifier("en")),
                 // )
                 .child(
-                    Locale::new_from_locale_identifier("en-US").human_readable_locale_name_of(
+                    Locale::new_from_locale_identifier("vi-VN").human_readable_locale_name_of(
                         &Locale::new_from_locale_identifier("de-DE"),
                     ),
                 )
