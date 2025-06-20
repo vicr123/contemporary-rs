@@ -67,6 +67,8 @@ fn main() {
     }
 
     match args.command {
-        CntpI18nSubCommand::Generate => generate(path.unwrap().as_std_path()),
+        CntpI18nSubCommand::Generate => {
+            generate(path.unwrap().as_std_path());
+        }
     }
 }

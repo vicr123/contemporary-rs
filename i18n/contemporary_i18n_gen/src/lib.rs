@@ -99,7 +99,13 @@ impl<'ast> Visit<'ast> for TrMacroVisitor {
     }
 }
 
-pub fn generate(manifest_directory: &Path) {
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum GenerationResult {
+    Successful,
+    ErrorsEncountered(usize),
+}
+
+pub fn generate(manifest_directory: &Path) -> GenerationResult {
     let config = get_i18n_config(manifest_directory);
 
     let Ok(locale) = Locale::try_from_str(&config.i18n.default_language) else {
@@ -218,4 +224,10 @@ pub fn generate(manifest_directory: &Path) {
         visitor.strings.len(),
         catalog_path
     );
+
+    if errors_encountered > 0 {
+        GenerationResult::ErrorsEncountered(errors_encountered)
+    } else {
+        GenerationResult::Successful
+    }
 }
