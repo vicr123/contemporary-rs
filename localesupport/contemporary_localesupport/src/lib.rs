@@ -13,9 +13,29 @@ pub enum LocaleError {
 }
 
 impl Locale {
+    fn split_language_range(language_range: &str) -> Vec<String> {
+        let mut result = Vec::new();
+        let segments: Vec<&str> = language_range.split('-').collect();
+
+        for i in (1..=segments.len()).rev() {
+            result.push(segments[..i].join("-"));
+        }
+
+        result
+    }
+    
+    fn create_icu_locale(range: &str) -> Option<icu::locale::Locale> {
+        for range in Self::split_language_range(range) {
+            if let Ok(locale) = icu::locale::Locale::try_from_str(&*range) {
+                return Some(locale);
+            }
+        }
+        None
+    }
+    
     pub fn new_from_parts(messages: Vec<String>) -> Locale {
         Locale {
-            messages_icu: icu::locale::Locale::try_from_str(messages.first().unwrap()).unwrap(),
+            messages_icu: Self::create_icu_locale(messages.first().unwrap()).unwrap_or_else(|| Self::create_icu_locale("en").unwrap()),
             messages,
         }
     }
@@ -25,15 +45,7 @@ impl Locale {
             locale_config_locale
                 .tags_for("messages")
                 .flat_map(|language_range| {
-                    let mut result = Vec::new();
-                    let range_string = language_range.to_string();
-                    let segments: Vec<&str> = range_string.split('-').collect();
-
-                    for i in (1..=segments.len()).rev() {
-                        result.push(segments[..i].join("-"));
-                    }
-
-                    result
+                    Self::split_language_range(&*language_range.to_string())
                 })
                 .collect(),
         )
