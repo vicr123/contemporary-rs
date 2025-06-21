@@ -2,6 +2,7 @@ use std::rc::Rc;
 
 use crate::components::root::components_root;
 use crate::surface_list::SurfaceList;
+use contemporary::application::new_contemporary_application;
 use contemporary::{
     about_surface::AboutSurface,
     application::{ApplicationLink, Details, License, Versions},
@@ -10,14 +11,14 @@ use contemporary::{
     window::{contemporary_window_options, ContemporaryWindow, PushPop},
 };
 use contemporary_i18n::{tr_load, I18N_MANAGER};
-use gpui::{px, size, App, AppContext, Application, Bounds, Menu, WindowBounds, WindowOptions};
+use gpui::{px, size, App, AppContext, Bounds, Menu, WindowBounds, WindowOptions};
 use indexmap::IndexMap;
 
 mod components;
 mod surface_list;
 
 fn main() {
-    Application::new().run(|cx: &mut App| {
+    new_contemporary_application().run(|cx: &mut App| {
         I18N_MANAGER.write().unwrap().load_source(tr_load!());
         let bounds = Bounds::centered(None, size(px(800.0), px(600.0)), cx);
 
