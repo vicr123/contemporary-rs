@@ -1,5 +1,5 @@
+use crate::components::buttons::buttons;
 use crate::surface_list::SurfaceList;
-use contemporary::button::button;
 use contemporary::grandstand::grandstand;
 use contemporary::layer::layer;
 use contemporary::pager::pager;
@@ -53,14 +53,7 @@ impl Render for ComponentsRoot {
                             .flex()
                             .flex_col()
                             .child(grandstand("content-grandstand").text("Content").pt(px(36.)))
-                            .child(
-                                div().child(button("btn").child("Change to Page 2").on_click(
-                                    cx.listener(|this, _, _, cx| {
-                                        this.current_page = 1;
-                                        cx.notify()
-                                    }),
-                                )),
-                            )
+                            .child(buttons())
                             .into_any_element(),
                     )
                     .page(

@@ -10,6 +10,7 @@ use gpui::{
     App, AppContext, Context, Entity, FontWeight, IntoElement, ParentElement, Render, RenderOnce,
     Styled, WeakEntity, Window, div, px,
 };
+use crate::subtitle::subtitle;
 
 #[derive(IntoElement)]
 struct AboutSurfaceButtons;
@@ -122,9 +123,7 @@ where
                                 .flex()
                                 .flex_col()
                                 .child(
-                                    div()
-                                        .font_weight(FontWeight::BLACK)
-                                        .child(tr!("ABOUT_SOFTWARE", "Software").to_uppercase()),
+                                    subtitle(tr!("ABOUT_SOFTWARE", "Software").into())
                                 )
                                 .child(
                                     div()
@@ -163,9 +162,7 @@ where
                                 .flex()
                                 .flex_col()
                                 .child(
-                                    div()
-                                        .font_weight(FontWeight::BOLD)
-                                        .child(tr!("ABOUT_COPYRIGHT", "Copyright").to_uppercase()),
+                                    subtitle(tr!("ABOUT_COPYRIGHT", "Copyright").into()),
                                 )
                                 .child(format!(
                                     "Copyright © {} {}",

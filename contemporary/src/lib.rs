@@ -9,5 +9,6 @@ pub mod layer;
 pub mod pager;
 pub mod setup;
 pub mod styling;
+pub mod subtitle;
 pub mod surface;
 pub mod window;
