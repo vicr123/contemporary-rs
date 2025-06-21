@@ -1,19 +1,25 @@
 use crate::surface_list::SurfaceList;
+use contemporary::button::button;
 use contemporary::grandstand::grandstand;
+use contemporary::layer::layer;
+use contemporary::pager::pager;
 use contemporary::window::ContemporaryWindow;
 use contemporary_i18n::tr;
 use gpui::{
     div, px, Context, InteractiveElement, IntoElement, ParentElement, Render, Styled,
     WeakEntity, Window,
 };
-use contemporary::layer::layer;
 
 pub struct ComponentsRoot {
     pub window: WeakEntity<ContemporaryWindow<SurfaceList>>,
+    current_page: usize,
 }
 
 pub fn components_root(window: WeakEntity<ContemporaryWindow<SurfaceList>>) -> ComponentsRoot {
-    ComponentsRoot { window }
+    ComponentsRoot {
+        window,
+        current_page: 0,
+    }
 }
 
 impl Render for ComponentsRoot {
@@ -38,12 +44,45 @@ impl Render for ComponentsRoot {
                     .child(div().child("Sidebar options go here")),
             )
             .child(
-                div()
-                    .flex()
-                    .flex_col()
+                pager("main-area", self.current_page)
                     .flex_grow()
-                    .child(grandstand("content-grandstand").text("Content").pt(px(36.)))
-                    .child(div().child("Content goes here")),
+                    .page(
+                        div()
+                            .w_full()
+                            .h_full()
+                            .flex()
+                            .flex_col()
+                            .child(grandstand("content-grandstand").text("Content").pt(px(36.)))
+                            .child(
+                                div().child(button("btn").child("Change to Page 2").on_click(
+                                    cx.listener(|this, _, _, cx| {
+                                        this.current_page = 1;
+                                        cx.notify()
+                                    }),
+                                )),
+                            )
+                            .into_any_element(),
+                    )
+                    .page(
+                        div()
+                            .w_full()
+                            .h_full()
+                            .flex()
+                            .flex_col()
+                            .child(grandstand("content-grandstand").text("Content").pt(px(36.)))
+                            .child(div().child("Content 2 goes here"))
+                            .into_any_element(),
+                    )
+                    .page(
+                        div()
+                            .w_full()
+                            .h_full()
+                            .flex()
+                            .flex_col()
+                            .child(grandstand("content-grandstand").text("Content").pt(px(36.)))
+                            .child(div().child("Content 3 goes here"))
+                            .into_any_element(),
+                    ),
             )
     }
 }
