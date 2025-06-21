@@ -46,16 +46,7 @@ impl Render for ComponentsRoot {
             .child(
                 pager("main-area", self.current_page)
                     .flex_grow()
-                    .page(
-                        div()
-                            .w_full()
-                            .h_full()
-                            .flex()
-                            .flex_col()
-                            .child(grandstand("content-grandstand").text("Content").pt(px(36.)))
-                            .child(buttons())
-                            .into_any_element(),
-                    )
+                    .page(buttons().into_any_element())
                     .page(
                         div()
                             .w_full()
