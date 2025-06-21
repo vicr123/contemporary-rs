@@ -1,7 +1,7 @@
 use crate::styling::theme::Theme;
 use gpui::{
-    AnyElement, App, Div, ElementId, InteractiveElement, IntoElement, ParentElement, RenderOnce,
-    Stateful, Styled, Window, div,
+    div, AnyElement, App, Div, ElementId, InteractiveElement, IntoElement, ParentElement,
+    RenderOnce, Stateful, StyleRefinement, Styled, Window,
 };
 
 #[derive(IntoElement)]
@@ -21,11 +21,11 @@ impl ParentElement for Layer {
     }
 }
 
-// impl Styled for Layer {
-//     fn style(&mut self) -> &mut StyleRefinement {
-//         self.div.style()
-//     }
-// }
+impl Styled for Layer {
+    fn style(&mut self) -> &mut StyleRefinement {
+        self.div.style()
+    }
+}
 
 impl RenderOnce for Layer {
     fn render(self, _window: &mut Window, cx: &mut App) -> impl IntoElement {

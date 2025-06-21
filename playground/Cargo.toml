@@ -8,3 +8,6 @@ contemporary_i18n = { path = "../i18n/contemporary_i18n" }
 contemporary = { path = "../contemporary" }
 gpui = { workspace = true }
 indexmap = { workspace = true }
+
+[build-dependencies]
+contemporary_i18n_gen = { path = "../i18n/contemporary_i18n_gen" }

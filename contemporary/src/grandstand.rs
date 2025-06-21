@@ -69,7 +69,8 @@ impl RenderOnce for Grandstand {
                             .items_center()
                             .text_size(theme.heading_font_size)
                             .child(self.text)
-                            .pt(px(2.)),
+                            .pt(px(2.))
+                            .m(px(4.)),
                     ),
             ),
         )

@@ -1,18 +1,19 @@
 use std::rc::Rc;
 
+use crate::components::root::components_root;
+use crate::surface_list::SurfaceList;
 use contemporary::{
     about_surface::AboutSurface,
     application::{ApplicationLink, Details, License, Versions},
-    setup::{Contemporary, ContemporaryMenus, setup_contemporary},
+    setup::{setup_contemporary, Contemporary, ContemporaryMenus},
     surface::Surface,
-    window::{ContemporaryWindow, PushPop, contemporary_window_options},
+    window::{contemporary_window_options, ContemporaryWindow, PushPop},
 };
-use contemporary_i18n::{I18N_MANAGER, tr_load};
-use gpui::{App, AppContext, Application, Bounds, Menu, WindowBounds, WindowOptions, px, size};
+use contemporary_i18n::{tr_load, I18N_MANAGER};
+use gpui::{px, size, App, AppContext, Application, Bounds, Menu, WindowBounds, WindowOptions};
 use indexmap::IndexMap;
 
-use crate::surface_list::{HelloWorld, SurfaceList};
-
+mod components;
 mod surface_list;
 
 fn main() {
@@ -79,12 +80,8 @@ fn main() {
                     .unwrap()
                     .insert("version thing".into(), "1.0".into());
 
-                let window_contents = cx.new(|cx| {
-                    SurfaceList::HelloWorld(cx.new(|_| HelloWorld {
-                        window: weak_window,
-                        count: 0,
-                    }))
-                });
+                let window_contents =
+                    cx.new(|cx| SurfaceList::Components(cx.new(|_| components_root(weak_window))));
                 let surface = Surface::new(cx, window_contents);
                 window.push(cx, surface);
                 window
