@@ -1,8 +1,8 @@
 use crate::button::button;
 use crate::styling::theme::Theme;
 use gpui::{
-    div, px, App, AppContext, Context, Entity, InteractiveElement, IntoElement,
-    MouseButton, ParentElement, Render, RenderOnce, Styled, Window,
+    App, AppContext, Context, Entity, InteractiveElement, IntoElement, MouseButton, ParentElement,
+    Render, RenderOnce, Styled, Window, WindowControlArea, div, px, rgb,
 };
 
 pub struct Surface<T>
@@ -56,6 +56,7 @@ impl RenderOnce for WindowTitle {
         }
 
         div()
+            .id("contemporary-window-title")
             .absolute()
             .top(px(0.))
             .left(px(0.))
@@ -64,6 +65,7 @@ impl RenderOnce for WindowTitle {
             .flex()
             .child(div())
             .child(div().flex_grow())
+            .window_control_area(WindowControlArea::Drag)
             .child(
                 div()
                     .flex()
@@ -74,7 +76,8 @@ impl RenderOnce for WindowTitle {
                             .w(px(36.))
                             .h(px(36.))
                             .child("Min")
-                            .on_click(move |_, window, _| window.minimize_window()),
+                            .on_click(move |_, window, _| window.minimize_window())
+                            .window_control_area(WindowControlArea::Min),
                     )
                     .child(
                         button("window-maximise")
@@ -82,7 +85,8 @@ impl RenderOnce for WindowTitle {
                             .w(px(36.))
                             .h(px(36.))
                             .child("Max")
-                            .on_click(move |_, window, _| window.zoom_window()),
+                            .on_click(move |_, window, _| window.zoom_window())
+                            .window_control_area(WindowControlArea::Max),
                     )
                     .child(
                         button("window-close")
@@ -90,7 +94,8 @@ impl RenderOnce for WindowTitle {
                             .w(px(36.))
                             .h(px(36.))
                             .child("X")
-                            .on_click(move |_, _, cx| cx.quit()),
+                            .on_click(move |_, _, cx| cx.quit())
+                            .window_control_area(WindowControlArea::Close),
                     ),
             )
             .on_mouse_down(MouseButton::Left, move |_, window, _| {

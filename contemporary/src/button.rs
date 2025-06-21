@@ -1,7 +1,10 @@
+use crate::constrainer::Constrainer;
 use crate::styling::theme::Theme;
 use gpui::prelude::FluentBuilder;
-use gpui::{AnyElement, App, ClickEvent, Div, ElementId, InteractiveElement, IntoElement, ParentElement, RenderOnce, Stateful, StatefulInteractiveElement, Styled, Window, div, px, StyleRefinement};
-use crate::constrainer::Constrainer;
+use gpui::{
+    AnyElement, App, ClickEvent, Div, ElementId, InteractiveElement, IntoElement, ParentElement,
+    RenderOnce, Stateful, StatefulInteractiveElement, StyleRefinement, Styled, Window, div, px,
+};
 
 #[derive(IntoElement)]
 pub struct Button {
@@ -43,6 +46,12 @@ impl Button {
 impl ParentElement for Button {
     fn extend(&mut self, elements: impl IntoIterator<Item = AnyElement>) {
         self.div.extend(elements);
+    }
+}
+
+impl InteractiveElement for Button {
+    fn interactivity(&mut self) -> &mut gpui::Interactivity {
+        self.div.interactivity()
     }
 }
 
