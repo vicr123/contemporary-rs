@@ -1,13 +1,17 @@
 use crate::components::buttons::buttons;
+use crate::components::checkboxes_radio_buttons::checkboxes_radio_buttons;
+use crate::components::text_input::text_input;
 use crate::surface_list::SurfaceList;
 use contemporary::grandstand::grandstand;
 use contemporary::layer::layer;
 use contemporary::pager::pager;
+use contemporary::styling::theme::Theme;
 use contemporary::window::ContemporaryWindow;
 use contemporary_i18n::tr;
+use gpui::prelude::FluentBuilder;
 use gpui::{
-    div, px, Context, InteractiveElement, IntoElement, ParentElement, Render, Styled,
-    WeakEntity, Window,
+    div, px, uniform_list, Context, InteractiveElement, IntoElement,
+    ParentElement, Render, StatefulInteractiveElement, Styled, WeakEntity, Window,
 };
 
 pub struct ComponentsRoot {
@@ -41,32 +45,51 @@ impl Render for ComponentsRoot {
                             .text(tr!("COMPONENTS_TITLE", "Components"))
                             .pt(px(36.)),
                     )
-                    .child(div().child("Sidebar options go here")),
+                    .child(
+                        div().flex_grow().p(px(2.)).child(
+                            uniform_list(
+                                "sidebar-items",
+                                3,
+                                cx.processor(|this, range, _, cx| {
+                                    let theme = cx.global::<Theme>();
+                                    let mut items = Vec::new();
+                                    for ix in range {
+                                        let item = ix + 1;
+
+                                        items.push(
+                                            div()
+                                                .id(ix)
+                                                .p(px(2.))
+                                                .rounded(theme.border_radius)
+                                                .on_click(cx.listener(move |this, _, _, cx| {
+                                                    this.current_page = ix;
+                                                    cx.notify()
+                                                }))
+                                                .child(match ix {
+                                                    0 => tr!("BUTTONS_TITLE"),
+                                                    1 => tr!("CHECKBOXES_RADIO_BUTTONS_TITLE"),
+                                                    2 => tr!("TEXT_INPUT_TITLE"),
+                                                    _ => format!("Item {item}"),
+                                                })
+                                                .when(this.current_page == ix, |div| {
+                                                    div.bg(theme.button_background)
+                                                }),
+                                        );
+                                    }
+                                    items
+                                }),
+                            )
+                            .h_full()
+                            .w_full(),
+                        ),
+                    ),
             )
             .child(
                 pager("main-area", self.current_page)
                     .flex_grow()
                     .page(buttons().into_any_element())
-                    .page(
-                        div()
-                            .w_full()
-                            .h_full()
-                            .flex()
-                            .flex_col()
-                            .child(grandstand("content-grandstand").text("Content").pt(px(36.)))
-                            .child(div().child("Content 2 goes here"))
-                            .into_any_element(),
-                    )
-                    .page(
-                        div()
-                            .w_full()
-                            .h_full()
-                            .flex()
-                            .flex_col()
-                            .child(grandstand("content-grandstand").text("Content").pt(px(36.)))
-                            .child(div().child("Content 3 goes here"))
-                            .into_any_element(),
-                    ),
+                    .page(checkboxes_radio_buttons().into_any_element())
+                    .page(text_input().into_any_element()),
             )
     }
 }
