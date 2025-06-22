@@ -14,5 +14,8 @@
   "CHECKBOXES_TITLE": "Checkboxes",
   "COMPONENTS_TITLE": "Components",
   "RADIO_BUTTONS_TITLE": "Radio Buttons",
+  "TEXT_FIELDS_TITLE": "Text Fields",
+  "TEXT_FIELD_DISABLED_PLACEHOLDER": "Disabled Text Field",
+  "TEXT_FIELD_PLACEHOLDER": "Text Field",
   "TEXT_INPUT_TITLE": "Text Input"
 }

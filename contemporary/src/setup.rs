@@ -1,7 +1,8 @@
 use crate::application::{ApplicationLink, Details, Versions};
+use crate::components::text_field::bind_text_input_keys;
 use crate::styling::theme::Theme;
-use contemporary_i18n::{I18N_MANAGER, I18nManager, tr, tr_load};
-use gpui::{App, Global, KeyBinding, Menu, MenuItem, actions, impl_actions};
+use contemporary_i18n::{tr, tr_load, I18nManager, I18N_MANAGER};
+use gpui::{actions, impl_actions, App, Global, KeyBinding, Menu, MenuItem};
 use schemars::JsonSchema;
 use serde::Deserialize;
 use std::collections::HashMap;
@@ -35,6 +36,8 @@ impl Global for Callbacks {}
 
 pub fn setup_contemporary(cx: &mut App, mut application: Contemporary) {
     // TODO: Set up event handlers for system theme changes
+    bind_text_input_keys(cx);
+
     cx.on_action(quit);
     cx.on_action(hide_self);
     cx.on_action(hide_others);

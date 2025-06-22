@@ -1,4 +1,4 @@
-use crate::styling::theme::Theme;
+use crate::styling::theme::{Theme, VariableColor};
 use gpui::prelude::FluentBuilder;
 use gpui::{
     div, px, AnyElement, App, ClickEvent, Div, ElementId, InteractiveElement,
@@ -56,7 +56,7 @@ impl InteractiveElement for Button {
 
 impl RenderOnce for Button {
     fn render(self, _window: &mut Window, cx: &mut App) -> impl IntoElement {
-        let theme = cx.global::<Theme>();
+        let theme = cx.global::<Theme>().disable_when(self.disabled);
 
         self.div
             .when(!self.flat, |div| div.bg(theme.button_background))

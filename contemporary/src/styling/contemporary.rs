@@ -6,10 +6,13 @@ pub trait ContemporaryTheme {
     const BACKGROUND: Rgba;
     const FOREGROUND: Rgba;
     const LAYER: Rgba;
+    const BORDER: Rgba;
     const SYSTEM_FONT_FAMILY: &'static str = "Manrope ExtraLight";
     const SYSTEM_FONT_SIZE: Pixels = px(14.0);
     const HEADING_FONT_SIZE: Pixels = px(16.0);
     const BORDER_RADIUS: Pixels;
+    const FOCUS_DECORATION: Rgba;
+    const DESTRUCTIVE_ACCENT: Rgba;
 }
 
 pub struct ContemporaryDark;
@@ -18,7 +21,10 @@ impl ContemporaryTheme for ContemporaryDark {
     const BACKGROUND: Rgba = rgb_tuple(40, 40, 40);
     const FOREGROUND: Rgba = rgb_tuple(255, 255, 255);
     const LAYER: Rgba = rgba_tuple(255, 255, 255, 0.06);
+    const BORDER: Rgba = rgba_tuple(255, 255, 255, 0.4);
     const BORDER_RADIUS: Pixels = px(4.0);
+    const FOCUS_DECORATION: Rgba = rgb_tuple(20, 125, 200);
+    const DESTRUCTIVE_ACCENT: Rgba = rgb_tuple(200, 0, 0);
 }
 
 pub struct ContemporaryLight;
@@ -27,7 +33,10 @@ impl ContemporaryTheme for ContemporaryLight {
     const BACKGROUND: Rgba = rgb_tuple(255, 255, 255);
     const FOREGROUND: Rgba = rgb_tuple(0, 0, 0);
     const LAYER: Rgba = rgba_tuple(0, 0, 0, 0.1);
+    const BORDER: Rgba = rgba_tuple(0, 0, 0, 0.4);
     const BORDER_RADIUS: Pixels = px(4.0);
+    const FOCUS_DECORATION: Rgba = rgb_tuple(20, 125, 200);
+    const DESTRUCTIVE_ACCENT: Rgba = rgb_tuple(255, 0, 0);
 }
 
 pub fn make_contemporary_base_theme<T>() -> Theme
@@ -44,7 +53,10 @@ where
         button_foreground: T::FOREGROUND,
         button_hover_background: rgb_tuple(0, 75, 225),
         button_active_background: rgb_tuple(0, 33, 100),
+        border_color: T::BORDER,
         border_radius: T::BORDER_RADIUS,
         layer_background: T::LAYER,
+        focus_decoration: T::FOCUS_DECORATION,
+        destructive_accent_color: T::DESTRUCTIVE_ACCENT,
     }
 }

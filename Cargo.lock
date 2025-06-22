@@ -1067,6 +1067,7 @@ dependencies = [
  "schemars",
  "serde",
  "serde_json",
+ "unicode-segmentation",
  "url",
 ]
 

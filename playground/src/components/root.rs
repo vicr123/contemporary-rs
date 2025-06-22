@@ -1,6 +1,6 @@
 use crate::components::buttons::buttons;
 use crate::components::checkboxes_radio_buttons::CheckboxesRadioButtons;
-use crate::components::text_input::text_input;
+use crate::components::text_input::TextInput;
 use crate::surface_list::SurfaceList;
 use contemporary::components::grandstand::grandstand;
 use contemporary::components::layer::layer;
@@ -18,6 +18,7 @@ pub struct ComponentsRoot {
     pub window: WeakEntity<ContemporaryWindow<SurfaceList>>,
 
     checkboxes_radio_buttons: Entity<CheckboxesRadioButtons>,
+    text_input: Entity<TextInput>,
 
     current_page: usize,
 }
@@ -30,6 +31,7 @@ impl ComponentsRoot {
         cx.new(|cx| ComponentsRoot {
             window,
             checkboxes_radio_buttons: CheckboxesRadioButtons::new(cx),
+            text_input: TextInput::new(cx),
             current_page: 0,
         })
     }
@@ -98,7 +100,7 @@ impl Render for ComponentsRoot {
                     .flex_grow()
                     .page(buttons().into_any_element())
                     .page(self.checkboxes_radio_buttons.clone().into_any_element())
-                    .page(text_input().into_any_element()),
+                    .page(self.text_input.clone().into_any_element()),
             )
     }
 }
