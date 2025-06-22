@@ -1,6 +1,6 @@
 use std::rc::Rc;
 
-use crate::components::root::components_root;
+use crate::components::root::ComponentsRoot;
 use crate::surface_list::SurfaceList;
 use contemporary::application::new_contemporary_application;
 use contemporary::{
@@ -82,7 +82,7 @@ fn main() {
                     .insert("version thing".into(), "1.0".into());
 
                 let window_contents =
-                    cx.new(|cx| SurfaceList::Components(cx.new(|_| components_root(weak_window))));
+                    cx.new(|cx| SurfaceList::Components(ComponentsRoot::new(cx, weak_window)));
                 let surface = Surface::new(cx, window_contents);
                 window.push(cx, surface);
                 window

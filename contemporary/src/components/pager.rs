@@ -1,5 +1,7 @@
-use gpui::{div, AnyElement, App, Div, ElementId, InteractiveElement, IntoElement, ParentElement, RenderOnce, Stateful, StyleRefinement, Styled, Window};
-use crate::button::Button;
+use gpui::{
+    div, AnyElement, App, Div, ElementId, InteractiveElement, IntoElement, ParentElement,
+    RenderOnce, Stateful, StyleRefinement, Styled, Window,
+};
 
 #[derive(IntoElement)]
 pub struct Pager {

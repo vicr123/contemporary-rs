@@ -5,8 +5,10 @@ use gpui::{
     ParentElement, RenderOnce, SharedString, StyleRefinement, Styled, Window,
 };
 
-use crate::icon::icon;
-use crate::{button::button, layer::layer, styling::theme::Theme};
+use crate::components::button::button;
+use crate::components::icon::icon;
+use crate::components::layer::layer;
+use crate::styling::theme::Theme;
 
 #[derive(IntoElement)]
 pub struct Grandstand {

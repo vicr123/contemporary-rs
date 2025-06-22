@@ -1,4 +1,4 @@
-use crate::button::button;
+use crate::components::button::button;
 use crate::styling::theme::Theme;
 use gpui::{
     div, px, App, AppContext, Context, Entity, InteractiveElement, IntoElement,

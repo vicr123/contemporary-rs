@@ -1,8 +1,8 @@
-use contemporary::button::button;
-use contemporary::constrainer::constrainer;
-use contemporary::grandstand::grandstand;
-use contemporary::layer::layer;
-use contemporary::subtitle::subtitle;
+use contemporary::components::button::button;
+use contemporary::components::constrainer::constrainer;
+use contemporary::components::grandstand::grandstand;
+use contemporary::components::layer::layer;
+use contemporary::components::subtitle::subtitle;
 use contemporary_i18n::tr;
 use gpui::{div, px, App, IntoElement, ParentElement, RenderOnce, Styled, Window};
 
@@ -44,18 +44,21 @@ impl RenderOnce for Buttons {
                                     .flex()
                                     .gap(px(8.))
                                     .child(
-                                        div()
-                                            .flex_grow()
-                                            .child(button("button-1").child("Default Button")),
+                                        div().flex_grow().child(button("button-1").child(tr!(
+                                            "BUTTONS_DEFAULT_BUTTON",
+                                            "Default Button"
+                                        ))),
                                     )
                                     .child(div().flex_grow().child(
-                                        button("button-2").disabled().child("Disabled Button"),
+                                        button("button-2").disabled().child(tr!(
+                                            "BUTTONS_DISABLED_BUTTON",
+                                            "Disabled Button"
+                                        )),
                                     ))
-                                    .child(
-                                        div()
-                                            .flex_grow()
-                                            .child(button("button-3").child("Checkable Button")),
-                                    ),
+                                    .child(div().flex_grow().child(button("button-3").child(tr!(
+                                        "BUTTONS_CHECKABLE_BUTTON",
+                                        "Checkable Button"
+                                    )))),
                             ),
                     )
                     .child(
@@ -70,21 +73,18 @@ impl RenderOnce for Buttons {
                                     .flex()
                                     .gap(px(8.))
                                     .child(
-                                        button("button-1").flat().flex_grow().child("Flat Button"),
-                                    )
-                                    .child(
-                                        button("button-2")
-                                            .flat()
-                                            .disabled()
-                                            .flex_grow()
-                                            .child("Flat Disabled Button"),
-                                    )
-                                    .child(
-                                        button("button-3")
+                                        button("button-1")
                                             .flat()
                                             .flex_grow()
-                                            .child("Flat Checkable Button"),
-                                    ),
+                                            .child(tr!("BUTTONS_FLAT_BUTTON", "Flat Button")),
+                                    )
+                                    .child(button("button-2").flat().disabled().flex_grow().child(
+                                        tr!("BUTTONS_FLAT_DISABLED_BUTTON", "Flat Disabled Button"),
+                                    ))
+                                    .child(button("button-3").flat().flex_grow().child(tr!(
+                                        "BUTTONS_FLAT_CHECKABLE_BUTTON",
+                                        "Flat Checkable Button"
+                                    ))),
                             ),
                     ),
             )

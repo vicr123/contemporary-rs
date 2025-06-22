@@ -1,17 +1,32 @@
-use contemporary::constrainer::constrainer;
-use contemporary::grandstand::grandstand;
+use contemporary::components::checkbox::{checkbox, radio_button, CheckState, CheckedChangeEvent};
+use contemporary::components::constrainer::constrainer;
+use contemporary::components::grandstand::grandstand;
+use contemporary::components::layer::layer;
+use contemporary::components::subtitle::subtitle;
 use contemporary_i18n::tr;
-use gpui::{div, px, App, IntoElement, ParentElement, RenderOnce, Styled, Window};
+use gpui::prelude::FluentBuilder;
+use gpui::{
+    div, px, App, AppContext, Context, Entity, IntoElement, ParentElement, Render, Styled, Window,
+};
 
-#[derive(IntoElement)]
-pub struct CheckboxesRadioButtons;
-
-pub fn checkboxes_radio_buttons() -> CheckboxesRadioButtons {
-    CheckboxesRadioButtons {}
+pub struct CheckboxesRadioButtons {
+    default_off_checkbox: CheckState,
+    default_on_checkbox: CheckState,
+    default_radio: u8,
 }
 
-impl RenderOnce for CheckboxesRadioButtons {
-    fn render(self, window: &mut Window, cx: &mut App) -> impl IntoElement {
+impl CheckboxesRadioButtons {
+    pub fn new(cx: &mut App) -> Entity<Self> {
+        cx.new(|_| CheckboxesRadioButtons {
+            default_off_checkbox: CheckState::Off,
+            default_on_checkbox: CheckState::On,
+            default_radio: 1,
+        })
+    }
+}
+
+impl Render for CheckboxesRadioButtons {
+    fn render(&mut self, _window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
         div()
             .w_full()
             .h_full()
@@ -32,7 +47,84 @@ impl RenderOnce for CheckboxesRadioButtons {
                     .w_full()
                     .p(px(8.))
                     .gap(px(8.))
-                    .child("Children"),
+                    .child(
+                        layer("checkboxes")
+                            .flex()
+                            .flex_col()
+                            .p(px(8.))
+                            .w_full()
+                            .child(subtitle(tr!("CHECKBOXES_TITLE", "Checkboxes").into()))
+                            .child(
+                                div()
+                                    .flex()
+                                    .gap(px(8.))
+                                    .child(
+                                        checkbox("default-off-checkbox")
+                                            .check_state(self.default_off_checkbox)
+                                            .label(tr!("CHECKBOXES_OFF", "Off").into())
+                                            .on_checked_changed(cx.listener(
+                                                |this, event: &CheckedChangeEvent, _, cx| {
+                                                    this.default_off_checkbox = event.check_state;
+                                                    cx.notify()
+                                                },
+                                            )),
+                                    )
+                                    .child(
+                                        checkbox("default-on-checkbox")
+                                            .check_state(self.default_on_checkbox)
+                                            .label(tr!("CHECKBOXES_ON", "On").into())
+                                            .on_checked_changed(cx.listener(
+                                                |this, event: &CheckedChangeEvent, _, cx| {
+                                                    this.default_on_checkbox = event.check_state;
+                                                    cx.notify()
+                                                },
+                                            )),
+                                    ),
+                            ),
+                    )
+                    .child(
+                        layer("radio-buttons")
+                            .flex()
+                            .flex_col()
+                            .p(px(8.))
+                            .w_full()
+                            .child(subtitle(tr!("RADIO_BUTTONS_TITLE", "Radio Buttons").into()))
+                            .child(
+                                div()
+                                    .flex()
+                                    .gap(px(8.))
+                                    .child(
+                                        radio_button("default-off-radio")
+                                            .when(self.default_radio == 0, |radio_button| {
+                                                radio_button.checked()
+                                            })
+                                            .label(tr!("CHECKBOXES_OFF").into())
+                                            .on_checked_changed(cx.listener(
+                                                |this, event: &CheckedChangeEvent, _, cx| {
+                                                    if event.check_state == CheckState::On {
+                                                        this.default_radio = 0;
+                                                        cx.notify()
+                                                    }
+                                                },
+                                            )),
+                                    )
+                                    .child(
+                                        radio_button("default-on-radio")
+                                            .when(self.default_radio == 1, |radio_button| {
+                                                radio_button.checked()
+                                            })
+                                            .label(tr!("CHECKBOXES_ON").into())
+                                            .on_checked_changed(cx.listener(
+                                                |this, event: &CheckedChangeEvent, _, cx| {
+                                                    if event.check_state == CheckState::On {
+                                                        this.default_radio = 1;
+                                                        cx.notify()
+                                                    }
+                                                },
+                                            )),
+                                    ),
+                            ),
+                    ),
             )
     }
 }

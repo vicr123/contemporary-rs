@@ -1,28 +1,37 @@
 use crate::components::buttons::buttons;
-use crate::components::checkboxes_radio_buttons::checkboxes_radio_buttons;
+use crate::components::checkboxes_radio_buttons::CheckboxesRadioButtons;
 use crate::components::text_input::text_input;
 use crate::surface_list::SurfaceList;
-use contemporary::grandstand::grandstand;
-use contemporary::layer::layer;
-use contemporary::pager::pager;
+use contemporary::components::grandstand::grandstand;
+use contemporary::components::layer::layer;
+use contemporary::components::pager::pager;
 use contemporary::styling::theme::Theme;
 use contemporary::window::ContemporaryWindow;
 use contemporary_i18n::tr;
 use gpui::prelude::FluentBuilder;
 use gpui::{
-    div, px, uniform_list, Context, InteractiveElement, IntoElement,
-    ParentElement, Render, StatefulInteractiveElement, Styled, WeakEntity, Window,
+    div, px, uniform_list, App, AppContext, Context, Entity, InteractiveElement,
+    IntoElement, ParentElement, Render, StatefulInteractiveElement, Styled, WeakEntity, Window,
 };
 
 pub struct ComponentsRoot {
     pub window: WeakEntity<ContemporaryWindow<SurfaceList>>,
+
+    checkboxes_radio_buttons: Entity<CheckboxesRadioButtons>,
+
     current_page: usize,
 }
 
-pub fn components_root(window: WeakEntity<ContemporaryWindow<SurfaceList>>) -> ComponentsRoot {
-    ComponentsRoot {
-        window,
-        current_page: 0,
+impl ComponentsRoot {
+    pub fn new(
+        cx: &mut App,
+        window: WeakEntity<ContemporaryWindow<SurfaceList>>,
+    ) -> Entity<ComponentsRoot> {
+        cx.new(|cx| ComponentsRoot {
+            window,
+            checkboxes_radio_buttons: CheckboxesRadioButtons::new(cx),
+            current_page: 0,
+        })
     }
 }
 
@@ -88,7 +97,7 @@ impl Render for ComponentsRoot {
                 pager("main-area", self.current_page)
                     .flex_grow()
                     .page(buttons().into_any_element())
-                    .page(checkboxes_radio_buttons().into_any_element())
+                    .page(self.checkboxes_radio_buttons.clone().into_any_element())
                     .page(text_input().into_any_element()),
             )
     }

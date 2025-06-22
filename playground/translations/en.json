@@ -1,8 +1,18 @@
 {
+  "BUTTONS_CHECKABLE_BUTTON": "Checkable Button",
+  "BUTTONS_DEFAULT_BUTTON": "Default Button",
+  "BUTTONS_DISABLED_BUTTON": "Disabled Button",
+  "BUTTONS_FLAT_BUTTON": "Flat Button",
+  "BUTTONS_FLAT_CHECKABLE_BUTTON": "Flat Checkable Button",
+  "BUTTONS_FLAT_DISABLED_BUTTON": "Flat Disabled Button",
   "BUTTONS_FLAT_TITLE": "Flat Buttons",
   "BUTTONS_NORMAL_TITLE": "Buttons",
   "BUTTONS_TITLE": "Buttons",
+  "CHECKBOXES_OFF": "Off",
+  "CHECKBOXES_ON": "On",
   "CHECKBOXES_RADIO_BUTTONS_TITLE": "Checkboxes & Radio Buttons",
+  "CHECKBOXES_TITLE": "Checkboxes",
   "COMPONENTS_TITLE": "Components",
+  "RADIO_BUTTONS_TITLE": "Radio Buttons",
   "TEXT_INPUT_TITLE": "Text Input"
 }

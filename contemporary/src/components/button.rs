@@ -1,9 +1,8 @@
-use crate::constrainer::Constrainer;
 use crate::styling::theme::Theme;
 use gpui::prelude::FluentBuilder;
 use gpui::{
-    AnyElement, App, ClickEvent, Div, ElementId, InteractiveElement, IntoElement, ParentElement,
-    RenderOnce, Stateful, StatefulInteractiveElement, StyleRefinement, Styled, Window, div, px,
+    div, px, AnyElement, App, ClickEvent, Div, ElementId, InteractiveElement,
+    IntoElement, ParentElement, RenderOnce, Stateful, StatefulInteractiveElement, StyleRefinement, Styled, Window,
 };
 
 #[derive(IntoElement)]

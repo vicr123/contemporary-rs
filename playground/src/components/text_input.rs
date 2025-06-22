@@ -1,7 +1,7 @@
-use gpui::{div, px, App, IntoElement, ParentElement, RenderOnce, Styled, Window};
-use contemporary::constrainer::constrainer;
-use contemporary::grandstand::grandstand;
+use contemporary::components::constrainer::constrainer;
+use contemporary::components::grandstand::grandstand;
 use contemporary_i18n::tr;
+use gpui::{div, px, App, IntoElement, ParentElement, RenderOnce, Styled, Window};
 
 #[derive(IntoElement)]
 pub struct TextInput;
@@ -19,10 +19,7 @@ impl RenderOnce for TextInput {
             .flex_col()
             .child(
                 grandstand("text-input-grandstand")
-                    .text(tr!(
-                        "TEXT_INPUT_TITLE",
-                        "Text Input"
-                    ))
+                    .text(tr!("TEXT_INPUT_TITLE", "Text Input"))
                     .pt(px(36.)),
             )
             .child(

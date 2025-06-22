@@ -1,16 +1,16 @@
 use crate::application::{ApplicationLink, Details, Versions};
-use crate::button::button;
-use crate::constrainer::constrainer;
-use crate::grandstand::grandstand;
-use crate::layer::layer;
+use crate::components::button::button;
+use crate::components::constrainer::constrainer;
+use crate::components::grandstand::grandstand;
+use crate::components::layer::layer;
+use crate::components::subtitle::subtitle;
 use crate::styling::theme::Theme;
 use crate::window::{ContemporaryWindow, PushPop};
-use contemporary_i18n::{I18nManager, tr};
+use contemporary_i18n::tr;
 use gpui::{
-    App, AppContext, Context, Entity, FontWeight, IntoElement, ParentElement, Render, RenderOnce,
-    Styled, WeakEntity, Window, div, px,
+    div, px, App, AppContext, Context, Entity, IntoElement, ParentElement,
+    Render, RenderOnce, Styled, WeakEntity, Window,
 };
-use crate::subtitle::subtitle;
 
 #[derive(IntoElement)]
 struct AboutSurfaceButtons;
@@ -122,9 +122,7 @@ where
                                 .p(px(4.))
                                 .flex()
                                 .flex_col()
-                                .child(
-                                    subtitle(tr!("ABOUT_SOFTWARE", "Software").into())
-                                )
+                                .child(subtitle(tr!("ABOUT_SOFTWARE", "Software").into()))
                                 .child(
                                     div()
                                         .flex()
@@ -161,9 +159,7 @@ where
                                 .p(px(4.))
                                 .flex()
                                 .flex_col()
-                                .child(
-                                    subtitle(tr!("ABOUT_COPYRIGHT", "Copyright").into()),
-                                )
+                                .child(subtitle(tr!("ABOUT_COPYRIGHT", "Copyright").into()))
                                 .child(format!(
                                     "Copyright © {} {}",
                                     details.copyright_holder, details.copyright_year
