@@ -1,7 +1,10 @@
-#[cfg(target_os = "linux")]
-use freedesktop_icons::lookup;
 use gpui::{AssetSource, SharedString};
 use std::borrow::Cow;
+
+#[cfg(target_os = "linux")]
+use freedesktop_icons::lookup;
+#[cfg(target_os = "linux")]
+use url::Url;
 
 pub struct IconAssetSource;
 
