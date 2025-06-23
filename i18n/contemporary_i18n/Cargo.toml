@@ -4,11 +4,9 @@ version = "0.1.0"
 edition = "2024"
 
 [features]
-# gpui = ["dep:gpui"]
-# default = ["gpui"]
+gpui = ["contemporary_i18n_core/gpui"]
 
 [dependencies]
-# gpui = { workspace = true, optional = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
 contemporary_i18n_core = { path = "../contemporary_i18n_core" }

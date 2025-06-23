@@ -3,6 +3,9 @@ name = "contemporary_i18n_core"
 version = "0.1.0"
 edition = "2024"
 
+[features]
+gpui = ["dep:gpui"]
+
 [dependencies]
 serde = { workspace = true }
 serde_json = { workspace = true }
@@ -10,3 +13,4 @@ icu = { workspace = true, features = ["compiled_data"] }
 contemporary_localesupport = { path = "../../localesupport/contemporary_localesupport" }
 toml = "0.8"
 anyhow = "1"
+gpui = { workspace = true, optional = true }

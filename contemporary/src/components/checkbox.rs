@@ -1,11 +1,11 @@
 use crate::styling::theme::Theme;
-use gpui::prelude::FluentBuilder;
 use gpui::MouseButton::Left;
+use gpui::prelude::FluentBuilder;
 use gpui::{
-    div, px, quad, size, transparent_black, white, App, AvailableSpace, BorderStyle,
-    Bounds, Corners, Div, Element, ElementId, GlobalElementId,
+    App, AvailableSpace, BorderStyle, Bounds, Corners, Div, Element, ElementId, GlobalElementId,
     InspectorElementId, InteractiveElement, IntoElement, LayoutId, ParentElement, Pixels,
-    Refineable, RenderOnce, SharedString, Stateful, StatefulInteractiveElement, Style, StyleRefinement, Styled, Window,
+    Refineable, RenderOnce, SharedString, Stateful, StatefulInteractiveElement, Style,
+    StyleRefinement, Styled, Window, div, px, quad, size, transparent_black, white,
 };
 use std::panic::Location;
 
@@ -67,8 +67,8 @@ impl Checkbox {
         self
     }
 
-    pub fn label(mut self, label: SharedString) -> Self {
-        self.label = Some(label);
+    pub fn label(mut self, label: impl Into<SharedString>) -> Self {
+        self.label = Some(label.into());
         self
     }
 

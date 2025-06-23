@@ -3,7 +3,7 @@ use once_cell::sync::Lazy;
 use std::sync::RwLock;
 
 pub use contemporary_i18n_core::{
-    I18nEntry, I18nPluralStringEntry, I18nSource, I18nString, I18nStringEntry,
+    I18nEntry, I18nPluralStringEntry, I18nSource, I18nStringEntry, string::I18nString,
 };
 pub use contemporary_localesupport::Locale;
 pub use phf;
@@ -39,7 +39,7 @@ impl I18nManager {
         self.sources.push(Box::new(source));
     }
 
-    pub fn lookup(&self, key: &str, variables: Vec<(&str, Variable)>) -> String {
+    pub fn lookup(&self, key: &str, variables: Vec<(&str, Variable)>) -> I18nString {
         for source in &self.sources {
             let Some(entry) = source.lookup(&self.locale, key) else {
                 continue;
@@ -47,7 +47,7 @@ impl I18nManager {
 
             // TODO: Cache the resolved string
             let mut resolved = match &entry {
-                I18nEntry::Entry(entry) => entry.entry.read().to_string(),
+                I18nEntry::Entry(entry) => entry.entry.clone(),
                 I18nEntry::PluralEntry(entry) => {
                     let (_, count) = variables.iter().find(|(name, _)| *name == "count").expect(
                         format!(
@@ -87,9 +87,9 @@ impl I18nManager {
                         "Substitution variable ({}) not of type string (is {})",
                         name, count
                     ),
-                    Variable::String(string) => {
-                        resolved.replace(format!("{{{{{}}}}}", name).as_str(), string.as_str())
-                    }
+                    Variable::String(string) => resolved
+                        .replace(format!("{{{{{}}}}}", name).as_str(), string.as_str())
+                        .into(),
                 }
             }
 
@@ -97,6 +97,6 @@ impl I18nManager {
         }
 
         // None of the translation sources we have were able to find a key so just return the key
-        key.to_string()
+        key.to_string().into()
     }
 }

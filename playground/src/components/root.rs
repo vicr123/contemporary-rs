@@ -10,8 +10,8 @@ use contemporary::window::ContemporaryWindow;
 use contemporary_i18n::tr;
 use gpui::prelude::FluentBuilder;
 use gpui::{
-    div, px, uniform_list, App, AppContext, Context, Entity, InteractiveElement,
-    IntoElement, ParentElement, Render, StatefulInteractiveElement, Styled, WeakEntity, Window,
+    App, AppContext, Context, Entity, InteractiveElement, IntoElement, ParentElement, Render,
+    StatefulInteractiveElement, Styled, WeakEntity, Window, div, px, uniform_list,
 };
 
 pub struct ComponentsRoot {
@@ -80,7 +80,7 @@ impl Render for ComponentsRoot {
                                                     0 => tr!("BUTTONS_TITLE"),
                                                     1 => tr!("CHECKBOXES_RADIO_BUTTONS_TITLE"),
                                                     2 => tr!("TEXT_INPUT_TITLE"),
-                                                    _ => format!("Item {item}"),
+                                                    _ => format!("Item {item}").into(),
                                                 })
                                                 .when(this.current_page == ix, |div| {
                                                     div.bg(theme.button_background)

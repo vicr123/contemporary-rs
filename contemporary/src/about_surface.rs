@@ -8,8 +8,8 @@ use crate::styling::theme::Theme;
 use crate::window::{ContemporaryWindow, PushPop};
 use contemporary_i18n::tr;
 use gpui::{
-    div, px, App, AppContext, Context, Entity, IntoElement, ParentElement,
-    Render, RenderOnce, Styled, WeakEntity, Window,
+    App, AppContext, Context, Entity, IntoElement, ParentElement, Render, RenderOnce, Styled,
+    WeakEntity, Window, div, px,
 };
 
 #[derive(IntoElement)]
@@ -122,7 +122,7 @@ where
                                 .p(px(4.))
                                 .flex()
                                 .flex_col()
-                                .child(subtitle(tr!("ABOUT_SOFTWARE", "Software").into()))
+                                .child(subtitle(tr!("ABOUT_SOFTWARE", "Software")))
                                 .child(
                                     div()
                                         .flex()
@@ -159,7 +159,7 @@ where
                                 .p(px(4.))
                                 .flex()
                                 .flex_col()
-                                .child(subtitle(tr!("ABOUT_COPYRIGHT", "Copyright").into()))
+                                .child(subtitle(tr!("ABOUT_COPYRIGHT", "Copyright")))
                                 .child(format!(
                                     "Copyright © {} {}",
                                     details.copyright_holder, details.copyright_year

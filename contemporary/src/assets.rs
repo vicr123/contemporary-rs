@@ -12,6 +12,8 @@ impl AssetSource for IconAssetSource {
     fn load(&self, path: &str) -> gpui::Result<Option<Cow<'static, [u8]>>> {
         #[cfg(target_os = "linux")]
         {
+            use url::Url;
+
             let Ok(url) = Url::parse(path) else {
                 return Ok(None);
             };

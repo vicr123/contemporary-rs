@@ -1,5 +1,5 @@
 use gpui::{
-    div, App, FontWeight, IntoElement, ParentElement, RenderOnce, SharedString, Styled, Window,
+    App, FontWeight, IntoElement, ParentElement, RenderOnce, SharedString, Styled, Window, div,
 };
 
 #[derive(IntoElement)]
@@ -7,8 +7,8 @@ pub struct Subtitle {
     text: SharedString,
 }
 
-pub fn subtitle(text: SharedString) -> Subtitle {
-    Subtitle { text }
+pub fn subtitle(text: impl Into<SharedString>) -> Subtitle {
+    Subtitle { text: text.into() }
 }
 
 impl RenderOnce for Subtitle {

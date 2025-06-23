@@ -4,7 +4,7 @@ use contemporary::components::grandstand::grandstand;
 use contemporary::components::layer::layer;
 use contemporary::components::subtitle::subtitle;
 use contemporary_i18n::tr;
-use gpui::{div, px, App, IntoElement, ParentElement, RenderOnce, Styled, Window};
+use gpui::{App, IntoElement, ParentElement, RenderOnce, Styled, Window, div, px};
 
 #[derive(IntoElement)]
 pub struct Buttons;
@@ -38,7 +38,7 @@ impl RenderOnce for Buttons {
                             .flex_col()
                             .p(px(8.))
                             .w_full()
-                            .child(subtitle(tr!("BUTTONS_NORMAL_TITLE", "Buttons").into()))
+                            .child(subtitle(tr!("BUTTONS_NORMAL_TITLE", "Buttons")))
                             .child(
                                 div()
                                     .flex()
@@ -67,7 +67,7 @@ impl RenderOnce for Buttons {
                             .flex_col()
                             .p(px(8.))
                             .w_full()
-                            .child(subtitle(tr!("BUTTONS_FLAT_TITLE", "Flat Buttons").into()))
+                            .child(subtitle(tr!("BUTTONS_FLAT_TITLE", "Flat Buttons")))
                             .child(
                                 div()
                                     .flex()

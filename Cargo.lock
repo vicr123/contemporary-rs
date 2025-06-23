@@ -1092,6 +1092,7 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "contemporary_localesupport",
+ "gpui",
  "icu",
  "serde",
  "serde_json",

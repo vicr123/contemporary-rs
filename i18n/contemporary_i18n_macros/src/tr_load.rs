@@ -11,7 +11,7 @@ macro_rules! extract_plural_rule {
             .get(stringify!($n))
             .map(|str| {
                 quote! {
-                    $n: Some(I18nString::Static(#str))
+                    $n: Some(I18nString::Borrowed(#str))
                 }
             })
             .unwrap_or(quote! {
@@ -37,7 +37,7 @@ pub fn tr_load(_body: TokenStream) -> TokenStream {
             strings.push(match entry {
                 load::TranslationEntry::Entry(string) => quote! {
                     #key => I18nEntry::Entry(I18nStringEntry {
-                        entry: I18nString::Static(#string),
+                        entry: I18nString::Borrowed(#string),
                     })
                 },
                 load::TranslationEntry::PluralEntry(items) => {
@@ -64,13 +64,13 @@ pub fn tr_load(_body: TokenStream) -> TokenStream {
 
                     quote! {
                         #key => I18nEntry::PluralEntry(I18nPluralStringEntry {
-                            locale: I18nString::Static(#language),
+                            locale: I18nString::Borrowed(#language),
                             #zero,
                             #one,
                             #two,
                             #few,
                             #many,
-                            other: I18nString::Static(#other)
+                            other: I18nString::Borrowed(#other)
                         })
                     }
                 }

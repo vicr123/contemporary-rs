@@ -1,26 +1,17 @@
 pub mod config;
+#[cfg(feature = "gpui")]
+pub mod gpui;
 pub mod load;
+pub mod string;
 
 use anyhow::anyhow;
 use contemporary_localesupport::Locale;
 use icu::plurals::{PluralCategory, PluralRules};
 
+use crate::string::I18nString;
+
 pub trait I18nSource: Send + Sync {
     fn lookup(&self, locale: &Locale, id: &str) -> Option<&I18nEntry>;
-}
-
-pub enum I18nString {
-    Static(&'static str),
-    Dynamic(String),
-}
-
-impl I18nString {
-    pub fn read(&self) -> &str {
-        match self {
-            Self::Static(inner) => *inner,
-            Self::Dynamic(inner) => inner.as_str(),
-        }
-    }
 }
 
 pub struct I18nStringEntry {
@@ -38,9 +29,9 @@ pub struct I18nPluralStringEntry {
 }
 
 impl I18nPluralStringEntry {
-    pub fn lookup(&self, count: isize) -> String {
-        let lookup_core = || -> anyhow::Result<String> {
-            let locale = icu::locale::Locale::try_from_str(self.locale.read())?;
+    pub fn lookup(&self, count: isize) -> I18nString {
+        let lookup_core = || -> anyhow::Result<I18nString> {
+            let locale = icu::locale::Locale::try_from_str(&self.locale)?;
             let pr = PluralRules::try_new(locale.into(), Default::default())?;
 
             Ok(match pr.category_for(count) {
@@ -48,40 +39,40 @@ impl I18nPluralStringEntry {
                     .zero
                     .as_ref()
                     .ok_or(anyhow!("Zero case required but not present"))?
-                    .read()
-                    .replace("{{count}}", &*count.to_string()),
+                    .replace("{{count}}", &*count.to_string())
+                    .into(),
                 PluralCategory::One => self
                     .one
                     .as_ref()
                     .ok_or(anyhow!("One case required but not present"))?
-                    .read()
-                    .replace("{{count}}", &*count.to_string()),
+                    .replace("{{count}}", &*count.to_string())
+                    .into(),
                 PluralCategory::Two => self
                     .two
                     .as_ref()
                     .ok_or(anyhow!("Two case required but not present"))?
-                    .read()
-                    .replace("{{count}}", &*count.to_string()),
+                    .replace("{{count}}", &*count.to_string())
+                    .into(),
                 PluralCategory::Few => self
                     .few
                     .as_ref()
                     .ok_or(anyhow!("Few case required but not present"))?
-                    .read()
-                    .replace("{{count}}", &*count.to_string()),
+                    .replace("{{count}}", &*count.to_string())
+                    .into(),
                 PluralCategory::Many => self
                     .many
                     .as_ref()
                     .ok_or(anyhow!("Many case required but not present"))?
-                    .read()
-                    .replace("{{count}}", &*count.to_string()),
+                    .replace("{{count}}", &*count.to_string())
+                    .into(),
                 PluralCategory::Other => {
-                    self.other.read().replace("{{count}}", &*count.to_string())
+                    self.other.replace("{{count}}", &*count.to_string()).into()
                 }
             })
         };
 
         lookup_core()
-            .unwrap_or_else(|_| self.other.read().replace("{{count}}", &*count.to_string()))
+            .unwrap_or_else(|_| self.other.replace("{{count}}", &*count.to_string()).into())
     }
 }
 

@@ -5,7 +5,7 @@ use contemporary::components::subtitle::subtitle;
 use contemporary::components::text_field::TextField;
 use contemporary_i18n::tr;
 use gpui::{
-    div, px, App, AppContext, Context, Entity, IntoElement, ParentElement, Render, Styled, Window,
+    App, AppContext, Context, Entity, IntoElement, ParentElement, Render, Styled, Window, div, px,
 };
 
 pub struct TextInput {
@@ -64,7 +64,7 @@ impl Render for TextInput {
                             .flex_col()
                             .p(px(8.))
                             .w_full()
-                            .child(subtitle(tr!("TEXT_FIELDS_TITLE", "Text Fields").into()))
+                            .child(subtitle(tr!("TEXT_FIELDS_TITLE", "Text Fields")))
                             .child(
                                 div()
                                     .flex()

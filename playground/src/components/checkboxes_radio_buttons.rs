@@ -1,4 +1,4 @@
-use contemporary::components::checkbox::{checkbox, radio_button, CheckState, CheckedChangeEvent};
+use contemporary::components::checkbox::{CheckState, CheckedChangeEvent, checkbox, radio_button};
 use contemporary::components::constrainer::constrainer;
 use contemporary::components::grandstand::grandstand;
 use contemporary::components::layer::layer;
@@ -6,7 +6,7 @@ use contemporary::components::subtitle::subtitle;
 use contemporary_i18n::tr;
 use gpui::prelude::FluentBuilder;
 use gpui::{
-    div, px, App, AppContext, Context, Entity, IntoElement, ParentElement, Render, Styled, Window,
+    App, AppContext, Context, Entity, IntoElement, ParentElement, Render, Styled, Window, div, px,
 };
 
 pub struct CheckboxesRadioButtons {
@@ -53,7 +53,7 @@ impl Render for CheckboxesRadioButtons {
                             .flex_col()
                             .p(px(8.))
                             .w_full()
-                            .child(subtitle(tr!("CHECKBOXES_TITLE", "Checkboxes").into()))
+                            .child(subtitle(tr!("CHECKBOXES_TITLE", "Checkboxes")))
                             .child(
                                 div()
                                     .flex()
@@ -61,7 +61,7 @@ impl Render for CheckboxesRadioButtons {
                                     .child(
                                         checkbox("default-off-checkbox")
                                             .check_state(self.default_off_checkbox)
-                                            .label(tr!("CHECKBOXES_OFF", "Off").into())
+                                            .label(tr!("CHECKBOXES_OFF", "Off"))
                                             .on_checked_changed(cx.listener(
                                                 |this, event: &CheckedChangeEvent, _, cx| {
                                                     this.default_off_checkbox = event.check_state;
@@ -72,7 +72,7 @@ impl Render for CheckboxesRadioButtons {
                                     .child(
                                         checkbox("default-on-checkbox")
                                             .check_state(self.default_on_checkbox)
-                                            .label(tr!("CHECKBOXES_ON", "On").into())
+                                            .label(tr!("CHECKBOXES_ON", "On"))
                                             .on_checked_changed(cx.listener(
                                                 |this, event: &CheckedChangeEvent, _, cx| {
                                                     this.default_on_checkbox = event.check_state;
@@ -88,7 +88,7 @@ impl Render for CheckboxesRadioButtons {
                             .flex_col()
                             .p(px(8.))
                             .w_full()
-                            .child(subtitle(tr!("RADIO_BUTTONS_TITLE", "Radio Buttons").into()))
+                            .child(subtitle(tr!("RADIO_BUTTONS_TITLE", "Radio Buttons")))
                             .child(
                                 div()
                                     .flex()
@@ -98,7 +98,7 @@ impl Render for CheckboxesRadioButtons {
                                             .when(self.default_radio == 0, |radio_button| {
                                                 radio_button.checked()
                                             })
-                                            .label(tr!("CHECKBOXES_OFF").into())
+                                            .label(tr!("CHECKBOXES_OFF"))
                                             .on_checked_changed(cx.listener(
                                                 |this, event: &CheckedChangeEvent, _, cx| {
                                                     if event.check_state == CheckState::On {
@@ -113,7 +113,7 @@ impl Render for CheckboxesRadioButtons {
                                             .when(self.default_radio == 1, |radio_button| {
                                                 radio_button.checked()
                                             })
-                                            .label(tr!("CHECKBOXES_ON").into())
+                                            .label(tr!("CHECKBOXES_ON"))
                                             .on_checked_changed(cx.listener(
                                                 |this, event: &CheckedChangeEvent, _, cx| {
                                                     if event.check_state == CheckState::On {
