@@ -1,8 +1,8 @@
 use std::rc::Rc;
 
 use gpui::{
-    div, prelude::FluentBuilder, px, App, ClickEvent, Div, ElementId, IntoElement,
-    ParentElement, RenderOnce, SharedString, StyleRefinement, Styled, Window,
+    App, ClickEvent, Div, ElementId, IntoElement, ParentElement, RenderOnce, SharedString,
+    StyleRefinement, Styled, Window, div, prelude::FluentBuilder, px,
 };
 
 use crate::components::button::button;
@@ -10,10 +10,12 @@ use crate::components::icon::icon;
 use crate::components::layer::layer;
 use crate::styling::theme::Theme;
 
+type ClickHandler = Option<Rc<dyn Fn(&ClickEvent, &mut Window, &mut App)>>;
+
 #[derive(IntoElement)]
 pub struct Grandstand {
     id: ElementId,
-    on_click: Option<Rc<dyn Fn(&ClickEvent, &mut Window, &mut App)>>,
+    on_click: ClickHandler,
     text: SharedString,
     div: Div,
 }

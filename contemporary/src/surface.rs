@@ -1,8 +1,8 @@
 use crate::components::button::button;
 use crate::styling::theme::Theme;
 use gpui::{
-    div, px, App, AppContext, Context, Entity, InteractiveElement, IntoElement,
-    MouseButton, ParentElement, Render, RenderOnce, Styled, Window, WindowControlArea,
+    App, AppContext, Context, Entity, InteractiveElement, IntoElement, MouseButton, ParentElement,
+    Render, RenderOnce, Styled, Window, WindowControlArea, div, px,
 };
 
 pub struct Surface<T>
@@ -48,8 +48,9 @@ fn window_controls() -> WindowTitle {
     WindowTitle
 }
 
+#[allow(unreachable_code)]
 impl RenderOnce for WindowTitle {
-    fn render(self, _window: &mut Window, cx: &mut App) -> impl IntoElement {
+    fn render(self, _window: &mut Window, _cx: &mut App) -> impl IntoElement {
         #[cfg(target_os = "macos")]
         {
             return div().id("contemporary-window-title");

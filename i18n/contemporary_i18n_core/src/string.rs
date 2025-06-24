@@ -70,18 +70,18 @@ impl TryInto<&'static str> for I18nString {
     }
 }
 
-impl Into<Arc<str>> for I18nString {
-    fn into(self) -> Arc<str> {
-        match self {
+impl From<I18nString> for Arc<str> {
+    fn from(val: I18nString) -> Self {
+        match val {
             I18nString::Borrowed(s) => Arc::from(s),
             I18nString::Owned(s) => s,
         }
     }
 }
 
-impl Into<String> for I18nString {
-    fn into(self) -> String {
-        match self {
+impl From<I18nString> for String {
+    fn from(val: I18nString) -> Self {
+        match val {
             I18nString::Borrowed(s) => s.to_string(),
             I18nString::Owned(s) => s.to_string(),
         }

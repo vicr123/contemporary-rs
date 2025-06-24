@@ -6,12 +6,12 @@ use contemporary::application::new_contemporary_application;
 use contemporary::{
     about_surface::AboutSurface,
     application::{ApplicationLink, Details, License, Versions},
-    setup::{setup_contemporary, Contemporary, ContemporaryMenus},
+    setup::{Contemporary, ContemporaryMenus, setup_contemporary},
     surface::Surface,
-    window::{contemporary_window_options, ContemporaryWindow, PushPop},
+    window::{ContemporaryWindow, PushPop, contemporary_window_options},
 };
-use contemporary_i18n::{tr_load, I18N_MANAGER};
-use gpui::{px, size, App, AppContext, Bounds, Menu, WindowBounds, WindowOptions};
+use contemporary_i18n::{I18N_MANAGER, tr_load};
+use gpui::{App, AppContext, Bounds, Menu, WindowBounds, WindowOptions, px, size};
 use indexmap::IndexMap;
 
 mod components;
@@ -31,7 +31,6 @@ fn main() {
             |_, cx| {
                 let mut window = ContemporaryWindow::new(cx);
                 let weak_window = window.downgrade();
-                let weak_widow = window.downgrade();
 
                 setup_contemporary(
                     cx,
@@ -65,10 +64,10 @@ fn main() {
                                 items: vec![],
                             }],
                             on_about: Rc::new(move |cx| {
-                                let about_surface = AboutSurface::new(cx, weak_widow.clone());
+                                let about_surface = AboutSurface::new(cx, weak_window.clone());
                                 let a_surface = cx.new(|_| SurfaceList::About(about_surface));
                                 let sf = Surface::new(cx, a_surface);
-                                weak_widow.upgrade().unwrap().push(cx, sf);
+                                weak_window.upgrade().unwrap().push(cx, sf);
                             }),
                         },
                     },
@@ -81,8 +80,7 @@ fn main() {
                     .unwrap()
                     .insert("version thing".into(), "1.0".into());
 
-                let window_contents =
-                    cx.new(|cx| SurfaceList::Components(ComponentsRoot::new(cx, weak_window)));
+                let window_contents = cx.new(|cx| SurfaceList::Components(ComponentsRoot::new(cx)));
                 let surface = Surface::new(cx, window_contents);
                 window.push(cx, surface);
                 window

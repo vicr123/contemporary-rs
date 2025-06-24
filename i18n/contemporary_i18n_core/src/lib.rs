@@ -39,40 +39,37 @@ impl I18nPluralStringEntry {
                     .zero
                     .as_ref()
                     .ok_or(anyhow!("Zero case required but not present"))?
-                    .replace("{{count}}", &*count.to_string())
+                    .replace("{{count}}", &count.to_string())
                     .into(),
                 PluralCategory::One => self
                     .one
                     .as_ref()
                     .ok_or(anyhow!("One case required but not present"))?
-                    .replace("{{count}}", &*count.to_string())
+                    .replace("{{count}}", &count.to_string())
                     .into(),
                 PluralCategory::Two => self
                     .two
                     .as_ref()
                     .ok_or(anyhow!("Two case required but not present"))?
-                    .replace("{{count}}", &*count.to_string())
+                    .replace("{{count}}", &count.to_string())
                     .into(),
                 PluralCategory::Few => self
                     .few
                     .as_ref()
                     .ok_or(anyhow!("Few case required but not present"))?
-                    .replace("{{count}}", &*count.to_string())
+                    .replace("{{count}}", &count.to_string())
                     .into(),
                 PluralCategory::Many => self
                     .many
                     .as_ref()
                     .ok_or(anyhow!("Many case required but not present"))?
-                    .replace("{{count}}", &*count.to_string())
+                    .replace("{{count}}", &count.to_string())
                     .into(),
-                PluralCategory::Other => {
-                    self.other.replace("{{count}}", &*count.to_string()).into()
-                }
+                PluralCategory::Other => self.other.replace("{{count}}", &count.to_string()).into(),
             })
         };
 
-        lookup_core()
-            .unwrap_or_else(|_| self.other.replace("{{count}}", &*count.to_string()).into())
+        lookup_core().unwrap_or_else(|_| self.other.replace("{{count}}", &count.to_string()).into())
     }
 }
 

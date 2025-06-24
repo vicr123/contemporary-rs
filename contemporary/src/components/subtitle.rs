@@ -12,7 +12,7 @@ pub fn subtitle(text: impl Into<SharedString>) -> Subtitle {
 }
 
 impl RenderOnce for Subtitle {
-    fn render(self, _window: &mut Window, cx: &mut App) -> impl IntoElement {
+    fn render(self, _window: &mut Window, _cx: &mut App) -> impl IntoElement {
         div()
             .font_weight(FontWeight::BOLD)
             // TODO: Make locale aware

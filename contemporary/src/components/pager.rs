@@ -1,6 +1,6 @@
 use gpui::{
-    div, AnyElement, App, Div, ElementId, InteractiveElement, IntoElement, ParentElement,
-    RenderOnce, Stateful, StyleRefinement, Styled, Window,
+    AnyElement, App, Div, ElementId, InteractiveElement, IntoElement, ParentElement, RenderOnce,
+    Stateful, StyleRefinement, Styled, Window, div,
 };
 
 #[derive(IntoElement)]
@@ -37,7 +37,7 @@ impl Styled for Pager {
 }
 
 impl RenderOnce for Pager {
-    fn render(self, _window: &mut Window, cx: &mut App) -> impl IntoElement {
+    fn render(self, _window: &mut Window, _cx: &mut App) -> impl IntoElement {
         self.div.child(self.element)
     }
 }

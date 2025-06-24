@@ -14,7 +14,7 @@ pub fn buttons() -> Buttons {
 }
 
 impl RenderOnce for Buttons {
-    fn render(self, window: &mut Window, cx: &mut App) -> impl IntoElement {
+    fn render(self, _: &mut Window, _: &mut App) -> impl IntoElement {
         div()
             .w_full()
             .h_full()

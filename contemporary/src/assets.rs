@@ -9,6 +9,7 @@ use url::Url;
 pub struct IconAssetSource;
 
 impl AssetSource for IconAssetSource {
+    #[allow(unused_variables)]
     fn load(&self, path: &str) -> gpui::Result<Option<Cow<'static, [u8]>>> {
         #[cfg(target_os = "linux")]
         {
@@ -48,7 +49,7 @@ impl AssetSource for IconAssetSource {
         Ok(None)
     }
 
-    fn list(&self, path: &str) -> gpui::Result<Vec<SharedString>> {
+    fn list(&self, _path: &str) -> gpui::Result<Vec<SharedString>> {
         Ok(Vec::new())
     }
 }

@@ -20,13 +20,13 @@ pub fn tr(body: TokenStream) -> TokenStream {
         if let Some(default_string) = &input.default_string {
             if !default_string
                 .value()
-                .contains(format!("{{{{{}}}}}", variable.name.to_string()).as_str())
+                .contains(format!("{{{{{}}}}}", variable.name).as_str())
             {
                 return Error::new(
                     variable.name.span(),
                     format!(
                         "Translation variable {} specified when rendering key {} but not used",
-                        variable.name.to_string(),
+                        variable.name,
                         input.translation_id.value()
                     ),
                 )
@@ -35,7 +35,7 @@ pub fn tr(body: TokenStream) -> TokenStream {
             }
         }
 
-        if variable.name.to_string() == "count" {
+        if variable.name == "count" {
             // Special handling
             let var_name = variable.name.to_string();
             let expr = variable.value;
@@ -105,14 +105,14 @@ pub fn trn(body: TokenStream) -> TokenStream {
         let is_used = input.default_strings.iter().any(|default_string| {
             default_string
                 .value()
-                .contains(format!("{{{{{}}}}}", variable.name.to_string()).as_str())
+                .contains(format!("{{{{{}}}}}", variable.name).as_str())
         });
         if !is_used {
             return Error::new(
                 variable.name.span(),
                 format!(
                     "Translation variable {} specified when rendering key {} but not used",
-                    variable.name.to_string(),
+                    variable.name,
                     input.translation_id.value()
                 ),
             )
@@ -120,7 +120,7 @@ pub fn trn(body: TokenStream) -> TokenStream {
             .into();
         }
 
-        if variable.name.to_string() == "count" {
+        if variable.name == "count" {
             // Special handling
             let var_name = variable.name.to_string();
             let expr = variable.value;

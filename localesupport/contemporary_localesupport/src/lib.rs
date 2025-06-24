@@ -1,5 +1,5 @@
-use icu::locale::subtags::{Language, Region};
 use icu::locale::Locale as IcuLocale;
+use icu::locale::subtags::{Language, Region};
 use locale_config::Locale as LocaleConfigLocale;
 use std::fmt::Display;
 
@@ -23,19 +23,20 @@ impl Locale {
 
         result
     }
-    
+
     fn create_icu_locale(range: &str) -> Option<icu::locale::Locale> {
         for range in Self::split_language_range(range) {
-            if let Ok(locale) = icu::locale::Locale::try_from_str(&*range) {
+            if let Ok(locale) = icu::locale::Locale::try_from_str(&range) {
                 return Some(locale);
             }
         }
         None
     }
-    
+
     pub fn new_from_parts(messages: Vec<String>) -> Locale {
         Locale {
-            messages_icu: Self::create_icu_locale(messages.first().unwrap()).unwrap_or_else(|| Self::create_icu_locale("en").unwrap()),
+            messages_icu: Self::create_icu_locale(messages.first().unwrap())
+                .unwrap_or_else(|| Self::create_icu_locale("en").unwrap()),
             messages,
         }
     }
@@ -44,9 +45,7 @@ impl Locale {
         Self::new_from_parts(
             locale_config_locale
                 .tags_for("messages")
-                .flat_map(|language_range| {
-                    Self::split_language_range(&*language_range.to_string())
-                })
+                .flat_map(|language_range| Self::split_language_range(language_range.as_ref()))
                 .collect(),
         )
     }
@@ -136,11 +135,11 @@ impl Locale {
     }
 
     pub fn quote_string(&self, string: impl Display) -> String {
-        format!("\"{}\"", string.to_string())
+        format!("\"{}\"", string)
     }
 
     pub fn quote_string_alternate(&self, string: impl Display) -> String {
-        format!("'{}'", string.to_string())
+        format!("'{}'", string)
     }
 }
 

@@ -2,11 +2,11 @@ use std::ops::Range;
 
 use crate::styling::theme::{Theme, VariableColor};
 use gpui::{
-    actions, div, fill, point, prelude::*, px, relative, size,
-    App, Bounds, ClipboardItem, Context, CursorStyle, ElementId, ElementInputHandler,
-    Entity, EntityInputHandler, FocusHandle, Focusable, GlobalElementId, Hsla, KeyBinding, LayoutId,
-    MouseButton, MouseDownEvent, MouseMoveEvent, MouseUpEvent, PaintQuad, Pixels, Point, Rgba, ShapedLine,
-    SharedString, Style, TextRun, UTF16Selection, UnderlineStyle, Window,
+    App, Bounds, ClipboardItem, Context, CursorStyle, ElementId, ElementInputHandler, Entity,
+    EntityInputHandler, FocusHandle, Focusable, GlobalElementId, Hsla, KeyBinding, LayoutId,
+    MouseButton, MouseDownEvent, MouseMoveEvent, MouseUpEvent, PaintQuad, Pixels, Point, Rgba,
+    ShapedLine, SharedString, Style, TextRun, UTF16Selection, UnderlineStyle, Window, actions, div,
+    fill, point, prelude::*, px, relative, size,
 };
 use unicode_segmentation::*;
 
@@ -64,8 +64,8 @@ pub struct TextInput {
 impl TextInput {
     pub fn new(
         cx: &mut App,
-        default_text: SharedString,
-        placeholder: SharedString,
+        default_text: impl Into<SharedString>,
+        placeholder: impl Into<SharedString>,
     ) -> Entity<Self> {
         cx.new(|cx| TextInput {
             focus_handle: cx.focus_handle(),
@@ -191,14 +191,14 @@ impl TextInput {
     pub fn copy(&mut self, _: &Copy, _: &mut Window, cx: &mut Context<Self>) {
         if !self.selected_range.is_empty() {
             cx.write_to_clipboard(ClipboardItem::new_string(
-                (&self.content[self.selected_range.clone()]).to_string(),
+                (self.content[self.selected_range.clone()]).to_string(),
             ));
         }
     }
     pub fn cut(&mut self, _: &Cut, window: &mut Window, cx: &mut Context<Self>) {
         if !self.selected_range.is_empty() {
             cx.write_to_clipboard(ClipboardItem::new_string(
-                (&self.content[self.selected_range.clone()]).to_string(),
+                (self.content[self.selected_range.clone()]).to_string(),
             ));
             self.replace_text_in_range(None, "", window, cx)
         }

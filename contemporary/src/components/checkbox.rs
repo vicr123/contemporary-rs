@@ -21,6 +21,8 @@ pub struct CheckedChangeEvent {
     pub check_state: CheckState,
 }
 
+type CheckedChangedHandlers = Vec<Box<dyn Fn(&CheckedChangeEvent, &mut Window, &mut App)>>;
+
 #[derive(IntoElement)]
 pub struct Checkbox {
     div: Stateful<Div>,
@@ -28,7 +30,7 @@ pub struct Checkbox {
     draw_as_radio: bool,
     label: Option<SharedString>,
 
-    checked_changed_handlers: Vec<Box<dyn Fn(&CheckedChangeEvent, &mut Window, &mut App)>>,
+    checked_changed_handlers: CheckedChangedHandlers,
 }
 
 pub fn checkbox(id: impl Into<ElementId>) -> Checkbox {
@@ -222,7 +224,7 @@ impl Element for CheckboxBox {
             .text
             .clone()
             .and_then(|text| text.color)
-            .unwrap_or(white().into());
+            .unwrap_or(white());
 
         if self.draw_as_radio {
             window.paint_quad(quad(

@@ -1,22 +1,18 @@
 use crate::components::buttons::buttons;
 use crate::components::checkboxes_radio_buttons::CheckboxesRadioButtons;
 use crate::components::text_input::TextInput;
-use crate::surface_list::SurfaceList;
 use contemporary::components::grandstand::grandstand;
 use contemporary::components::layer::layer;
 use contemporary::components::pager::pager;
 use contemporary::styling::theme::Theme;
-use contemporary::window::ContemporaryWindow;
 use contemporary_i18n::tr;
 use gpui::prelude::FluentBuilder;
 use gpui::{
     App, AppContext, Context, Entity, InteractiveElement, IntoElement, ParentElement, Render,
-    StatefulInteractiveElement, Styled, WeakEntity, Window, div, px, uniform_list,
+    StatefulInteractiveElement, Styled, Window, div, px, uniform_list,
 };
 
 pub struct ComponentsRoot {
-    pub window: WeakEntity<ContemporaryWindow<SurfaceList>>,
-
     checkboxes_radio_buttons: Entity<CheckboxesRadioButtons>,
     text_input: Entity<TextInput>,
 
@@ -24,12 +20,8 @@ pub struct ComponentsRoot {
 }
 
 impl ComponentsRoot {
-    pub fn new(
-        cx: &mut App,
-        window: WeakEntity<ContemporaryWindow<SurfaceList>>,
-    ) -> Entity<ComponentsRoot> {
+    pub fn new(cx: &mut App) -> Entity<ComponentsRoot> {
         cx.new(|cx| ComponentsRoot {
-            window,
             checkboxes_radio_buttons: CheckboxesRadioButtons::new(cx),
             text_input: TextInput::new(cx),
             current_page: 0,
@@ -39,7 +31,6 @@ impl ComponentsRoot {
 
 impl Render for ComponentsRoot {
     fn render(&mut self, _window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
-        let window = self.window.clone();
         div()
             .id("components")
             .flex()

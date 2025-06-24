@@ -34,7 +34,7 @@ impl RenderOnce for AboutSurfaceButtons {
                     .map(|(idx, link)| {
                         button(("help-link", idx))
                             .child(link.0.get_name())
-                            .on_click(|_, _, cx| cx.open_url(*link.1))
+                            .on_click(|_, _, cx| cx.open_url(link.1))
                             .into_any_element()
                     }),
             )

@@ -1,7 +1,7 @@
 use crate::application::{ApplicationLink, Details, Versions};
 use crate::components::text_field::bind_text_input_keys;
 use crate::styling::theme::Theme;
-use contemporary_i18n::{I18N_MANAGER, I18nManager, tr, tr_load};
+use contemporary_i18n::{I18N_MANAGER, tr, tr_load};
 use gpui::{Action, App, Global, KeyBinding, Menu, MenuItem, actions};
 use schemars::JsonSchema;
 use serde::Deserialize;

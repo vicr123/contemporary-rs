@@ -8,7 +8,8 @@ pub use contemporary_i18n_core::{
 pub use contemporary_localesupport::Locale;
 pub use phf;
 
-pub static I18N_MANAGER: Lazy<RwLock<I18nManager>> = Lazy::new(|| RwLock::new(I18nManager::new()));
+pub static I18N_MANAGER: Lazy<RwLock<I18nManager>> =
+    Lazy::new(|| RwLock::new(I18nManager::default()));
 
 #[macro_export]
 macro_rules! i18n_manager {
@@ -30,13 +31,6 @@ pub enum Variable {
 type LookupVariable<'a> = &'a (&'a str, Variable);
 
 impl I18nManager {
-    pub fn new() -> I18nManager {
-        I18nManager {
-            sources: vec![],
-            locale: Locale::current(),
-        }
-    }
-
     pub fn load_source(&mut self, source: impl I18nSource + 'static) {
         self.sources.push(Box::new(source));
     }
@@ -54,17 +48,16 @@ impl I18nManager {
             let mut resolved = match &entry {
                 I18nEntry::Entry(entry) => entry.entry.clone(),
                 I18nEntry::PluralEntry(entry) => {
-                    let (_, count) = (&variables)
+                    let (_, count) = (variables)
                         .into_iter()
                         .find(|(name, _)| *name == "count")
-                        .expect(
-                            format!(
+                        .unwrap_or_else(|| {
+                            panic!(
                                 "Resolved plural string for {}, but no count variable provided for \
                             substitution",
                                 key
                             )
-                            .as_str(),
-                        );
+                        });
 
                     match count {
                         Variable::Count(count) => entry.lookup(*count),
@@ -76,7 +69,7 @@ impl I18nManager {
             };
 
             // Substitute the variables
-            for (name, substitution) in (&variables).into_iter() {
+            for (name, substitution) in variables.into_iter() {
                 if *name == "count" {
                     if entry.is_singular() {
                         panic!(
@@ -106,5 +99,14 @@ impl I18nManager {
 
         // None of the translation sources we have were able to find a key so just return the key
         key.to_string().into()
+    }
+}
+
+impl Default for I18nManager {
+    fn default() -> Self {
+        I18nManager {
+            sources: vec![],
+            locale: Locale::current(),
+        }
     }
 }
