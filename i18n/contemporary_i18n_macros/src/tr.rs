@@ -4,6 +4,8 @@ use proc_macro::TokenStream;
 use quote::quote;
 use syn::{Error, parse_macro_input};
 
+use crate::config::CURRENT_CRATE;
+
 /// Returns a translated string for the given key.
 ///
 /// Examples:
@@ -64,12 +66,14 @@ pub fn tr(body: TokenStream) -> TokenStream {
     }
 
     let key = input.translation_id.value();
+    let current_crate = &*CURRENT_CRATE;
+
     quote! {
         {
             use contemporary_i18n::I18N_MANAGER as i18n;
             i18n.read().unwrap().lookup(#key, &[
                 #( #z )*
-            ])
+            ], #current_crate)
         }
     }
     .into()
@@ -149,12 +153,14 @@ pub fn trn(body: TokenStream) -> TokenStream {
     }
 
     let key = input.translation_id.value();
+    let current_crate = &*CURRENT_CRATE;
+
     quote! {
         {
             use contemporary_i18n::I18N_MANAGER as i18n;
             i18n.read().unwrap().lookup(#key, &[
                 #( #z )*
-            ])
+            ], #current_crate)
         }
     }
     .into()

@@ -11,7 +11,7 @@ use icu::plurals::{PluralCategory, PluralRules};
 use crate::string::I18nString;
 
 pub trait I18nSource: Send + Sync {
-    fn lookup(&self, locale: &Locale, id: &str) -> Option<&I18nEntry>;
+    fn lookup(&self, locale: &Locale, id: &str, lookup_crate: &str) -> Option<&I18nEntry>;
 }
 
 pub struct I18nStringEntry {

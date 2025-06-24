@@ -10,3 +10,6 @@ pub static I18N_CONFIG: Lazy<Config> = Lazy::new(|| {
         .into();
     get_i18n_config(&path)
 });
+
+pub static CURRENT_CRATE: Lazy<String> =
+    Lazy::new(|| env::var("CARGO_PKG_NAME").expect("CARGO_PKG_NAME is not set"));

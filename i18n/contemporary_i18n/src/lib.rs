@@ -35,12 +35,12 @@ impl I18nManager {
         self.sources.push(Box::new(source));
     }
 
-    pub fn lookup<'a, T>(&self, key: &str, variables: &'a T) -> I18nString
+    pub fn lookup<'a, T>(&self, key: &str, variables: &'a T, lookup_crate: &str) -> I18nString
     where
         &'a T: IntoIterator<Item = LookupVariable<'a>>,
     {
         for source in &self.sources {
-            let Some(entry) = source.lookup(&self.locale, key) else {
+            let Some(entry) = source.lookup(&self.locale, key, lookup_crate) else {
                 continue;
             };
 
