@@ -1,8 +1,8 @@
 use crate::application::{ApplicationLink, Details, Versions};
 use crate::components::text_field::bind_text_input_keys;
 use crate::styling::theme::Theme;
-use contemporary_i18n::{tr, tr_load, I18nManager, I18N_MANAGER};
-use gpui::{actions, impl_actions, App, Global, KeyBinding, Menu, MenuItem};
+use contemporary_i18n::{I18N_MANAGER, I18nManager, tr, tr_load};
+use gpui::{Action, App, Global, KeyBinding, Menu, MenuItem, actions};
 use schemars::JsonSchema;
 use serde::Deserialize;
 use std::collections::HashMap;
@@ -11,12 +11,11 @@ use std::sync::{Arc, Mutex};
 
 actions!(contemporary, [Quit, HideSelf, HideOthers, ShowAll, About]);
 
-#[derive(PartialEq, Clone, Default, Deserialize, JsonSchema)]
+#[derive(PartialEq, Clone, Default, Deserialize, JsonSchema, Action)]
 struct OpenLink {
     #[serde(default)]
     link: String,
 }
-impl_actions!(contemporary, [OpenLink]);
 
 pub struct Contemporary {
     pub details: Details,
@@ -99,7 +98,7 @@ pub fn setup_contemporary(cx: &mut App, mut application: Contemporary) {
         .details
         .links
         .iter()
-        .map(|(key, url)| {
+        .flat_map(|(key, url)| {
             if *key == ApplicationLink::HelpContents {
                 [
                     Some(MenuItem::action(
@@ -123,8 +122,6 @@ pub fn setup_contemporary(cx: &mut App, mut application: Contemporary) {
             }
         })
         .flatten()
-        .filter(|something| something.is_some())
-        .map(|something| something.unwrap())
         .collect();
 
     menus.push(Menu {
