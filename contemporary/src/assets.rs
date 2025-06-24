@@ -3,13 +3,12 @@ use std::borrow::Cow;
 
 #[cfg(target_os = "linux")]
 use freedesktop_icons::lookup;
-#[cfg(target_os = "linux")]
-use url::Url;
 
 pub struct IconAssetSource;
 
 impl AssetSource for IconAssetSource {
     #[allow(unused_variables)]
+    #[allow(unreachable_code)]
     fn load(&self, path: &str) -> gpui::Result<Option<Cow<'static, [u8]>>> {
         #[cfg(target_os = "linux")]
         {
@@ -26,8 +25,7 @@ impl AssetSource for IconAssetSource {
             let size = url
                 .query_pairs()
                 .find(|(k, _)| k == "size")
-                .map(|(_, value)| value.parse::<f32>().ok())
-                .flatten()
+                .and_then(|(_, value)| value.parse::<f32>().ok())
                 .unwrap_or(16.);
 
             let Some(file) = lookup(&url.path()[1..])
