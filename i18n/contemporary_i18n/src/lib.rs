@@ -27,6 +27,8 @@ pub enum Variable {
     Count(isize),
 }
 
+type LookupVariable<'a> = &'a (&'a str, Variable);
+
 impl I18nManager {
     pub fn new() -> I18nManager {
         I18nManager {
@@ -39,7 +41,10 @@ impl I18nManager {
         self.sources.push(Box::new(source));
     }
 
-    pub fn lookup(&self, key: &str, variables: Vec<(&str, Variable)>) -> I18nString {
+    pub fn lookup<'a, T>(&self, key: &str, variables: &'a T) -> I18nString
+    where
+        &'a T: IntoIterator<Item = LookupVariable<'a>>,
+    {
         for source in &self.sources {
             let Some(entry) = source.lookup(&self.locale, key) else {
                 continue;
@@ -49,14 +54,17 @@ impl I18nManager {
             let mut resolved = match &entry {
                 I18nEntry::Entry(entry) => entry.entry.clone(),
                 I18nEntry::PluralEntry(entry) => {
-                    let (_, count) = variables.iter().find(|(name, _)| *name == "count").expect(
-                        format!(
-                            "Resolved plural string for {}, but no count variable provided for \
+                    let (_, count) = (&variables)
+                        .into_iter()
+                        .find(|(name, _)| *name == "count")
+                        .expect(
+                            format!(
+                                "Resolved plural string for {}, but no count variable provided for \
                             substitution",
-                            key
-                        )
-                        .as_str(),
-                    );
+                                key
+                            )
+                            .as_str(),
+                        );
 
                     match count {
                         Variable::Count(count) => entry.lookup(*count),
@@ -68,8 +76,8 @@ impl I18nManager {
             };
 
             // Substitute the variables
-            for (name, substitution) in variables {
-                if name == "count" {
+            for (name, substitution) in (&variables).into_iter() {
+                if *name == "count" {
                     if entry.is_singular() {
                         panic!(
                             "Resolved non-plural string for {}, but count variable provided \

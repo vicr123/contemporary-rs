@@ -2,7 +2,7 @@ use contemporary_i18n_parse::{tr::TrMacroInput, trn::TrnMacroInput};
 use proc_macro::TokenStream;
 
 use quote::quote;
-use syn::{parse_macro_input, Error};
+use syn::{Error, parse_macro_input};
 
 /// Returns a translated string for the given key.
 ///
@@ -67,7 +67,7 @@ pub fn tr(body: TokenStream) -> TokenStream {
     quote! {
         {
             use contemporary_i18n::I18N_MANAGER as i18n;
-            i18n.read().unwrap().lookup(#key, vec![
+            i18n.read().unwrap().lookup(#key, &[
                 #( #z )*
             ])
         }
@@ -152,7 +152,7 @@ pub fn trn(body: TokenStream) -> TokenStream {
     quote! {
         {
             use contemporary_i18n::I18N_MANAGER as i18n;
-            i18n.read().unwrap().lookup(#key, vec![
+            i18n.read().unwrap().lookup(#key, &[
                 #( #z )*
             ])
         }
