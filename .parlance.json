@@ -1,0 +1,17 @@
+{
+  "name": "Contemporary Rust",
+  "subprojects": [
+    {
+      "name": "Contemporary Rust",
+      "type": "cntp-rs",
+      "path": "/contemporary/translations/{lang}.ts",
+      "baseLang": "en"
+    },
+    {
+      "name": "Contemporary Playground Rust",
+      "type": "cntp-rs",
+      "path": "/playground/translations/{lang}.ts",
+      "baseLang": "en"
+    }
+  ]
+}
