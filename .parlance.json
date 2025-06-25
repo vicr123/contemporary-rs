@@ -4,13 +4,13 @@
     {
       "name": "Contemporary Rust",
       "type": "cntp-rs",
-      "path": "/contemporary/translations/{lang}.ts",
+      "path": "/contemporary/translations/{lang}.json",
       "baseLang": "en"
     },
     {
       "name": "Contemporary Playground Rust",
       "type": "cntp-rs",
-      "path": "/playground/translations/{lang}.ts",
+      "path": "/playground/translations/{lang}.json",
       "baseLang": "en"
     }
   ]
