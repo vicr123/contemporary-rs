@@ -1,12 +1,12 @@
 {
+  "ABOUT_SOFTWARE": "Software",
   "ABOUT_ARCH": "Architecture",
+  "APPLE_APP_MENU_QUIT": "Quit {{application}}",
+  "MENU_HELP": "Help",
+  "ABOUT_PLATFORM": "Platform",
+  "ABOUT_TITLE": "About {{application}}",
+  "APPLE_APP_MENU_SHOW_ALL": "Show All",
   "ABOUT_CONTEMPORARY": "Contemporary",
   "ABOUT_COPYRIGHT": "Copyright",
-  "ABOUT_PLATFORM": "Platform",
-  "ABOUT_SOFTWARE": "Software",
-  "ABOUT_TITLE": "About {{application}}",
-  "APPLE_APP_MENU_HIDE_OTHERS": "Hide Others",
-  "APPLE_APP_MENU_QUIT": "Quit {{application}}",
-  "APPLE_APP_MENU_SHOW_ALL": "Show All",
-  "MENU_HELP": "Help"
+  "APPLE_APP_MENU_HIDE_OTHERS": "Hide Others"
 }

@@ -3,18 +3,26 @@ use contemporary::components::constrainer::constrainer;
 use contemporary::components::grandstand::grandstand;
 use contemporary::components::layer::layer;
 use contemporary::components::subtitle::subtitle;
-use contemporary_i18n::tr;
-use gpui::{App, IntoElement, ParentElement, RenderOnce, Styled, Window, div, px};
+use contemporary_i18n::{tr, trn};
+use gpui::{
+    div, px, App, AppContext, ClickEvent, Context, Entity, IntoElement, ParentElement,
+    Render, Styled, Window,
+};
 
-#[derive(IntoElement)]
-pub struct Buttons;
-
-pub fn buttons() -> Buttons {
-    Buttons {}
+pub struct Buttons {
+    buttons_click_count: u8,
 }
 
-impl RenderOnce for Buttons {
-    fn render(self, _: &mut Window, _: &mut App) -> impl IntoElement {
+impl Buttons {
+    pub fn new(cx: &mut App) -> Entity<Self> {
+        cx.new(|_| Buttons {
+            buttons_click_count: 0,
+        })
+    }
+}
+
+impl Render for Buttons {
+    fn render(&mut self, _window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
         div()
             .w_full()
             .h_full()
@@ -47,7 +55,14 @@ impl RenderOnce for Buttons {
                                         div().flex_grow().child(button("button-1").child(tr!(
                                             "BUTTONS_DEFAULT_BUTTON",
                                             "Default Button"
-                                        ))),
+                                        )).on_click(cx.listener(|this, event: &ClickEvent, _, cx| {
+                                            if event.down.modifiers.shift {
+                                                this.buttons_click_count = 0
+                                            } else {
+                                                this.buttons_click_count += 1;
+                                            }
+                                            cx.notify()
+                                        }))),
                                     )
                                     .child(div().flex_grow().child(
                                         button("button-2").disabled().child(tr!(
@@ -59,7 +74,13 @@ impl RenderOnce for Buttons {
                                         "BUTTONS_CHECKABLE_BUTTON",
                                         "Checkable Button"
                                     )))),
-                            ),
+                            )
+                            .child(trn!(
+                                "BUTTONS_COUNT_TEXT",
+                                "You have clicked the default button once (shift-click to reset)",
+                                "You have clicked the default button {{count}} times (shift-click to reset)",
+                                count = self.buttons_click_count as isize
+                            )),
                     )
                     .child(
                         layer("flat-buttons")

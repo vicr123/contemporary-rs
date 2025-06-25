@@ -1,4 +1,4 @@
-use crate::components::buttons::buttons;
+use crate::components::buttons::Buttons;
 use crate::components::checkboxes_radio_buttons::CheckboxesRadioButtons;
 use crate::components::text_input::TextInput;
 use contemporary::components::grandstand::grandstand;
@@ -8,11 +8,12 @@ use contemporary::styling::theme::Theme;
 use contemporary_i18n::tr;
 use gpui::prelude::FluentBuilder;
 use gpui::{
-    App, AppContext, Context, Entity, InteractiveElement, IntoElement, ParentElement, Render,
-    StatefulInteractiveElement, Styled, Window, div, px, uniform_list,
+    div, px, uniform_list, App, AppContext, Context, Entity, InteractiveElement,
+    IntoElement, ParentElement, Render, StatefulInteractiveElement, Styled, Window,
 };
 
 pub struct ComponentsRoot {
+    buttons: Entity<Buttons>,
     checkboxes_radio_buttons: Entity<CheckboxesRadioButtons>,
     text_input: Entity<TextInput>,
 
@@ -22,6 +23,7 @@ pub struct ComponentsRoot {
 impl ComponentsRoot {
     pub fn new(cx: &mut App) -> Entity<ComponentsRoot> {
         cx.new(|cx| ComponentsRoot {
+            buttons: Buttons::new(cx),
             checkboxes_radio_buttons: CheckboxesRadioButtons::new(cx),
             text_input: TextInput::new(cx),
             current_page: 0,
@@ -89,7 +91,7 @@ impl Render for ComponentsRoot {
             .child(
                 pager("main-area", self.current_page)
                     .flex_grow()
-                    .page(buttons().into_any_element())
+                    .page(self.buttons.clone().into_any_element())
                     .page(self.checkboxes_radio_buttons.clone().into_any_element())
                     .page(self.text_input.clone().into_any_element()),
             )
