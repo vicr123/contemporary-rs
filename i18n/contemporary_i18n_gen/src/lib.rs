@@ -12,6 +12,7 @@ use icu::{
     locale::Locale,
     plurals::{PluralCategory, PluralRules},
 };
+use itertools::Itertools;
 use serde_json::json;
 use syn::{Expr, Macro, Token, parse_file, visit::Visit};
 use syn::{parse::Parse, punctuated::Punctuated};
@@ -171,10 +172,9 @@ pub fn generate(manifest_directory: &Path) -> GenerationResult {
     debug!("located string key(s): {}", keys);
 
     // TODO: add option to only modify the existing file instead of erasing and regenerating every time
-    let catalog = visitor
-        .strings
-        .iter()
-        .fold(json!({}), |mut catalog, (key, value)| {
+    let catalog = visitor.strings.iter().sorted_by_key(|x| x.0).fold(
+        json!({}),
+        |mut catalog, (key, value)| {
             match value {
                 TrString::Single(string) => {
                     catalog[key] = json!(string.as_str());
@@ -198,7 +198,8 @@ pub fn generate(manifest_directory: &Path) -> GenerationResult {
                 }
             }
             catalog
-        });
+        },
+    );
 
     let catalog_path = config.i18n.translation_catalog_file(manifest_directory);
 

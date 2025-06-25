@@ -12,3 +12,4 @@ walkdir = "2"
 serde = { workspace = true }
 serde_json = { workspace = true }
 icu = { workspace = true }
+itertools = "0.14"
