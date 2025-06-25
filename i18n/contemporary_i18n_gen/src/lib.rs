@@ -1,9 +1,11 @@
 use std::{
+    cell::RefCell,
     collections::HashMap,
     ffi::OsStr,
     fs::{self, OpenOptions},
-    path::Path,
+    path::{Path, PathBuf},
     process::exit,
+    rc::Rc,
 };
 
 use contemporary_i18n_core::config::get_i18n_config;
@@ -14,7 +16,7 @@ use icu::{
 };
 use itertools::Itertools;
 use serde_json::json;
-use syn::{Expr, Macro, Token, parse_file, visit::Visit};
+use syn::{Expr, Lit, Macro, Token, parse_file, spanned::Spanned, visit::Visit};
 use syn::{parse::Parse, punctuated::Punctuated};
 use tracing::{debug, error, info, trace};
 use walkdir::WalkDir;
@@ -38,9 +40,18 @@ enum TrString {
     Plural(Vec<(PluralCategory, String)>),
 }
 
+struct TrInfo {
+    string: TrString,
+    file: PathBuf,
+    plural: bool,
+    description: Option<String>,
+    line_no: usize,
+}
+
 struct TrMacroVisitor {
-    pub strings: HashMap<String, TrString>,
+    pub strings: HashMap<String, TrInfo>,
     pub plural_rules: PluralRules,
+    pub current_path: Rc<RefCell<PathBuf>>,
 }
 
 impl<'ast> Visit<'ast> for TrMacroVisitor {
@@ -51,7 +62,23 @@ impl<'ast> Visit<'ast> for TrMacroVisitor {
                     if let Some(default_string) = contents.default_string {
                         self.strings.insert(
                             contents.translation_id.value(),
-                            TrString::Single(default_string.value()),
+                            TrInfo {
+                                string: TrString::Single(default_string.value()),
+                                file: self.current_path.borrow().clone(),
+                                plural: false,
+                                description: contents
+                                    .context
+                                    .iter()
+                                    .find(|v| v.name == "description")
+                                    .and_then(|v| match &v.value {
+                                        Expr::Lit(lit) => match &lit.lit {
+                                            Lit::Str(str) => Some(str.value()),
+                                            _ => None,
+                                        },
+                                        _ => None,
+                                    }),
+                                line_no: mac.tokens.span().start().line,
+                            },
                         );
                     }
                 }
@@ -75,7 +102,26 @@ impl<'ast> Visit<'ast> for TrMacroVisitor {
                             .map(|(category, lit_str)| (category, lit_str.value()))
                             .collect();
 
-                        self.strings.insert(id, TrString::Plural(forms));
+                        self.strings.insert(
+                            id,
+                            TrInfo {
+                                string: TrString::Plural(forms),
+                                file: self.current_path.borrow().clone(),
+                                plural: true,
+                                description: contents
+                                    .context
+                                    .iter()
+                                    .find(|v| v.name == "description")
+                                    .and_then(|v| match &v.value {
+                                        Expr::Lit(lit) => match &lit.lit {
+                                            Lit::Str(str) => Some(str.value()),
+                                            _ => None,
+                                        },
+                                        _ => None,
+                                    }),
+                                line_no: mac.tokens.span().start().line,
+                            },
+                        );
                     }
                 }
             }
@@ -120,8 +166,11 @@ pub fn generate(manifest_directory: &Path) -> GenerationResult {
     let plural_rules = PluralRules::try_new(locale.into(), Default::default())
         .expect("could not create plural_rules");
 
+    let current_file = Rc::new(RefCell::new(PathBuf::new()));
+
     let mut visitor = TrMacroVisitor {
         strings: HashMap::new(),
+        current_path: current_file.clone(),
         plural_rules,
     };
 
@@ -140,6 +189,8 @@ pub fn generate(manifest_directory: &Path) -> GenerationResult {
             errors_encountered += 1;
             continue;
         };
+
+        *current_file.borrow_mut() = entry.path().to_path_buf();
 
         let Ok(syntax) = parse_file(&contents) else {
             error!("failed to parse source file {:?}", entry.path());
@@ -175,7 +226,7 @@ pub fn generate(manifest_directory: &Path) -> GenerationResult {
     let catalog = visitor.strings.iter().sorted_by_key(|x| x.0).fold(
         json!({}),
         |mut catalog, (key, value)| {
-            match value {
+            match &value.string {
                 TrString::Single(string) => {
                     catalog[key] = json!(string.as_str());
                 }
@@ -225,6 +276,40 @@ pub fn generate(manifest_directory: &Path) -> GenerationResult {
         visitor.strings.len(),
         catalog_path
     );
+
+    let meta =
+        visitor
+            .strings
+            .iter()
+            .sorted_by_key(|x| x.0)
+            .fold(json!({}), |mut meta, (key, value)| {
+                meta[key] = json!({
+                    "context": value.file.file_name().and_then(|v| v.to_str()),
+                    "definedIn": value.file.strip_prefix(manifest_directory).ok().map(|v| format!("{}:{}", v.as_os_str().display(), value.line_no)),
+                    "plural": value.plural,
+                    "description": value.description,
+                });
+                meta
+            });
+
+    let meta_path = catalog_path.with_file_name("meta.json");
+
+    let Ok(meta_file) = OpenOptions::new()
+        .write(true)
+        .create(true)
+        .truncate(true)
+        .open(&meta_path)
+    else {
+        error!("failed to open meta file, exiting");
+        exit(1);
+    };
+
+    let write_result = serde_json::to_writer_pretty(meta_file, &meta);
+
+    if let Err(error) = write_result {
+        error!("failed to write meta file: {:?}, exiting", error);
+        exit(1);
+    }
 
     if errors_encountered > 0 {
         GenerationResult::ErrorsEncountered(errors_encountered)

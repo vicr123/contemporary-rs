@@ -1,0 +1,62 @@
+{
+  "ABOUT_ARCH": {
+    "context": "about_surface.rs",
+    "definedIn": "src/about_surface.rs:151",
+    "description": null,
+    "plural": false
+  },
+  "ABOUT_CONTEMPORARY": {
+    "context": "about_surface.rs",
+    "definedIn": "src/about_surface.rs:137",
+    "description": null,
+    "plural": false
+  },
+  "ABOUT_COPYRIGHT": {
+    "context": "about_surface.rs",
+    "definedIn": "src/about_surface.rs:162",
+    "description": null,
+    "plural": false
+  },
+  "ABOUT_PLATFORM": {
+    "context": "about_surface.rs",
+    "definedIn": "src/about_surface.rs:144",
+    "description": null,
+    "plural": false
+  },
+  "ABOUT_SOFTWARE": {
+    "context": "about_surface.rs",
+    "definedIn": "src/about_surface.rs:125",
+    "description": null,
+    "plural": false
+  },
+  "ABOUT_TITLE": {
+    "context": "about_surface.rs",
+    "definedIn": "src/about_surface.rs:77",
+    "description": null,
+    "plural": false
+  },
+  "APPLE_APP_MENU_HIDE_OTHERS": {
+    "context": "setup.rs",
+    "definedIn": "src/setup.rs:82",
+    "description": null,
+    "plural": false
+  },
+  "APPLE_APP_MENU_QUIT": {
+    "context": "setup.rs",
+    "definedIn": "src/setup.rs:87",
+    "description": null,
+    "plural": false
+  },
+  "APPLE_APP_MENU_SHOW_ALL": {
+    "context": "setup.rs",
+    "definedIn": "src/setup.rs:83",
+    "description": null,
+    "plural": false
+  },
+  "MENU_HELP": {
+    "context": "setup.rs",
+    "definedIn": "src/setup.rs:128",
+    "description": null,
+    "plural": false
+  }
+}

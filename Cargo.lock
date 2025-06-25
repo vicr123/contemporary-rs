@@ -1107,6 +1107,7 @@ dependencies = [
  "contemporary_i18n_parse",
  "icu",
  "itertools 0.14.0",
+ "proc-macro2",
  "serde",
  "serde_json",
  "syn 2.0.104",
