@@ -1,8 +1,8 @@
 use crate::components::button::button;
 use crate::styling::theme::Theme;
 use gpui::{
-    App, AppContext, Context, Entity, InteractiveElement, IntoElement, MouseButton, ParentElement,
-    Render, RenderOnce, Styled, Window, WindowControlArea, div, px,
+    div, img, px, App, AppContext, Context, Entity, InteractiveElement,
+    IntoElement, MouseButton, ParentElement, Render, RenderOnce, Styled, Window, WindowControlArea,
 };
 
 pub struct Surface<T>
@@ -64,7 +64,19 @@ impl RenderOnce for WindowTitle {
             .w_full()
             .h(px(40.))
             .flex()
-            .child(div())
+            .child(if cfg!(target_os = "macos") {
+                div()
+            } else {
+                div()
+                    .child(
+                        button("window-menu")
+                            .flat()
+                            .w(px(40.))
+                            .h(px(40.))
+                            .child(img("contemporary-icon:/application").w(px(24.)).h(px(24.))),
+                    )
+                    .occlude()
+            })
             .child(div().flex_grow())
             .window_control_area(WindowControlArea::Drag)
             .child(
@@ -74,8 +86,8 @@ impl RenderOnce for WindowTitle {
                     .child(
                         button("window-minimise")
                             .flat()
-                            .w(px(36.))
-                            .h(px(36.))
+                            .w(px(40.))
+                            .h(px(40.))
                             .child("Min")
                             .on_click(move |_, window, _| window.minimize_window())
                             .window_control_area(WindowControlArea::Min),
@@ -83,8 +95,8 @@ impl RenderOnce for WindowTitle {
                     .child(
                         button("window-maximise")
                             .flat()
-                            .w(px(36.))
-                            .h(px(36.))
+                            .w(px(40.))
+                            .h(px(40.))
                             .child("Max")
                             .on_click(move |_, window, _| window.zoom_window())
                             .window_control_area(WindowControlArea::Max),
@@ -92,8 +104,8 @@ impl RenderOnce for WindowTitle {
                     .child(
                         button("window-close")
                             .flat()
-                            .w(px(36.))
-                            .h(px(36.))
+                            .w(px(40.))
+                            .h(px(40.))
                             .child("X")
                             .on_click(move |_, _, cx| cx.quit())
                             .window_control_area(WindowControlArea::Close),

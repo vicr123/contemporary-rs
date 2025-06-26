@@ -1,9 +1,9 @@
 use crate::assets::global_manager::ManagerSource;
+#[cfg(target_os = "linux")]
+use freedesktop_icons::lookup;
 use gpui::SharedString;
 use std::borrow::Cow;
 use url::Url;
-#[cfg(target_os = "linux")]
-use freedesktop_icons::lookup;
 
 pub struct IconThemeAssetSource;
 
@@ -14,7 +14,7 @@ impl ManagerSource for IconThemeAssetSource {
 
     #[allow(unused_variables)]
     #[allow(unreachable_code)]
-    fn load(&self, path: &Url) -> gpui::Result<Option<Cow<'static, [u8]>>> {
+    fn load(&self, url: &Url) -> gpui::Result<Option<Cow<'static, [u8]>>> {
         #[cfg(target_os = "linux")]
         {
             if url.scheme() != "icon" {
