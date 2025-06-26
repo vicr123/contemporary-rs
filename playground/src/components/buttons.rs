@@ -4,9 +4,10 @@ use contemporary::components::grandstand::grandstand;
 use contemporary::components::layer::layer;
 use contemporary::components::subtitle::subtitle;
 use contemporary_i18n::{tr, trn};
+use contemporary_icon_tool_macros::application_icon_asset_path;
 use gpui::{
-    div, px, App, AppContext, ClickEvent, Context, Entity, IntoElement, ParentElement,
-    Render, Styled, Window,
+    div, img, px, App, AppContext, ClickEvent, Context, Entity, IntoElement,
+    ParentElement, Render, Styled, Window,
 };
 
 pub struct Buttons {
@@ -33,6 +34,7 @@ impl Render for Buttons {
                     .text(tr!("BUTTONS_TITLE", "Buttons"))
                     .pt(px(36.)),
             )
+            .child(img(application_icon_asset_path!()).h(px(32.)).w(px(32.)))
             .child(
                 constrainer("buttons")
                     .flex()

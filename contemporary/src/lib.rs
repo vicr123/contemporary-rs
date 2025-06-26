@@ -2,6 +2,7 @@ pub mod about_surface;
 pub mod application;
 pub mod assets;
 pub mod components;
+pub mod icon_tool;
 pub mod setup;
 pub mod styling;
 pub mod surface;

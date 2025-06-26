@@ -1064,6 +1064,7 @@ dependencies = [
  "freedesktop-icons",
  "gpui",
  "indexmap",
+ "once_cell",
  "schemars",
  "serde",
  "serde_json",
@@ -1134,6 +1135,24 @@ name = "contemporary_i18n_parse"
 version = "0.1.0"
 dependencies = [
  "syn 2.0.104",
+]
+
+[[package]]
+name = "contemporary_icon_tool_core"
+version = "0.1.0"
+dependencies = [
+ "regex",
+]
+
+[[package]]
+name = "contemporary_icon_tool_macros"
+version = "0.1.0"
+dependencies = [
+ "contemporary_icon_tool_core",
+ "quote",
+ "serde",
+ "syn 2.0.104",
+ "toml",
 ]
 
 [[package]]
@@ -3989,6 +4008,7 @@ dependencies = [
  "contemporary",
  "contemporary_i18n",
  "contemporary_i18n_gen",
+ "contemporary_icon_tool_macros",
  "gpui",
  "indexmap",
 ]

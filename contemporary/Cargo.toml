@@ -12,6 +12,7 @@ gpui = { workspace = true }
 indexmap = { workspace = true }
 url = "2"
 unicode-segmentation = "1"
+once_cell = { workspace = true }
 
 [target.'cfg(target_os="linux")'.dependencies]
 freedesktop-icons = "0.4.0"

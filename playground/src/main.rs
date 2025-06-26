@@ -6,18 +6,20 @@ use contemporary::application::new_contemporary_application;
 use contemporary::{
     about_surface::AboutSurface,
     application::{ApplicationLink, Details, License, Versions},
-    setup::{Contemporary, ContemporaryMenus, setup_contemporary},
+    setup::{setup_contemporary, Contemporary, ContemporaryMenus},
     surface::Surface,
-    window::{ContemporaryWindow, PushPop, contemporary_window_options},
+    window::{contemporary_window_options, ContemporaryWindow, PushPop},
 };
-use contemporary_i18n::{I18N_MANAGER, tr_load};
-use gpui::{App, AppContext, Bounds, Menu, WindowBounds, WindowOptions, px, size};
+use contemporary_i18n::{tr_load, I18N_MANAGER};
+use contemporary_icon_tool_macros::application_icon;
+use gpui::{px, size, App, AppContext, Bounds, Menu, WindowBounds, WindowOptions};
 use indexmap::IndexMap;
 
 mod components;
 mod surface_list;
 
 fn main() {
+    application_icon!("assets/baseicon.svg");
     new_contemporary_application().run(|cx: &mut App| {
         I18N_MANAGER.write().unwrap().load_source(tr_load!());
         let bounds = Bounds::centered(None, size(px(800.0), px(600.0)), cx);

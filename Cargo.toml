@@ -9,7 +9,7 @@ members = [
     "i18n/contemporary_i18n_parse",
     "i18n/contemporary_i18n_gen",
     "localesupport/contemporary_localesupport",
-    "playground",
+    "playground", "icon_tool/contemporary_icon_tool_core", "icon_tool/contemporary_icon_tool_macros",
 ]
 
 [workspace.dependencies]
