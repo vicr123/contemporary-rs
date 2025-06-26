@@ -5,7 +5,8 @@ use std::{
 
 use gpui::{Application, Global, SharedString};
 use indexmap::IndexMap;
-use crate::assets::IconAssetSource;
+use crate::assets::icon_theme_asset_source::IconThemeAssetSource;
+use crate::assets::manager::Manager;
 
 #[derive(Hash, Eq, Clone, PartialEq, Debug)]
 pub enum ApplicationLink {
@@ -63,6 +64,9 @@ pub struct Versions {
 impl Global for Versions {}
 
 pub fn new_contemporary_application() -> Application {
+    let mut asset_manager = Manager::default();
+    asset_manager.add_source(Box::new(IconThemeAssetSource));
+    
     Application::new()
-        .with_assets(IconAssetSource)
+        .with_assets(asset_manager)
 }
