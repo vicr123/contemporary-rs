@@ -5,8 +5,12 @@
   "ABOUT_PLATFORM": "Platform",
   "ABOUT_SOFTWARE": "Software",
   "ABOUT_TITLE": "About {{application}}",
+  "APPLE_APP_MENU_ABOUT": "About {{application}}",
   "APPLE_APP_MENU_HIDE_OTHERS": "Hide Others",
+  "APPLE_APP_MENU_HIDE_SELF": "Hide {{application}}",
   "APPLE_APP_MENU_QUIT": "Quit {{application}}",
+  "APPLE_APP_MENU_SERVICES": "Services",
   "APPLE_APP_MENU_SHOW_ALL": "Show All",
-  "MENU_HELP": "Help"
+  "MENU_HELP": "Help",
+  "MENU_HELP_CONTENTS": "{{application}} Help"
 }

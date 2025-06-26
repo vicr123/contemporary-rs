@@ -1,8 +1,8 @@
 use crate::application::{ApplicationLink, Details, Versions};
 use crate::components::text_field::bind_text_input_keys;
 use crate::styling::theme::Theme;
-use contemporary_i18n::{I18N_MANAGER, tr, tr_load};
-use gpui::{Action, App, Global, KeyBinding, Menu, MenuItem, actions};
+use contemporary_i18n::{tr, tr_load, I18N_MANAGER};
+use gpui::{actions, Action, App, Global, KeyBinding, Menu, MenuItem};
 use schemars::JsonSchema;
 use serde::Deserialize;
 use std::collections::HashMap;
@@ -66,27 +66,41 @@ pub fn setup_contemporary(cx: &mut App, mut application: Contemporary) {
         name: application.details.application_name.into(),
         items: vec![
             MenuItem::action(
-                format!("About {}", application.details.application_name),
+                tr!("APPLE_APP_MENU_ABOUT", "About {{application}}", application=application.details.application_name,
+                    #description = "Please use the string that macOS uses for the About action in the application menu."
+                ),
                 About,
             ),
             MenuItem::separator(),
             MenuItem::Submenu(Menu {
-                name: "Services".into(),
+                name: tr!("APPLE_APP_MENU_SERVICES", "Services",
+                    #description = "Please use the string that macOS uses for the Services action in the application menu."
+                ).into(),
                 items: vec![],
             }),
             MenuItem::separator(),
             MenuItem::action(
-                format!("Hide {}", application.details.application_name),
+                tr!("APPLE_APP_MENU_HIDE_SELF", "Hide {{application}}", application = application.details.application_name,
+                    #description = "Please use the string that macOS uses for the Hide this application action in the application menu."),
                 HideSelf,
             ),
-            MenuItem::action(tr!("APPLE_APP_MENU_HIDE_OTHERS", "Hide Others"), HideOthers),
-            MenuItem::action(tr!("APPLE_APP_MENU_SHOW_ALL", "Show All"), ShowAll),
+            MenuItem::action(
+                tr!("APPLE_APP_MENU_HIDE_OTHERS", "Hide Others",
+                    #description = "Please use the string that macOS uses for the Hide Others action in the application menu."),
+                HideOthers,
+            ),
+            MenuItem::action(
+                tr!("APPLE_APP_MENU_SHOW_ALL", "Show All", 
+                    #description = "Please use the string that macOS uses for the Show All action in the application menu."),
+                ShowAll,
+            ),
             MenuItem::separator(),
             MenuItem::action(
                 tr!(
                     "APPLE_APP_MENU_QUIT",
                     "Quit {{application}}",
-                    application = application.details.application_name
+                    application = application.details.application_name,
+                    #description = "Please use the string that macOS uses for the Quit action in the application menu."
                 ),
                 Quit,
             ),
@@ -102,7 +116,7 @@ pub fn setup_contemporary(cx: &mut App, mut application: Contemporary) {
             if *key == ApplicationLink::HelpContents {
                 [
                     Some(MenuItem::action(
-                        format!("{} Help", application.details.application_name),
+                        tr!("MENU_HELP_CONTENTS", "{{application}} Help", application=application.details.application_name),
                         OpenLink {
                             link: url.to_string(),
                         },
@@ -125,7 +139,10 @@ pub fn setup_contemporary(cx: &mut App, mut application: Contemporary) {
         .collect();
 
     menus.push(Menu {
-        name: tr!("MENU_HELP", "Help").into(),
+        name: tr!("MENU_HELP", "Help",
+            #description = "Please use the string that macOS uses for the Help menu."
+        )
+        .into(),
         items: help_menu_items,
     });
 
