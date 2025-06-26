@@ -6,6 +6,7 @@ use std::{
 use crate::assets::global_manager::ASSET_MANAGER;
 use crate::assets::icon_theme_asset_source::IconThemeAssetSource;
 use crate::assets::manager::Manager;
+use crate::assets::window_controls_asset_source::WindowControlsAssetSource;
 use gpui::{Application, Global, SharedString};
 use indexmap::IndexMap;
 
@@ -65,10 +66,10 @@ pub struct Versions {
 impl Global for Versions {}
 
 pub fn new_contemporary_application() -> Application {
-    ASSET_MANAGER
-        .read()
-        .unwrap()
-        .add_source(Box::new(IconThemeAssetSource));
+    ASSET_MANAGER.read().unwrap().add_sources(vec![
+        Box::new(IconThemeAssetSource),
+        Box::new(WindowControlsAssetSource),
+    ]);
 
     Application::new().with_assets(Manager)
 }

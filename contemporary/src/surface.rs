@@ -1,8 +1,8 @@
 use crate::components::button::button;
 use crate::styling::theme::Theme;
 use gpui::{
-    div, img, px, App, AppContext, Context, Entity, InteractiveElement,
-    IntoElement, MouseButton, ParentElement, Render, RenderOnce, Styled, Window, WindowControlArea,
+    App, AppContext, Context, Entity, InteractiveElement, IntoElement, MouseButton, ParentElement,
+    Render, RenderOnce, Styled, Window, WindowControlArea, div, img, px, rgb, svg,
 };
 
 pub struct Surface<T>
@@ -50,11 +50,13 @@ fn window_controls() -> WindowTitle {
 
 #[allow(unreachable_code)]
 impl RenderOnce for WindowTitle {
-    fn render(self, _window: &mut Window, _cx: &mut App) -> impl IntoElement {
+    fn render(self, window: &mut Window, _cx: &mut App) -> impl IntoElement {
         #[cfg(target_os = "macos")]
         {
             return div().id("contemporary-window-title");
         }
+
+        let theme = _cx.global::<Theme>();
 
         div()
             .id("contemporary-window-title")
@@ -88,7 +90,13 @@ impl RenderOnce for WindowTitle {
                             .flat()
                             .w(px(40.))
                             .h(px(40.))
-                            .child("Min")
+                            .child(
+                                svg()
+                                    .w(px(24.))
+                                    .h(px(24.))
+                                    .text_color(theme.foreground)
+                                    .path("window-controls:/min"),
+                            )
                             .on_click(move |_, window, _| window.minimize_window())
                             .window_control_area(WindowControlArea::Min),
                     )
@@ -97,7 +105,17 @@ impl RenderOnce for WindowTitle {
                             .flat()
                             .w(px(40.))
                             .h(px(40.))
-                            .child("Max")
+                            .child(
+                                svg()
+                                    .w(px(24.))
+                                    .h(px(24.))
+                                    .text_color(theme.foreground)
+                                    .path(if window.is_maximized() {
+                                        "window-controls:/res"
+                                    } else {
+                                        "window-controls:/max"
+                                    }),
+                            )
                             .on_click(move |_, window, _| window.zoom_window())
                             .window_control_area(WindowControlArea::Max),
                     )
@@ -106,7 +124,13 @@ impl RenderOnce for WindowTitle {
                             .flat()
                             .w(px(40.))
                             .h(px(40.))
-                            .child("X")
+                            .child(
+                                svg()
+                                    .w(px(24.))
+                                    .h(px(24.))
+                                    .text_color(theme.foreground)
+                                    .path("window-controls:/close"),
+                            )
                             .on_click(move |_, _, cx| cx.quit())
                             .window_control_area(WindowControlArea::Close),
                     ),

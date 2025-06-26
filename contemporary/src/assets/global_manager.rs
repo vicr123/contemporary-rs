@@ -31,6 +31,12 @@ impl GlobalManager {
             sources.push(source);
         }
     }
+
+    pub fn add_sources(&self, mut sources: Vec<Box<dyn ManagerSource + Send + Sync>>) {
+        if let Ok(mut global_sources) = self.sources.write() {
+            global_sources.append(&mut sources);
+        }
+    }
 }
 
 impl AssetSource for GlobalManager {
