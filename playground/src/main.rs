@@ -19,7 +19,7 @@ mod components;
 mod surface_list;
 
 fn main() {
-    application_icon!("assets/baseicon.svg");
+    application_icon!("../assets/baseicon.svg");
     new_contemporary_application().run(|cx: &mut App| {
         I18N_MANAGER.write().unwrap().load_source(tr_load!());
         let bounds = Bounds::centered(None, size(px(800.0), px(600.0)), cx);

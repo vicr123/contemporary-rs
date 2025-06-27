@@ -69,7 +69,25 @@ pub fn application_icon(body: TokenStream) -> TokenStream {
         .into();
     }
 
-    let icon_path = manifest_dir.join(input.icon_file.value());
+    let Some(current_file) = proc_macro::Span::call_site().local_file() else {
+        return Error::new(
+            proc_macro::Span::call_site().into(),
+            "Macro used in non-file context",
+        )
+        .to_compile_error()
+        .into();
+    };
+
+    let icon_path = current_file.parent().unwrap().join(input.icon_file.value());
+    if !icon_path.exists() {
+        return Error::new(
+            input.icon_file.span().into(),
+            format!("Unable to find icon file: {}", icon_path.to_str().unwrap()),
+        )
+        .to_compile_error()
+        .into();
+    }
+
     let icon = ContemporaryIcon::new(icon_path, false, false);
     let icon_source = icon.generate(
         &config.application.theme_colors[0],
