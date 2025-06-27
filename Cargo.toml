@@ -12,7 +12,7 @@ members = [
     "playground",
     "icon_tool/contemporary_icon_tool_core",
     "icon_tool/contemporary_icon_tool_macros",
-    "contemporary_config",
+    "contemporary_config", "deploy_tool/cargo_cntp_deploy", "deploy_tool/contemporary_deploy_lib",
 ]
 
 [workspace.dependencies]

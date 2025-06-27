@@ -2,121 +2,121 @@
   "BUTTONS_CHECKABLE_BUTTON": {
     "context": "buttons.rs",
     "definedIn": "src/components/buttons.rs:74",
-    "description": null,
-    "plural": false
+    "plural": false,
+    "description": null
   },
   "BUTTONS_COUNT_TEXT": {
     "context": "buttons.rs",
     "definedIn": "src/components/buttons.rs:79",
-    "description": null,
-    "plural": true
+    "plural": true,
+    "description": null
   },
   "BUTTONS_DEFAULT_BUTTON": {
     "context": "buttons.rs",
     "definedIn": "src/components/buttons.rs:56",
-    "description": null,
-    "plural": false
+    "plural": false,
+    "description": null
   },
   "BUTTONS_DISABLED_BUTTON": {
     "context": "buttons.rs",
     "definedIn": "src/components/buttons.rs:69",
-    "description": null,
-    "plural": false
+    "plural": false,
+    "description": null
   },
   "BUTTONS_FLAT_BUTTON": {
     "context": "buttons.rs",
     "definedIn": "src/components/buttons.rs:100",
-    "description": null,
-    "plural": false
+    "plural": false,
+    "description": null
   },
   "BUTTONS_FLAT_CHECKABLE_BUTTON": {
     "context": "buttons.rs",
     "definedIn": "src/components/buttons.rs:106",
-    "description": null,
-    "plural": false
+    "plural": false,
+    "description": null
   },
   "BUTTONS_FLAT_DISABLED_BUTTON": {
     "context": "buttons.rs",
     "definedIn": "src/components/buttons.rs:103",
-    "description": null,
-    "plural": false
+    "plural": false,
+    "description": null
   },
   "BUTTONS_FLAT_TITLE": {
     "context": "buttons.rs",
     "definedIn": "src/components/buttons.rs:91",
-    "description": null,
-    "plural": false
+    "plural": false,
+    "description": null
   },
   "BUTTONS_NORMAL_TITLE": {
     "context": "buttons.rs",
     "definedIn": "src/components/buttons.rs:49",
-    "description": null,
-    "plural": false
+    "plural": false,
+    "description": null
   },
   "BUTTONS_TITLE": {
     "context": "buttons.rs",
     "definedIn": "src/components/buttons.rs:33",
-    "description": null,
-    "plural": false
+    "plural": false,
+    "description": null
   },
   "CHECKBOXES_OFF": {
     "context": "checkboxes_radio_buttons.rs",
     "definedIn": "src/components/checkboxes_radio_buttons.rs:64",
-    "description": null,
-    "plural": false
+    "plural": false,
+    "description": null
   },
   "CHECKBOXES_ON": {
     "context": "checkboxes_radio_buttons.rs",
     "definedIn": "src/components/checkboxes_radio_buttons.rs:75",
-    "description": null,
-    "plural": false
+    "plural": false,
+    "description": null
   },
   "CHECKBOXES_RADIO_BUTTONS_TITLE": {
     "context": "checkboxes_radio_buttons.rs",
     "definedIn": "src/components/checkboxes_radio_buttons.rs:38",
-    "description": null,
-    "plural": false
+    "plural": false,
+    "description": null
   },
   "CHECKBOXES_TITLE": {
     "context": "checkboxes_radio_buttons.rs",
     "definedIn": "src/components/checkboxes_radio_buttons.rs:56",
-    "description": null,
-    "plural": false
+    "plural": false,
+    "description": null
   },
   "COMPONENTS_TITLE": {
     "context": "root.rs",
     "definedIn": "src/components/root.rs:49",
-    "description": null,
-    "plural": false
+    "plural": false,
+    "description": null
   },
   "RADIO_BUTTONS_TITLE": {
     "context": "checkboxes_radio_buttons.rs",
     "definedIn": "src/components/checkboxes_radio_buttons.rs:91",
-    "description": null,
-    "plural": false
+    "plural": false,
+    "description": null
   },
   "TEXT_FIELDS_TITLE": {
     "context": "text_input.rs",
     "definedIn": "src/components/text_input.rs:67",
-    "description": null,
-    "plural": false
+    "plural": false,
+    "description": null
   },
   "TEXT_FIELD_DISABLED_PLACEHOLDER": {
     "context": "text_input.rs",
     "definedIn": "src/components/text_input.rs:30",
-    "description": null,
-    "plural": false
+    "plural": false,
+    "description": null
   },
   "TEXT_FIELD_PLACEHOLDER": {
     "context": "text_input.rs",
     "definedIn": "src/components/text_input.rs:24",
-    "description": null,
-    "plural": false
+    "plural": false,
+    "description": null
   },
   "TEXT_INPUT_TITLE": {
     "context": "text_input.rs",
     "definedIn": "src/components/text_input.rs:51",
-    "description": null,
-    "plural": false
+    "plural": false,
+    "description": null
   }
 }

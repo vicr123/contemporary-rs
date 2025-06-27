@@ -1,0 +1,12 @@
+[package]
+name = "contemporary_deploy_lib"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+tracing = { workspace = true }
+contemporary_config = { path = "../../contemporary_config" }
+contemporary_icon_tool_core = { path = "../../icon_tool/contemporary_icon_tool_core" }
+plist = "1"
+resvg = "0.45"
+tempfile = "3.8"

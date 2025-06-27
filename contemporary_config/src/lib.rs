@@ -1,6 +1,7 @@
 pub mod config;
 
-use crate::config::ContemporaryConfigApplication;
+use std::collections::HashMap;
+use crate::config::{ContemporaryConfigApplication, ContemporaryConfigDeployment};
 use serde::Deserialize;
 use std::env;
 use std::fs::OpenOptions;
@@ -10,6 +11,7 @@ use std::path::PathBuf;
 #[derive(Deserialize)]
 pub struct ContemporaryConfig {
     pub application: ContemporaryConfigApplication,
+    pub deployment: ContemporaryConfigDeployment,
 }
 
 impl ContemporaryConfig {
@@ -41,5 +43,23 @@ impl ContemporaryConfig {
         let manifest_dir = PathBuf::from(cargo_manifest_dir);
         let contemporary_path = manifest_dir.join("Contemporary.toml");
         Self::new_from_path(contemporary_path)
+    }
+
+    pub fn deployment(&self, arch: &str) -> ContemporaryConfigDeployment {
+        let deployment = self.deployment.clone();
+        let specific_deployment = if let Some(x) = self.deployment.clone().children.get(arch) {
+            x.clone()
+        } else {
+            ContemporaryConfigDeployment::new()
+        };
+
+        ContemporaryConfigDeployment {
+            application_name: specific_deployment.application_name.or(deployment.application_name),
+            apple_localisation_dir: specific_deployment.apple_localisation_dir.or(deployment.apple_localisation_dir),
+            desktop_entry: specific_deployment.desktop_entry.or(deployment.desktop_entry),
+            icon: specific_deployment.icon.or(deployment.icon),
+            contemporary_base_icon: specific_deployment.contemporary_base_icon.or(deployment.contemporary_base_icon),
+            children: HashMap::new()
+        }
     }
 }

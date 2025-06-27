@@ -1,2 +1,7 @@
 [application]
 theme_colors = ["#6400ff", "#c800ff"]
+
+[deployment]
+application_name = "Contemporary Playground"
+desktop_entry = "com.vicr123.contemporary.playground"
+contemporary_base_icon = "assets/baseicon-mac.svg"

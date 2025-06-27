@@ -1,0 +1,16 @@
+[package]
+name = "cargo-cntp-deploy"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+clap = { version = "4", features = ["derive"] }
+clap-cargo = { version = "0.15", features = ["cargo_metadata"] }
+contemporary_config = { path = "../../contemporary_config" }
+contemporary_deploy_lib = { path = "../contemporary_deploy_lib" }
+tracing = { workspace = true }
+tracing-subscriber = "0.3"
+clap-verbosity-flag = { version = "3.0.3", default-features = false, features = ["tracing"] }
+cargo_metadata = "0.20.0"
+current_platform = "0.2.0"
+open = "5.3.2"
