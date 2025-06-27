@@ -1,11 +1,7 @@
+use contemporary_config::ContemporaryConfig;
 use contemporary_icon_tool_core::contemporary_icon::ContemporaryIcon;
 use proc_macro::TokenStream;
 use quote::quote;
-use serde::Deserialize;
-use std::env;
-use std::fs::OpenOptions;
-use std::io::Read;
-use std::path::PathBuf;
 use syn::parse::{Parse, ParseStream};
 use syn::{parse_macro_input, Error, LitStr};
 
@@ -22,39 +18,14 @@ impl Parse for ApplicationIconMacroInput {
     }
 }
 
-#[derive(Deserialize)]
-struct ContemporaryConfig {
-    pub application: ContemporaryConfigApplication,
-}
-
-#[derive(Deserialize)]
-struct ContemporaryConfigApplication {
-    pub theme_colors: Vec<String>,
-}
-
 #[proc_macro]
 pub fn application_icon(body: TokenStream) -> TokenStream {
-    // TODO: https://github.com/rust-lang/rust/pull/140514
-    // Once this is implemented, change the argument to be relative to the file
     let input = parse_macro_input!(body as ApplicationIconMacroInput);
 
-    let cargo_manifest_dir =
-        env::var("CARGO_MANIFEST_DIR").expect("CARGO_MANIFEST_DIR environment variable not set");
-    let manifest_dir = PathBuf::from(cargo_manifest_dir);
-
-    let contemporary_path = manifest_dir.join("Contemporary.toml");
-    let config: ContemporaryConfig = if contemporary_path.exists() {
-        let mut file = OpenOptions::new()
-            .read(true)
-            .open(&contemporary_path)
-            .unwrap();
-        let mut contents = String::new();
-        file.read_to_string(&mut contents).unwrap();
-        toml::from_str(&contents).expect("unable to read i18n configuration")
-    } else {
+    let Some(config) = ContemporaryConfig::new_from_build_env() else {
         return Error::new(
             proc_macro::Span::call_site().into(),
-            "Contemporary.toml not found.",
+            "Unable to read Contemporary.toml from build environment.",
         )
         .to_compile_error()
         .into();
@@ -81,7 +52,7 @@ pub fn application_icon(body: TokenStream) -> TokenStream {
     let icon_path = current_file.parent().unwrap().join(input.icon_file.value());
     if !icon_path.exists() {
         return Error::new(
-            input.icon_file.span().into(),
+            input.icon_file.span(),
             format!("Unable to find icon file: {}", icon_path.to_str().unwrap()),
         )
         .to_compile_error()

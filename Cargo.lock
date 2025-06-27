@@ -1073,6 +1073,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "contemporary_config"
+version = "0.1.0"
+dependencies = [
+ "serde",
+ "toml",
+]
+
+[[package]]
 name = "contemporary_i18n"
 version = "0.1.0"
 dependencies = [
@@ -1148,11 +1156,10 @@ dependencies = [
 name = "contemporary_icon_tool_macros"
 version = "0.1.0"
 dependencies = [
+ "contemporary_config",
  "contemporary_icon_tool_core",
  "quote",
- "serde",
  "syn 2.0.104",
- "toml",
 ]
 
 [[package]]

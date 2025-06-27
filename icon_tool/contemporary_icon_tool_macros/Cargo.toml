@@ -10,7 +10,6 @@ proc-macro = true
 
 [dependencies]
 contemporary_icon_tool_core = { path = "../contemporary_icon_tool_core" }
+contemporary_config = { path = "../../contemporary_config" }
 syn = { workspace = true }
 quote = "1"
-serde = { workspace = true }
-toml = "0.8"
