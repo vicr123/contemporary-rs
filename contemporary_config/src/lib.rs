@@ -86,7 +86,13 @@ impl ContemporaryConfig {
                 continue;
             }
 
-            let lang = path.with_extension("").file_name().unwrap().to_str().unwrap().to_string();
+            let lang = path
+                .with_extension("")
+                .file_name()
+                .unwrap()
+                .to_str()
+                .unwrap()
+                .to_string();
 
             let Ok(mut translation_file) = OpenOptions::new().read(true).open(&path) else {
                 warn!(
@@ -130,6 +136,11 @@ impl ContemporaryConfig {
                 specific_deployment
                     .application_name
                     .or(deployment.application_name),
+            ),
+            application_generic_name: self.resolve_localised_string(
+                specific_deployment
+                    .application_generic_name
+                    .or(deployment.application_generic_name),
             ),
             apple_localisation_dir: self.resolve_localised_string(
                 specific_deployment

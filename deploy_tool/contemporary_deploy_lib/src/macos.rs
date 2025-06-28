@@ -35,6 +35,8 @@ pub fn deploy_macos(
         exit(1);
     };
 
+    let application_generic_name = deployment.application_generic_name;
+
     let app_root = output_directory
         .join(application_name.default_value())
         .with_extension("app");
@@ -83,6 +85,12 @@ pub fn deploy_macos(
         "CFBundleIdentifier".to_string(),
         Value::String(desktop_entry.default_value()),
     );
+    if let Some(ref application_generic_name) = application_generic_name {
+        plist_root.insert(
+            "CFBundleGetInfoString".to_string(),
+            Value::String(application_generic_name.default_value()),
+        );
+    }
     plist_root.insert(
         "CFBundlePackageType".to_string(),
         Value::String("APPL".to_string()),
@@ -121,17 +129,31 @@ pub fn deploy_macos(
             );
             continue;
         };
-        
+
         let info_plist_strings_path = lproj_dir.join("InfoPlist.strings");
         let mut file = OpenOptions::new()
             .write(true)
-            .create(true).truncate(true)
+            .create(true)
+            .truncate(true)
             .open(info_plist_strings_path)
             .unwrap();
-        
+
         if let Some(application_name) = application_name.resolve_language(&localisation) {
-            file.write_all(format!("CFBundleDisplayName = {application_name};\n").as_bytes()).unwrap();
-            file.write_all(format!("CFBundleName = {application_name};\n").as_bytes()).unwrap();
+            file.write_all(format!("CFBundleDisplayName = {application_name};\n").as_bytes())
+                .unwrap();
+            file.write_all(format!("CFBundleName = {application_name};\n").as_bytes())
+                .unwrap();
+        }
+
+        if let Some(ref application_generic_name) = application_generic_name {
+            if let Some(application_generic_name) =
+                application_generic_name.resolve_language(&localisation)
+            {
+                file.write_all(
+                    format!("CFBundleGetInfoString = {application_generic_name};\n").as_bytes(),
+                )
+                .unwrap();
+            }
         }
     }
 }

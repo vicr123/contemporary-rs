@@ -15,6 +15,7 @@ pub struct ContemporaryConfigConfigDef {
 #[derive(Deserialize, Clone, Default)]
 pub struct ContemporaryConfigDeploymentDef {
     pub application_name: Option<String>,
+    pub application_generic_name: Option<String>,
     pub apple_localisation_dir: Option<String>,
     pub desktop_entry: Option<String>,
     pub icon: Option<String>,
@@ -26,6 +27,7 @@ pub struct ContemporaryConfigDeploymentDef {
 
 pub struct ContemporaryConfigDeployment {
     pub application_name: Option<LocalisedString>,
+    pub application_generic_name: Option<LocalisedString>,
     pub apple_localisation_dir: Option<LocalisedString>,
     pub desktop_entry: Option<LocalisedString>,
     pub icon: Option<String>,
