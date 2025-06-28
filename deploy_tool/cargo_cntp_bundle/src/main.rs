@@ -5,8 +5,10 @@ use contemporary_bundle_lib::linux::deploy_linux;
 use contemporary_bundle_lib::macos::deploy_macos;
 use contemporary_config::ContemporaryConfig;
 use current_platform::CURRENT_PLATFORM;
+use std::collections::HashMap;
 use std::env;
 use std::env::consts::EXE_EXTENSION;
+use std::path::PathBuf;
 use std::process::exit;
 use tracing::{error, info};
 
@@ -19,9 +21,9 @@ struct Args {
     #[arg(short, long, default_value_t = String::from("release"))]
     profile: String,
 
-    /// The architecture to build for
-    #[arg(short, long, default_value_t = String::from(CURRENT_PLATFORM))]
-    arch: String,
+    /// The targets to build for
+    #[arg(short, long)]
+    target: Vec<String>,
 
     /// How loud should we be?
     #[clap(flatten)]
@@ -34,6 +36,16 @@ struct Args {
 
 fn main() {
     let args = Args::parse();
+
+    let targets = if args.target.is_empty() {
+        vec![CURRENT_PLATFORM.to_string()]
+    } else {
+        args.target
+            .iter()
+            .flat_map(|s| s.split(';'))
+            .map(String::from)
+            .collect()
+    };
 
     tracing_subscriber::fmt()
         .with_target(false)
@@ -72,59 +84,84 @@ fn main() {
         exit(1);
     };
 
+    let deployment_type = {
+        if targets.iter().all(|target| {
+            matches!(
+                target.as_str(),
+                "x86_64-unknown-linux-gnu"
+                    | "aarch64-unknown-linux-gnu"
+                    | "x86_64-unknown-linux-musl"
+                    | "aarch64-unknown-linux-musl"
+            )
+        }) && targets.len() == 1
+        {
+            "linux"
+        } else if targets.iter().all(|target| {
+            matches!(
+                target.as_str(),
+                "aarch64-apple-darwin" | "x86_64-apple-darwin"
+            )
+        }) {
+            "macos"
+        } else {
+            error!("Unsupported target configuration: {}", targets.join(";"));
+            exit(1);
+        }
+    };
+
     let output_directory = cargo_metadata
         .target_directory
         .join("deploy")
-        .join(args.arch.clone())
+        .join(targets.join("-"))
         .join(args.profile.clone());
 
     info!("Deploying {}", root_package.name);
     info!("Profile: {}", args.profile);
-    info!("Target:  {}", args.arch);
+    info!("Target:  {}", targets.join(";"));
     info!("Output:  {}", output_directory);
 
-    // Find the executable to publish
-    let mut target_directory = cargo_metadata.target_directory.clone();
-    let triple_directory = target_directory.join(args.arch.clone());
-    if triple_directory.exists() {
-        target_directory = triple_directory;
-    }
-    target_directory = target_directory.join(args.profile);
-    let bin_target = target_directory
-        .join(root_package.name.as_str())
-        .with_extension(EXE_EXTENSION);
+    // Find the executable(s) to publish
+    let mut bin_targets: HashMap<String, PathBuf> = HashMap::new();
+    for target in &targets {
+        let mut target_directory = cargo_metadata.target_directory.clone();
+        if target != CURRENT_PLATFORM {
+            target_directory = target_directory.join(target.clone());
+        }
+        target_directory = target_directory.join(args.profile.clone());
 
-    // TODO: Run cargo build
-    if !bin_target.exists() {
-        error!("Unable to find executable at {}", bin_target)
+        let bin_target = target_directory
+            .join(root_package.name.as_str())
+            .with_extension(EXE_EXTENSION);
+
+        // TODO: Run cargo build
+        if !bin_target.exists() {
+            error!("Unable to find executable at {}", bin_target);
+            exit(0);
+        }
+
+        bin_targets.insert(target.clone(), bin_target.into());
     }
 
     let version = &root_package.version;
     let version_tuple = (version.major, version.minor, version.patch);
 
-    match args.arch.as_str() {
-        "x86_64-unknown-linux-gnu"
-        | "aarch64-unknown-linux-gnu"
-        | "x86_64-unknown-linux-musl"
-        | "aarch64-unknown-linux-musl" => deploy_linux(
-            args.arch,
+    match deployment_type {
+        "linux" => deploy_linux(
+            targets,
             current_dir,
-            bin_target.into(),
+            bin_targets,
             output_directory.clone().into(),
             config,
         ),
-        "aarch64-apple-darwin" | "x86-64-apple-darwin" => deploy_macos(
-            args.arch,
+        "macos" => deploy_macos(
+            targets,
             version_tuple,
             current_dir,
-            bin_target.into(),
+            bin_targets,
             output_directory.clone().into(),
             config,
         ),
-        _ => {
-            error!("Unsupported target triple: {}", args.arch);
-            exit(1);
-        }
+        _ => {}
     }
 
     if !args.no_open {

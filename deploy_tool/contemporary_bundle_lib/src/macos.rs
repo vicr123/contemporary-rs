@@ -1,10 +1,11 @@
-use crate::VersionTuple;
 use crate::icon::get_svg_icon_contents;
+use crate::VersionTuple;
 use contemporary_config::ContemporaryConfig;
 use plist::{to_file_xml, Dictionary, Value};
 use resvg::render;
 use resvg::tiny_skia::{Pixmap, Transform};
 use resvg::usvg::{Options, Tree};
+use std::collections::HashMap;
 use std::fs::{copy, create_dir_all, remove_dir_all, OpenOptions};
 use std::io::Write;
 use std::path::PathBuf;
@@ -13,14 +14,14 @@ use tempfile::TempDir;
 use tracing::error;
 
 pub fn deploy_macos(
-    target_triple: String,
+    target_triple: Vec<String>,
     version: VersionTuple,
     base_path: PathBuf,
-    executable_path: PathBuf,
+    executable_path: HashMap<String, PathBuf>,
     output_directory: PathBuf,
     contemporary_config: ContemporaryConfig,
 ) {
-    let deployment = contemporary_config.deployment(&target_triple);
+    let deployment = contemporary_config.deployment(&target_triple.first().unwrap());
 
     let Ok(_) = create_dir_all(&output_directory) else {
         error!("Failed to create output directory");
@@ -59,13 +60,33 @@ pub fn deploy_macos(
         exit(1);
     };
 
-    let Ok(_) = copy(
-        executable_path,
-        macos_dir.join(application_name.default_value()),
-    ) else {
-        error!("Failed to copy executable to MacOS directory");
-        exit(1);
-    };
+    let output_executable_path = macos_dir.join(application_name.default_value());
+    if target_triple.len() == 1 {
+        let executable_path = executable_path
+            .get(target_triple.first().unwrap())
+            .unwrap();
+        let Ok(_) = copy(executable_path, output_executable_path) else {
+            error!("Failed to copy executable to MacOS directory");
+            exit(1);
+        };
+    } else {
+        // Building a universal application bundle
+        let Ok(status) = Command::new("lipo")
+            .arg("-create")
+            .arg("-output")
+            .arg(&output_executable_path)
+            .args(executable_path.values())
+            .status()
+        else {
+            error!("Failed to run lipo command to create universal binary");
+            exit(1);
+        };
+
+        if !status.success() {
+            error!("Failed to create universal binary");
+            exit(1);
+        }
+    }
 
     let resources_dir = contents_dir.join("Resources");
     let Ok(_) = create_dir_all(&resources_dir) else {
@@ -73,7 +94,11 @@ pub fn deploy_macos(
         exit(1);
     };
 
-    let icon_svg = get_svg_icon_contents(target_triple, &base_path, &contemporary_config);
+    let icon_svg = get_svg_icon_contents(
+        target_triple.first().unwrap(),
+        &base_path,
+        &contemporary_config,
+    );
     let icon_path = resources_dir.join("icon.icns");
     create_icns_file(icon_path, icon_svg);
 

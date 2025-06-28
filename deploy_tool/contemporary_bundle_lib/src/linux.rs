@@ -3,20 +3,24 @@ use contemporary_config::{ContemporaryConfig, LocalisedString};
 use resvg::render;
 use resvg::tiny_skia::{Pixmap, Transform};
 use resvg::usvg::{Options, Tree};
+use std::collections::HashMap;
 use std::fmt::{Error, Write};
 use std::fs::{copy, create_dir_all, remove_dir_all, write};
 use std::os::unix::fs::symlink;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use std::process::exit;
 use tracing::error;
 
 pub fn deploy_linux(
-    target_triple: String,
+    target_triple: Vec<String>,
     base_path: PathBuf,
-    executable_path: PathBuf,
+    executable_path: HashMap<String, PathBuf>,
     output_directory: PathBuf,
     contemporary_config: ContemporaryConfig,
 ) {
+    let target_triple = target_triple.first().unwrap();
+    let executable_path = executable_path.get(target_triple).unwrap();
+
     let deployment = contemporary_config.deployment(&target_triple);
 
     let Some(desktop_entry) = deployment.desktop_entry else {
@@ -139,7 +143,7 @@ pub fn deploy_linux(
 
 fn generate_desktop_entry(
     target_triple: &str,
-    executable_path: PathBuf,
+    executable_path: &Path,
     contemporary_config: &ContemporaryConfig,
 ) -> Result<String, Error> {
     let deployment = contemporary_config.deployment(target_triple);

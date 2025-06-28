@@ -5,7 +5,7 @@ use std::io::Read;
 use std::path::Path;
 
 pub fn get_svg_icon_contents(
-    target_triple: String,
+    target_triple: &String,
     base_path: &Path,
     contemporary_config: &ContemporaryConfig,
 ) -> String {
