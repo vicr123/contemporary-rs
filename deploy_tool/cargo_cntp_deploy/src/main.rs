@@ -103,43 +103,17 @@ fn main() {
     let version_tuple = (version.major, version.minor, version.patch);
 
     match args.arch.as_str() {
-        "x86_64-unknown-linux-gnu" => deploy_linux(
+        "x86_64-unknown-linux-gnu"
+        | "aarch64-unknown-linux-gnu"
+        | "x86_64-unknown-linux-musl"
+        | "aarch64-unknown-linux-musl" => deploy_linux(
             args.arch,
             current_dir,
             bin_target.into(),
             output_directory.clone().into(),
             config,
         ),
-        "aarch64-unknown-linux-gnu" => deploy_linux(
-            args.arch,
-            current_dir,
-            bin_target.into(),
-            output_directory.clone().into(),
-            config,
-        ),
-        "x86_64-unknown-linux-musl" => deploy_linux(
-            args.arch,
-            current_dir,
-            bin_target.into(),
-            output_directory.clone().into(),
-            config,
-        ),
-        "aarch64-unknown-linux-musl" => deploy_linux(
-            args.arch,
-            current_dir,
-            bin_target.into(),
-            output_directory.clone().into(),
-            config,
-        ),
-        "aarch64-apple-darwin" => deploy_macos(
-            args.arch,
-            version_tuple,
-            current_dir,
-            bin_target.into(),
-            output_directory.clone().into(),
-            config,
-        ),
-        "x86-64-apple-darwin" => deploy_macos(
+        "aarch64-apple-darwin" | "x86-64-apple-darwin" => deploy_macos(
             args.arch,
             version_tuple,
             current_dir,

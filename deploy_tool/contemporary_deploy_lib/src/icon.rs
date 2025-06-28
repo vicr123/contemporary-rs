@@ -2,11 +2,11 @@ use contemporary_config::ContemporaryConfig;
 use contemporary_icon_tool_core::contemporary_icon::ContemporaryIcon;
 use std::fs::OpenOptions;
 use std::io::Read;
-use std::path::PathBuf;
+use std::path::Path;
 
 pub fn get_svg_icon_contents(
     target_triple: String,
-    base_path: &PathBuf,
+    base_path: &Path,
     contemporary_config: &ContemporaryConfig,
 ) -> String {
     let config = contemporary_config.deployment(&target_triple);
@@ -29,7 +29,6 @@ pub fn get_svg_icon_contents(
         panic!("No icon specified for target triple: {:?}", &target_triple);
     };
     let path = base_path.join(contemporary_base_icon);
-
 
     if contemporary_config.application.theme_colors.len() != 2 {
         panic!("theme_colors must contain exactly 2 elements.");
