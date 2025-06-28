@@ -1,3 +1,4 @@
+use crate::VersionTuple;
 use crate::icon::get_svg_icon_contents;
 use contemporary_config::ContemporaryConfig;
 use plist::{Dictionary, Value, to_file_xml};
@@ -13,6 +14,7 @@ use tracing::error;
 
 pub fn deploy_macos(
     target_triple: String,
+    version: VersionTuple,
     base_path: PathBuf,
     executable_path: PathBuf,
     output_directory: PathBuf,
@@ -111,6 +113,15 @@ pub fn deploy_macos(
     plist_root.insert(
         "CFBundleIconFile".to_string(),
         Value::String("icon.icns".to_string()),
+    );
+    plist_root.insert(
+        "CFBundleVersion".to_string(),
+        Value::String(format!("{}.{}.{}", version.0, version.1, version.2)),
+    );
+    // TODO: maybe allow overriding this?
+    plist_root.insert(
+        "CFBundleShortVersionString".to_string(),
+        Value::String(format!("{}.{}.{}", version.0, version.1, version.2)),
     );
 
     for (key, value) in &extra_info_plist_attributes {

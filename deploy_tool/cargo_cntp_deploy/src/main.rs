@@ -98,9 +98,13 @@ fn main() {
         error!("Unable to find executable at {}", bin_target)
     }
 
+    let version = &root_package.version;
+    let version_tuple = (version.major, version.minor, version.patch);
+
     match args.arch.as_str() {
         "aarch64-apple-darwin" => deploy_macos(
             args.arch,
+            version_tuple,
             current_dir,
             bin_target.into(),
             output_directory.clone().into(),
@@ -108,6 +112,7 @@ fn main() {
         ),
         "x86-64-apple-darwin" => deploy_macos(
             args.arch,
+            version_tuple,
             current_dir,
             bin_target.into(),
             output_directory.clone().into(),
