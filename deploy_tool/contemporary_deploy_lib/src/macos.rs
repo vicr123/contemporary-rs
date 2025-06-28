@@ -1,14 +1,14 @@
 use crate::VersionTuple;
 use crate::icon::get_svg_icon_contents;
 use contemporary_config::ContemporaryConfig;
-use plist::{Dictionary, Value, to_file_xml};
+use plist::{to_file_xml, Dictionary, Value};
 use resvg::render;
 use resvg::tiny_skia::{Pixmap, Transform};
 use resvg::usvg::{Options, Tree};
-use std::fs::{OpenOptions, copy, create_dir_all, remove_dir_all};
+use std::fs::{copy, create_dir_all, remove_dir_all, OpenOptions};
 use std::io::Write;
 use std::path::PathBuf;
-use std::process::{Command, exit};
+use std::process::{exit, Command};
 use tempfile::TempDir;
 use tracing::error;
 
@@ -73,7 +73,7 @@ pub fn deploy_macos(
         exit(1);
     };
 
-    let icon_svg = get_svg_icon_contents(target_triple, base_path, &contemporary_config);
+    let icon_svg = get_svg_icon_contents(target_triple, &base_path, &contemporary_config);
     let icon_path = resources_dir.join("icon.icns");
     create_icns_file(icon_path, icon_svg);
 
@@ -86,7 +86,7 @@ pub fn deploy_macos(
     );
     plist_root.insert(
         "CFBundleIdentifier".to_string(),
-        Value::String(desktop_entry.default_value()),
+        Value::String(desktop_entry),
     );
     if let Some(ref application_generic_name) = application_generic_name {
         plist_root.insert(

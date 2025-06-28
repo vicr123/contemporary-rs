@@ -150,15 +150,19 @@ impl ContemporaryConfig {
                     .application_generic_name
                     .or(deployment.application_generic_name),
             ),
-            desktop_entry: self.resolve_localised_string(
-                specific_deployment
-                    .desktop_entry
-                    .or(deployment.desktop_entry),
-            ),
+            desktop_entry: specific_deployment
+                .desktop_entry
+                .or(deployment.desktop_entry),
+
             icon: specific_deployment.icon.or(deployment.icon),
             contemporary_base_icon: specific_deployment
                 .contemporary_base_icon
                 .or(deployment.contemporary_base_icon),
+
+            // Linux only
+            desktop_entry_categories: specific_deployment
+                .desktop_entry_categories
+                .or(deployment.desktop_entry_categories),
 
             // macOS only
             apple_localisation_dir: self.resolve_localised_string(

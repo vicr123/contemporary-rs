@@ -1,4 +1,5 @@
 pub mod icon;
+pub mod linux;
 pub mod macos;
 
 /// A tuple containing the major, minor, and patch version number components, in that order.

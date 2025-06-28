@@ -20,6 +20,9 @@ pub struct ContemporaryConfigDeploymentDef {
     pub icon: Option<String>,
     pub contemporary_base_icon: Option<String>,
 
+    // Linux only
+    pub desktop_entry_categories: Option<Vec<String>>,
+
     // macOS only
     pub apple_localisation_dir: Option<String>,
     pub extra_info_plist_attributes: Option<HashMap<String, String>>,
@@ -33,9 +36,12 @@ pub struct ContemporaryConfigDeploymentDef {
 pub struct ContemporaryConfigDeployment {
     pub application_name: Option<LocalisedString>,
     pub application_generic_name: Option<LocalisedString>,
-    pub desktop_entry: Option<LocalisedString>,
+    pub desktop_entry: Option<String>,
     pub icon: Option<String>,
     pub contemporary_base_icon: Option<String>,
+
+    // Linux only
+    pub desktop_entry_categories: Option<Vec<String>>,
 
     // macOS only
     pub apple_localisation_dir: Option<LocalisedString>,

@@ -6,7 +6,7 @@ use std::path::PathBuf;
 
 pub fn get_svg_icon_contents(
     target_triple: String,
-    base_path: PathBuf,
+    base_path: &PathBuf,
     contemporary_config: &ContemporaryConfig,
 ) -> String {
     let config = contemporary_config.deployment(&target_triple);
