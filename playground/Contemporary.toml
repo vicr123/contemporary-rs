@@ -1,8 +1,11 @@
+[config]
+i18n_dir = "dist/contemporary_toml_translations"
+
 [application]
 theme_colors = ["#6400ff", "#c800ff"]
 
 [deployment]
-application_name = "Contemporary Playground"
+application_name = "t:APPLICATION_NAME"
 desktop_entry = "com.vicr123.contemporary.playground"
 contemporary_base_icon = "assets/baseicon.svg"
 

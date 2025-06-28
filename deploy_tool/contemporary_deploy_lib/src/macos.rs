@@ -36,7 +36,7 @@ pub fn deploy_macos(
     };
 
     let app_root = output_directory
-        .join(application_name.clone())
+        .join(application_name.default_value())
         .with_extension("app");
     if app_root.exists() {
         remove_dir_all(app_root.clone()).unwrap();
@@ -54,7 +54,10 @@ pub fn deploy_macos(
         exit(1);
     };
 
-    let Ok(_) = std::fs::copy(executable_path, macos_dir.join(application_name.clone())) else {
+    let Ok(_) = copy(
+        executable_path,
+        macos_dir.join(application_name.default_value()),
+    ) else {
         error!("Failed to copy executable to MacOS directory");
         exit(1);
     };
@@ -65,7 +68,7 @@ pub fn deploy_macos(
         exit(1);
     };
 
-    let icon_svg = get_svg_icon_contents(target_triple, base_path, contemporary_config);
+    let icon_svg = get_svg_icon_contents(target_triple, base_path, &contemporary_config);
     let icon_path = resources_dir.join("icon.icns");
     create_icns_file(icon_path, icon_svg);
 
@@ -74,11 +77,11 @@ pub fn deploy_macos(
     let mut plist_root = Dictionary::new();
     plist_root.insert(
         "CFBundleExecutable".to_string(),
-        Value::String(application_name.clone()),
+        Value::String(application_name.default_value()),
     );
     plist_root.insert(
         "CFBundleIdentifier".to_string(),
-        Value::String(desktop_entry.clone()),
+        Value::String(desktop_entry.default_value()),
     );
     plist_root.insert(
         "CFBundlePackageType".to_string(),
@@ -105,6 +108,32 @@ pub fn deploy_macos(
         error!("Failed to write Info.plist");
         exit(1);
     };
+
+    // Create an InfoPlist.strings file for each localisation
+    for localisation in contemporary_config.available_localisations() {
+        let lproj_dir = resources_dir
+            .join(localisation.clone())
+            .with_extension("lproj");
+        let Ok(_) = create_dir_all(&lproj_dir) else {
+            error!(
+                "Failed to create localisation directory for language {}",
+                localisation
+            );
+            continue;
+        };
+        
+        let info_plist_strings_path = lproj_dir.join("InfoPlist.strings");
+        let mut file = OpenOptions::new()
+            .write(true)
+            .create(true).truncate(true)
+            .open(info_plist_strings_path)
+            .unwrap();
+        
+        if let Some(application_name) = application_name.resolve_language(&localisation) {
+            file.write_all(format!("CFBundleDisplayName = {application_name};\n").as_bytes()).unwrap();
+            file.write_all(format!("CFBundleName = {application_name};\n").as_bytes()).unwrap();
+        }
+    }
 }
 
 struct IconDimensions {

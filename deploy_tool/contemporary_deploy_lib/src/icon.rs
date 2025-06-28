@@ -7,7 +7,7 @@ use std::path::PathBuf;
 pub fn get_svg_icon_contents(
     target_triple: String,
     base_path: PathBuf,
-    contemporary_config: ContemporaryConfig,
+    contemporary_config: &ContemporaryConfig,
 ) -> String {
     let config = contemporary_config.deployment(&target_triple);
 
@@ -29,12 +29,12 @@ pub fn get_svg_icon_contents(
         panic!("No icon specified for target triple: {:?}", &target_triple);
     };
     let path = base_path.join(contemporary_base_icon);
-    
+
 
     if contemporary_config.application.theme_colors.len() != 2 {
         panic!("theme_colors must contain exactly 2 elements.");
     }
-    
+
     let icon_generator = ContemporaryIcon::new(
         path,
         matches!(

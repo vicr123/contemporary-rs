@@ -1,13 +1,19 @@
-use std::collections::HashMap;
+use crate::LocalisedString;
 use serde::Deserialize;
+use std::collections::HashMap;
 
 #[derive(Deserialize)]
-pub struct ContemporaryConfigApplication {
+pub struct ContemporaryConfigApplicationDef {
     pub theme_colors: Vec<String>,
 }
 
 #[derive(Deserialize, Clone)]
-pub struct ContemporaryConfigDeployment {
+pub struct ContemporaryConfigConfigDef {
+    pub i18n_dir: Option<String>,
+}
+
+#[derive(Deserialize, Clone, Default)]
+pub struct ContemporaryConfigDeploymentDef {
     pub application_name: Option<String>,
     pub apple_localisation_dir: Option<String>,
     pub desktop_entry: Option<String>,
@@ -15,18 +21,13 @@ pub struct ContemporaryConfigDeployment {
     pub contemporary_base_icon: Option<String>,
 
     #[serde(flatten)]
-    pub children: HashMap<String, ContemporaryConfigDeployment>
+    pub children: HashMap<String, ContemporaryConfigDeploymentDef>,
 }
 
-impl ContemporaryConfigDeployment {
-    pub fn new() -> Self {
-        Self {
-            application_name: None,
-            apple_localisation_dir: None,
-            desktop_entry: None,
-            icon: None,
-            contemporary_base_icon: None,
-            children: HashMap::new()
-        }
-    }
+pub struct ContemporaryConfigDeployment {
+    pub application_name: Option<LocalisedString>,
+    pub apple_localisation_dir: Option<LocalisedString>,
+    pub desktop_entry: Option<LocalisedString>,
+    pub icon: Option<String>,
+    pub contemporary_base_icon: Option<String>,
 }
