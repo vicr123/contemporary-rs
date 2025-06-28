@@ -80,7 +80,7 @@ impl Locale {
         let Some(region) = region else {
             return language;
         };
-        format!("{} ({})", language, region)
+        format!("{language} ({region})")
     }
 
     pub fn human_readable_language_name(&self) -> String {
@@ -135,11 +135,11 @@ impl Locale {
     }
 
     pub fn quote_string(&self, string: impl Display) -> String {
-        format!("\"{}\"", string)
+        format!("\"{string}\"")
     }
 
     pub fn quote_string_alternate(&self, string: impl Display) -> String {
-        format!("'{}'", string)
+        format!("'{string}'")
     }
 }
 

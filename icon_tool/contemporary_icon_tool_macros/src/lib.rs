@@ -3,7 +3,7 @@ use contemporary_icon_tool_core::contemporary_icon::ContemporaryIcon;
 use proc_macro::TokenStream;
 use quote::quote;
 use syn::parse::{Parse, ParseStream};
-use syn::{parse_macro_input, Error, LitStr};
+use syn::{Error, LitStr, parse_macro_input};
 
 struct ApplicationIconMacroInput {
     pub icon_file: LitStr,
@@ -107,7 +107,7 @@ pub fn application_icon(body: TokenStream) -> TokenStream {
 }
 
 #[proc_macro]
-pub fn application_icon_asset_path(body: TokenStream) -> TokenStream {
+pub fn application_icon_asset_path(_body: TokenStream) -> TokenStream {
     quote! {
         "contemporary-icon:/application"
     }

@@ -9,9 +9,8 @@ fn main() {
 
     if let GenerationResult::ErrorsEncountered(count) = contemporary_i18n_gen::generate(&path) {
         println!(
-            "cargo::warning={} errors generated while building translation file, \
+            "cargo::warning={count} errors generated while building translation file, \
             run cntp-i18n generate manually to see them",
-            count
         );
     };
 }

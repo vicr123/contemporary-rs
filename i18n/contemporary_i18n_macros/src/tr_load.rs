@@ -44,8 +44,8 @@ pub fn tr_load(_body: TokenStream) -> TokenStream {
                     let other = items.get("other");
                     let Some(other) = other else {
                         panic!(
-                            "Translation key {} for language {} has plural entry without other",
-                            key, language
+                            "Translation key {key} for language {language} has plural entry \
+                            without other",
                         )
                         // return ParseBuffer::error(format!(
                         //     "Translation key {} has plural entry without other",

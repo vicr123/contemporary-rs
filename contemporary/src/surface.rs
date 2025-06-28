@@ -2,7 +2,7 @@ use crate::components::button::button;
 use crate::styling::theme::Theme;
 use gpui::{
     App, AppContext, Context, Entity, InteractiveElement, IntoElement, MouseButton, ParentElement,
-    Render, RenderOnce, Styled, Window, WindowControlArea, div, img, px, rgb, svg,
+    Render, RenderOnce, Styled, Window, WindowControlArea, div, img, px, svg,
 };
 
 pub struct Surface<T>

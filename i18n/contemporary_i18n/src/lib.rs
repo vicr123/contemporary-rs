@@ -53,16 +53,15 @@ impl I18nManager {
                         .find(|(name, _)| *name == "count")
                         .unwrap_or_else(|| {
                             panic!(
-                                "Resolved plural string for {}, but no count variable provided for \
-                            substitution",
-                                key
+                                "Resolved plural string for {key}, but no count variable provided \
+                                for substitution",
                             )
                         });
 
                     match count {
                         Variable::Count(count) => entry.lookup(*count),
                         Variable::String(string) => {
-                            panic!("Count variable ({}) not of type isize", string)
+                            panic!("Count variable ({string}) not of type isize")
                         }
                     }
                 }
@@ -73,9 +72,8 @@ impl I18nManager {
                 if *name == "count" {
                     if entry.is_singular() {
                         panic!(
-                            "Resolved non-plural string for {}, but count variable provided \
+                            "Resolved non-plural string for {key}, but count variable provided \
                             for substitution",
-                            key
                         )
                     }
 
@@ -84,12 +82,11 @@ impl I18nManager {
                 }
 
                 resolved = match substitution {
-                    Variable::Count(count) => panic!(
-                        "Substitution variable ({}) not of type string (is {})",
-                        name, count
-                    ),
+                    Variable::Count(count) => {
+                        panic!("Substitution variable ({name}) not of type string (is {count})",)
+                    }
                     Variable::String(string) => resolved
-                        .replace(format!("{{{{{}}}}}", name).as_str(), string.as_str())
+                        .replace(format!("{{{{{name}}}}}",).as_str(), string.as_str())
                         .into(),
                 }
             }

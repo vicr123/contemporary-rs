@@ -46,7 +46,7 @@ impl ManagerSource for IconThemeAssetSource {
         Ok(None)
     }
 
-    fn list(&self, path: &str) -> gpui::Result<Vec<SharedString>> {
+    fn list(&self, _path: &str) -> gpui::Result<Vec<SharedString>> {
         Ok(Vec::new())
     }
 }

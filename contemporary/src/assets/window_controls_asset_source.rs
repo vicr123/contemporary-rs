@@ -26,7 +26,7 @@ impl ManagerSource for WindowControlsAssetSource {
         })
     }
 
-    fn list(&self, path: &str) -> gpui::Result<Vec<SharedString>> {
+    fn list(&self, _path: &str) -> gpui::Result<Vec<SharedString>> {
         Ok(Vec::new())
     }
 }
