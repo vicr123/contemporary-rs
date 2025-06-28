@@ -12,6 +12,12 @@
       "type": "cntp-rs",
       "path": "/playground/translations/{lang}.json",
       "baseLang": "en"
+    },
+    {
+      "name": "Contemporary Playground Metadata",
+      "type": "i18next",
+      "path": "/playground/dist/contemporary_toml_translations/{lang}.json",
+      "baseLang": "en"
     }
   ]
 }
