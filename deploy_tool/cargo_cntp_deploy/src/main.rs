@@ -25,10 +25,10 @@ struct Args {
     /// How loud should we be?
     #[clap(flatten)]
     verbosity: clap_verbosity_flag::Verbosity<InfoLevel>,
-    
+
     /// Don't open the output directory after deployment is complete
     #[clap(long, default_value_t = false)]
-    no_open: bool
+    no_open: bool,
 }
 
 fn main() {
@@ -89,7 +89,9 @@ fn main() {
         target_directory = triple_directory;
     }
     target_directory = target_directory.join(args.profile);
-    let bin_target = target_directory.join(root_package.name.as_str().to_owned() + EXE_EXTENSION);
+    let bin_target = target_directory
+        .join(root_package.name.as_str())
+        .with_extension(EXE_EXTENSION);
 
     // TODO: Run cargo build
     if !bin_target.exists() {
@@ -97,13 +99,25 @@ fn main() {
     }
 
     match args.arch.as_str() {
-        "aarch64-apple-darwin" => deploy_macos(args.arch, current_dir, bin_target.into(), output_directory.clone().into(), config),
-        "x86-64-apple-darwin" => deploy_macos(args.arch, current_dir, bin_target.into(), output_directory.clone().into(), config),
+        "aarch64-apple-darwin" => deploy_macos(
+            args.arch,
+            current_dir,
+            bin_target.into(),
+            output_directory.clone().into(),
+            config,
+        ),
+        "x86-64-apple-darwin" => deploy_macos(
+            args.arch,
+            current_dir,
+            bin_target.into(),
+            output_directory.clone().into(),
+            config,
+        ),
         _ => {
             error!("Unsupported target triple: {}", args.arch);
             exit(1);
         }
     }
-    
+
     let _ = open::that(output_directory);
 }
