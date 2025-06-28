@@ -1,9 +1,9 @@
 use cargo_metadata::MetadataCommand;
 use clap::Parser;
 use clap_verbosity_flag::InfoLevel;
+use contemporary_bundle_lib::linux::deploy_linux;
+use contemporary_bundle_lib::macos::deploy_macos;
 use contemporary_config::ContemporaryConfig;
-use contemporary_deploy_lib::linux::deploy_linux;
-use contemporary_deploy_lib::macos::deploy_macos;
 use current_platform::CURRENT_PLATFORM;
 use std::env;
 use std::env::consts::EXE_EXTENSION;

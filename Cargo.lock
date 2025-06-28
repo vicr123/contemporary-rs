@@ -674,15 +674,15 @@ dependencies = [
 ]
 
 [[package]]
-name = "cargo-cntp-deploy"
+name = "cargo-cntp-bundle"
 version = "0.1.0"
 dependencies = [
  "cargo_metadata 0.20.0",
  "clap",
  "clap-cargo",
  "clap-verbosity-flag",
+ "contemporary_bundle_lib",
  "contemporary_config",
- "contemporary_deploy_lib",
  "current_platform",
  "open",
  "tracing",
@@ -1089,17 +1089,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "contemporary_config"
-version = "0.1.0"
-dependencies = [
- "serde",
- "serde_json",
- "toml",
- "tracing",
-]
-
-[[package]]
-name = "contemporary_deploy_lib"
+name = "contemporary_bundle_lib"
 version = "0.1.0"
 dependencies = [
  "contemporary_config",
@@ -1107,6 +1097,16 @@ dependencies = [
  "plist",
  "resvg",
  "tempfile",
+ "tracing",
+]
+
+[[package]]
+name = "contemporary_config"
+version = "0.1.0"
+dependencies = [
+ "serde",
+ "serde_json",
+ "toml",
  "tracing",
 ]
 

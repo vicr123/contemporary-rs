@@ -1,5 +1,5 @@
 [package]
-name = "cargo-cntp-deploy"
+name = "cargo-cntp-bundle"
 version = "0.1.0"
 edition = "2024"
 
@@ -7,7 +7,7 @@ edition = "2024"
 clap = { version = "4", features = ["derive"] }
 clap-cargo = { version = "0.15", features = ["cargo_metadata"] }
 contemporary_config = { path = "../../contemporary_config" }
-contemporary_deploy_lib = { path = "../contemporary_deploy_lib" }
+contemporary_bundle_lib = { path = "../contemporary_bundle_lib" }
 tracing = { workspace = true }
 tracing-subscriber = "0.3"
 clap-verbosity-flag = { version = "3.0.3", default-features = false, features = ["tracing"] }
