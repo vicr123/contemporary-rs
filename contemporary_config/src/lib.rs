@@ -150,11 +150,6 @@ impl ContemporaryConfig {
                     .application_generic_name
                     .or(deployment.application_generic_name),
             ),
-            apple_localisation_dir: self.resolve_localised_string(
-                specific_deployment
-                    .apple_localisation_dir
-                    .or(deployment.apple_localisation_dir),
-            ),
             desktop_entry: self.resolve_localised_string(
                 specific_deployment
                     .desktop_entry
@@ -164,6 +159,13 @@ impl ContemporaryConfig {
             contemporary_base_icon: specific_deployment
                 .contemporary_base_icon
                 .or(deployment.contemporary_base_icon),
+
+            // macOS only
+            apple_localisation_dir: self.resolve_localised_string(
+                specific_deployment
+                    .apple_localisation_dir
+                    .or(deployment.apple_localisation_dir),
+            ),
             extra_info_plist_attributes: extra_info_plist_attributes
                 .iter()
                 .map(|(key, value)| {
@@ -173,6 +175,14 @@ impl ContemporaryConfig {
                     )
                 })
                 .collect(),
+            minimum_system_version: specific_deployment
+                .minimum_system_version
+                .or(deployment.minimum_system_version)
+                .unwrap_or("10.15".to_string()),
+            supports_automatic_graphics_switching: specific_deployment
+                .supports_automatic_graphics_switching
+                .or(deployment.supports_automatic_graphics_switching)
+                .unwrap_or(true),
         }
     }
 

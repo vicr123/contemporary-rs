@@ -98,7 +98,7 @@ pub fn deploy_macos(
     );
     plist_root.insert(
         "LSMinimumSystemVersion".to_string(),
-        Value::String("10.15".to_string()),
+        Value::String(deployment.minimum_system_version),
     );
     plist_root.insert(
         "NSPrincipalClass".to_string(),
@@ -106,7 +106,7 @@ pub fn deploy_macos(
     );
     plist_root.insert(
         "NSSupportsAutomaticGraphicsSwitching".to_string(),
-        Value::Boolean(true),
+        Value::Boolean(deployment.supports_automatic_graphics_switching),
     );
     plist_root.insert(
         "CFBundleIconFile".to_string(),
