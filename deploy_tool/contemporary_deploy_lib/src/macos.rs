@@ -1,13 +1,13 @@
 use crate::icon::get_svg_icon_contents;
 use contemporary_config::ContemporaryConfig;
-use plist::{to_file_xml, Dictionary, Value};
+use plist::{Dictionary, Value, to_file_xml};
 use resvg::render;
 use resvg::tiny_skia::{Pixmap, Transform};
 use resvg::usvg::{Options, Tree};
-use std::fs::{copy, create_dir_all, remove_dir_all, OpenOptions};
+use std::fs::{OpenOptions, copy, create_dir_all, remove_dir_all};
 use std::io::Write;
 use std::path::PathBuf;
-use std::process::{exit, Command};
+use std::process::{Command, exit};
 use tempfile::TempDir;
 use tracing::error;
 
@@ -20,7 +20,7 @@ pub fn deploy_macos(
 ) {
     let deployment = contemporary_config.deployment(&target_triple);
 
-    let Ok(_) = create_dir_all(output_directory.clone()) else {
+    let Ok(_) = create_dir_all(&output_directory) else {
         error!("Failed to create output directory");
         exit(1);
     };
@@ -42,17 +42,17 @@ pub fn deploy_macos(
         .join(application_name.default_value())
         .with_extension("app");
     if app_root.exists() {
-        remove_dir_all(app_root.clone()).unwrap();
+        remove_dir_all(&app_root).unwrap();
     };
 
     let contents_dir = app_root.join("Contents");
-    let Ok(_) = create_dir_all(contents_dir.clone()) else {
+    let Ok(_) = create_dir_all(&contents_dir) else {
         error!("Failed to create application package");
         exit(1);
     };
 
     let macos_dir = contents_dir.join("MacOS");
-    let Ok(_) = create_dir_all(macos_dir.clone()) else {
+    let Ok(_) = create_dir_all(&macos_dir) else {
         error!("Failed to create MacOS directory");
         exit(1);
     };
@@ -66,7 +66,7 @@ pub fn deploy_macos(
     };
 
     let resources_dir = contents_dir.join("Resources");
-    let Ok(_) = create_dir_all(resources_dir.clone()) else {
+    let Ok(_) = create_dir_all(&resources_dir) else {
         error!("Failed to create Resources directory");
         exit(1);
     };
@@ -124,9 +124,7 @@ pub fn deploy_macos(
 
     // Create an InfoPlist.strings file for each localisation
     for localisation in contemporary_config.available_localisations() {
-        let lproj_dir = resources_dir
-            .join(localisation.clone())
-            .with_extension("lproj");
+        let lproj_dir = resources_dir.join(&localisation).with_extension("lproj");
         let Ok(_) = create_dir_all(&lproj_dir) else {
             error!(
                 "Failed to create localisation directory for language {}",
