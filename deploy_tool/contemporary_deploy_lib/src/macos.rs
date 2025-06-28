@@ -36,6 +36,7 @@ pub fn deploy_macos(
     };
 
     let application_generic_name = deployment.application_generic_name;
+    let extra_info_plist_attributes = deployment.extra_info_plist_attributes;
 
     let app_root = output_directory
         .join(application_name.default_value())
@@ -112,6 +113,10 @@ pub fn deploy_macos(
         Value::String("icon.icns".to_string()),
     );
 
+    for (key, value) in &extra_info_plist_attributes {
+        plist_root.insert(key.clone(), Value::String(value.default_value()));
+    }
+
     let Ok(_) = to_file_xml(info_plist_path, &Value::Dictionary(plist_root)) else {
         error!("Failed to write Info.plist");
         exit(1);
@@ -139,9 +144,9 @@ pub fn deploy_macos(
             .unwrap();
 
         if let Some(application_name) = application_name.resolve_language(&localisation) {
-            file.write_all(format!("CFBundleDisplayName = {application_name};\n").as_bytes())
+            file.write_all(format!("CFBundleDisplayName = \"{application_name}\";\n").as_bytes())
                 .unwrap();
-            file.write_all(format!("CFBundleName = {application_name};\n").as_bytes())
+            file.write_all(format!("CFBundleName = \"{application_name}\";\n").as_bytes())
                 .unwrap();
         }
 
@@ -150,9 +155,16 @@ pub fn deploy_macos(
                 application_generic_name.resolve_language(&localisation)
             {
                 file.write_all(
-                    format!("CFBundleGetInfoString = {application_generic_name};\n").as_bytes(),
+                    format!("CFBundleGetInfoString = \"{application_generic_name}\";\n").as_bytes(),
                 )
                 .unwrap();
+            }
+        }
+
+        for (key, value) in &extra_info_plist_attributes {
+            if let Some(value) = value.resolve_language(&localisation) {
+                file.write_all(format!("{key} = \"{value}\";\n").as_bytes())
+                    .unwrap();
             }
         }
     }

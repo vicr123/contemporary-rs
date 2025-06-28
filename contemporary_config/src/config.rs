@@ -20,6 +20,7 @@ pub struct ContemporaryConfigDeploymentDef {
     pub desktop_entry: Option<String>,
     pub icon: Option<String>,
     pub contemporary_base_icon: Option<String>,
+    pub extra_info_plist_attributes: Option<HashMap<String, String>>,
 
     #[serde(flatten)]
     pub children: HashMap<String, ContemporaryConfigDeploymentDef>,
@@ -32,4 +33,5 @@ pub struct ContemporaryConfigDeployment {
     pub desktop_entry: Option<LocalisedString>,
     pub icon: Option<String>,
     pub contemporary_base_icon: Option<String>,
+    pub extra_info_plist_attributes: HashMap<String, LocalisedString>,
 }

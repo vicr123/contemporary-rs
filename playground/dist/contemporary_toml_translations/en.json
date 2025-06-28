@@ -1,4 +1,5 @@
 {
   "APPLICATION_NAME": "Contemporary Playground",
-  "APPLICATION_GENERIC_NAME": "Control Playground"
+  "APPLICATION_GENERIC_NAME": "Control Playground",
+  "REMOVABLE_VOLUMES_USAGE_DESCRIPTION": "This is example text for an example attribute to go inside Info.plist"
 }

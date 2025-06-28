@@ -9,6 +9,7 @@ application_name = "t:APPLICATION_NAME"
 application_generic_name = "t:APPLICATION_GENERIC_NAME"
 desktop_entry = "com.vicr123.contemporary.playground"
 contemporary_base_icon = "assets/baseicon.svg"
+extra_info_plist_attributes = { NSRemovableVolumesUsageDescription = "t:REMOVABLE_VOLUMES_USAGE_DESCRIPTION" }
 
 [deployment."aarch64-apple-darwin"]
 contemporary_base_icon = "assets/baseicon-mac.svg"

@@ -131,6 +131,14 @@ impl ContemporaryConfig {
             ContemporaryConfigDeploymentDef::default()
         };
 
+        let mut extra_info_plist_attributes = HashMap::new();
+        if let Some(extra_attributes) = deployment.extra_info_plist_attributes {
+            extra_info_plist_attributes.extend(extra_attributes);
+        }
+        if let Some(extra_attributes) = specific_deployment.extra_info_plist_attributes {
+            extra_info_plist_attributes.extend(extra_attributes);
+        }
+
         ContemporaryConfigDeployment {
             application_name: self.resolve_localised_string(
                 specific_deployment
@@ -156,6 +164,15 @@ impl ContemporaryConfig {
             contemporary_base_icon: specific_deployment
                 .contemporary_base_icon
                 .or(deployment.contemporary_base_icon),
+            extra_info_plist_attributes: extra_info_plist_attributes
+                .iter()
+                .map(|(key, value)| {
+                    (
+                        key.clone(),
+                        self.resolve_localised_string(Some(value.clone())).unwrap(),
+                    )
+                })
+                .collect(),
         }
     }
 

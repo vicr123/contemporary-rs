@@ -1,3 +1,4 @@
 {
-  "APPLICATION_NAME": "Sân chơi Contemporary"
+  "APPLICATION_NAME": "Sân chơi Contemporary",
+  "REMOVABLE_VOLUMES_USAGE_DESCRIPTION": "Đây là văn bản ví dụ cho một thuộc tính ví dụ để trong Info.plist"
 }
