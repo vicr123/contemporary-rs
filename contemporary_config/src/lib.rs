@@ -183,6 +183,9 @@ impl ContemporaryConfig {
                 .minimum_system_version
                 .or(deployment.minimum_system_version)
                 .unwrap_or("10.15".to_string()),
+            disk_image_background: specific_deployment
+                .disk_image_background
+                .or(deployment.disk_image_background),
             supports_automatic_graphics_switching: specific_deployment
                 .supports_automatic_graphics_switching
                 .or(deployment.supports_automatic_graphics_switching)

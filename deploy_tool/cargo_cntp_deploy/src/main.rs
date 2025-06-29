@@ -1,7 +1,7 @@
 use clap::Parser;
 use clap_verbosity_flag::InfoLevel;
 use contemporary_bundle_lib::linux::{bundle_linux, deploy_linux};
-use contemporary_bundle_lib::macos::{bundle_macos, deploy_macos};
+use contemporary_bundle_lib::macos::deploy::deploy_macos;
 use contemporary_bundle_lib::tool_setup::{setup_tool, DeploymentType};
 use std::path::Path;
 use tracing::info;
@@ -52,7 +52,7 @@ fn main() {
 
     match setup_data.deployment_type {
         DeploymentType::Linux => deploy_linux(&setup_data, &args.output_file),
-        DeploymentType::MacOS => deploy_macos(&setup_data),
+        DeploymentType::MacOS => deploy_macos(&setup_data, &args.output_file),
     }
 
     if !args.no_open {

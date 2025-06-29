@@ -28,6 +28,7 @@ pub struct ContemporaryConfigDeploymentDef {
     pub extra_info_plist_attributes: Option<HashMap<String, String>>,
     pub minimum_system_version: Option<String>,
     pub supports_automatic_graphics_switching: Option<bool>,
+    pub disk_image_background: Option<String>,
 
     #[serde(flatten)]
     pub children: HashMap<String, ContemporaryConfigDeploymentDef>,
@@ -47,5 +48,6 @@ pub struct ContemporaryConfigDeployment {
     pub apple_localisation_dir: Option<LocalisedString>,
     pub extra_info_plist_attributes: HashMap<String, LocalisedString>,
     pub minimum_system_version: String,
+    pub disk_image_background: Option<String>,
     pub supports_automatic_graphics_switching: bool,
 }

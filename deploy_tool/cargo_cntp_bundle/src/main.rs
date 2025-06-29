@@ -2,7 +2,7 @@ use cargo_metadata::MetadataCommand;
 use clap::Parser;
 use clap_verbosity_flag::InfoLevel;
 use contemporary_bundle_lib::linux::bundle_linux;
-use contemporary_bundle_lib::macos::bundle_macos;
+use contemporary_bundle_lib::macos::bundle::bundle_macos;
 use contemporary_bundle_lib::tool_setup::{setup_tool, DeploymentType};
 use contemporary_config::ContemporaryConfig;
 use current_platform::CURRENT_PLATFORM;

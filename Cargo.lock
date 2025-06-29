@@ -1122,12 +1122,15 @@ dependencies = [
 name = "contemporary_bundle_lib"
 version = "0.1.0"
 dependencies = [
+ "anyhow",
  "cargo_metadata 0.20.0",
  "contemporary_config",
  "contemporary_icon_tool_core",
  "current_platform",
+ "image",
  "isahc",
  "plist",
+ "regex",
  "resvg",
  "tempfile",
  "tracing",
