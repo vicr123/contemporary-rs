@@ -1,9 +1,9 @@
 use cargo_metadata::MetadataCommand;
 use clap::Parser;
 use clap_verbosity_flag::InfoLevel;
-use contemporary_bundle_lib::linux::deploy_linux;
-use contemporary_bundle_lib::macos::deploy_macos;
-use contemporary_bundle_lib::tool_setup::{DeploymentType, setup_tool};
+use contemporary_bundle_lib::linux::bundle_linux;
+use contemporary_bundle_lib::macos::bundle_macos;
+use contemporary_bundle_lib::tool_setup::{setup_tool, DeploymentType};
 use contemporary_config::ContemporaryConfig;
 use current_platform::CURRENT_PLATFORM;
 use std::collections::HashMap;
@@ -84,9 +84,8 @@ fn main() {
     }
 
     match setup_data.deployment_type {
-        DeploymentType::Linux => deploy_linux(&setup_data, bin_targets),
-        DeploymentType::MacOS => deploy_macos(&setup_data, bin_targets),
-        _ => panic!("Unknown deployment type"),
+        DeploymentType::Linux => bundle_linux(&setup_data, bin_targets),
+        DeploymentType::MacOS => bundle_macos(&setup_data, bin_targets),
     }
 
     if !args.no_open {

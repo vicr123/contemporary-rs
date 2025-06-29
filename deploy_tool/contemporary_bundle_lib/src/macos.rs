@@ -14,7 +14,7 @@ use std::process::{exit, Command};
 use tempfile::TempDir;
 use tracing::error;
 
-pub fn deploy_macos(setup_data: &ToolSetup, executable_path: HashMap<String, PathBuf>) {
+pub fn bundle_macos(setup_data: &ToolSetup, executable_path: HashMap<String, PathBuf>) {
     let deployment = setup_data
         .contemporary_config
         .deployment(&setup_data.targets.first().unwrap());
@@ -307,3 +307,5 @@ fn create_icns_file(icns_path: PathBuf, svg_data: String) {
     // Copy the generated ICNS file to the output location
     copy(temp_dir_path.join("icon.icns"), icns_path).expect("Failed to copy generated ICNS file");
 }
+
+pub fn deploy_macos(setup_data: &ToolSetup) {}
