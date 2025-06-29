@@ -3,6 +3,7 @@ use clap::Parser;
 use clap_verbosity_flag::InfoLevel;
 use contemporary_bundle_lib::linux::deploy_linux;
 use contemporary_bundle_lib::macos::deploy_macos;
+use contemporary_bundle_lib::tool_setup::{DeploymentType, setup_tool};
 use contemporary_config::ContemporaryConfig;
 use current_platform::CURRENT_PLATFORM;
 use std::collections::HashMap;
@@ -18,8 +19,8 @@ use tracing::{error, info};
 #[command(version, about, long_about = None)]
 struct Args {
     /// The profile to build
-    #[arg(short, long, default_value_t = String::from("release"))]
-    profile: String,
+    #[arg(short, long)]
+    profile: Option<String>,
 
     /// The targets to build for
     #[arg(short, long)]
@@ -37,100 +38,40 @@ struct Args {
 fn main() {
     let args = Args::parse();
 
-    let targets = if args.target.is_empty() {
-        vec![CURRENT_PLATFORM.to_string()]
-    } else {
-        args.target
-            .iter()
-            .flat_map(|s| s.split(';'))
-            .map(String::from)
-            .collect()
-    };
-
     tracing_subscriber::fmt()
         .with_target(false)
         .without_time()
         .with_max_level(args.verbosity)
         .init();
 
-    let current_dir = env::current_dir().unwrap();
+    let setup_data = setup_tool(args.profile, args.target, "bundle");
 
-    let cargo_toml_path = current_dir.join("Cargo.toml");
-    if !cargo_toml_path.exists() {
-        error!("Unable to find Cargo.toml in current directory.");
-        exit(1)
-    };
-
-    let Ok(cargo_metadata) = MetadataCommand::new().manifest_path("./Cargo.toml").exec() else {
-        error!("Unable to read Cargo.toml in current directory.");
-        exit(1);
-    };
-
-    let Some(root_package) = cargo_metadata.root_package() else {
-        error!("The current project is not a binary project.");
-        error!("Please rerun this command in the root of a binary project.");
-        exit(1);
-    };
-
-    let Some(bin_target) = root_package.targets.iter().find(|target| target.is_bin()) else {
-        error!("The current project is not a binary project.");
-        error!("Please rerun this command in the root of a binary project.");
-        exit(1);
-    };
-
-    let Some(config) = ContemporaryConfig::new_from_path(current_dir.join("Contemporary.toml"))
-    else {
-        error!("Unable to find Contemporary.toml in current directory.");
-        exit(1);
-    };
-
-    let deployment_type = {
-        if targets.iter().all(|target| {
-            matches!(
-                target.as_str(),
-                "x86_64-unknown-linux-gnu"
-                    | "aarch64-unknown-linux-gnu"
-                    | "x86_64-unknown-linux-musl"
-                    | "aarch64-unknown-linux-musl"
-            )
-        }) && targets.len() == 1
-        {
-            "linux"
-        } else if targets.iter().all(|target| {
-            matches!(
-                target.as_str(),
-                "aarch64-apple-darwin" | "x86_64-apple-darwin"
-            )
-        }) {
-            "macos"
-        } else {
-            error!("Unsupported target configuration: {}", targets.join(";"));
-            exit(1);
-        }
-    };
-
-    let output_directory = cargo_metadata
-        .target_directory
-        .join("deploy")
-        .join(targets.join("-"))
-        .join(args.profile.clone());
-
-    info!("Deploying {}", root_package.name);
-    info!("Profile: {}", args.profile);
-    info!("Target:  {}", targets.join(";"));
-    info!("Output:  {}", output_directory);
+    info!(
+        "Bundling {}",
+        setup_data.cargo_metadata.root_package().unwrap().name
+    );
+    info!("Profile: {}", setup_data.profile);
+    info!("Target:  {}", setup_data.targets.join(";"));
+    info!("Output:  {}", setup_data.output_directory.display());
 
     // Find the executable(s) to publish
     let mut bin_targets: HashMap<String, PathBuf> = HashMap::new();
-    for target in &targets {
-        let mut target_directory = cargo_metadata.target_directory.clone();
+    for target in &setup_data.targets {
+        let mut target_directory = setup_data.cargo_metadata.target_directory.clone();
         if target != CURRENT_PLATFORM {
             target_directory = target_directory.join(target.clone());
         }
-        target_directory = target_directory.join(args.profile.clone());
+        target_directory = target_directory.join(setup_data.profile.clone());
 
         let bin_target = target_directory
-            .join(root_package.name.as_str())
+            .join(
+                setup_data
+                    .cargo_metadata
+                    .root_package()
+                    .unwrap()
+                    .name
+                    .as_str(),
+            )
             .with_extension(EXE_EXTENSION);
 
         // TODO: Run cargo build
@@ -142,29 +83,13 @@ fn main() {
         bin_targets.insert(target.clone(), bin_target.into());
     }
 
-    let version = &root_package.version;
-    let version_tuple = (version.major, version.minor, version.patch);
-
-    match deployment_type {
-        "linux" => deploy_linux(
-            targets,
-            current_dir,
-            bin_targets,
-            output_directory.clone().into(),
-            config,
-        ),
-        "macos" => deploy_macos(
-            targets,
-            version_tuple,
-            current_dir,
-            bin_targets,
-            output_directory.clone().into(),
-            config,
-        ),
-        _ => {}
+    match setup_data.deployment_type {
+        DeploymentType::Linux => deploy_linux(&setup_data, bin_targets),
+        DeploymentType::MacOS => deploy_macos(&setup_data, bin_targets),
+        _ => panic!("Unknown deployment type"),
     }
 
     if !args.no_open {
-        let _ = open::that(output_directory);
+        let _ = open::that(setup_data.output_directory);
     }
 }

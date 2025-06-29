@@ -10,3 +10,5 @@ contemporary_icon_tool_core = { path = "../../icon_tool/contemporary_icon_tool_c
 plist = "1"
 resvg = "0.45"
 tempfile = "3.8"
+cargo_metadata = "0.20.0"
+current_platform = "0.2.0"

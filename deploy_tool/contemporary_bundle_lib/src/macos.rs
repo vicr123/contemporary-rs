@@ -1,4 +1,5 @@
 use crate::icon::get_svg_icon_contents;
+use crate::tool_setup::ToolSetup;
 use crate::VersionTuple;
 use contemporary_config::ContemporaryConfig;
 use plist::{to_file_xml, Dictionary, Value};
@@ -13,17 +14,12 @@ use std::process::{exit, Command};
 use tempfile::TempDir;
 use tracing::error;
 
-pub fn deploy_macos(
-    target_triple: Vec<String>,
-    version: VersionTuple,
-    base_path: PathBuf,
-    executable_path: HashMap<String, PathBuf>,
-    output_directory: PathBuf,
-    contemporary_config: ContemporaryConfig,
-) {
-    let deployment = contemporary_config.deployment(&target_triple.first().unwrap());
+pub fn deploy_macos(setup_data: &ToolSetup, executable_path: HashMap<String, PathBuf>) {
+    let deployment = setup_data
+        .contemporary_config
+        .deployment(&setup_data.targets.first().unwrap());
 
-    let Ok(_) = create_dir_all(&output_directory) else {
+    let Ok(_) = create_dir_all(&setup_data.output_directory) else {
         error!("Failed to create output directory");
         exit(1);
     };
@@ -41,7 +37,8 @@ pub fn deploy_macos(
     let application_generic_name = deployment.application_generic_name;
     let extra_info_plist_attributes = deployment.extra_info_plist_attributes;
 
-    let app_root = output_directory
+    let app_root = setup_data
+        .output_directory
         .join(application_name.default_value())
         .with_extension("app");
     if app_root.exists() {
@@ -61,9 +58,9 @@ pub fn deploy_macos(
     };
 
     let output_executable_path = macos_dir.join(application_name.default_value());
-    if target_triple.len() == 1 {
+    if setup_data.targets.len() == 1 {
         let executable_path = executable_path
-            .get(target_triple.first().unwrap())
+            .get(setup_data.targets.first().unwrap())
             .unwrap();
         let Ok(_) = copy(executable_path, output_executable_path) else {
             error!("Failed to copy executable to MacOS directory");
@@ -95,9 +92,9 @@ pub fn deploy_macos(
     };
 
     let icon_svg = get_svg_icon_contents(
-        target_triple.first().unwrap(),
-        &base_path,
-        &contemporary_config,
+        setup_data.targets.first().unwrap(),
+        &setup_data.base_path,
+        &setup_data.contemporary_config,
     );
     let icon_path = resources_dir.join("icon.icns");
     create_icns_file(icon_path, icon_svg);
@@ -141,12 +138,18 @@ pub fn deploy_macos(
     );
     plist_root.insert(
         "CFBundleVersion".to_string(),
-        Value::String(format!("{}.{}.{}", version.0, version.1, version.2)),
+        Value::String(format!(
+            "{}.{}.{}",
+            setup_data.version.0, setup_data.version.1, setup_data.version.2
+        )),
     );
     // TODO: maybe allow overriding this?
     plist_root.insert(
         "CFBundleShortVersionString".to_string(),
-        Value::String(format!("{}.{}.{}", version.0, version.1, version.2)),
+        Value::String(format!(
+            "{}.{}.{}",
+            setup_data.version.0, setup_data.version.1, setup_data.version.2
+        )),
     );
 
     for (key, value) in &extra_info_plist_attributes {
@@ -159,7 +162,7 @@ pub fn deploy_macos(
     };
 
     // Create an InfoPlist.strings file for each localisation
-    for localisation in contemporary_config.available_localisations() {
+    for localisation in setup_data.contemporary_config.available_localisations() {
         let lproj_dir = resources_dir.join(&localisation).with_extension("lproj");
         let Ok(_) = create_dir_all(&lproj_dir) else {
             error!(

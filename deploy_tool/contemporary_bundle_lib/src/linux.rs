@@ -1,4 +1,5 @@
 use crate::icon::get_svg_icon_contents;
+use crate::tool_setup::ToolSetup;
 use contemporary_config::{ContemporaryConfig, LocalisedString};
 use resvg::render;
 use resvg::tiny_skia::{Pixmap, Transform};
@@ -11,17 +12,11 @@ use std::path::{Path, PathBuf};
 use std::process::exit;
 use tracing::error;
 
-pub fn deploy_linux(
-    target_triple: Vec<String>,
-    base_path: PathBuf,
-    executable_path: HashMap<String, PathBuf>,
-    output_directory: PathBuf,
-    contemporary_config: ContemporaryConfig,
-) {
-    let target_triple = target_triple.first().unwrap();
+pub fn deploy_linux(setup_data: &ToolSetup, executable_path: HashMap<String, PathBuf>) {
+    let target_triple = setup_data.targets.first().unwrap();
     let executable_path = executable_path.get(target_triple).unwrap();
 
-    let deployment = contemporary_config.deployment(&target_triple);
+    let deployment = setup_data.contemporary_config.deployment(&target_triple);
 
     let Some(desktop_entry) = deployment.desktop_entry else {
         error!("No desktop entry specified in config");
@@ -31,12 +26,12 @@ pub fn deploy_linux(
     let desktop_entry_with_desktop_extension = desktop_entry.clone() + ".desktop";
     let desktop_entry_with_svg_extension = desktop_entry.clone() + ".svg";
 
-    let Ok(_) = create_dir_all(&output_directory) else {
+    let Ok(_) = create_dir_all(&setup_data.output_directory) else {
         error!("Failed to create output directory");
         exit(1);
     };
 
-    let appdir_root = output_directory.join("appdir");
+    let appdir_root = setup_data.output_directory.join("appdir");
     if appdir_root.exists() {
         let Ok(_) = remove_dir_all(&appdir_root) else {
             error!("Failed to remove existing appdir");
@@ -85,9 +80,11 @@ pub fn deploy_linux(
         exit(1);
     };
 
-    let Ok(desktop_entry_contents) =
-        generate_desktop_entry(&target_triple, executable_path, &contemporary_config)
-    else {
+    let Ok(desktop_entry_contents) = generate_desktop_entry(
+        &target_triple,
+        executable_path,
+        &setup_data.contemporary_config,
+    ) else {
         error!("Failed to generate desktop entry");
         exit(1);
     };
@@ -107,7 +104,11 @@ pub fn deploy_linux(
         exit(1);
     };
 
-    let icon_svg = get_svg_icon_contents(target_triple, &base_path, &contemporary_config);
+    let icon_svg = get_svg_icon_contents(
+        target_triple,
+        &setup_data.base_path,
+        &setup_data.contemporary_config,
+    );
     let Ok(_) = write(
         appdir_scalable_app_icons.join(&desktop_entry_with_svg_extension),
         &icon_svg,
