@@ -224,7 +224,7 @@ impl DesktopEntry {
 pub fn deploy_linux(setup_data: &ToolSetup, output_file: &str) {
     let appdir_root = setup_data.output_directory.join("appdir");
     if !appdir_root.exists() {
-        error!("AppDir does not exist. Please deploy first.");
+        error!("AppDir does not exist. Please bundle first.");
         exit(1);
     }
 

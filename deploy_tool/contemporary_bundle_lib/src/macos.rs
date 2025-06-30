@@ -1,3 +1,4 @@
+mod alias;
 pub mod bundle;
 pub mod deploy;
 mod disk_image;

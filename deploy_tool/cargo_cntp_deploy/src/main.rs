@@ -40,7 +40,7 @@ fn main() {
         .with_max_level(args.verbosity)
         .init();
 
-    let setup_data = setup_tool(args.profile, args.target, "deploy");
+    let setup_data = setup_tool(args.profile, args.target, "bundle");
 
     info!(
         "Deploying {}",

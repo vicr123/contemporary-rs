@@ -50,7 +50,7 @@ impl DSStore {
 }
 
 impl DSStoreEntry {
-    pub fn new_v_srn(file_name: &str, value: i32) -> Self {
+    pub fn new_v_srn(file_name: &str, value: u32) -> Self {
         let mut buffer = Vec::new();
         buffer.extend_from_slice(&value.to_be_bytes());
         DSStoreEntry {
@@ -61,7 +61,7 @@ impl DSStoreEntry {
         }
     }
 
-    pub fn new_iloc(file_name: &str, x: i32, y: i32) -> Self {
+    pub fn new_iloc(file_name: &str, x: u32, y: u32) -> Self {
         let mut buffer = Vec::new();
         buffer.extend_from_slice(&12_i32.to_be_bytes());
         buffer.extend_from_slice(&x.to_be_bytes());
@@ -76,7 +76,7 @@ impl DSStoreEntry {
         }
     }
 
-    pub fn new_bwsp(file_name: &str, x: i32, y: i32, width: i32, height: i32) -> Self {
+    pub fn new_bwsp(file_name: &str, x: u32, y: u32, width: u32, height: u32) -> Self {
         let mut buffer = Vec::new();
 
         let mut plist_dictionary = Dictionary::new();
@@ -94,7 +94,7 @@ impl DSStoreEntry {
 
         let mut plist_buffer = Vec::new();
         to_writer_binary(&mut plist_buffer, &plist_dictionary).unwrap();
-        buffer.extend_from_slice(&(plist_buffer.len() as i32).to_be_bytes());
+        buffer.extend_from_slice(&(plist_buffer.len() as u32).to_be_bytes());
         buffer.extend_from_slice(&plist_buffer);
 
         DSStoreEntry {
@@ -105,7 +105,7 @@ impl DSStoreEntry {
         }
     }
 
-    pub fn new_icvp(file_name: &str, icon_size: i32, background_alias: Vec<u8>) -> Self {
+    pub fn new_icvp(file_name: &str, icon_size: u32, background_alias: Vec<u8>) -> Self {
         let mut buffer = Vec::new();
 
         let mut plist_dictionary = Dictionary::new();
@@ -127,7 +127,7 @@ impl DSStoreEntry {
 
         let mut plist_buffer = Vec::new();
         to_writer_binary(&mut plist_buffer, &plist_dictionary).unwrap();
-        buffer.extend_from_slice(&(plist_buffer.len() as i32).to_be_bytes());
+        buffer.extend_from_slice(&(plist_buffer.len() as u32).to_be_bytes());
         buffer.extend_from_slice(&plist_buffer);
 
         DSStoreEntry {

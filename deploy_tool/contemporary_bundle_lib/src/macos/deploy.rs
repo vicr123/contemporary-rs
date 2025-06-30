@@ -1,17 +1,19 @@
+use crate::macos::alias::Alias;
 use crate::macos::disk_image::DiskImage;
 use crate::macos::ds_store::{DSStore, DSStoreEntry};
 use crate::tool_setup::ToolSetup;
-use image::{ImageFormat, ImageReader};
 use resvg::render;
 use resvg::tiny_skia::{Pixmap, Rect};
 use resvg::usvg::{Options, Transform, Tree};
-use std::fs::{copy, create_dir_all, read_dir, remove_dir_all, remove_file, write, OpenOptions};
+use std::fs::{copy, create_dir_all, read_dir, remove_file, write, OpenOptions};
 use std::io;
 use std::io::Read;
 use std::os::unix::fs::symlink;
 use std::path::Path;
 use std::process::exit;
 use tempfile::TempDir;
+use tiff::encoder::{colortype, Rational, TiffEncoder};
+use tiff::tags::ResolutionUnit;
 use tracing::{debug, error, info};
 
 pub fn deploy_macos(setup_data: &ToolSetup, output_file: &str) {
@@ -34,7 +36,7 @@ pub fn deploy_macos(setup_data: &ToolSetup, output_file: &str) {
         .join(application_name.default_value())
         .with_extension("app");
     if !app_root.exists() {
-        error!("Application bundle does not exist. Please deploy first.");
+        error!("Application bundle does not exist. Please bundle first.");
         exit(1);
     };
 
@@ -65,6 +67,7 @@ pub fn deploy_macos(setup_data: &ToolSetup, output_file: &str) {
         exit(1);
     };
 
+    // TODO: Calculate an approximate size for the DMG on the fly
     let temp_dir = TempDir::new().expect("Failed to create temporary directory");
     let Ok(editable_disk_image) = DiskImage::new(
         52428800,
@@ -88,8 +91,11 @@ pub fn deploy_macos(setup_data: &ToolSetup, output_file: &str) {
         exit(1);
     };
 
-    let mut pixmap = Pixmap::new(tree.size().width() as u32, tree.size().height() as u32)
-        .expect("Could not create pixmap to hold PNG");
+    let mut pixmap = Pixmap::new(
+        tree.size().width() as u32 * 2,
+        tree.size().height() as u32 * 2,
+    )
+    .expect("Could not create pixmap to hold PNG");
     render(
         &tree,
         Transform::from_scale(
@@ -99,23 +105,31 @@ pub fn deploy_macos(setup_data: &ToolSetup, output_file: &str) {
         &mut pixmap.as_mut(),
     );
 
-    let temp_background_file = temp_dir.path().join("background.png");
-    pixmap
-        .save_png(&temp_background_file)
-        .expect("Could not save PNG");
+    // Render to TIFF
+    let finished_background_file_path =
+        editable_disk_image_background_directory.join("background.tiff");
 
-    // Convert to TIFF
-    let image = ImageReader::open(temp_background_file)
-        .unwrap()
-        .decode()
-        .unwrap();
-    let Ok(_) = image.save_with_format(
-        editable_disk_image_background_directory.join("background.tiff"),
-        ImageFormat::Tiff,
-    ) else {
-        error!("Failed to convert background PNG to TIFF");
-        exit(1);
-    };
+    {
+        let Ok(mut output_tiff_file) = OpenOptions::new()
+            .write(true)
+            .create(true)
+            .truncate(true)
+            .open(&finished_background_file_path)
+        else {
+            error!("Failed to open output background TIFF file");
+            exit(1);
+        };
+
+        let mut encoder = TiffEncoder::new(&mut output_tiff_file).unwrap();
+        let mut encoder_image = encoder
+            .new_image::<colortype::RGBA8>(pixmap.width(), pixmap.height())
+            .unwrap();
+        encoder_image.resolution(ResolutionUnit::Inch, Rational { n: 144, d: 1 });
+        let Ok(_) = encoder_image.write_data(pixmap.data()) else {
+            error!("Failed to write TIFF data");
+            exit(1);
+        };
+    }
 
     // Copy the application bundle
     let Ok(_) = copy_dir_all(
@@ -144,23 +158,32 @@ pub fn deploy_macos(setup_data: &ToolSetup, output_file: &str) {
         ".",
         100,
         100,
-        tree.size().width() as i32,
-        tree.size().height() as i32,
+        tree.size().width() as u32,
+        tree.size().height() as u32,
     ));
 
     // Set the window properties
-    ds_store.push_entry(DSStoreEntry::new_icvp(".", 48, vec![]));
+    ds_store.push_entry(DSStoreEntry::new_icvp(
+        ".",
+        48,
+        Alias::alias_for(
+            finished_background_file_path.clone(),
+            editable_disk_image_mount.mount_point.clone(),
+        )
+        .unwrap()
+        .data(),
+    ));
 
     ds_store.push_entry(DSStoreEntry::new_v_srn(".", 1));
 
     // Move the file icons
-    let applications_center = center_of_rect(&applications_node.bounding_box());
+    let applications_center = center_of_rect(&applications_node.abs_bounding_box());
     ds_store.push_entry(DSStoreEntry::new_iloc(
         "Applications",
         applications_center.0,
         applications_center.1,
     ));
-    let app_center = center_of_rect(&app_node.bounding_box());
+    let app_center = center_of_rect(&app_node.abs_bounding_box());
     ds_store.push_entry(DSStoreEntry::new_iloc(
         app_root.file_name().unwrap().to_str().unwrap(),
         app_center.0,
@@ -196,10 +219,10 @@ pub fn deploy_macos(setup_data: &ToolSetup, output_file: &str) {
     info!("Disk Image created successfully");
 }
 
-fn center_of_rect(rect: &Rect) -> (i32, i32) {
+fn center_of_rect(rect: &Rect) -> (u32, u32) {
     (
-        rect.x() as i32 + rect.width() as i32 / 2,
-        rect.y() as i32 + rect.height() as i32 / 2,
+        rect.x() as u32 + rect.width() as u32 / 2,
+        rect.y() as u32 + rect.height() as u32 / 2,
     )
 }
 
