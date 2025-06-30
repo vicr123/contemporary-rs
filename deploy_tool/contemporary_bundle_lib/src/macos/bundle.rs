@@ -1,21 +1,21 @@
 use crate::icon::get_svg_icon_contents;
 use crate::tool_setup::ToolSetup;
-use plist::{to_file_xml, Dictionary, Value};
+use plist::{Dictionary, Value, to_file_xml};
 use resvg::render;
 use resvg::tiny_skia::{Pixmap, Transform};
 use resvg::usvg::{Options, Tree};
 use std::collections::HashMap;
-use std::fs::{copy, create_dir_all, remove_dir_all, OpenOptions};
+use std::fs::{OpenOptions, copy, create_dir_all, remove_dir_all};
 use std::io::Write;
 use std::path::PathBuf;
-use std::process::{exit, Command};
+use std::process::{Command, exit};
 use tempfile::TempDir;
 use tracing::error;
 
 pub fn bundle_macos(setup_data: &ToolSetup, executable_path: HashMap<String, PathBuf>) {
     let deployment = setup_data
         .contemporary_config
-        .deployment(&setup_data.targets.first().unwrap());
+        .deployment(setup_data.targets.first().unwrap());
 
     let Ok(_) = create_dir_all(&setup_data.output_directory) else {
         error!("Failed to create output directory");

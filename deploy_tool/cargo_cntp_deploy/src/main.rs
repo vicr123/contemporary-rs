@@ -1,8 +1,8 @@
 use clap::Parser;
 use clap_verbosity_flag::InfoLevel;
-use contemporary_bundle_lib::linux::{bundle_linux, deploy_linux};
+use contemporary_bundle_lib::linux::deploy_linux;
 use contemporary_bundle_lib::macos::deploy::deploy_macos;
-use contemporary_bundle_lib::tool_setup::{setup_tool, DeploymentType};
+use contemporary_bundle_lib::tool_setup::{DeploymentType, setup_tool};
 use std::path::Path;
 use tracing::info;
 

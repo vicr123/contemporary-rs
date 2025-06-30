@@ -1,7 +1,7 @@
 use anyhow::anyhow;
 use regex::Regex;
 use std::os::unix::process::ExitStatusExt;
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 use std::process::Command;
 use std::thread::sleep;
 use std::time::Duration;

@@ -9,11 +9,11 @@ use resvg::usvg::{Options, Tree};
 use std::collections::HashMap;
 use std::env::consts::ARCH;
 use std::fmt::Error;
-use std::fs::{copy, create_dir_all, remove_dir_all, set_permissions, write, File, Permissions};
+use std::fs::{File, Permissions, copy, create_dir_all, remove_dir_all, set_permissions, write};
 use std::io::{Read, Write};
-use std::os::unix::fs::{symlink, PermissionsExt};
+use std::os::unix::fs::{PermissionsExt, symlink};
 use std::path::{Path, PathBuf};
-use std::process::{exit, Command};
+use std::process::{Command, exit};
 use tempfile::TempDir;
 use tracing::{error, info};
 
@@ -52,7 +52,7 @@ pub fn bundle_linux(setup_data: &ToolSetup, executable_path: HashMap<String, Pat
     };
 
     let Ok(_) = copy(
-        &executable_path,
+        executable_path,
         appdir_bin.join(executable_path.file_name().unwrap()),
     ) else {
         error!("Failed to copy executable to bin directory");
@@ -86,7 +86,7 @@ pub fn bundle_linux(setup_data: &ToolSetup, executable_path: HashMap<String, Pat
     };
 
     let Ok(desktop_entry_contents) = generate_desktop_entry(
-        &target_triple,
+        target_triple,
         executable_path,
         &setup_data.contemporary_config,
     ) else {
@@ -270,7 +270,7 @@ pub fn deploy_linux(setup_data: &ToolSetup, output_file: &str) {
         .and_then(|ct_len| ct_len.parse::<u64>().ok())
         .unwrap_or(0);
 
-    let mut downloaded: u64 = 0;
+    let mut _downloaded: u64 = 0;
     let mut buffer = [0; 8192];
 
     // Download with progress updates
@@ -282,7 +282,7 @@ pub fn deploy_linux(setup_data: &ToolSetup, output_file: &str) {
             error!("Unable to write appimagetool to disk.");
             exit(1);
         };
-        downloaded += n as u64;
+        _downloaded += n as u64;
 
         // TODO: Print progress to the console periodically
     }
@@ -300,7 +300,7 @@ pub fn deploy_linux(setup_data: &ToolSetup, output_file: &str) {
     // Use appimagetool to write the AppImage to the output file
     let command_result = Command::new(&appimagetool_path)
         .arg(appdir_root)
-        .arg(&output_file)
+        .arg(output_file)
         .spawn();
     let Ok(mut appimagetool_process) = command_result else {
         let e = command_result.unwrap_err();

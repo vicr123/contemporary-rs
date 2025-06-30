@@ -9,7 +9,7 @@ pub fn get_svg_icon_contents(
     base_path: &Path,
     contemporary_config: &ContemporaryConfig,
 ) -> String {
-    let config = contemporary_config.deployment(&target_triple);
+    let config = contemporary_config.deployment(target_triple);
 
     let icon = config.icon;
     if let Some(icon) = icon {
