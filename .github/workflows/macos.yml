@@ -16,8 +16,10 @@ jobs:
         run: |
           rustup update
       - uses: Swatinem/rust-cache@v2
-      - name: Build
+      - name: Build (arm)
         run: cargo build --verbose --release
+      - name: Build (x86_64)
+        run: cargo build --verbose --release --target x86_64-apple-darwin
       - name: Bundle
         run: cargo run --package cargo-cntp-bundle --bin cargo-cntp-bundle -- --target x86_64-apple-darwin --target aarch64-apple-darwin
         working-directory: playground
