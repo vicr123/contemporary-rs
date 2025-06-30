@@ -31,5 +31,5 @@ jobs:
         working-directory: playground
       - uses: actions/upload-artifact@v4
         with:
-          name: contemporary-playground-linux
-          path: "~/Contemporary_Playground-$ARCH.AppImage"
+          name: contemporary-playground-linux-${{ env.ARCH }}
+          path: "~/Contemporary_Playground-${{ env.ARCH }}.AppImage"
