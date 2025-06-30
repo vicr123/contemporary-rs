@@ -17,7 +17,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y pkg-config libxkbcommon-dev libxkbcommon-x11-dev libx11-xcb-dev
+          sudo apt-get install -y pkg-config libxkbcommon-dev libxkbcommon-x11-dev libx11-xcb-dev desktop-file-utils
           rustup update
       - uses: Swatinem/rust-cache@v2
       - name: Build
@@ -26,9 +26,9 @@ jobs:
         run: cargo run --package cargo-cntp-bundle --bin cargo-cntp-bundle
         working-directory: playground
       - name: Deploy
-        run: cargo run --package cargo-cntp-deploy --bin cargo-cntp-deploy -- --output-file "$HOME/Contemporary_Playground-$ARCH.AppImage"
+        run: cargo run --package cargo-cntp-deploy --bin cargo-cntp-deploy -- --output-file "~/Contemporary_Playground-$ARCH.AppImage"
         working-directory: playground
       - uses: actions/upload-artifact@v4
         with:
           name: contemporary-playground-linux
-          path: "$HOME/Contemporary_Playground-$ARCH.AppImage"
+          path: "~/Contemporary_Playground-$ARCH.AppImage"
