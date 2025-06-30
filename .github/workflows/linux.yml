@@ -11,7 +11,7 @@ jobs:
         os: [ ubuntu-22.04, ubuntu-22.04-arm ]
     runs-on: ${{ matrix.os }}
     env:
-      ARCH: "${{ (matrix.os == 'ubuntu-20.04' && 'x86_64') || 'aarch64' }}"
+      ARCH: "${{ endsWith(matrix.os, 'arm') && 'aarch64' || 'x86_64' }}"
     steps:
       - uses: actions/checkout@v4
       - name: Install dependencies
