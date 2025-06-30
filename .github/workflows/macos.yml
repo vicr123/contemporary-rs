@@ -17,6 +17,7 @@ jobs:
           rustup update
           rustup target install x86_64-apple-darwin
       - uses: Swatinem/rust-cache@v2
+      - uses: r7kamura/rust-problem-matchers@v1
       - name: Build (arm)
         run: cargo build --verbose --release
       - name: Build (x86_64)
