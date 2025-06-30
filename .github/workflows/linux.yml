@@ -1,0 +1,30 @@
+name: Build on Linux
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ ubuntu-20.04, ubuntu-22.04-arm ]
+    runs-on: ${{ matrix.os }}
+    env:
+      ARCH: "${{ (matrix.os == 'ubuntu-20.04' && 'x86_64') || 'aarch64' }}"
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y pkg-config libxkbcommon-dev libxkbcommon-x11-dev libx11-xcb-dev
+      - name: Build
+        run: cargo build --verbose --release
+      - name: Bundle
+        run: cargo run --package cargo-cntp-bundle --bin cargo-cntp-bundle
+      - name: Deploy
+        run: cargo run --package cargo-cntp-deploy --bin cargo-cntp-deploy -- --output-file "$HOME/Contemporary_Playground-$ARCH.AppImage"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: contemporary-playground-linux
+          path: "$HOME/Contemporary_Playground-$ARCH.AppImage"
