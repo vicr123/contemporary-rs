@@ -15,12 +15,15 @@ jobs:
       - name: Update Rust
         run: |
           rustup update
+      - uses: Swatinem/rust-cache@v2
       - name: Build
         run: cargo build --verbose --release
       - name: Bundle
         run: cargo run --package cargo-cntp-bundle --bin cargo-cntp-bundle -- --target x86_64-apple-darwin --target aarch64-apple-darwin
+        working-directory: playground
       - name: Deploy
         run: cargo run --package cargo-cntp-deploy --bin cargo-cntp-deploy -- --target x86_64-apple-darwin --target aarch64-apple-darwin --output-file "$HOME/Contemporary_Playground-macOS.dmg"
+        working-directory: playground
       - uses: actions/upload-artifact@v4
         with:
           name: contemporary-playground-linux

@@ -19,12 +19,15 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y pkg-config libxkbcommon-dev libxkbcommon-x11-dev libx11-xcb-dev
           rustup update
+      - uses: Swatinem/rust-cache@v2
       - name: Build
         run: cargo build --verbose --release
       - name: Bundle
         run: cargo run --package cargo-cntp-bundle --bin cargo-cntp-bundle
+        working-directory: playground
       - name: Deploy
         run: cargo run --package cargo-cntp-deploy --bin cargo-cntp-deploy -- --output-file "$HOME/Contemporary_Playground-$ARCH.AppImage"
+        working-directory: playground
       - uses: actions/upload-artifact@v4
         with:
           name: contemporary-playground-linux
