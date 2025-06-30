@@ -2,7 +2,7 @@ use clap::Parser;
 use clap_verbosity_flag::InfoLevel;
 use contemporary_bundle_lib::linux::bundle_linux;
 use contemporary_bundle_lib::macos::bundle::bundle_macos;
-use contemporary_bundle_lib::tool_setup::{DeploymentType, setup_tool};
+use contemporary_bundle_lib::tool_setup::{setup_tool, DeploymentType};
 use current_platform::CURRENT_PLATFORM;
 use std::collections::HashMap;
 use std::env::consts::EXE_EXTENSION;
@@ -74,7 +74,7 @@ fn main() {
         // TODO: Run cargo build
         if !bin_target.exists() {
             error!("Unable to find executable at {}", bin_target);
-            exit(0);
+            exit(1);
         }
 
         bin_targets.insert(target.clone(), bin_target.into());
