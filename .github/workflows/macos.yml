@@ -12,6 +12,9 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
+      - name: Update Rust
+        run: |
+          rustup update
       - name: Build
         run: cargo build --verbose --release
       - name: Bundle

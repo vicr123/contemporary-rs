@@ -18,6 +18,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y pkg-config libxkbcommon-dev libxkbcommon-x11-dev libx11-xcb-dev
+          rustup update
       - name: Build
         run: cargo build --verbose --release
       - name: Bundle
