@@ -177,13 +177,13 @@ pub fn deploy_macos(setup_data: &ToolSetup, output_file: &str) {
     ds_store.push_entry(DSStoreEntry::new_v_srn(".", 1));
 
     // Move the file icons
-    let applications_center = center_of_rect(&applications_node.abs_bounding_box());
+    let applications_center = center_of_rect(&applications_node.abs_stroke_bounding_box());
     ds_store.push_entry(DSStoreEntry::new_iloc(
         "Applications",
         applications_center.0,
         applications_center.1,
     ));
-    let app_center = center_of_rect(&app_node.abs_bounding_box());
+    let app_center = center_of_rect(&app_node.abs_stroke_bounding_box());
     ds_store.push_entry(DSStoreEntry::new_iloc(
         app_root.file_name().unwrap().to_str().unwrap(),
         app_center.0,
