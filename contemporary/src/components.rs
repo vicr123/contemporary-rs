@@ -6,5 +6,6 @@ pub mod grandstand;
 pub mod icon;
 pub mod layer;
 pub mod pager;
+pub mod progress_bar;
 pub mod subtitle;
 pub mod text_field;

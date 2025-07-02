@@ -1,5 +1,6 @@
 use crate::components::buttons::Buttons;
 use crate::components::checkboxes_radio_buttons::CheckboxesRadioButtons;
+use crate::components::progress_bars::ProgressBars;
 use crate::components::text_input::TextInput;
 use contemporary::components::grandstand::grandstand;
 use contemporary::components::layer::layer;
@@ -16,6 +17,7 @@ pub struct ComponentsRoot {
     buttons: Entity<Buttons>,
     checkboxes_radio_buttons: Entity<CheckboxesRadioButtons>,
     text_input: Entity<TextInput>,
+    progress_bars: Entity<ProgressBars>,
 
     current_page: usize,
 }
@@ -26,6 +28,7 @@ impl ComponentsRoot {
             buttons: Buttons::new(cx),
             checkboxes_radio_buttons: CheckboxesRadioButtons::new(cx),
             text_input: TextInput::new(cx),
+            progress_bars: ProgressBars::new(cx),
             current_page: 0,
         })
     }
@@ -53,7 +56,7 @@ impl Render for ComponentsRoot {
                         div().flex_grow().p(px(2.)).child(
                             uniform_list(
                                 "sidebar-items",
-                                3,
+                                4,
                                 cx.processor(|this, range, _, cx| {
                                     let theme = cx.global::<Theme>();
                                     let mut items = Vec::new();
@@ -73,6 +76,7 @@ impl Render for ComponentsRoot {
                                                     0 => tr!("BUTTONS_TITLE"),
                                                     1 => tr!("CHECKBOXES_RADIO_BUTTONS_TITLE"),
                                                     2 => tr!("TEXT_INPUT_TITLE"),
+                                                    3 => tr!("PROGRESS_BARS_TITLE"),
                                                     _ => format!("Item {item}").into(),
                                                 })
                                                 .when(this.current_page == ix, |div| {
@@ -93,7 +97,8 @@ impl Render for ComponentsRoot {
                     .flex_grow()
                     .page(self.buttons.clone().into_any_element())
                     .page(self.checkboxes_radio_buttons.clone().into_any_element())
-                    .page(self.text_input.clone().into_any_element()),
+                    .page(self.text_input.clone().into_any_element())
+                    .page(self.progress_bars.clone().into_any_element()),
             )
     }
 }

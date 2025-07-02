@@ -91,7 +91,13 @@
   },
   "COMPONENTS_TITLE": {
     "context": "root.rs",
-    "definedIn": "src/components/root.rs:49",
+    "definedIn": "src/components/root.rs:52",
+    "plural": false,
+    "description": null
+  },
+  "PROGRESS_BARS_TITLE": {
+    "context": "progress_bars.rs",
+    "definedIn": "src/components/progress_bars.rs:28",
     "plural": false,
     "description": null
   },
