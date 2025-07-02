@@ -2,13 +2,18 @@ pub use crate::components::base::text_input::bind_text_input_keys;
 use crate::components::base::text_input::TextInput;
 use crate::styling::theme::Theme;
 use gpui::prelude::FluentBuilder;
-use gpui::{div, px, App, AppContext, Context, ElementId, Entity, FocusHandle, Focusable, InteractiveElement, IntoElement, MouseUpEvent, ParentElement, Refineable, Render, SharedString, StatefulInteractiveElement, StyleRefinement, Styled, Window};
+use gpui::{
+    div, px, App, AppContext, Context, ElementId, Entity, FocusHandle,
+    Focusable, InteractiveElement, IntoElement, MouseUpEvent, ParentElement, Refineable,
+    Render, SharedString, StatefulInteractiveElement, StyleRefinement, Styled, Window,
+};
 
 pub struct TextField {
     id: ElementId,
     text_input: Entity<TextInput>,
     focus_handle: FocusHandle,
     style: StyleRefinement,
+    borderless: bool,
 }
 
 impl TextField {
@@ -23,6 +28,7 @@ impl TextField {
             text_input: TextInput::new(cx, default_text, placeholder),
             focus_handle: cx.focus_handle(),
             style: StyleRefinement::default(),
+            borderless: false,
         })
     }
 
@@ -31,6 +37,11 @@ impl TextField {
             text_input.disabled(disabled);
             cx.notify();
         });
+        self
+    }
+
+    pub fn borderless(&mut self, borderless: bool) -> &Self {
+        self.borderless = borderless;
         self
     }
 }
@@ -57,7 +68,7 @@ impl Render for TextField {
 
         let mut david = div()
             .id(self.id.clone())
-            .bg(theme.layer_background)
+            .when(!self.borderless, |div| div.bg(theme.layer_background))
             .overflow_x_scroll()
             .track_focus(&self.focus_handle(cx))
             .size_full()
@@ -70,8 +81,9 @@ impl Render for TextField {
                     .h_full()
                     .justify_center()
                     .rounded(theme.border_radius)
-                    .border(px(1.))
-                    .border_color(theme.border_color)
+                    .when(!self.borderless, |div| {
+                        div.border(px(1.)).border_color(theme.border_color)
+                    })
                     .child(self.text_input.clone()),
             )
             .when(self.focus_handle.contains_focused(window, cx), |david| {

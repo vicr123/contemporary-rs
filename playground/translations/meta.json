@@ -1,4 +1,10 @@
 {
+  "BORDERLESS_TEXT_FIELD_PLACEHOLDER": {
+    "context": "text_input.rs",
+    "definedIn": "src/components/text_input.rs:31",
+    "plural": false,
+    "description": null
+  },
   "BUTTONS_CHECKABLE_BUTTON": {
     "context": "buttons.rs",
     "definedIn": "src/components/buttons.rs:74",
@@ -97,25 +103,25 @@
   },
   "TEXT_FIELDS_TITLE": {
     "context": "text_input.rs",
-    "definedIn": "src/components/text_input.rs:67",
+    "definedIn": "src/components/text_input.rs:78",
     "plural": false,
     "description": null
   },
   "TEXT_FIELD_DISABLED_PLACEHOLDER": {
     "context": "text_input.rs",
-    "definedIn": "src/components/text_input.rs:30",
+    "definedIn": "src/components/text_input.rs:37",
     "plural": false,
     "description": null
   },
   "TEXT_FIELD_PLACEHOLDER": {
     "context": "text_input.rs",
-    "definedIn": "src/components/text_input.rs:24",
+    "definedIn": "src/components/text_input.rs:25",
     "plural": false,
     "description": null
   },
   "TEXT_INPUT_TITLE": {
     "context": "text_input.rs",
-    "definedIn": "src/components/text_input.rs:51",
+    "definedIn": "src/components/text_input.rs:62",
     "plural": false,
     "description": null
   }

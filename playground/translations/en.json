@@ -1,4 +1,5 @@
 {
+  "BORDERLESS_TEXT_FIELD_PLACEHOLDER": "Borderless Text Field",
   "BUTTONS_CHECKABLE_BUTTON": "Checkable Button",
   "BUTTONS_COUNT_TEXT": {
     "one": "You have clicked the default button once (shift-click to reset)",
