@@ -1,18 +1,18 @@
+use crate::main_surface::MainSurface;
 use contemporary::about_surface::about_surface;
 use contemporary::window::contemporary_window;
 use gpui::prelude::FluentBuilder;
 use gpui::{App, AppContext, Context, Entity, IntoElement, ParentElement, Render, Window};
-use crate::components::root::ComponentsRoot;
 
 pub struct MainWindow {
-    components_root: Entity<ComponentsRoot>,
+    main_surface: Entity<MainSurface>,
     is_about_surface_open: bool,
 }
 
 impl MainWindow {
     pub fn new(cx: &mut App) -> Entity<MainWindow> {
         cx.new(|cx| MainWindow {
-            components_root: ComponentsRoot::new(cx),
+            main_surface: MainSurface::new(cx),
             is_about_surface_open: false,
         })
     }
@@ -25,13 +25,14 @@ impl MainWindow {
 
 impl Render for MainWindow {
     fn render(&mut self, _window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
-        contemporary_window()
-            .child(self.components_root.clone())
-            .when(self.is_about_surface_open, |w| {
-            w.child(about_surface().on_back_click(cx.listener(|this, _, _, cx| {
-                this.is_about_surface_open = false;
-                cx.notify();
-            })))
-        })
+        contemporary_window().child(self.main_surface.clone()).when(
+            self.is_about_surface_open,
+            |w| {
+                w.child(about_surface().on_back_click(cx.listener(|this, _, _, cx| {
+                    this.is_about_surface_open = false;
+                    cx.notify();
+                })))
+            },
+        )
     }
 }

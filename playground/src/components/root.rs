@@ -6,7 +6,6 @@ use contemporary::components::grandstand::grandstand;
 use contemporary::components::layer::layer;
 use contemporary::components::pager::pager;
 use contemporary::styling::theme::Theme;
-use contemporary::surface::surface;
 use contemporary_i18n::tr;
 use gpui::prelude::FluentBuilder;
 use gpui::{
@@ -37,71 +36,69 @@ impl ComponentsRoot {
 
 impl Render for ComponentsRoot {
     fn render(&mut self, _window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
-        surface().child(
-            div()
-                .id("components")
-                .flex()
-                .w_full()
-                .h_full()
-                .gap(px(2.))
-                .child(
-                    layer("sidebar-layer")
-                        .w(px(300.))
-                        .flex()
-                        .flex_col()
-                        .child(
-                            grandstand("sidebar-grandstand")
-                                .text(tr!("COMPONENTS_TITLE", "Components"))
-                                .pt(px(36.)),
-                        )
-                        .child(
-                            div().flex_grow().p(px(2.)).child(
-                                uniform_list(
-                                    "sidebar-items",
-                                    4,
-                                    cx.processor(|this, range, _, cx| {
-                                        let theme = cx.global::<Theme>();
-                                        let mut items = Vec::new();
-                                        for ix in range {
-                                            let item = ix + 1;
+        div()
+            .id("components")
+            .flex()
+            .w_full()
+            .h_full()
+            .gap(px(2.))
+            .child(
+                layer("sidebar-layer")
+                    .w(px(300.))
+                    .flex()
+                    .flex_col()
+                    .child(
+                        grandstand("sidebar-grandstand")
+                            .text(tr!("COMPONENTS_TITLE", "Components"))
+                            .pt(px(36.)),
+                    )
+                    .child(
+                        div().flex_grow().p(px(2.)).child(
+                            uniform_list(
+                                "sidebar-items",
+                                4,
+                                cx.processor(|this, range, _, cx| {
+                                    let theme = cx.global::<Theme>();
+                                    let mut items = Vec::new();
+                                    for ix in range {
+                                        let item = ix + 1;
 
-                                            items.push(
-                                                div()
-                                                    .id(ix)
-                                                    .p(px(2.))
-                                                    .rounded(theme.border_radius)
-                                                    .on_click(cx.listener(move |this, _, _, cx| {
-                                                        this.current_page = ix;
-                                                        cx.notify()
-                                                    }))
-                                                    .child(match ix {
-                                                        0 => tr!("BUTTONS_TITLE"),
-                                                        1 => tr!("CHECKBOXES_RADIO_BUTTONS_TITLE"),
-                                                        2 => tr!("TEXT_INPUT_TITLE"),
-                                                        3 => tr!("PROGRESS_BARS_TITLE"),
-                                                        _ => format!("Item {item}").into(),
-                                                    })
-                                                    .when(this.current_page == ix, |div| {
-                                                        div.bg(theme.button_background)
-                                                    }),
-                                            );
-                                        }
-                                        items
-                                    }),
-                                )
-                                .h_full()
-                                .w_full(),
-                            ),
+                                        items.push(
+                                            div()
+                                                .id(ix)
+                                                .p(px(2.))
+                                                .rounded(theme.border_radius)
+                                                .on_click(cx.listener(move |this, _, _, cx| {
+                                                    this.current_page = ix;
+                                                    cx.notify()
+                                                }))
+                                                .child(match ix {
+                                                    0 => tr!("BUTTONS_TITLE"),
+                                                    1 => tr!("CHECKBOXES_RADIO_BUTTONS_TITLE"),
+                                                    2 => tr!("TEXT_INPUT_TITLE"),
+                                                    3 => tr!("PROGRESS_BARS_TITLE"),
+                                                    _ => format!("Item {item}").into(),
+                                                })
+                                                .when(this.current_page == ix, |div| {
+                                                    div.bg(theme.button_background)
+                                                }),
+                                        );
+                                    }
+                                    items
+                                }),
+                            )
+                            .h_full()
+                            .w_full(),
                         ),
-                )
-                .child(
-                    pager("main-area", self.current_page)
-                        .flex_grow()
-                        .page(self.buttons.clone().into_any_element())
-                        .page(self.checkboxes_radio_buttons.clone().into_any_element())
-                        .page(self.text_input.clone().into_any_element())
-                        .page(self.progress_bars.clone().into_any_element()),
-                ),
-        )
+                    ),
+            )
+            .child(
+                pager("main-area", self.current_page)
+                    .flex_grow()
+                    .page(self.buttons.clone().into_any_element())
+                    .page(self.checkboxes_radio_buttons.clone().into_any_element())
+                    .page(self.text_input.clone().into_any_element())
+                    .page(self.progress_bars.clone().into_any_element()),
+            )
     }
 }

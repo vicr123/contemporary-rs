@@ -89,9 +89,21 @@
     "plural": false,
     "description": null
   },
+  "COMPONENTS_BUTTON": {
+    "context": "main_surface.rs",
+    "definedIn": "src/main_surface.rs:49",
+    "plural": false,
+    "description": null
+  },
   "COMPONENTS_TITLE": {
     "context": "root.rs",
-    "definedIn": "src/components/root.rs:54",
+    "definedIn": "src/components/root.rs:52",
+    "plural": false,
+    "description": null
+  },
+  "PATTERNS_BUTTON": {
+    "context": "main_surface.rs",
+    "definedIn": "src/main_surface.rs:58",
     "plural": false,
     "description": null
   },

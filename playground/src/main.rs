@@ -13,6 +13,7 @@ use gpui::{px, size, App, Bounds, Menu, WindowBounds, WindowOptions};
 use indexmap::IndexMap;
 
 mod components;
+mod main_surface;
 mod main_window;
 
 fn main() {

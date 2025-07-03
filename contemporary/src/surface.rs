@@ -1,24 +1,32 @@
 use crate::components::button::button;
 use crate::styling::theme::Theme;
+use gpui::prelude::FluentBuilder;
 use gpui::{
-    div, img, px, svg, AnyElement, App, AppContext, Context,
-    Entity, InteractiveElement, IntoElement, MouseButton, ParentElement, Render, RenderOnce, Styled, Window, WindowControlArea,
+    div, img, px, rgb, svg, AnyElement, App, AppContext,
+    Context, Entity, InteractiveElement, IntoElement, MouseButton, ParentElement, Render, RenderOnce, Styled, Window, WindowControlArea,
 };
 
 #[derive(IntoElement)]
 pub struct Surface {
     child: AnyElement,
+    actions: AnyElement,
 }
 
 pub fn surface() -> Surface {
     Surface {
         child: div().into_any_element(),
+        actions: div().into_any_element(),
     }
 }
 
 impl Surface {
     pub fn child(mut self, child: impl IntoElement) -> Self {
         self.child = child.into_any_element();
+        self
+    }
+
+    pub fn actions(mut self, actions: impl IntoElement) -> Self {
+        self.actions = actions.into_any_element();
         self
     }
 }
@@ -36,25 +44,22 @@ impl RenderOnce for Surface {
             .occlude()
             .bg(theme.background)
             .child(self.child)
-            .child(window_controls())
+            .child(window_controls(self.actions))
     }
 }
 
 #[derive(IntoElement)]
-struct WindowTitle;
+struct WindowTitle {
+    actions: AnyElement,
+}
 
-fn window_controls() -> WindowTitle {
-    WindowTitle
+fn window_controls(actions: AnyElement) -> WindowTitle {
+    WindowTitle { actions }
 }
 
 #[allow(unreachable_code)]
 impl RenderOnce for WindowTitle {
     fn render(self, window: &mut Window, _cx: &mut App) -> impl IntoElement {
-        #[cfg(target_os = "macos")]
-        {
-            return div().id("contemporary-window-title");
-        }
-
         let theme = _cx.global::<Theme>();
 
         div()
@@ -66,7 +71,8 @@ impl RenderOnce for WindowTitle {
             .h(px(40.))
             .flex()
             .child(if cfg!(target_os = "macos") {
-                div()
+                // Make space for the window controls
+                div().w(px(80.))
             } else {
                 div()
                     .child(
@@ -78,62 +84,64 @@ impl RenderOnce for WindowTitle {
                     )
                     .occlude()
             })
-            .child(div().flex_grow())
+            .child(div().flex_grow().child(self.actions))
             .window_control_area(WindowControlArea::Drag)
-            .child(
-                div()
-                    .flex()
-                    .occlude()
-                    .child(
-                        button("window-minimise")
-                            .flat()
-                            .w(px(40.))
-                            .h(px(40.))
-                            .child(
-                                svg()
-                                    .w(px(24.))
-                                    .h(px(24.))
-                                    .text_color(theme.foreground)
-                                    .path("window-controls:/min"),
-                            )
-                            .on_click(move |_, window, _| window.minimize_window())
-                            .window_control_area(WindowControlArea::Min),
-                    )
-                    .child(
-                        button("window-maximise")
-                            .flat()
-                            .w(px(40.))
-                            .h(px(40.))
-                            .child(
-                                svg()
-                                    .w(px(24.))
-                                    .h(px(24.))
-                                    .text_color(theme.foreground)
-                                    .path(if window.is_maximized() {
-                                        "window-controls:/res"
-                                    } else {
-                                        "window-controls:/max"
-                                    }),
-                            )
-                            .on_click(move |_, window, _| window.zoom_window())
-                            .window_control_area(WindowControlArea::Max),
-                    )
-                    .child(
-                        button("window-close")
-                            .flat()
-                            .w(px(40.))
-                            .h(px(40.))
-                            .child(
-                                svg()
-                                    .w(px(24.))
-                                    .h(px(24.))
-                                    .text_color(theme.foreground)
-                                    .path("window-controls:/close"),
-                            )
-                            .on_click(move |_, _, cx| cx.quit())
-                            .window_control_area(WindowControlArea::Close),
-                    ),
-            )
+            .when(!cfg!(target_os = "macos"), |david| {
+                david.child(
+                    div()
+                        .flex()
+                        .occlude()
+                        .child(
+                            button("window-minimise")
+                                .flat()
+                                .w(px(40.))
+                                .h(px(40.))
+                                .child(
+                                    svg()
+                                        .w(px(24.))
+                                        .h(px(24.))
+                                        .text_color(theme.foreground)
+                                        .path("window-controls:/min"),
+                                )
+                                .on_click(move |_, window, _| window.minimize_window())
+                                .window_control_area(WindowControlArea::Min),
+                        )
+                        .child(
+                            button("window-maximise")
+                                .flat()
+                                .w(px(40.))
+                                .h(px(40.))
+                                .child(
+                                    svg()
+                                        .w(px(24.))
+                                        .h(px(24.))
+                                        .text_color(theme.foreground)
+                                        .path(if window.is_maximized() {
+                                            "window-controls:/res"
+                                        } else {
+                                            "window-controls:/max"
+                                        }),
+                                )
+                                .on_click(move |_, window, _| window.zoom_window())
+                                .window_control_area(WindowControlArea::Max),
+                        )
+                        .child(
+                            button("window-close")
+                                .flat()
+                                .w(px(40.))
+                                .h(px(40.))
+                                .child(
+                                    svg()
+                                        .w(px(24.))
+                                        .h(px(24.))
+                                        .text_color(theme.foreground)
+                                        .path("window-controls:/close"),
+                                )
+                                .on_click(move |_, _, cx| cx.quit())
+                                .window_control_area(WindowControlArea::Close),
+                        ),
+                )
+            })
             .on_mouse_down(MouseButton::Left, move |_, window, _| {
                 window.start_window_move()
             })
