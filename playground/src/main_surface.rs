@@ -37,7 +37,7 @@ impl Render for MainSurface {
 
         surface()
             .actions(
-                div().occlude().flex().h_full().child(
+                div().occlude().flex().content_stretch().child(
                     div()
                         .flex()
                         .id("action-bar")

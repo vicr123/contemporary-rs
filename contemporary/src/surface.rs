@@ -84,7 +84,7 @@ impl RenderOnce for WindowTitle {
                     )
                     .occlude()
             })
-            .child(div().flex_grow().child(self.actions))
+            .child(div().flex_grow().content_stretch().child(self.actions))
             .window_control_area(WindowControlArea::Drag)
             .when(!cfg!(target_os = "macos"), |david| {
                 david.child(
