@@ -1,22 +1,19 @@
 use std::rc::Rc;
 
-use crate::components::root::ComponentsRoot;
-use crate::surface_list::SurfaceList;
+use crate::main_window::MainWindow;
 use contemporary::application::new_contemporary_application;
 use contemporary::{
-    about_surface::AboutSurface,
     application::{ApplicationLink, Details, License, Versions},
     setup::{setup_contemporary, Contemporary, ContemporaryMenus},
-    surface::Surface,
-    window::{contemporary_window_options, ContemporaryWindow, PushPop},
+    window::contemporary_window_options,
 };
 use contemporary_i18n::{tr_load, I18N_MANAGER};
 use contemporary_icon_tool_macros::application_icon;
-use gpui::{px, size, App, AppContext, Bounds, Menu, WindowBounds, WindowOptions};
+use gpui::{px, size, App, Bounds, Menu, WindowBounds, WindowOptions};
 use indexmap::IndexMap;
 
 mod components;
-mod surface_list;
+mod main_window;
 
 fn main() {
     application_icon!("../dist/baseicon.svg");
@@ -31,7 +28,7 @@ fn main() {
                 ..default_window_options
             },
             |_, cx| {
-                let mut window = ContemporaryWindow::new(cx);
+                let window = MainWindow::new(cx);
                 let weak_window = window.downgrade();
 
                 setup_contemporary(
@@ -66,10 +63,10 @@ fn main() {
                                 items: vec![],
                             }],
                             on_about: Rc::new(move |cx| {
-                                let about_surface = AboutSurface::new(cx, weak_window.clone());
-                                let a_surface = cx.new(|_| SurfaceList::About(about_surface));
-                                let sf = Surface::new(cx, a_surface);
-                                weak_window.upgrade().unwrap().push(cx, sf);
+                                weak_window.upgrade().unwrap().update(cx, |window, cx| {
+                                    window.about_surface_open(true);
+                                    cx.notify()
+                                })
                             }),
                         },
                     },
@@ -82,9 +79,6 @@ fn main() {
                     .unwrap()
                     .insert("version thing".into(), "1.0".into());
 
-                let window_contents = cx.new(|cx| SurfaceList::Components(ComponentsRoot::new(cx)));
-                let surface = Surface::new(cx, window_contents);
-                window.push(cx, surface);
                 window
             },
         )

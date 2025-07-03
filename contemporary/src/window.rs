@@ -1,75 +1,37 @@
 use crate::styling::theme::Theme;
-use crate::surface::Surface;
 use gpui::{
-    App, AppContext, Bounds, Context, Entity, IntoElement, ParentElement, Render, Styled,
-    TitlebarOptions, Window, WindowBounds, WindowDecorations, WindowOptions, div, point, px, size,
+    div, point, px, size, AnyElement, App, Bounds, Div, IntoElement,
+    ParentElement, RenderOnce, Styled, TitlebarOptions, Window, WindowBounds, WindowDecorations, WindowOptions,
 };
 
-pub trait PushPop<T>
-where
-    T: Render,
-{
-    fn push(&mut self, cx: &mut App, entity: Entity<Surface<T>>);
-    fn pop(&mut self, cx: &mut App);
+#[derive(IntoElement)]
+pub struct ContemporaryWindow {
+    div: Div,
 }
 
-pub struct ContemporaryWindow<T>
-where
-    T: Render,
-{
-    surfaces: Vec<Entity<Surface<T>>>,
+pub fn contemporary_window() -> ContemporaryWindow {
+    ContemporaryWindow { div: div() }
 }
 
-impl<T> ContemporaryWindow<T> 
-where
-    T: Render,
-{
-    pub fn new(cx: &mut App) -> Entity<ContemporaryWindow<T>> {
-        cx.new(|_| ContemporaryWindow { surfaces: vec![] })
+impl ParentElement for ContemporaryWindow {
+    fn extend(&mut self, elements: impl IntoIterator<Item = AnyElement>) {
+        self.div.extend(elements);
     }
 }
 
-impl<T> PushPop<T> for Entity<ContemporaryWindow<T>>
-where
-    T: Render,
-{
-    fn push(&mut self, cx: &mut App, entity: Entity<Surface<T>>) {
-        self.update(cx, |this, cx| {
-            this.surfaces.push(entity);
-            cx.notify()
-        })
-    }
-
-    fn pop(&mut self, cx: &mut App) {
-        self.update(cx, |this, cx| {
-            let last_surface = this.surfaces.pop();
-            if last_surface.is_none() {
-                panic!("Tried to pop a surface with no children")
-            }
-            cx.notify()
-        })
-    }
-}
-
-impl<T> Render for ContemporaryWindow<T>
-where
-    T: Render,
-{
-    fn render(&mut self, _window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
+impl RenderOnce for ContemporaryWindow {
+    fn render(self, _window: &mut Window, cx: &mut App) -> impl IntoElement {
         let theme = cx.global::<Theme>();
 
-        self.surfaces.iter().fold(
-            div()
-                .bg(theme.background)
-                .text_color(theme.foreground)
-                .text_size(theme.system_font_size)
-                .w_full()
-                .h_full()
-                .font_family(theme.system_font_family)
-                .flex()
-                .flex_col(),
-            |div, surface| div.child(surface.clone()),
-        )
+        self.div
+            .bg(theme.background)
+            .text_color(theme.foreground)
+            .text_size(theme.system_font_size)
+            .w_full()
+            .h_full()
+            .font_family(theme.system_font_family)
+            .flex()
+            .flex_col()
     }
 }
 

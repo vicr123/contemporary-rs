@@ -91,7 +91,7 @@
   },
   "COMPONENTS_TITLE": {
     "context": "root.rs",
-    "definedIn": "src/components/root.rs:52",
+    "definedIn": "src/components/root.rs:54",
     "plural": false,
     "description": null
   },

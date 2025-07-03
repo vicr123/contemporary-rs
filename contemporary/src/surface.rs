@@ -1,31 +1,30 @@
 use crate::components::button::button;
 use crate::styling::theme::Theme;
 use gpui::{
-    App, AppContext, Context, Entity, InteractiveElement, IntoElement, MouseButton, ParentElement,
-    Render, RenderOnce, Styled, Window, WindowControlArea, div, img, px, svg,
+    div, img, px, svg, AnyElement, App, AppContext, Context,
+    Entity, InteractiveElement, IntoElement, MouseButton, ParentElement, Render, RenderOnce, Styled, Window, WindowControlArea,
 };
 
-pub struct Surface<T>
-where
-    T: Render,
-{
-    child: Entity<T>,
+#[derive(IntoElement)]
+pub struct Surface {
+    child: AnyElement,
 }
 
-impl<T> Surface<T>
-where
-    T: Render,
-{
-    pub fn new(cx: &mut App, child: Entity<T>) -> Entity<Surface<T>> {
-        cx.new(|_| Surface { child })
+pub fn surface() -> Surface {
+    Surface {
+        child: div().into_any_element(),
     }
 }
 
-impl<T> Render for Surface<T>
-where
-    T: Render,
-{
-    fn render(&mut self, _window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
+impl Surface {
+    pub fn child(mut self, child: impl IntoElement) -> Self {
+        self.child = child.into_any_element();
+        self
+    }
+}
+
+impl RenderOnce for Surface {
+    fn render(self, _window: &mut Window, cx: &mut App) -> impl IntoElement {
         let theme = cx.global::<Theme>();
 
         div()
@@ -36,7 +35,7 @@ where
             .h_full()
             .occlude()
             .bg(theme.background)
-            .child(self.child.clone())
+            .child(self.child)
             .child(window_controls())
     }
 }
