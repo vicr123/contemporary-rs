@@ -11,12 +11,16 @@ use gpui::{
 
 pub struct Buttons {
     buttons_click_count: u8,
+    checkable_button_checked: bool,
+    flat_checkable_button_checked: bool,
 }
 
 impl Buttons {
     pub fn new(cx: &mut App) -> Entity<Self> {
         cx.new(|_| Buttons {
             buttons_click_count: 0,
+            checkable_button_checked: true,
+            flat_checkable_button_checked: true,
         })
     }
 }
@@ -73,7 +77,10 @@ impl Render for Buttons {
                                     .child(div().flex_grow().child(button("button-3").child(tr!(
                                         "BUTTONS_CHECKABLE_BUTTON",
                                         "Checkable Button"
-                                    )))),
+                                    )).checked_when(self.checkable_button_checked).on_click(cx.listener(|this, _, _, cx| {
+                                        this.checkable_button_checked = !this.checkable_button_checked;
+                                        cx.notify()
+                                    })))),
                             )
                             .child(trn!(
                                 "BUTTONS_COUNT_TEXT",
@@ -105,7 +112,10 @@ impl Render for Buttons {
                                     .child(button("button-3").flat().flex_grow().child(tr!(
                                         "BUTTONS_FLAT_CHECKABLE_BUTTON",
                                         "Flat Checkable Button"
-                                    ))),
+                                    )).checked_when(self.flat_checkable_button_checked).on_click(cx.listener(|this, _, _, cx| {
+                                        this.flat_checkable_button_checked = !this.flat_checkable_button_checked;
+                                        cx.notify()
+                                    }))),
                             ),
                     ),
             )
