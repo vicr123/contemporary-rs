@@ -91,7 +91,7 @@
   },
   "COMPONENTS_BUTTON": {
     "context": "main_surface.rs",
-    "definedIn": "src/main_surface.rs:49",
+    "definedIn": "src/main_surface.rs:50",
     "plural": false,
     "description": null
   },
@@ -103,7 +103,7 @@
   },
   "PATTERNS_BUTTON": {
     "context": "main_surface.rs",
-    "definedIn": "src/main_surface.rs:58",
+    "definedIn": "src/main_surface.rs:59",
     "plural": false,
     "description": null
   },

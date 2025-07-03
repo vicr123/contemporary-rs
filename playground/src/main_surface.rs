@@ -26,7 +26,7 @@ impl MainSurface {
     pub fn new(cx: &mut App) -> Entity<MainSurface> {
         cx.new(|cx| MainSurface {
             components_root: ComponentsRoot::new(cx),
-            selected_tab: MainSurfaceTab::Components,
+            selected_tab: Components,
         })
     }
 }
@@ -44,6 +44,7 @@ impl Render for MainSurface {
                         .bg(theme.button_background)
                         .rounded(theme.border_radius)
                         .gap(px(2.))
+                        .content_stretch()
                         .child(
                             button("components-button")
                                 .child(tr!("COMPONENTS_BUTTON", "Components"))

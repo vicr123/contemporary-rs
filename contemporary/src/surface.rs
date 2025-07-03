@@ -70,6 +70,7 @@ impl RenderOnce for WindowTitle {
             .w_full()
             .h(px(40.))
             .flex()
+            .gap(px(6.))
             .child(if cfg!(target_os = "macos") {
                 // Make space for the window controls
                 div().w(px(80.))
@@ -84,7 +85,14 @@ impl RenderOnce for WindowTitle {
                     )
                     .occlude()
             })
-            .child(div().flex_grow().content_stretch().child(self.actions))
+            .child(
+                div()
+                    .flex()
+                    .h(px(40.))
+                    .flex_grow()
+                    .content_stretch()
+                    .child(self.actions),
+            )
             .window_control_area(WindowControlArea::Drag)
             .when(!cfg!(target_os = "macos"), |david| {
                 david.child(
