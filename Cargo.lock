@@ -1105,17 +1105,20 @@ dependencies = [
 name = "contemporary"
 version = "0.1.0"
 dependencies = [
+ "async-channel 2.3.1",
  "contemporary_i18n",
  "contemporary_i18n_gen",
  "freedesktop-icons",
  "gpui",
  "indexmap",
+ "objc2",
  "objc2-foundation",
  "once_cell",
  "rust-embed",
  "schemars",
  "serde",
  "serde_json",
+ "smol",
  "unicode-segmentation",
  "url",
 ]
@@ -4231,6 +4234,8 @@ dependencies = [
  "contemporary_icon_tool_macros",
  "gpui",
  "indexmap",
+ "smol",
+ "smol-macros",
 ]
 
 [[package]]
@@ -5179,6 +5184,19 @@ dependencies = [
  "async-net",
  "async-process",
  "blocking",
+ "futures-lite 2.6.0",
+]
+
+[[package]]
+name = "smol-macros"
+version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "bfcaedb62e0475a6898988138995ec7b1e5d116167a72bb12c7b59d0649fbbc2"
+dependencies = [
+ "async-executor",
+ "async-io",
+ "async-lock",
+ "event-listener 5.4.0",
  "futures-lite 2.6.0",
 ]
 

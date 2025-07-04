@@ -103,7 +103,7 @@
   },
   "MENU_THEME": {
     "context": "main.rs",
-    "definedIn": "src/main.rs:71",
+    "definedIn": "src/main.rs:72",
     "plural": false,
     "description": null
   },
@@ -151,19 +151,19 @@
   },
   "THEME_DARK": {
     "context": "main.rs",
-    "definedIn": "src/main.rs:75",
+    "definedIn": "src/main.rs:76",
     "plural": false,
     "description": null
   },
   "THEME_LIGHT": {
     "context": "main.rs",
-    "definedIn": "src/main.rs:74",
+    "definedIn": "src/main.rs:75",
     "plural": false,
     "description": null
   },
   "THEME_SYSTEM": {
     "context": "main.rs",
-    "definedIn": "src/main.rs:73",
+    "definedIn": "src/main.rs:74",
     "plural": false,
     "description": null
   }

@@ -7,7 +7,7 @@ use crate::styling::macos::create_macos_theme;
 use crate::styling::rgb::{rgb_tuple, rgba_tuple};
 use gpui::{Global, Pixels, Rgba};
 
-#[derive(Copy, Clone)]
+#[derive(PartialEq, Copy, Clone)]
 pub enum ThemeType {
     System,
     Light,
@@ -96,6 +96,7 @@ impl VariableColor for Rgba {
 
 impl Theme {
     pub fn set_theme(&mut self, other: Theme) {
+        self.theme_type = other.theme_type;
         self.background = other.background;
         self.foreground = other.foreground;
         self.system_font_family = other.system_font_family;

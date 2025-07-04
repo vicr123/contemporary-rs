@@ -9,6 +9,8 @@ contemporary = { path = "../contemporary" }
 gpui = { workspace = true }
 indexmap = { workspace = true }
 contemporary_icon_tool_macros = { path = "../icon_tool/contemporary_icon_tool_macros" }
+smol = "2"
+smol-macros = "0.1"
 
 [build-dependencies]
 contemporary_i18n_gen = { path = "../i18n/contemporary_i18n_gen" }

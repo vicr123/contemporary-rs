@@ -1,5 +1,6 @@
 use crate::application::{ApplicationLink, Details, Versions};
 use crate::components::text_field::bind_text_input_keys;
+use crate::platform_support::setup_platform;
 use crate::styling::theme::Theme;
 use contemporary_i18n::{tr, tr_load, I18N_MANAGER};
 use gpui::{actions, Action, App, Global, KeyBinding, Menu, MenuItem};
@@ -116,7 +117,11 @@ pub fn setup_contemporary(cx: &mut App, mut application: Contemporary) {
             if *key == ApplicationLink::HelpContents {
                 [
                     Some(MenuItem::action(
-                        tr!("MENU_HELP_CONTENTS", "{{application}} Help", application=application.details.application_name),
+                        tr!(
+                            "MENU_HELP_CONTENTS",
+                            "{{application}} Help",
+                            application = application.details.application_name
+                        ),
                         OpenLink {
                             link: url.to_string(),
                         },
@@ -157,6 +162,8 @@ pub fn setup_contemporary(cx: &mut App, mut application: Contemporary) {
         contemporary_version: "alpha",
         versions: Arc::new(Mutex::new(HashMap::new())),
     });
+
+    setup_platform(cx);
 }
 
 fn quit(_: &Quit, cx: &mut App) {

@@ -14,6 +14,7 @@ use contemporary_i18n::{tr, tr_load, I18N_MANAGER};
 use contemporary_icon_tool_macros::application_icon;
 use gpui::{actions, px, size, App, Bounds, Menu, MenuItem, WindowBounds, WindowOptions};
 use indexmap::IndexMap;
+use smol_macros::main;
 
 mod components;
 mod main_surface;
@@ -21,7 +22,7 @@ mod main_window;
 
 actions!(playground, [SystemTheme, LightTheme, DarkTheme]);
 
-fn main() {
+fn mane() {
     application_icon!("../dist/baseicon.svg");
     new_contemporary_application().run(|cx: &mut App| {
         I18N_MANAGER.write().unwrap().load_source(tr_load!());
@@ -98,6 +99,12 @@ fn main() {
         .unwrap();
         cx.activate(true);
     });
+}
+
+main! {
+    async fn main() {
+        mane()
+    }
 }
 
 fn system_theme(_: &SystemTheme, cx: &mut App) {
