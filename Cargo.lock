@@ -1121,6 +1121,7 @@ dependencies = [
  "smol",
  "unicode-segmentation",
  "url",
+ "windows 0.61.3",
 ]
 
 [[package]]
