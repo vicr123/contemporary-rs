@@ -1,4 +1,4 @@
-use crate::styling::theme::Theme;
+use crate::styling::theme::{Theme, VariableColor};
 use gpui::prelude::FluentBuilder;
 use gpui::{
     div, px, rgba, AnyElement, App, ClickEvent, Div, ElementId,
@@ -70,21 +70,10 @@ impl RenderOnce for Button {
     fn render(self, _window: &mut Window, cx: &mut App) -> impl IntoElement {
         let theme = cx.global::<Theme>().disable_when(self.disabled);
 
-        let hover_color = if self.flat {
-            rgba(0xFFFFFF4B)
-        } else {
-            theme.button_hover_background
-        };
-        let active_color = if self.flat {
-            rgba(0x0000004B)
-        } else {
-            theme.button_active_background
-        };
-
         self.div
             .when_else(
                 self.checked,
-                |div| div.bg(active_color),
+                |div| div.bg(theme.button_background.active()),
                 |div| div.when(!self.flat, |div| div.bg(theme.button_background)),
             )
             .flex()
@@ -100,11 +89,11 @@ impl RenderOnce for Button {
                         div.bg(if self.flat {
                             theme.layer_background
                         } else {
-                            hover_color
+                            theme.button_background.hover()
                         })
                     })
                 })
-                .active(|div| div.bg(active_color))
+                .active(|div| div.bg(theme.button_background.hover()))
             })
     }
 }

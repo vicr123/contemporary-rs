@@ -19,11 +19,15 @@
   "CHECKBOXES_TITLE": "Checkboxes",
   "COMPONENTS_BUTTON": "Components",
   "COMPONENTS_TITLE": "Components",
+  "MENU_THEME": "Theme",
   "PATTERNS_BUTTON": "Patterns",
   "PROGRESS_BARS_TITLE": "Progress Bars",
   "RADIO_BUTTONS_TITLE": "Radio Buttons",
   "TEXT_FIELDS_TITLE": "Text Fields",
   "TEXT_FIELD_DISABLED_PLACEHOLDER": "Disabled Text Field",
   "TEXT_FIELD_PLACEHOLDER": "Text Field",
-  "TEXT_INPUT_TITLE": "Text Input"
+  "TEXT_INPUT_TITLE": "Text Input",
+  "THEME_DARK": "Dark",
+  "THEME_LIGHT": "Light",
+  "THEME_SYSTEM": "System"
 }

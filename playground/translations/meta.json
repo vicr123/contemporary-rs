@@ -101,6 +101,12 @@
     "plural": false,
     "description": null
   },
+  "MENU_THEME": {
+    "context": "main.rs",
+    "definedIn": "src/main.rs:71",
+    "plural": false,
+    "description": null
+  },
   "PATTERNS_BUTTON": {
     "context": "main_surface.rs",
     "definedIn": "src/main_surface.rs:59",
@@ -140,6 +146,24 @@
   "TEXT_INPUT_TITLE": {
     "context": "text_input.rs",
     "definedIn": "src/components/text_input.rs:62",
+    "plural": false,
+    "description": null
+  },
+  "THEME_DARK": {
+    "context": "main.rs",
+    "definedIn": "src/main.rs:75",
+    "plural": false,
+    "description": null
+  },
+  "THEME_LIGHT": {
+    "context": "main.rs",
+    "definedIn": "src/main.rs:74",
+    "plural": false,
+    "description": null
+  },
+  "THEME_SYSTEM": {
+    "context": "main.rs",
+    "definedIn": "src/main.rs:73",
     "plural": false,
     "description": null
   }
