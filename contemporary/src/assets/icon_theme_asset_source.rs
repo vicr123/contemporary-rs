@@ -11,6 +11,7 @@ pub struct IconThemeAssetSource;
 #[cfg(not(target_os = "linux"))]
 #[derive(RustEmbed)]
 #[folder = "../submodules/contemporary-icons"]
+#[include = "*.svg"]
 struct BundledContemporaryIcons;
 
 #[cfg(not(target_os = "linux"))]
