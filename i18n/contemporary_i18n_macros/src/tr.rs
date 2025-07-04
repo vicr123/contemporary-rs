@@ -73,7 +73,7 @@ pub fn tr(body: TokenStream) -> TokenStream {
         {
             use contemporary_i18n::I18N_MANAGER as i18n;
             use contemporary_i18n::Variable;
-            i18n.read().unwrap().lookup::<'_, [(&'_ str, Variable); #token_length]>(#key, &[
+            i18n.read().unwrap().lookup::<[(&'_ str, Variable); #token_length]>(#key, &[
                 #( #z )*
             ], #current_crate)
         }
@@ -162,7 +162,7 @@ pub fn trn(body: TokenStream) -> TokenStream {
         {
             use contemporary_i18n::I18N_MANAGER as i18n;
             use contemporary_i18n::Variable;
-            i18n.read().unwrap().lookup::<'_, [(&'_ str, Variable); #token_length]>(#key, &[
+            i18n.read().unwrap().lookup::<[(&'_ str, Variable); #token_length]>(#key, &[
                 #( #z )*
             ], #current_crate)
         }
