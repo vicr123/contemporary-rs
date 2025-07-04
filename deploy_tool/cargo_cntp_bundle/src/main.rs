@@ -1,14 +1,18 @@
 use clap::Parser;
 use clap_verbosity_flag::InfoLevel;
-use contemporary_bundle_lib::linux::bundle_linux;
-use contemporary_bundle_lib::macos::bundle::bundle_macos;
-use contemporary_bundle_lib::tool_setup::{setup_tool, DeploymentType};
+use contemporary_bundle_lib::tool_setup::{DeploymentType, setup_tool};
 use current_platform::CURRENT_PLATFORM;
 use std::collections::HashMap;
 use std::env::consts::EXE_EXTENSION;
 use std::path::PathBuf;
 use std::process::exit;
 use tracing::{error, info};
+
+#[cfg(target_os = "linux")]
+use contemporary_bundle_lib::linux::bundle_linux;
+
+#[cfg(target_os = "macos")]
+use contemporary_bundle_lib::macos::bundle::bundle_macos;
 
 #[derive(Parser, Debug)]
 #[command(name = "cargo cntp-deploy")] // all of this is necessary so things work as expected wrt. cargo
@@ -81,8 +85,20 @@ fn main() {
     }
 
     match setup_data.deployment_type {
-        DeploymentType::Linux => bundle_linux(&setup_data, bin_targets),
-        DeploymentType::MacOS => bundle_macos(&setup_data, bin_targets),
+        DeploymentType::Linux => {
+            #[cfg(target_os = "linux")]
+            bundle_linux(&setup_data, bin_targets);
+
+            #[cfg(not(target_os = "linux"))]
+            panic!("Tried to compile for Linux when not on Linux");
+        }
+        DeploymentType::MacOS => {
+            #[cfg(target_os = "macos")]
+            bundle_macos(&setup_data, bin_targets);
+
+            #[cfg(not(target_os = "macos"))]
+            panic!("Tried to compile for macOS when not on macOS");
+        }
     }
 
     if !args.no_open {
