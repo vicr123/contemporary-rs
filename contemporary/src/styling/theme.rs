@@ -94,6 +94,10 @@ impl VariableColor for Rgba {
     }
 }
 
+pub fn variable_transparent() -> Rgba {
+    rgba_tuple(0, 0, 0, 0.)
+}
+
 impl Theme {
     pub fn set_theme(&mut self, other: Theme) {
         self.theme_type = other.theme_type;
