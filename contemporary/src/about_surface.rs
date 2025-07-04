@@ -97,8 +97,9 @@ impl RenderOnce for AboutSurface {
                                 .child(
                                     div()
                                         .flex()
-                                        .gap(px(6.))
-                                        .child(img("contemporary-icon:/application").w(px(48.))) // TODO: Icon goes here
+                                        .items_center()
+                                        .gap(px(12.))
+                                        .child(img("contemporary-icon:/application").w(px(40.))) // TODO: Icon goes here
                                         .child(
                                             div()
                                                 .text_size(px(35.))
@@ -108,15 +109,15 @@ impl RenderOnce for AboutSurface {
                                 .child(
                                     div()
                                         .flex()
-                                        .gap(px(6.))
-                                        .child(div().w(px(48.)))
+                                        .gap(px(12.))
+                                        .child(div().w(px(40.)))
                                         .child(div().child(details.application_generic_name)),
                                 )
                                 .child(
                                     div()
                                         .flex()
-                                        .gap(px(6.))
-                                        .child(div().w(px(48.)))
+                                        .gap(px(12.))
+                                        .child(div().w(px(40.)))
                                         .child(AboutSurfaceButtons),
                                 ),
                         )

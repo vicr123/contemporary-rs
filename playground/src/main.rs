@@ -48,7 +48,7 @@ fn mane() {
                             application_name: "Contemporary Playground",
                             application_generic_name: "Control Playground",
                             desktop_entry: "com.vicr123.contemporary-playground",
-                            copyright_holder: "me :)",
+                            copyright_holder: "Victor Tran",
                             copyright_year: "2025",
                             application_version: "3.0",
                             license: License::Gpl3OrLater,
