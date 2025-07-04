@@ -8,15 +8,17 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [ windows-latest ]
+        os: [ windows-latest, windows-11-arm ]
     runs-on: ${{ matrix.os }}
     env:
       ARCH: "${{ endsWith(matrix.os, 'arm') && 'aarch64' || 'x86_64' }}"
     steps:
       - uses: actions/checkout@v4
-      - name: Install dependencies
+      - name: Install Rust
+        if: matrix.os == 'windows-11-arm'
         run: |
-          rustup update
+          Invoke-WebRequest https://win.rustup.rs/aarch64 -OutFile rustup.exe
+          .\rustup.exe default stable
       - uses: Swatinem/rust-cache@v2
       - uses: r7kamura/rust-problem-matchers@v1
       - name: Build
