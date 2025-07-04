@@ -18,5 +18,8 @@ rust-embed = "8.7.2"
 [target.'cfg(target_os="linux")'.dependencies]
 freedesktop-icons = "0.4.0"
 
+[target.'cfg(target_os="macos")'.dependencies]
+objc2-foundation = "0.3"
+
 [build-dependencies]
 contemporary_i18n_gen = { path = "../i18n/contemporary_i18n_gen" }

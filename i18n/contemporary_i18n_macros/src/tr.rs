@@ -2,7 +2,7 @@ use contemporary_i18n_parse::{tr::TrMacroInput, trn::TrnMacroInput};
 use proc_macro::TokenStream;
 
 use quote::quote;
-use syn::{Error, parse_macro_input};
+use syn::{parse_macro_input, Error};
 
 use crate::config::CURRENT_CRATE;
 
@@ -67,11 +67,13 @@ pub fn tr(body: TokenStream) -> TokenStream {
 
     let key = input.translation_id.value();
     let current_crate = &*CURRENT_CRATE;
+    let token_length = z.len();
 
     quote! {
         {
             use contemporary_i18n::I18N_MANAGER as i18n;
-            i18n.read().unwrap().lookup(#key, &[
+            use contemporary_i18n::Variable;
+            i18n.read().unwrap().lookup::<'_, [(&'_ str, Variable); #token_length]>(#key, &[
                 #( #z )*
             ], #current_crate)
         }
@@ -154,11 +156,13 @@ pub fn trn(body: TokenStream) -> TokenStream {
 
     let key = input.translation_id.value();
     let current_crate = &*CURRENT_CRATE;
+    let token_length = z.len();
 
     quote! {
         {
             use contemporary_i18n::I18N_MANAGER as i18n;
-            i18n.read().unwrap().lookup(#key, &[
+            use contemporary_i18n::Variable;
+            i18n.read().unwrap().lookup::<'_, [(&'_ str, Variable); #token_length]>(#key, &[
                 #( #z )*
             ], #current_crate)
         }

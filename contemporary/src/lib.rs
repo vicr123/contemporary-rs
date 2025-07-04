@@ -4,7 +4,7 @@ pub mod assets;
 pub mod components;
 pub mod hsv;
 pub mod icon_tool;
-mod lerp;
+pub mod lerp;
 pub mod setup;
 pub mod styling;
 pub mod surface;

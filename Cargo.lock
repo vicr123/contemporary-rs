@@ -1110,6 +1110,7 @@ dependencies = [
  "freedesktop-icons",
  "gpui",
  "indexmap",
+ "objc2-foundation",
  "once_cell",
  "rust-embed",
  "schemars",
@@ -3877,6 +3878,8 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "900831247d2fe1a09a683278e5384cfb8c80c79fe6b166f9d14bfdde0ea1b03c"
 dependencies = [
  "bitflags 2.9.1",
+ "block2",
+ "libc",
  "objc2",
  "objc2-core-foundation",
 ]
