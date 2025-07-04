@@ -2,6 +2,7 @@ mod base;
 pub mod button;
 pub mod checkbox;
 pub mod constrainer;
+pub mod focus_decoration;
 pub mod grandstand;
 pub mod icon;
 pub mod layer;

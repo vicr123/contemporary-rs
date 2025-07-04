@@ -1,5 +1,6 @@
 pub use crate::components::base::text_input::bind_text_input_keys;
 use crate::components::base::text_input::TextInput;
+use crate::components::focus_decoration::focus_decoration;
 use crate::styling::theme::Theme;
 use gpui::prelude::FluentBuilder;
 use gpui::{
@@ -86,19 +87,19 @@ impl Render for TextField {
                     })
                     .child(self.text_input.clone()),
             )
-            .when(self.focus_handle.contains_focused(window, cx), |david| {
-                david.child(
-                    div()
-                        .w_full()
-                        .h_full()
-                        .absolute()
-                        .top_0()
-                        .left_0()
-                        .rounded(theme.border_radius)
-                        .border(px(3.))
-                        .border_color(theme.focus_decoration),
-                )
-            });
+            .when(
+                self.focus_handle.contains_focused(window, cx) && !self.borderless,
+                |david| {
+                    david.child(
+                        focus_decoration()
+                            .w_full()
+                            .h_full()
+                            .absolute()
+                            .top_0()
+                            .left_0(),
+                    )
+                },
+            );
         david.style().refine(&self.style);
         david
     }
