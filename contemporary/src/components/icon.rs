@@ -1,7 +1,6 @@
 use crate::styling::theme::Theme;
 use gpui::{
-    div, px, svg, App, IntoElement, ParentElement, RenderOnce, Rgba, SharedString, Styled,
-    Window,
+    div, px, svg, App, IntoElement, ParentElement, RenderOnce, Rgba, SharedString, Styled, Window,
 };
 
 #[derive(IntoElement)]
@@ -33,7 +32,7 @@ impl Icon {
 
 impl RenderOnce for Icon {
     fn render(self, _window: &mut Window, cx: &mut App) -> impl IntoElement {
-        div().child(
+        div().size(px(self.size)).child(
             svg()
                 .text_color(self.foreground.unwrap_or_else(|| {
                     let theme = cx.global::<Theme>();

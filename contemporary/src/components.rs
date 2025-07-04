@@ -5,6 +5,7 @@ pub mod constrainer;
 pub mod focus_decoration;
 pub mod grandstand;
 pub mod icon;
+pub mod icon_text;
 pub mod layer;
 pub mod pager;
 pub mod progress_bar;

@@ -30,6 +30,15 @@ impl ApplicationLink {
             ApplicationLink::Other { icon: _, text } => text.clone(),
         }
     }
+
+    pub fn get_icon(&self) -> SharedString {
+        match self {
+            ApplicationLink::FileBug => "tools-report-bug".into(),
+            ApplicationLink::SourceCode => "commit".into(),
+            ApplicationLink::HelpContents => "help-contents".into(),
+            ApplicationLink::Other { icon, text: _ } => (**icon).into(),
+        }
+    }
 }
 
 pub struct Details {

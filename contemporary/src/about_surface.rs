@@ -1,14 +1,16 @@
 use crate::application::{ApplicationLink, Details, Versions};
 use crate::components::button::button;
 use crate::components::constrainer::constrainer;
-use crate::components::grandstand::{Grandstand, grandstand};
+use crate::components::grandstand::{grandstand, Grandstand};
+use crate::components::icon_text::icon_text;
 use crate::components::layer::layer;
 use crate::components::subtitle::subtitle;
 use crate::styling::theme::Theme;
 use crate::surface::surface;
 use contemporary_i18n::tr;
 use gpui::{
-    App, AppContext, ClickEvent, IntoElement, ParentElement, RenderOnce, Styled, Window, div, px,
+    div, img, px, App, AppContext, ClickEvent, IntoElement, ParentElement, RenderOnce, Styled,
+    Window,
 };
 
 #[derive(IntoElement)]
@@ -32,7 +34,7 @@ impl RenderOnce for AboutSurfaceButtons {
                     .enumerate()
                     .map(|(idx, link)| {
                         button(("help-link", idx))
-                            .child(link.0.get_name())
+                            .child(icon_text(link.0.get_icon(), link.0.get_name()))
                             .on_click(|_, _, cx| cx.open_url(link.1))
                             .into_any_element()
                     }),
@@ -96,7 +98,7 @@ impl RenderOnce for AboutSurface {
                                     div()
                                         .flex()
                                         .gap(px(6.))
-                                        .child(div().w(px(48.))) // TODO: Icon goes here
+                                        .child(img("contemporary-icon:/application").w(px(48.))) // TODO: Icon goes here
                                         .child(
                                             div()
                                                 .text_size(px(35.))

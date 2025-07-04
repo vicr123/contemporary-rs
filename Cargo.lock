@@ -1111,6 +1111,7 @@ dependencies = [
  "gpui",
  "indexmap",
  "once_cell",
+ "rust-embed",
  "schemars",
  "serde",
  "serde_json",
