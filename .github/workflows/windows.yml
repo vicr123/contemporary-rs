@@ -1,0 +1,33 @@
+name: Build on Windows
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ windows-latest, windows-11-arm ]
+    runs-on: ${{ matrix.os }}
+    env:
+      ARCH: "${{ endsWith(matrix.os, 'arm') && 'aarch64' || 'x86_64' }}"
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        run: |
+          rustup update
+      - uses: Swatinem/rust-cache@v2
+      - uses: r7kamura/rust-problem-matchers@v1
+      - name: Build
+        run: cargo build --verbose --release
+#      - name: Bundle
+#        run: cargo run --package cargo-cntp-bundle --bin cargo-cntp-bundle
+#        working-directory: playground
+#      - name: Deploy
+#        run: cargo run --package cargo-cntp-deploy --bin cargo-cntp-deploy -- --output-file "$HOME/Contemporary_Playground-$ARCH.AppImage"
+#        working-directory: playground
+      - uses: actions/upload-artifact@v4
+        with:
+          name: contemporary-playground-windows-${{ env.ARCH }}
+          path: "target/release/playground.exe"
