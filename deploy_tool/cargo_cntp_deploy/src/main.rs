@@ -65,23 +65,30 @@ fn main() {
             deploy_linux(&setup_data, &args.output_file);
 
             #[cfg(not(target_os = "linux"))]
-            error!("Unable to deploy for Linux on non-Linux platform");
-            exit(1);
+            {
+                error!("Unable to deploy for Linux on non-Linux platform");
+                exit(1);
+            }
         }
         DeploymentType::MacOS => {
             #[cfg(target_os = "macos")]
             deploy_macos(&setup_data, &args.output_file);
 
             #[cfg(not(target_os = "macos"))]
-            error!("Unable to deploy for macOS on non-Macintosh platform");
-            exit(1);
+            {
+                error!("Unable to deploy for macOS on non-Macintosh platform");
+                exit(1);
+            }
         }
         DeploymentType::Windows => {
             #[cfg(target_os = "windows")]
             deploy_windows(&setup_data, &args.output_file);
 
             #[cfg(not(target_os = "windows"))]
-            error!("Unable to deploy for Windows on non-Windows platform");
+            {
+                error!("Unable to deploy for Windows on non-Windows platform");
+                exit(1);
+            }
         }
     }
 

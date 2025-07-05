@@ -93,24 +93,30 @@ fn main() {
             bundle_linux(&setup_data, bin_targets);
 
             #[cfg(not(target_os = "linux"))]
-            error!("Unable to bundle for Linux on non-Linux platform");
-            exit(1);
+            {
+                error!("Unable to bundle for Linux on non-Linux platform");
+                exit(1);
+            }
         }
         DeploymentType::MacOS => {
             #[cfg(target_os = "macos")]
             bundle_macos(&setup_data, bin_targets);
 
             #[cfg(not(target_os = "macos"))]
-            error!("Unable to bundle for macOS on non-Macintosh platform");
-            exit(1);
+            {
+                error!("Unable to bundle for macOS on non-Macintosh platform");
+                exit(1);
+            }
         }
         DeploymentType::Windows => {
             #[cfg(target_os = "windows")]
             bundle_windows(&setup_data, bin_targets);
 
             #[cfg(not(target_os = "windows"))]
-            error!("Unable to bundle for Windows on non-Windows platform");
-            exit(1);
+            {
+                error!("Unable to bundle for Windows on non-Windows platform");
+                exit(1);
+            }
         }
     }
 
