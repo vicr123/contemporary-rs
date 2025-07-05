@@ -13,6 +13,7 @@ use contemporary_bundle_lib::linux::bundle_linux;
 
 #[cfg(target_os = "macos")]
 use contemporary_bundle_lib::macos::bundle::bundle_macos;
+use contemporary_bundle_lib::windows::bundle::bundle_windows;
 
 #[derive(Parser, Debug)]
 #[command(name = "cargo cntp-deploy")] // all of this is necessary so things work as expected wrt. cargo
@@ -99,6 +100,7 @@ fn main() {
             #[cfg(not(target_os = "macos"))]
             panic!("Tried to compile for macOS when not on macOS");
         }
+        DeploymentType::Windows => bundle_windows(&setup_data, bin_targets),
     }
 
     if !args.no_open {

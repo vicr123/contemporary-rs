@@ -1,3 +1,4 @@
+use crate::VersionTuple;
 use cargo_metadata::{Metadata, MetadataCommand};
 use contemporary_config::ContemporaryConfig;
 use current_platform::CURRENT_PLATFORM;
@@ -5,7 +6,6 @@ use std::env;
 use std::path::PathBuf;
 use std::process::exit;
 use tracing::error;
-use crate::VersionTuple;
 
 pub struct ToolSetup {
     pub cargo_metadata: Metadata,
@@ -15,12 +15,13 @@ pub struct ToolSetup {
     pub targets: Vec<String>,
     pub output_directory: PathBuf,
     pub profile: String,
-    pub version: VersionTuple
+    pub version: VersionTuple,
 }
 
 pub enum DeploymentType {
     Linux,
     MacOS,
+    Windows,
 }
 
 pub fn setup_tool(
@@ -86,6 +87,18 @@ pub fn setup_tool(
         } else if targets.iter().all(|target| {
             matches!(
                 target.as_str(),
+                "x86_64-pc-windows-msvc"
+                    | "x86_64-pc-windows-gnu"
+                    | "x86_64-pc-windows-gnullvm"
+                    | "aarch64-pc-windows-msvc"
+                    | "aarch64-pc-windows-gnullvm"
+            )
+        }) && targets.len() == 1
+        {
+            DeploymentType::Windows
+        } else if targets.iter().all(|target| {
+            matches!(
+                target.as_str(),
                 "aarch64-apple-darwin" | "x86_64-apple-darwin"
             )
         }) {
@@ -114,6 +127,6 @@ pub fn setup_tool(
         targets,
         output_directory,
         profile,
-        version
+        version,
     }
 }

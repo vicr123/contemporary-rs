@@ -71,6 +71,8 @@ fn main() {
             #[cfg(not(target_os = "macos"))]
             panic!("Tried to compile for macOS when not on macOS");
         },
+        DeploymentType::Windows => {
+        }
     }
 
     if !args.no_open {
