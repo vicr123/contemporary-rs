@@ -12,6 +12,7 @@ use gpui::{
     div, img, px, App, AppContext, ClickEvent, IntoElement, ParentElement, RenderOnce, Styled,
     Window,
 };
+use crate::components::application_menu::ApplicationMenu;
 
 #[derive(IntoElement)]
 struct AboutSurfaceButtons;
@@ -66,7 +67,7 @@ impl AboutSurface {
 }
 
 impl RenderOnce for AboutSurface {
-    fn render(self, _window: &mut Window, cx: &mut gpui::App) -> impl IntoElement {
+    fn render(self, _window: &mut Window, cx: &mut App) -> impl IntoElement {
         let details = cx.global::<Details>();
         let versions = cx.global::<Versions>();
 

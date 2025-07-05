@@ -1,6 +1,8 @@
+use crate::actions::{DarkTheme, LightTheme, SystemTheme};
 use crate::components::root::ComponentsRoot;
 use crate::main_surface::MainSurfaceTab::{Components, Patterns};
 use crate::patterns::root::PatternsRoot;
+use contemporary::components::application_menu::ApplicationMenu;
 use contemporary::components::button::button;
 use contemporary::components::pager::pager;
 use contemporary::styling::theme::Theme;
@@ -8,12 +10,14 @@ use contemporary::surface::surface;
 use contemporary_i18n::tr;
 use gpui::{
     div, px, App, AppContext, Context, Entity, InteractiveElement, IntoElement,
-    ParentElement, Render, Styled, Window,
+    Menu, MenuItem, ParentElement, Render, Styled, Window,
 };
 
 pub struct MainSurface {
     components_root: Entity<ComponentsRoot>,
     patterns_root: Entity<PatternsRoot>,
+
+    application_menu: Entity<ApplicationMenu>,
 
     selected_tab: MainSurfaceTab,
 }
@@ -38,6 +42,20 @@ impl MainSurface {
         cx.new(|cx| MainSurface {
             components_root: ComponentsRoot::new(cx),
             patterns_root: PatternsRoot::new(cx),
+            application_menu: ApplicationMenu::new(
+                cx,
+                Menu {
+                    name: "Application Menu".into(),
+                    items: vec![MenuItem::submenu(Menu {
+                        name: tr!("MENU_THEME").into(),
+                        items: vec![
+                            MenuItem::action(tr!("THEME_SYSTEM"), SystemTheme),
+                            MenuItem::action(tr!("THEME_LIGHT"), LightTheme),
+                            MenuItem::action(tr!("THEME_DARK"), DarkTheme),
+                        ],
+                    })],
+                },
+            ),
             selected_tab: Components,
         })
     }
@@ -84,5 +102,6 @@ impl Render for MainSurface {
                     .page(self.components_root.clone().into_any_element())
                     .page(self.patterns_root.clone().into_any_element()),
             )
+            .application_menu(self.application_menu.clone())
     }
 }

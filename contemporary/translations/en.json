@@ -17,6 +17,7 @@
   "DIALOG_YES": "Yes",
   "HELP_FILE_BUG": "File Bug",
   "HELP_SOURCE_CODE": "Source Code",
+  "MENU_GO_BACK": "Back",
   "MENU_HELP": "Help",
   "MENU_HELP_CONTENTS": "{{application}} Help"
 }

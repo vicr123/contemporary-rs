@@ -13,9 +13,9 @@ use std::sync::{Arc, Mutex};
 actions!(contemporary, [Quit, HideSelf, HideOthers, ShowAll, About]);
 
 #[derive(PartialEq, Clone, Default, Deserialize, JsonSchema, Action)]
-struct OpenLink {
+pub struct OpenLink {
     #[serde(default)]
-    link: String,
+    pub(crate) link: String,
 }
 
 pub struct Contemporary {

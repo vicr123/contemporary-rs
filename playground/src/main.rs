@@ -3,6 +3,7 @@
 
 use std::rc::Rc;
 
+use crate::actions::{register_actions, DarkTheme, LightTheme, SystemTheme};
 use crate::main_window::MainWindow;
 use contemporary::application::new_contemporary_application;
 use contemporary::setup::ShowAll;
@@ -19,12 +20,11 @@ use gpui::{actions, px, size, App, Bounds, Menu, MenuItem, WindowBounds, WindowO
 use indexmap::IndexMap;
 use smol_macros::main;
 
+mod actions;
 mod components;
 mod main_surface;
 mod main_window;
 mod patterns;
-
-actions!(playground, [SystemTheme, LightTheme, DarkTheme]);
 
 fn mane() {
     application_icon!("../dist/baseicon.svg");
@@ -33,9 +33,7 @@ fn mane() {
         let bounds = Bounds::centered(None, size(px(800.0), px(600.0)), cx);
 
         let default_window_options = contemporary_window_options(cx);
-        cx.on_action(system_theme);
-        cx.on_action(light_theme);
-        cx.on_action(dark_theme);
+        register_actions(cx);
         cx.open_window(
             WindowOptions {
                 window_bounds: Some(WindowBounds::Windowed(bounds)),
@@ -109,22 +107,4 @@ main! {
     async fn main() {
         mane()
     }
-}
-
-fn system_theme(_: &SystemTheme, cx: &mut App) {
-    let theme = cx.global_mut::<Theme>();
-    theme.set_theme(Theme::default_of_type(System));
-    cx.refresh_windows();
-}
-
-fn light_theme(_: &LightTheme, cx: &mut App) {
-    let theme = cx.global_mut::<Theme>();
-    theme.set_theme(Theme::default_of_type(Light));
-    cx.refresh_windows();
-}
-
-fn dark_theme(_: &DarkTheme, cx: &mut App) {
-    let theme = cx.global_mut::<Theme>();
-    theme.set_theme(Theme::default_of_type(Dark));
-    cx.refresh_windows();
 }
