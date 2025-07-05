@@ -15,6 +15,8 @@
   "DIALOG_NO": "No",
   "DIALOG_OK": "OK",
   "DIALOG_YES": "Yes",
+  "HELP_FILE_BUG": "File Bug",
+  "HELP_SOURCE_CODE": "Source Code",
   "MENU_HELP": "Help",
   "MENU_HELP_CONTENTS": "{{application}} Help"
 }

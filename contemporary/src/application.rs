@@ -7,6 +7,7 @@ use crate::assets::global_manager::ASSET_MANAGER;
 use crate::assets::icon_theme_asset_source::IconThemeAssetSource;
 use crate::assets::manager::Manager;
 use crate::assets::window_controls_asset_source::WindowControlsAssetSource;
+use contemporary_i18n::tr;
 use gpui::{Application, Global, SharedString};
 use indexmap::IndexMap;
 
@@ -24,9 +25,9 @@ pub enum ApplicationLink {
 impl ApplicationLink {
     pub fn get_name(&self) -> SharedString {
         match self {
-            ApplicationLink::FileBug => "File Bug".into(),
-            ApplicationLink::SourceCode => "Source Code".into(),
-            ApplicationLink::HelpContents => "Help".into(),
+            ApplicationLink::FileBug => tr!("HELP_FILE_BUG", "File Bug").into(),
+            ApplicationLink::SourceCode => tr!("HELP_SOURCE_CODE", "Source Code").into(),
+            ApplicationLink::HelpContents => tr!("HELP").into(),
             ApplicationLink::Other { icon: _, text } => text.clone(),
         }
     }

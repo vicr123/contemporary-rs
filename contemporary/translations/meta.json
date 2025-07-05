@@ -95,6 +95,18 @@
     "plural": false,
     "description": null
   },
+  "HELP_FILE_BUG": {
+    "context": "application.rs",
+    "definedIn": "src/application.rs:28",
+    "plural": false,
+    "description": null
+  },
+  "HELP_SOURCE_CODE": {
+    "context": "application.rs",
+    "definedIn": "src/application.rs:29",
+    "plural": false,
+    "description": null
+  },
   "MENU_HELP": {
     "context": "setup.rs",
     "definedIn": "src/setup.rs:147",

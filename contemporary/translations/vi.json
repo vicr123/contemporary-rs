@@ -8,5 +8,15 @@
   "APPLE_APP_MENU_HIDE_OTHERS": "Ẩn các mục khác",
   "APPLE_APP_MENU_QUIT": "Thoát {{application}}",
   "APPLE_APP_MENU_SHOW_ALL": "Hiển thị tất cả",
-  "MENU_HELP": "Trợ giúp"
+  "MENU_HELP": "Trợ giúp",
+  "APPLE_APP_MENU_ABOUT": "Giới thiệu về {{application}}",
+  "APPLE_APP_MENU_HIDE_SELF": "Ẩn {{application}}",
+  "APPLE_APP_MENU_SERVICES": "Dịch vụ",
+  "DIALOG_CANCEL": "Hủy",
+  "DIALOG_NO": "Không",
+  "DIALOG_OK": "OK",
+  "DIALOG_YES": "Có",
+  "HELP_FILE_BUG": "Báo cáo lỗi",
+  "HELP_SOURCE_CODE": "Mã nguồn",
+  "MENU_HELP_CONTENTS": "Trợ giúp về {{application}}"
 }
