@@ -25,13 +25,13 @@ jobs:
       - uses: r7kamura/rust-problem-matchers@v1
       - name: Build
         run: cargo build --verbose --release
-#      - name: Bundle
-#        run: cargo run --package cargo-cntp-bundle --bin cargo-cntp-bundle
-#        working-directory: playground
-#      - name: Deploy
-#        run: cargo run --package cargo-cntp-deploy --bin cargo-cntp-deploy -- --output-file "$HOME/Contemporary_Playground-$ARCH.AppImage"
-#        working-directory: playground
+      - name: Bundle
+        run: cargo run --package cargo-cntp-bundle --bin cargo-cntp-bundle
+        working-directory: playground
+      - name: Deploy
+        run: cargo run --package cargo-cntp-deploy --bin cargo-cntp-deploy -- --output-file "$env:HOME/Contemporary_Playground-$ARCH.exe"
+        working-directory: playground
       - uses: actions/upload-artifact@v4
         with:
-          name: contemporary-playground-windows-${{ env.ARCH }}
-          path: "target/release/playground.exe"
+          name: contemporary-playground-linux-${{ env.ARCH }}
+          path: "~/Contemporary_Playground-${{ env.ARCH }}.exe"

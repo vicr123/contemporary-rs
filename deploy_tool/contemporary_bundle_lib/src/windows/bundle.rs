@@ -1,16 +1,17 @@
 use crate::icon::get_svg_icon_contents;
 use crate::tool_setup::ToolSetup;
 use crate::windows::group_icon::{GroupIcon, GroupIconEntry};
+use crate::windows::icon::Icon;
 use resvg::render;
 use resvg::tiny_skia::{Pixmap, Transform};
 use resvg::usvg::{Options, Tree};
 use std::collections::HashMap;
+use std::env::consts::EXE_EXTENSION;
 use std::fs::{copy, create_dir_all};
 use std::path::{Path, PathBuf};
 use std::process::exit;
 use tracing::error;
 use winres_edit::{Id, Resource, Resources, resource_type};
-use crate::windows::icon::Icon;
 
 pub fn bundle_windows(setup_data: &ToolSetup, executable_path: HashMap<String, PathBuf>) {
     let target_triple = setup_data.targets.first().unwrap();
@@ -25,9 +26,15 @@ pub fn bundle_windows(setup_data: &ToolSetup, executable_path: HashMap<String, P
         exit(1);
     };
 
+    let Some(application_name) = deployment.application_name else {
+        error!("No application name specified in config");
+        exit(1);
+    };
+
     let output_executable = setup_data
         .output_directory
-        .join(executable_path.file_name().unwrap());
+        .join(application_name.default_value())
+        .with_extension(EXE_EXTENSION);
     if copy(executable_path, &output_executable).is_err() {
         error!("Failed to copy executable");
         exit(1);
