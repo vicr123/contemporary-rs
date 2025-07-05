@@ -1,10 +1,11 @@
 use crate::components::root::ComponentsRoot;
 use crate::main_surface::MainSurfaceTab::{Components, Patterns};
+use crate::patterns::root::PatternsRoot;
 use contemporary::components::button::button;
+use contemporary::components::pager::pager;
 use contemporary::styling::theme::Theme;
 use contemporary::surface::surface;
 use contemporary_i18n::tr;
-use gpui::prelude::FluentBuilder;
 use gpui::{
     div, px, App, AppContext, Context, Entity, InteractiveElement, IntoElement,
     ParentElement, Render, Styled, Window,
@@ -12,6 +13,7 @@ use gpui::{
 
 pub struct MainSurface {
     components_root: Entity<ComponentsRoot>,
+    patterns_root: Entity<PatternsRoot>,
 
     selected_tab: MainSurfaceTab,
 }
@@ -22,10 +24,20 @@ enum MainSurfaceTab {
     Patterns,
 }
 
+impl MainSurfaceTab {
+    fn index(&self) -> usize {
+        match self {
+            Components => 0,
+            Patterns => 1,
+        }
+    }
+}
+
 impl MainSurface {
     pub fn new(cx: &mut App) -> Entity<MainSurface> {
         cx.new(|cx| MainSurface {
             components_root: ComponentsRoot::new(cx),
+            patterns_root: PatternsRoot::new(cx),
             selected_tab: Components,
         })
     }
@@ -65,8 +77,12 @@ impl Render for MainSurface {
                         ),
                 ),
             )
-            .when(self.selected_tab == Components, |div| {
-                div.child(self.components_root.clone())
-            })
+            .child(
+                pager("main-pager", self.selected_tab.index())
+                    .w_full()
+                    .h_full()
+                    .page(self.components_root.clone().into_any_element())
+                    .page(self.patterns_root.clone().into_any_element()),
+            )
     }
 }

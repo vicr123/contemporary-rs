@@ -91,7 +91,7 @@
   },
   "COMPONENTS_BUTTON": {
     "context": "main_surface.rs",
-    "definedIn": "src/main_surface.rs:50",
+    "definedIn": "src/main_surface.rs:62",
     "plural": false,
     "description": null
   },
@@ -101,15 +101,45 @@
     "plural": false,
     "description": null
   },
+  "DIALOG_BOXES_TITLE": {
+    "context": "dialog_boxes.rs",
+    "definedIn": "src/patterns/dialog_boxes.rs:34",
+    "plural": false,
+    "description": null
+  },
+  "DIALOG_BOX_INFORMATIONAL": {
+    "context": "dialog_boxes.rs",
+    "definedIn": "src/patterns/dialog_boxes.rs:55",
+    "plural": false,
+    "description": null
+  },
+  "DIALOG_BOX_INFORMATIONAL_CONTENT": {
+    "context": "dialog_boxes.rs",
+    "definedIn": "src/patterns/dialog_boxes.rs:72",
+    "plural": false,
+    "description": null
+  },
+  "DIALOG_BOX_INFORMATIONAL_TITLE": {
+    "context": "dialog_boxes.rs",
+    "definedIn": "src/patterns/dialog_boxes.rs:69",
+    "plural": false,
+    "description": null
+  },
   "MENU_THEME": {
     "context": "main.rs",
-    "definedIn": "src/main.rs:75",
+    "definedIn": "src/main.rs:76",
     "plural": false,
     "description": null
   },
   "PATTERNS_BUTTON": {
     "context": "main_surface.rs",
-    "definedIn": "src/main_surface.rs:59",
+    "definedIn": "src/main_surface.rs:71",
+    "plural": false,
+    "description": null
+  },
+  "PATTERNS_TITLE": {
+    "context": "root.rs",
+    "definedIn": "src/patterns/root.rs:43",
     "plural": false,
     "description": null
   },
@@ -151,19 +181,19 @@
   },
   "THEME_DARK": {
     "context": "main.rs",
-    "definedIn": "src/main.rs:79",
+    "definedIn": "src/main.rs:80",
     "plural": false,
     "description": null
   },
   "THEME_LIGHT": {
     "context": "main.rs",
-    "definedIn": "src/main.rs:78",
+    "definedIn": "src/main.rs:79",
     "plural": false,
     "description": null
   },
   "THEME_SYSTEM": {
     "context": "main.rs",
-    "definedIn": "src/main.rs:77",
+    "definedIn": "src/main.rs:78",
     "plural": false,
     "description": null
   }

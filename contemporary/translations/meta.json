@@ -71,6 +71,30 @@
     "plural": false,
     "description": "Please use the string that macOS uses for the Show All action in the application menu."
   },
+  "DIALOG_CANCEL": {
+    "context": "dialog_box.rs",
+    "definedIn": "src/components/dialog_box.rs:34",
+    "plural": false,
+    "description": null
+  },
+  "DIALOG_NO": {
+    "context": "dialog_box.rs",
+    "definedIn": "src/components/dialog_box.rs:37",
+    "plural": false,
+    "description": null
+  },
+  "DIALOG_OK": {
+    "context": "dialog_box.rs",
+    "definedIn": "src/components/dialog_box.rs:30",
+    "plural": false,
+    "description": null
+  },
+  "DIALOG_YES": {
+    "context": "dialog_box.rs",
+    "definedIn": "src/components/dialog_box.rs:36",
+    "plural": false,
+    "description": null
+  },
   "MENU_HELP": {
     "context": "setup.rs",
     "definedIn": "src/setup.rs:147",

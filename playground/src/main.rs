@@ -22,6 +22,7 @@ use smol_macros::main;
 mod components;
 mod main_surface;
 mod main_window;
+mod patterns;
 
 actions!(playground, [SystemTheme, LightTheme, DarkTheme]);
 
