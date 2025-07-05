@@ -29,9 +29,9 @@ jobs:
         run: cargo run --package cargo-cntp-bundle --bin cargo-cntp-bundle
         working-directory: playground
       - name: Deploy
-        run: cargo run --package cargo-cntp-deploy --bin cargo-cntp-deploy -- --output-file "$env:HOME/Contemporary_Playground-$ARCH.exe"
+        run: cargo run --package cargo-cntp-deploy --bin cargo-cntp-deploy -- --output-file "$env:GITHUB_WORKSPACE/Contemporary_Playground-$env:ARCH.exe"
         working-directory: playground
       - uses: actions/upload-artifact@v4
         with:
           name: contemporary-playground-linux-${{ env.ARCH }}
-          path: "~/Contemporary_Playground-${{ env.ARCH }}.exe"
+          path: "Contemporary_Playground-${{ env.ARCH }}.exe"
