@@ -1,15 +1,18 @@
 use clap::Parser;
 use clap_verbosity_flag::InfoLevel;
 
-use contemporary_bundle_lib::tool_setup::{DeploymentType, setup_tool};
+use contemporary_bundle_lib::tool_setup::{setup_tool, DeploymentType};
 use std::path::Path;
-use tracing::info;
+use std::process::exit;
+use tracing::{error, info};
 
 #[cfg(target_os = "linux")]
 use contemporary_bundle_lib::linux::deploy_linux;
 
 #[cfg(target_os = "macos")]
 use contemporary_bundle_lib::macos::deploy::deploy_macos;
+
+#[cfg(target_os = "windows")]
 use contemporary_bundle_lib::windows::deploy::deploy_windows;
 
 #[derive(Parser, Debug)]
@@ -61,19 +64,24 @@ fn main() {
             #[cfg(target_os = "linux")]
             deploy_linux(&setup_data, &args.output_file);
 
-
             #[cfg(not(target_os = "linux"))]
-            panic!("Tried to compile for Linux when not on Linux");
-        },
+            error!("Unable to deploy for Linux on non-Linux platform");
+            exit(1);
+        }
         DeploymentType::MacOS => {
             #[cfg(target_os = "macos")]
             deploy_macos(&setup_data, &args.output_file);
 
             #[cfg(not(target_os = "macos"))]
-            panic!("Tried to compile for macOS when not on macOS");
-        },
+            error!("Unable to deploy for macOS on non-Macintosh platform");
+            exit(1);
+        }
         DeploymentType::Windows => {
+            #[cfg(target_os = "windows")]
             deploy_windows(&setup_data, &args.output_file);
+
+            #[cfg(not(target_os = "windows"))]
+            error!("Unable to deploy for Windows on non-Windows platform");
         }
     }
 

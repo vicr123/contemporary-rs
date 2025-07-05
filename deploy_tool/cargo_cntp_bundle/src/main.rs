@@ -1,6 +1,6 @@
 use clap::Parser;
 use clap_verbosity_flag::InfoLevel;
-use contemporary_bundle_lib::tool_setup::{DeploymentType, setup_tool};
+use contemporary_bundle_lib::tool_setup::{setup_tool, DeploymentType};
 use current_platform::CURRENT_PLATFORM;
 use std::collections::HashMap;
 use std::env::consts::EXE_EXTENSION;
@@ -13,6 +13,8 @@ use contemporary_bundle_lib::linux::bundle_linux;
 
 #[cfg(target_os = "macos")]
 use contemporary_bundle_lib::macos::bundle::bundle_macos;
+
+#[cfg(target_os = "windows")]
 use contemporary_bundle_lib::windows::bundle::bundle_windows;
 
 #[derive(Parser, Debug)]
@@ -91,16 +93,25 @@ fn main() {
             bundle_linux(&setup_data, bin_targets);
 
             #[cfg(not(target_os = "linux"))]
-            panic!("Tried to compile for Linux when not on Linux");
+            error!("Unable to bundle for Linux on non-Linux platform");
+            exit(1);
         }
         DeploymentType::MacOS => {
             #[cfg(target_os = "macos")]
             bundle_macos(&setup_data, bin_targets);
 
             #[cfg(not(target_os = "macos"))]
-            panic!("Tried to compile for macOS when not on macOS");
+            error!("Unable to bundle for macOS on non-Macintosh platform");
+            exit(1);
         }
-        DeploymentType::Windows => bundle_windows(&setup_data, bin_targets),
+        DeploymentType::Windows => {
+            #[cfg(target_os = "windows")]
+            bundle_windows(&setup_data, bin_targets);
+
+            #[cfg(not(target_os = "windows"))]
+            error!("Unable to bundle for Windows on non-Windows platform");
+            exit(1);
+        }
     }
 
     if !args.no_open {
