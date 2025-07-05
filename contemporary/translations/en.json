@@ -17,6 +17,11 @@
   "DIALOG_YES": "Yes",
   "HELP_FILE_BUG": "File Bug",
   "HELP_SOURCE_CODE": "Source Code",
+  "KEY_ALT": "Alt",
+  "KEY_CONTROL": "Ctrl",
+  "KEY_FUNCTION": "Fn",
+  "KEY_PLATFORM": "Super",
+  "KEY_SHIFT": "Shift",
   "MENU_GO_BACK": "Back",
   "MENU_HELP": "Help",
   "MENU_HELP_CONTENTS": "{{application}} Help"

@@ -37,37 +37,37 @@
   },
   "APPLE_APP_MENU_ABOUT": {
     "context": "setup.rs",
-    "definedIn": "src\\setup.rs:70",
+    "definedIn": "src\\setup.rs:71",
     "plural": false,
     "description": "Please use the string that macOS uses for the About action in the application menu."
   },
   "APPLE_APP_MENU_HIDE_OTHERS": {
     "context": "setup.rs",
-    "definedIn": "src\\setup.rs:89",
+    "definedIn": "src\\setup.rs:90",
     "plural": false,
     "description": "Please use the string that macOS uses for the Hide Others action in the application menu."
   },
   "APPLE_APP_MENU_HIDE_SELF": {
     "context": "setup.rs",
-    "definedIn": "src\\setup.rs:84",
+    "definedIn": "src\\setup.rs:85",
     "plural": false,
     "description": "Please use the string that macOS uses for the Hide this application action in the application menu."
   },
   "APPLE_APP_MENU_QUIT": {
     "context": "setup.rs",
-    "definedIn": "src\\setup.rs:101",
+    "definedIn": "src\\setup.rs:102",
     "plural": false,
     "description": "Please use the string that macOS uses for the Quit action in the application menu."
   },
   "APPLE_APP_MENU_SERVICES": {
     "context": "setup.rs",
-    "definedIn": "src\\setup.rs:77",
+    "definedIn": "src\\setup.rs:78",
     "plural": false,
     "description": "Please use the string that macOS uses for the Services action in the application menu."
   },
   "APPLE_APP_MENU_SHOW_ALL": {
     "context": "setup.rs",
-    "definedIn": "src\\setup.rs:94",
+    "definedIn": "src\\setup.rs:95",
     "plural": false,
     "description": "Please use the string that macOS uses for the Show All action in the application menu."
   },
@@ -107,6 +107,36 @@
     "plural": false,
     "description": null
   },
+  "KEY_ALT": {
+    "context": "application_menu.rs",
+    "definedIn": "src\\components\\application_menu.rs:284",
+    "plural": false,
+    "description": "Alt key, as shown next to menu items"
+  },
+  "KEY_CONTROL": {
+    "context": "application_menu.rs",
+    "definedIn": "src\\components\\application_menu.rs:278",
+    "plural": false,
+    "description": "Control key, as shown next to menu items"
+  },
+  "KEY_FUNCTION": {
+    "context": "application_menu.rs",
+    "definedIn": "src\\components\\application_menu.rs:290",
+    "plural": false,
+    "description": "Function key, as shown next to menu items"
+  },
+  "KEY_PLATFORM": {
+    "context": "application_menu.rs",
+    "definedIn": "src\\components\\application_menu.rs:287",
+    "plural": false,
+    "description": "Super key, as shown next to menu items"
+  },
+  "KEY_SHIFT": {
+    "context": "application_menu.rs",
+    "definedIn": "src\\components\\application_menu.rs:281",
+    "plural": false,
+    "description": "Shift key, as shown next to menu items"
+  },
   "MENU_GO_BACK": {
     "context": "application_menu.rs",
     "definedIn": "src\\components\\application_menu.rs:78",
@@ -115,13 +145,13 @@
   },
   "MENU_HELP": {
     "context": "setup.rs",
-    "definedIn": "src\\setup.rs:147",
+    "definedIn": "src\\setup.rs:148",
     "plural": false,
     "description": "Please use the string that macOS uses for the Help menu."
   },
   "MENU_HELP_CONTENTS": {
     "context": "setup.rs",
-    "definedIn": "src\\setup.rs:121",
+    "definedIn": "src\\setup.rs:122",
     "plural": false,
     "description": null
   }

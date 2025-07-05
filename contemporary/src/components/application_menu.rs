@@ -4,7 +4,7 @@ use crate::components::icon::icon;
 use crate::components::icon_text::icon_text;
 use crate::components::scrim::scrim;
 use crate::setup::{About, OpenLink};
-use crate::styling::theme::Theme;
+use crate::styling::theme::{Theme, VariableColor};
 use contemporary_i18n::tr;
 use gpui::prelude::FluentBuilder;
 use gpui::{
@@ -224,7 +224,7 @@ impl MenuList {
 }
 
 impl RenderOnce for MenuList {
-    fn render(self, _window: &mut Window, cx: &mut App) -> impl IntoElement {
+    fn render(self, window: &mut Window, cx: &mut App) -> impl IntoElement {
         let theme = cx.global::<Theme>();
 
         let submenu_click_listeners = Rc::new(self.menu_click_listeners);
@@ -266,8 +266,46 @@ impl RenderOnce for MenuList {
                     let button_id: SharedString = format!("menu-item-{name}").into();
                     let menu_should_close_listeners = menu_should_close_listeners.clone();
 
+                    let keybind = window
+                        .bindings_for_action(action.as_ref())
+                        .first()
+                        .map(|key| key.keystrokes())
+                        .map(|keystrokes| {
+                            if keystrokes.len() == 1 {
+                                let mut parts: Vec<String> = Vec::new();
+                                let keystroke = keystrokes.first().unwrap();
+                                if keystroke.modifiers.control {
+                                    parts.push(tr!("KEY_CONTROL", "Ctrl", #description="Control key, as shown next to menu items").into());
+                                }
+                                if keystroke.modifiers.shift {
+                                    parts.push(tr!("KEY_SHIFT", "Shift", #description="Shift key, as shown next to menu items").into());
+                                }
+                                if keystroke.modifiers.alt {
+                                    parts.push(tr!("KEY_ALT", "Alt", #description="Alt key, as shown next to menu items").into());
+                                }
+                                if keystroke.modifiers.platform {
+                                    parts.push(tr!("KEY_PLATFORM", "Super", #description="Super key, as shown next to menu items").into());
+                                }
+                                if keystroke.modifiers.function {
+                                    parts.push(tr!("KEY_FUNCTION", "Fn", #description="Function key, as shown next to menu items").into());
+                                }
+                                parts.push(keystroke.key.to_uppercase().clone());
+                                parts.join("+")
+                            } else {
+                                String::new()
+                            }
+                        })
+                        .unwrap_or_default();
+
                     button(button_id)
-                        .child(div().w_full().child(name))
+                        .child(
+                            div()
+                                .w_full()
+                                .flex()
+                                .items_center()
+                                .justify_between()
+                                .child(name)
+                                .child(div().text_color(theme.foreground.disabled()).child(keybind)))
                         .flat()
                         .on_click(move |event, window, cx| {
                             window.dispatch_action(action.boxed_clone(), cx);
