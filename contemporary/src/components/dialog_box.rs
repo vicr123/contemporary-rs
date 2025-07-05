@@ -1,17 +1,15 @@
 use crate::components::button::{button, Button};
 use crate::components::icon_text::icon_text;
 use crate::components::layer::layer;
-use crate::components::scrim::scrim;
+use crate::components::scrim::{scrim, Scrim};
 use crate::styling::theme::{Theme, VariableColor};
 use contemporary_i18n::tr;
 use gpui::prelude::FluentBuilder;
-use gpui::{
-    div, px, relative, AnyElement, App, ClickEvent, IntoElement, ParentElement,
-    RenderOnce, SharedString, Styled, Window,
-};
+use gpui::{div, px, relative, AnyElement, App, ClickEvent, ElementId, InteractiveElement, IntoElement, ParentElement, RenderOnce, SharedString, Styled, Window};
 
 #[derive(IntoElement)]
 pub struct DialogBox {
+    scrim: Scrim,
     title: Option<SharedString>,
     content: AnyElement,
     buttons: Vec<Button>,
@@ -41,8 +39,9 @@ impl StandardButton {
     }
 }
 
-pub fn dialog_box() -> DialogBox {
+pub fn dialog_box(id: impl Into<ElementId>) -> DialogBox {
     DialogBox {
+        scrim: scrim(id),
         title: None,
         content: div().into_any_element(),
         buttons: vec![],
@@ -78,6 +77,11 @@ impl DialogBox {
         self
     }
 
+    pub fn on_click_outside(mut self, fun: impl Fn(&ClickEvent, &mut Window, &mut App) + 'static) -> Self {
+        self.scrim = self.scrim.on_click(fun);
+        self
+    }
+
     pub fn standard_button(
         mut self,
         standard_button: StandardButton,
@@ -98,7 +102,7 @@ impl RenderOnce for DialogBox {
             move |layer, button| layer.child(button.flex_grow()),
         );
 
-        scrim().child(
+        self.scrim.child(
             div()
                 .flex()
                 .w_full()
@@ -114,6 +118,7 @@ impl RenderOnce for DialogBox {
                         .max_w(relative(0.9))
                         .flex()
                         .flex_col()
+                        .occlude()
                         .when_some(self.title, |david, title| {
                             david.child(
                                 layer("title-layer")

@@ -1,15 +1,19 @@
-use gpui::{
-    anchored, deferred, div, point, px, rgba, AnyElement, App,
-    Div, InteractiveElement, IntoElement, ParentElement, RenderOnce, Styled, Window,
-};
+use gpui::{anchored, deferred, div, point, px, rgba, AnyElement, App, ClickEvent, Div, Element, ElementId, InteractiveElement, IntoElement, ParentElement, RenderOnce, Stateful, StatefulInteractiveElement, Styled, Window};
 
 #[derive(IntoElement)]
 pub struct Scrim {
-    div: Div,
+    div: Stateful<Div>,
 }
 
-pub fn scrim() -> Scrim {
-    Scrim { div: div() }
+pub fn scrim(id: impl Into<ElementId>) -> Scrim {
+    Scrim { div: div().id(id) }
+}
+
+impl Scrim {
+    pub fn on_click(mut self, fun: impl Fn(&ClickEvent, &mut Window, &mut App) + 'static) -> Self {
+        self.div = self.div.on_click(fun);
+        self
+    }
 }
 
 impl RenderOnce for Scrim {

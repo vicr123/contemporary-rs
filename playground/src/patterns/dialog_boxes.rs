@@ -80,7 +80,7 @@ impl Render for DialogBoxes {
                     ),
             )
             .when(self.informational_dialog_open, |div| {
-                div.child(dialog_box()
+                div.child(dialog_box("informational-dialog-box")
                     .title(
                         tr!("DIALOG_BOX_INFORMATIONAL_TITLE", "Message Box Title").into()
                     )
@@ -91,10 +91,14 @@ impl Render for DialogBoxes {
                         this.informational_dialog_open = false;
                         cx.notify()
                     }))
+                    .on_click_outside(cx.listener(|this, _, _, cx| {
+                        this.informational_dialog_open = false;
+                        cx.notify()
+                    }))
                 )
             })
             .when(self.goblin_dialog_box_open, |div| {
-                div.child(dialog_box()
+                div.child(dialog_box("goblin-dialog-box")
                     .content(
                         tr!("DIALOG_BOX_GOBLIN_CONTENT", r#"After battling through hordes of goblins, you finally stand before the throne of the Goblin King himself. The grotesque creature eyes you with contempt from his towering seat.
 
@@ -110,16 +114,16 @@ The Goblin King leans forward, his putrid breath washing over you as he awaits y
                                 cx.notify()
                             })),
                     ).button(
-                        button("swear-fealty-button")
-                            .child(tr!("DIALOG_BOX_GOBLIN_SWEAR_FEALTY", "Swear Fealty"))
-                            .on_click(cx.listener(|this, _, _, cx| {
-                                this.goblin_dialog_box_open = false;
-                            }))
-                    )
+                    button("swear-fealty-button")
+                        .child(tr!("DIALOG_BOX_GOBLIN_SWEAR_FEALTY", "Swear Fealty"))
+                        .on_click(cx.listener(|this, _, _, cx| {
+                            this.goblin_dialog_box_open = false;
+                        }))
+                )
                 )
             })
             .when(self.nuclear_reactor_dialog_box_open, |div| {
-                div.child(dialog_box()
+                div.child(dialog_box("nuclear-reactor-dialog-box")
                     .title(
                         tr!("DIALOG_BOX_NUCLEAR_REACTOR_TITLE", "Danger! Extremely Hazardous Operation!").into()
                     )
@@ -134,7 +138,7 @@ This operation has the potential to cause:
 Only proceed if you are an expert user and fully understand the risks involved. Improper handling could lead to disastrous and irreparable results."#).into(),
                                                 tr!("DIALOG_BOX_NUCLEAR_REACTOR_INFORMATIONAL", 
                                                     "This is the informative text displayed in grey below the main text. It provides additional context and warnings about the dangerous operation. Attempting this operation without proper expertise and precautions could lead to permanent and devastating damage to your systems and data. Proceed at your own risk."
-                                                ).into()
+                                                ).into(),
                     )
                     .standard_button(StandardButton::Cancel, cx.listener(|this, _, _, cx| {
                         this.nuclear_reactor_dialog_box_open = false;
