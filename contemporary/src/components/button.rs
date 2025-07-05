@@ -11,6 +11,7 @@ pub struct Button {
     flat: bool,
     disabled: bool,
     checked: bool,
+    destructive: bool,
 }
 
 pub fn button(id: impl Into<ElementId>) -> Button {
@@ -19,6 +20,7 @@ pub fn button(id: impl Into<ElementId>) -> Button {
         flat: false,
         disabled: false,
         checked: false,
+        destructive: false,
     }
 }
 
@@ -40,6 +42,11 @@ impl Button {
 
     pub fn checked_when(self, condition: bool) -> Self {
         if condition { self.checked() } else { self }
+    }
+
+    pub fn destructive(mut self) -> Self {
+        self.destructive = true;
+        self
     }
 
     pub fn on_click(mut self, fun: impl Fn(&ClickEvent, &mut Window, &mut App) + 'static) -> Self {
@@ -71,6 +78,8 @@ impl RenderOnce for Button {
 
         let background = if self.flat {
             variable_transparent()
+        } else if self.destructive {
+            theme.destructive_accent_color
         } else {
             theme.button_background
         };
@@ -79,7 +88,7 @@ impl RenderOnce for Button {
             .when_else(
                 self.checked,
                 |div| div.bg(background.active()),
-                |div| div.when(!self.flat, |div| div.bg(theme.button_background)),
+                |div| div.bg(background),
             )
             .flex()
             .content_center()

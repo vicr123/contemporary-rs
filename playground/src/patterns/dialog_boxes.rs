@@ -12,12 +12,16 @@ use gpui::{
 
 pub struct DialogBoxes {
     informational_dialog_open: bool,
+    goblin_dialog_box_open: bool,
+    nuclear_reactor_dialog_box_open: bool,
 }
 
 impl DialogBoxes {
     pub fn new(cx: &mut App) -> Entity<Self> {
         cx.new(|_| DialogBoxes {
             informational_dialog_open: false,
+            goblin_dialog_box_open: false,
+            nuclear_reactor_dialog_box_open: false,
         })
     }
 }
@@ -50,6 +54,8 @@ impl Render for DialogBoxes {
                             .child(subtitle(tr!("DIALOG_BOXES_TITLE")))
                             .child(
                                 div().flex().flex_col().gap(px(8.)).child(
+                                    tr!("DIALOG_BOXES_DESCRIPTION", "Click on a button to open a dialog box")
+                                ).child(
                                     button("informational-dialog-box")
                                         .child(tr!(
                                             "DIALOG_BOX_INFORMATIONAL",
@@ -59,7 +65,17 @@ impl Render for DialogBoxes {
                                             this.informational_dialog_open = true;
                                             cx.notify()
                                         })),
-                                ),
+                                ).child(
+                                    button("goblin-dialog-box")
+                                        .child(tr!("DIALOG_BOX_GOBLIN", "Oh no! Goblins!"))
+                                        .on_click(cx.listener(|this, _, _, cx| {
+                                            this.goblin_dialog_box_open = true;
+                                        }))
+                                ).child(button("nuclear-reactor-dialog-box")
+                                    .child(tr!("DIALOG_BOX_NUCLEAR_REACTOR", "Shut down the nuclear reactor!"))
+                                    .on_click(cx.listener(|this, _, _, cx| {
+                                        this.nuclear_reactor_dialog_box_open = true;
+                                    }))),
                             ),
                     ),
             )
@@ -75,6 +91,59 @@ impl Render for DialogBoxes {
                         this.informational_dialog_open = false;
                         cx.notify()
                     }))
+                )
+            })
+            .when(self.goblin_dialog_box_open, |div| {
+                div.child(dialog_box()
+                    .content(
+                        tr!("DIALOG_BOX_GOBLIN_CONTENT", r#"After battling through hordes of goblins, you finally stand before the throne of the Goblin King himself. The grotesque creature eyes you with contempt from his towering seat.
+
+"So, you're the meddlesome adventurer who's been causing trouble in my kingdom, he growls. I'll give you one chance to save your miserable hide. Swear fealty to me, and I'll let you live as my servant. Refuse, and you'll spend the rest of your days in the darkest pit of my dungeons!"
+
+The Goblin King leans forward, his putrid breath washing over you as he awaits your answer. The weight of your decision could shape the fate of the entire goblin realm."#
+                        ))
+                    .button(
+                        button("refuse-button")
+                            .child(tr!("DIALOG_BOX_GOBLIN_REFUSE", "Refuse"))
+                            .on_click(cx.listener(|this, _, _, cx| {
+                                this.goblin_dialog_box_open = false;
+                                cx.notify()
+                            })),
+                    ).button(
+                        button("swear-fealty-button")
+                            .child(tr!("DIALOG_BOX_GOBLIN_SWEAR_FEALTY", "Swear Fealty"))
+                            .on_click(cx.listener(|this, _, _, cx| {
+                                this.goblin_dialog_box_open = false;
+                            }))
+                    )
+                )
+            })
+            .when(self.nuclear_reactor_dialog_box_open, |div| {
+                div.child(dialog_box()
+                    .title(
+                        tr!("DIALOG_BOX_NUCLEAR_REACTOR_TITLE", "Danger! Extremely Hazardous Operation!").into()
+                    )
+                    .content_text_informational(tr!("DIALOG_BOX_NUCLEAR_REACTOR_CONTENT", r#"You are attempting to perform an extremely hazardous operation that could result in catastrophic consequences if not executed with extreme caution.
+
+This operation has the potential to cause:
+- Complete data loss
+- Irreversible system damage
+- Breach of security protocols
+- Unrecoverable corruption
+
+Only proceed if you are an expert user and fully understand the risks involved. Improper handling could lead to disastrous and irreparable results."#).into(),
+                                                tr!("DIALOG_BOX_NUCLEAR_REACTOR_INFORMATIONAL", 
+                                                    "This is the informative text displayed in grey below the main text. It provides additional context and warnings about the dangerous operation. Attempting this operation without proper expertise and precautions could lead to permanent and devastating damage to your systems and data. Proceed at your own risk."
+                                                ).into()
+                    )
+                    .standard_button(StandardButton::Cancel, cx.listener(|this, _, _, cx| {
+                        this.nuclear_reactor_dialog_box_open = false;
+                        cx.notify()
+                    }))
+                    .button(StandardButton::Ok.button().destructive().on_click(cx.listener(|this, _, _, cx| {
+                        this.nuclear_reactor_dialog_box_open = false;
+                        cx.notify()
+                    })))
                 )
             })
     }

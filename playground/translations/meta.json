@@ -101,27 +101,81 @@
     "plural": false,
     "description": null
   },
+  "DIALOG_BOXES_DESCRIPTION": {
+    "context": "dialog_boxes.rs",
+    "definedIn": "src/patterns/dialog_boxes.rs:57",
+    "plural": false,
+    "description": null
+  },
   "DIALOG_BOXES_TITLE": {
     "context": "dialog_boxes.rs",
-    "definedIn": "src/patterns/dialog_boxes.rs:34",
+    "definedIn": "src/patterns/dialog_boxes.rs:38",
+    "plural": false,
+    "description": null
+  },
+  "DIALOG_BOX_GOBLIN": {
+    "context": "dialog_boxes.rs",
+    "definedIn": "src/patterns/dialog_boxes.rs:70",
+    "plural": false,
+    "description": null
+  },
+  "DIALOG_BOX_GOBLIN_CONTENT": {
+    "context": "dialog_boxes.rs",
+    "definedIn": "src/patterns/dialog_boxes.rs:99",
+    "plural": false,
+    "description": null
+  },
+  "DIALOG_BOX_GOBLIN_REFUSE": {
+    "context": "dialog_boxes.rs",
+    "definedIn": "src/patterns/dialog_boxes.rs:107",
+    "plural": false,
+    "description": null
+  },
+  "DIALOG_BOX_GOBLIN_SWEAR_FEALTY": {
+    "context": "dialog_boxes.rs",
+    "definedIn": "src/patterns/dialog_boxes.rs:114",
     "plural": false,
     "description": null
   },
   "DIALOG_BOX_INFORMATIONAL": {
     "context": "dialog_boxes.rs",
-    "definedIn": "src/patterns/dialog_boxes.rs:55",
+    "definedIn": "src/patterns/dialog_boxes.rs:61",
     "plural": false,
     "description": null
   },
   "DIALOG_BOX_INFORMATIONAL_CONTENT": {
     "context": "dialog_boxes.rs",
-    "definedIn": "src/patterns/dialog_boxes.rs:72",
+    "definedIn": "src/patterns/dialog_boxes.rs:88",
     "plural": false,
     "description": null
   },
   "DIALOG_BOX_INFORMATIONAL_TITLE": {
     "context": "dialog_boxes.rs",
-    "definedIn": "src/patterns/dialog_boxes.rs:69",
+    "definedIn": "src/patterns/dialog_boxes.rs:85",
+    "plural": false,
+    "description": null
+  },
+  "DIALOG_BOX_NUCLEAR_REACTOR": {
+    "context": "dialog_boxes.rs",
+    "definedIn": "src/patterns/dialog_boxes.rs:75",
+    "plural": false,
+    "description": null
+  },
+  "DIALOG_BOX_NUCLEAR_REACTOR_CONTENT": {
+    "context": "dialog_boxes.rs",
+    "definedIn": "src/patterns/dialog_boxes.rs:126",
+    "plural": false,
+    "description": null
+  },
+  "DIALOG_BOX_NUCLEAR_REACTOR_INFORMATIONAL": {
+    "context": "dialog_boxes.rs",
+    "definedIn": "src/patterns/dialog_boxes.rs:135",
+    "plural": false,
+    "description": null
+  },
+  "DIALOG_BOX_NUCLEAR_REACTOR_TITLE": {
+    "context": "dialog_boxes.rs",
+    "definedIn": "src/patterns/dialog_boxes.rs:124",
     "plural": false,
     "description": null
   },

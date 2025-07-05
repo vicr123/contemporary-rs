@@ -2,7 +2,7 @@ use crate::components::button::{button, Button};
 use crate::components::icon_text::icon_text;
 use crate::components::layer::layer;
 use crate::components::scrim::scrim;
-use crate::styling::theme::Theme;
+use crate::styling::theme::{Theme, VariableColor};
 use contemporary_i18n::tr;
 use gpui::prelude::FluentBuilder;
 use gpui::{
@@ -60,6 +60,19 @@ impl DialogBox {
         self
     }
 
+    pub fn content_text_informational(
+        mut self,
+        text: SharedString,
+        informational_text: SharedString,
+    ) -> Self {
+        self.content = DialogBoxContent {
+            content: text,
+            informational_content: informational_text,
+        }
+        .into_any_element();
+        self
+    }
+
     pub fn button(mut self, button: Button) -> Self {
         self.buttons.push(button);
         self
@@ -77,7 +90,7 @@ impl DialogBox {
 }
 
 impl RenderOnce for DialogBox {
-    fn render(self, window: &mut Window, cx: &mut App) -> impl IntoElement {
+    fn render(self, _window: &mut Window, cx: &mut App) -> impl IntoElement {
         let theme = cx.global::<Theme>();
 
         let buttons_layer = self.buttons.into_iter().fold(
@@ -113,5 +126,28 @@ impl RenderOnce for DialogBox {
                         .child(buttons_layer),
                 ),
         )
+    }
+}
+
+#[derive(IntoElement)]
+struct DialogBoxContent {
+    content: SharedString,
+    informational_content: SharedString,
+}
+
+impl RenderOnce for DialogBoxContent {
+    fn render(self, _window: &mut Window, cx: &mut App) -> impl IntoElement {
+        let theme = cx.global::<Theme>();
+
+        div()
+            .flex()
+            .flex_col()
+            .gap(px(12.))
+            .child(self.content)
+            .child(
+                div()
+                    .text_color(theme.foreground.disabled())
+                    .child(self.informational_content),
+            )
     }
 }
