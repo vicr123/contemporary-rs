@@ -2,7 +2,7 @@ use crate::application::{ApplicationLink, Details, Versions};
 use crate::components::text_field::bind_text_input_keys;
 use crate::platform_support::setup_platform;
 use crate::styling::theme::Theme;
-use contemporary_i18n::{tr, tr_load, I18N_MANAGER};
+use contemporary_i18n::{i18n_manager, tr, tr_load, I18N_MANAGER};
 use gpui::{actions, Action, App, Global, KeyBinding, Menu, MenuItem};
 use schemars::JsonSchema;
 use serde::Deserialize;
@@ -63,11 +63,15 @@ pub fn setup_contemporary(cx: &mut App, mut application: Contemporary) {
     }
 
     I18N_MANAGER.write().unwrap().load_source(tr_load!());
+    let locale = &i18n_manager!().locale;
+
     let mut menus = vec![Menu {
-        name: application.details.application_name.into(),
+        name: application.details.generatable.application_name
+            .resolve_languages_or_default(&locale.messages).into(),
         items: vec![
             MenuItem::action(
-                tr!("APPLE_APP_MENU_ABOUT", "About {{application}}", application=application.details.application_name,
+                tr!("APPLE_APP_MENU_ABOUT", "About {{application}}", application=application.details.generatable.application_name
+                                .resolve_languages_or_default(&locale.messages),
                     #description = "Please use the string that macOS uses for the About action in the application menu."
                 ),
                 About,
@@ -81,7 +85,8 @@ pub fn setup_contemporary(cx: &mut App, mut application: Contemporary) {
             }),
             MenuItem::separator(),
             MenuItem::action(
-                tr!("APPLE_APP_MENU_HIDE_SELF", "Hide {{application}}", application = application.details.application_name,
+                tr!("APPLE_APP_MENU_HIDE_SELF", "Hide {{application}}", application = application.details.generatable.application_name
+                                .resolve_languages_or_default(&locale.messages),
                     #description = "Please use the string that macOS uses for the Hide this application action in the application menu."),
                 HideSelf,
             ),
@@ -100,7 +105,8 @@ pub fn setup_contemporary(cx: &mut App, mut application: Contemporary) {
                 tr!(
                     "APPLE_APP_MENU_QUIT",
                     "Quit {{application}}",
-                    application = application.details.application_name,
+                    application = application.details.generatable.application_name
+                                .resolve_languages_or_default(&locale.messages),
                     #description = "Please use the string that macOS uses for the Quit action in the application menu."
                 ),
                 Quit,
@@ -120,7 +126,11 @@ pub fn setup_contemporary(cx: &mut App, mut application: Contemporary) {
                         tr!(
                             "MENU_HELP_CONTENTS",
                             "{{application}} Help",
-                            application = application.details.application_name
+                            application = application
+                                .details
+                                .generatable
+                                .application_name
+                                .resolve_languages_or_default(&locale.messages)
                         ),
                         OpenLink {
                             link: url.to_string(),

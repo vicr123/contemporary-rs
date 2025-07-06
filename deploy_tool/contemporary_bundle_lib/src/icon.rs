@@ -40,7 +40,7 @@ pub fn get_svg_icon_contents(
             target_triple.as_str(),
             "aarch64-apple-darwin" | "x86_64-apple-darwin"
         ),
-        false,
+        contemporary_config.is_blueprint(),
     );
 
     icon_generator.generate(

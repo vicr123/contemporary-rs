@@ -6,6 +6,7 @@ use std::rc::Rc;
 use crate::actions::{register_actions, DarkTheme, LightTheme, SystemTheme};
 use crate::main_window::MainWindow;
 use contemporary::application::new_contemporary_application;
+use contemporary::macros::application_details;
 use contemporary::setup::ShowAll;
 use contemporary::styling::theme::ThemeType::{Dark, Light, System};
 use contemporary::styling::theme::{Theme, ThemeType};
@@ -47,9 +48,7 @@ fn mane() {
                     cx,
                     Contemporary {
                         details: Details {
-                            application_name: "Contemporary Playground",
-                            application_generic_name: "Control Playground",
-                            desktop_entry: "com.vicr123.contemporary-playground",
+                            generatable: application_details!(),
                             copyright_holder: "Victor Tran",
                             copyright_year: "2025",
                             application_version: "3.0",

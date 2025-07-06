@@ -14,7 +14,7 @@ pub static I18N_MANAGER: Lazy<RwLock<I18nManager>> =
 #[macro_export]
 macro_rules! i18n_manager {
     () => {
-        I18N_MANAGER.read().unwrap()
+        contemporary_i18n::I18N_MANAGER.read().unwrap()
     };
 }
 

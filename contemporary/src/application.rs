@@ -7,6 +7,7 @@ use crate::assets::global_manager::ASSET_MANAGER;
 use crate::assets::icon_theme_asset_source::IconThemeAssetSource;
 use crate::assets::manager::Manager;
 use crate::assets::window_controls_asset_source::WindowControlsAssetSource;
+use contemporary_config::LocalisedString;
 use contemporary_i18n::tr;
 use gpui::{Application, Global, SharedString};
 use indexmap::IndexMap;
@@ -42,13 +43,17 @@ impl ApplicationLink {
     }
 }
 
+pub struct GeneratableDetails {
+    pub application_name: LocalisedString,
+    pub application_generic_name: LocalisedString,
+    pub desktop_entry: &'static str,
+}
+
 pub struct Details {
-    pub application_name: &'static str,
-    pub application_generic_name: &'static str,
+    pub generatable: GeneratableDetails,
     pub application_version: &'static str,
     pub copyright_holder: &'static str,
     pub copyright_year: &'static str,
-    pub desktop_entry: &'static str,
     pub license: License,
     pub links: IndexMap<ApplicationLink, &'static str>,
 }

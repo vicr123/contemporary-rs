@@ -5,7 +5,7 @@ use crate::components::icon_text::icon_text;
 use crate::components::scrim::scrim;
 use crate::setup::{About, OpenLink};
 use crate::styling::theme::{Theme, VariableColor};
-use contemporary_i18n::tr;
+use contemporary_i18n::{i18n_manager, tr};
 use gpui::prelude::FluentBuilder;
 use gpui::{
     div, img, px, App, AppContext, ClickEvent, Context, Entity, InteractiveElement,
@@ -46,6 +46,9 @@ impl Render for ApplicationMenu {
 
         let theme = cx.global::<Theme>();
         let details = cx.global::<Details>();
+
+        let locale = &i18n_manager!().locale;
+
         div().child(
             scrim("application-menu")
                 .on_click(cx.listener(|this, _, _, cx| {
@@ -68,7 +71,12 @@ impl Render for ApplicationMenu {
                                 .p(px(7.))
                                 .gap(px(6.))
                                 .child(img("contemporary-icon:/application").w(px(24.)).h(px(24.)))
-                                .child(details.application_name),
+                                .child(
+                                    details
+                                        .generatable
+                                        .application_name
+                                        .resolve_languages_or_default(&locale.messages),
+                                ),
                         )
                         .when(!self.menu_stack.is_empty(), |div| {
                             div.child(
@@ -112,6 +120,9 @@ impl Render for ApplicationMenu {
                                             .size(px(32.))
                                             .on_click(cx.listener(|this, _, _, cx| {
                                                 let details = cx.global::<Details>();
+
+                                                let locale = &i18n_manager!().locale;
+
                                                 let mut menu_items: Vec<MenuItem> = details
                                                     .links
                                                     .iter()
@@ -122,7 +133,9 @@ impl Render for ApplicationMenu {
                                                                     tr!(
                                                                         "MENU_HELP_CONTENTS",
                                                                         application = details
+                                                                            .generatable
                                                                             .application_name
+                                .resolve_languages_or_default(&locale.messages)
                                                                     ),
                                                                     OpenLink {
                                                                         link: url.to_string(),
@@ -152,7 +165,12 @@ impl Render for ApplicationMenu {
                                                 menu_items.push(MenuItem::action(
                                                     tr!(
                                                         "APPLE_APP_MENU_ABOUT",
-                                                        application = details.application_name
+                                                        application = details
+                                                            .generatable
+                                                            .application_name
+                                                            .resolve_languages_or_default(
+                                                                &locale.messages
+                                                            )
                                                     ),
                                                     About,
                                                 ));

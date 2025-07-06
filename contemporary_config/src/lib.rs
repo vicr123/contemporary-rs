@@ -4,7 +4,7 @@ use crate::config::{
     ContemporaryConfigApplicationDef, ContemporaryConfigConfigDef, ContemporaryConfigDeployment,
     ContemporaryConfigDeploymentDef,
 };
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::env;
 use std::fs::OpenOptions;
@@ -190,6 +190,8 @@ impl ContemporaryConfig {
                 .supports_automatic_graphics_switching
                 .or(deployment.supports_automatic_graphics_switching)
                 .unwrap_or(true),
+
+            is_blueprint: self.is_blueprint(),
         }
     }
 
@@ -217,8 +219,24 @@ impl ContemporaryConfig {
     pub fn available_localisations(&self) -> Vec<String> {
         self.translations.keys().cloned().collect()
     }
+
+    pub fn is_blueprint(&self) -> bool {
+        let blueprint_configuration = self
+            .config
+            .clone()
+            .and_then(|config| config.blueprint)
+            .unwrap_or("auto".into());
+
+        match blueprint_configuration.as_str() {
+            "auto" => true,
+            "false" => false,
+            "true" => true,
+            _ => panic!("Unknown blueprint configuration: {blueprint_configuration}"),
+        }
+    }
 }
 
+#[derive(Clone, Serialize, Deserialize)]
 pub enum LocalisedString {
     Hardcoded(String),
     Localised(HashMap<String, String>),
@@ -242,5 +260,22 @@ impl LocalisedString {
             LocalisedString::Hardcoded(string) => Some(string.clone()),
             LocalisedString::Localised(map) => map.get(lang).cloned(),
         }
+    }
+
+    pub fn resolve_languages(&self, languages: &[String]) -> Option<String> {
+        if let LocalisedString::Hardcoded(hardcoded_string) = self {
+            return Some(hardcoded_string.clone());
+        };
+
+        for lang in languages {
+            if let Some(string) = self.resolve_language(lang) {
+                return Some(string);
+            }
+        }
+        None
+    }
+    
+    pub fn resolve_languages_or_default(&self, languages: &[String]) -> String {
+        self.resolve_languages(languages).unwrap_or_else(|| self.default_value())
     }
 }

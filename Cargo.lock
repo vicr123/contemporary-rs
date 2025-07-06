@@ -1106,8 +1106,10 @@ name = "contemporary"
 version = "0.1.0"
 dependencies = [
  "async-channel 2.3.1",
+ "contemporary_config",
  "contemporary_i18n",
  "contemporary_i18n_gen",
+ "contemporary_macros",
  "freedesktop-icons",
  "gpui",
  "indexmap",
@@ -1242,6 +1244,17 @@ version = "0.1.0"
 dependencies = [
  "icu",
  "locale_config",
+]
+
+[[package]]
+name = "contemporary_macros"
+version = "0.1.0"
+dependencies = [
+ "contemporary_config",
+ "quote",
+ "serde",
+ "serde_json",
+ "syn 2.0.104",
 ]
 
 [[package]]

@@ -1,14 +1,14 @@
 use crate::icon::get_svg_icon_contents;
 use crate::tool_setup::ToolSetup;
-use plist::{Dictionary, Value, to_file_xml};
+use plist::{to_file_xml, Dictionary, Value};
 use resvg::render;
 use resvg::tiny_skia::{Pixmap, Transform};
 use resvg::usvg::{Options, Tree};
 use std::collections::HashMap;
-use std::fs::{OpenOptions, copy, create_dir_all, remove_dir_all};
+use std::fs::{copy, create_dir_all, remove_dir_all, OpenOptions};
 use std::io::Write;
 use std::path::PathBuf;
-use std::process::{Command, exit};
+use std::process::{exit, Command};
 use tempfile::TempDir;
 use tracing::error;
 
@@ -22,7 +22,7 @@ pub fn bundle_macos(setup_data: &ToolSetup, executable_path: HashMap<String, Pat
         exit(1);
     };
 
-    let Some(application_name) = deployment.application_name else {
+    let Some(application_name) = deployment.application_name() else {
         error!("No application name specified in config");
         exit(1);
     };

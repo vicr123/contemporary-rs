@@ -21,7 +21,7 @@ pub fn deploy_macos(setup_data: &ToolSetup, output_file: &str) {
         .contemporary_config
         .deployment(setup_data.targets.first().unwrap());
 
-    let Some(application_name) = deployment.application_name else {
+    let Some(application_name) = deployment.application_name() else {
         error!("No application name specified in config");
         exit(1);
     };

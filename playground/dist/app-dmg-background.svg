@@ -87,9 +87,9 @@
      showgrid="true"
      inkscape:current-layer="layer1-8"
      inkscape:document-units="mm"
-     inkscape:cy="184.94411"
-     inkscape:cx="283.04806"
-     inkscape:zoom="1.3760914"
+     inkscape:cy="219.41557"
+     inkscape:cx="252.85682"
+     inkscape:zoom="1.4652561"
      inkscape:pageshadow="2"
      inkscape:pageopacity="0.0"
      borderopacity="1.0"
@@ -155,17 +155,17 @@
          width="37.041664"
          height="37.041664"
          x="147.28474"
-         y="213.25935" />
+         y="212.79634" />
       <rect
          style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1.85208;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
          id="app"
          width="37.041664"
          height="37.041664"
          x="26.458336"
-         y="212.33331" />
+         y="212.79634" />
       <path
          style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-         d="m 89.958341,222.91663 v 15.87501 H 103.1875 v 10.58335 l 18.52084,-18.52084 -18.52084,-18.52083 v 10.58332 z"
+         d="m 89.958341,223.37964 v 15.87501 H 103.1875 V 249.838 l 18.52084,-18.52084 -18.52084,-18.52083 v 10.58332 z"
          id="path4649"
          inkscape:connector-curvature="0"
          sodipodi:nodetypes="cccccccc" />

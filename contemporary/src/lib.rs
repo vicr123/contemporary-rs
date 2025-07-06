@@ -5,6 +5,7 @@ pub mod components;
 pub mod hsv;
 pub mod icon_tool;
 pub mod lerp;
+pub mod macros;
 mod platform_support;
 pub mod setup;
 pub mod styling;

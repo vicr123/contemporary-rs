@@ -9,6 +9,7 @@ pub struct ContemporaryConfigApplicationDef {
 
 #[derive(Deserialize, Clone)]
 pub struct ContemporaryConfigConfigDef {
+    pub blueprint: Option<String>,
     pub i18n_dir: Option<String>,
 }
 
@@ -35,7 +36,7 @@ pub struct ContemporaryConfigDeploymentDef {
 }
 
 pub struct ContemporaryConfigDeployment {
-    pub application_name: Option<LocalisedString>,
+    pub(crate) application_name: Option<LocalisedString>,
     pub application_generic_name: Option<LocalisedString>,
     pub desktop_entry: Option<String>,
     pub icon: Option<String>,
@@ -50,4 +51,30 @@ pub struct ContemporaryConfigDeployment {
     pub minimum_system_version: String,
     pub disk_image_background: Option<String>,
     pub supports_automatic_graphics_switching: bool,
+
+    pub(crate) is_blueprint: bool,
+}
+
+impl ContemporaryConfigDeployment {
+    pub fn application_name(&self) -> Option<LocalisedString> {
+        if !self.is_blueprint {
+            return self.application_name.clone();
+        };
+
+        let Some(application_name) = &self.application_name else {
+            return None;
+        };
+
+        match application_name {
+            LocalisedString::Hardcoded(hardcoded_string) => Some(LocalisedString::Hardcoded(
+                format!("{hardcoded_string} Blueprint"),
+            )),
+            LocalisedString::Localised(localisations) => Some(LocalisedString::Localised(
+                localisations
+                    .iter()
+                    .map(|(lang, value)| (lang.to_string(), format!("{value} Blueprint")))
+                    .collect(),
+            )),
+        }
+    }
 }

@@ -3,7 +3,7 @@ use contemporary_icon_tool_core::contemporary_icon::ContemporaryIcon;
 use proc_macro::TokenStream;
 use quote::quote;
 use syn::parse::{Parse, ParseStream};
-use syn::{Error, LitStr, parse_macro_input};
+use syn::{parse_macro_input, Error, LitStr};
 
 struct ApplicationIconMacroInput {
     pub icon_file: LitStr,
@@ -59,7 +59,7 @@ pub fn application_icon(body: TokenStream) -> TokenStream {
         .into();
     }
 
-    let icon = ContemporaryIcon::new(icon_path, false, false);
+    let icon = ContemporaryIcon::new(icon_path, false, config.is_blueprint());
     let icon_source = icon.generate(
         &config.application.theme_colors[0],
         &config.application.theme_colors[1],

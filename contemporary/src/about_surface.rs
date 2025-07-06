@@ -7,12 +7,11 @@ use crate::components::layer::layer;
 use crate::components::subtitle::subtitle;
 use crate::styling::theme::Theme;
 use crate::surface::surface;
-use contemporary_i18n::{tr, Variable};
+use contemporary_i18n::{i18n_manager, tr, Variable};
 use gpui::{
     div, img, px, App, AppContext, ClickEvent, IntoElement, ParentElement, RenderOnce, Styled,
     Window,
 };
-use crate::components::application_menu::ApplicationMenu;
 
 #[derive(IntoElement)]
 struct AboutSurfaceButtons;
@@ -71,6 +70,8 @@ impl RenderOnce for AboutSurface {
         let details = cx.global::<Details>();
         let versions = cx.global::<Versions>();
 
+        let locale = &i18n_manager!().locale;
+
         surface().child(
             div()
                 .flex()
@@ -82,7 +83,10 @@ impl RenderOnce for AboutSurface {
                         .text(tr!(
                             "ABOUT_TITLE",
                             "About {{application}}",
-                            application = details.application_name
+                            application = details
+                                .generatable
+                                .application_name
+                                .resolve_languages_or_default(&locale.messages)
                         ))
                         .pt(px(36.)),
                 )
@@ -102,17 +106,23 @@ impl RenderOnce for AboutSurface {
                                         .gap(px(12.))
                                         .child(img("contemporary-icon:/application").w(px(40.))) // TODO: Icon goes here
                                         .child(
-                                            div()
-                                                .text_size(px(35.))
-                                                .child(details.application_name),
+                                            div().text_size(px(35.)).child(
+                                                details
+                                                    .generatable
+                                                    .application_name
+                                                    .resolve_languages_or_default(&locale.messages),
+                                            ),
                                         ),
                                 )
                                 .child(
-                                    div()
-                                        .flex()
-                                        .gap(px(12.))
-                                        .child(div().w(px(40.)))
-                                        .child(div().child(details.application_generic_name)),
+                                    div().flex().gap(px(12.)).child(div().w(px(40.))).child(
+                                        div().child(
+                                            details
+                                                .generatable
+                                                .application_generic_name
+                                                .resolve_languages_or_default(&locale.messages),
+                                        ),
+                                    ),
                                 )
                                 .child(
                                     div()
@@ -133,7 +143,12 @@ impl RenderOnce for AboutSurface {
                                         div()
                                             .flex()
                                             .justify_between()
-                                            .child(details.application_name)
+                                            .child(
+                                                details
+                                                    .generatable
+                                                    .application_name
+                                                    .resolve_languages_or_default(&locale.messages),
+                                            )
                                             .child(details.application_version),
                                     )
                                     .child(
