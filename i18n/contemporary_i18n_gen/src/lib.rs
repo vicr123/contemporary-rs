@@ -3,6 +3,7 @@ use std::{
     collections::HashMap,
     ffi::OsStr,
     fs::{self, OpenOptions},
+    io::Write,
     path::{Path, PathBuf},
     process::exit,
     rc::Rc,
@@ -254,7 +255,7 @@ pub fn generate(manifest_directory: &Path) -> GenerationResult {
 
     let catalog_path = config.i18n.translation_catalog_file(manifest_directory);
 
-    let Ok(file) = OpenOptions::new()
+    let Ok(mut file) = OpenOptions::new()
         .write(true)
         .create(true)
         .truncate(true)
@@ -264,10 +265,15 @@ pub fn generate(manifest_directory: &Path) -> GenerationResult {
         exit(1);
     };
 
-    let write_result = serde_json::to_writer_pretty(file, &catalog);
+    let Ok(serialized) = serde_json::to_string_pretty(&catalog) else {
+        error!("failed to serialize catalog file, exiting");
+        exit(1);
+    };
 
-    if let Err(error) = write_result {
-        error!("failed to write catalog file: {:?}, exiting", error);
+    let write_result = file.write_all(serialized.replace("\\r\\n", "\\n").as_bytes());
+
+    if let Err(err) = write_result {
+        error!("failed to write catalog file: {}, exiting", err);
         exit(1);
     }
 
@@ -285,7 +291,18 @@ pub fn generate(manifest_directory: &Path) -> GenerationResult {
             .fold(json!({}), |mut meta, (key, value)| {
                 meta[key] = json!({
                     "context": value.file.file_name().and_then(|v| v.to_str()),
-                    "definedIn": value.file.strip_prefix(manifest_directory).ok().map(|v| format!("{}:{}", v.as_os_str().display(), value.line_no)),
+                    "definedIn": value.file
+                        .strip_prefix(manifest_directory)
+                        .ok()
+                        .map(|v| format!(
+                            "{}:{}",
+                            v.to_path_buf()
+                                .iter()
+                                .map(OsStr::to_str)
+                                .flatten()
+                                .join("/")
+                            , value.line_no
+                        )),
                     "plural": value.plural,
                     "description": value.description,
                 });
