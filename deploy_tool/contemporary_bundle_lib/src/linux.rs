@@ -9,11 +9,11 @@ use resvg::usvg::{Options, Tree};
 use std::collections::HashMap;
 use std::env::consts::ARCH;
 use std::fmt::Error;
-use std::fs::{File, Permissions, copy, create_dir_all, remove_dir_all, set_permissions, write};
+use std::fs::{copy, create_dir_all, remove_dir_all, set_permissions, write, File, Permissions};
 use std::io::{Read, Write};
-use std::os::unix::fs::{PermissionsExt, symlink};
+use std::os::unix::fs::{symlink, PermissionsExt};
 use std::path::{Path, PathBuf};
-use std::process::{Command, exit};
+use std::process::{exit, Command};
 use tempfile::TempDir;
 use tracing::{error, info};
 
@@ -154,7 +154,7 @@ fn generate_desktop_entry(
 ) -> Result<String, Error> {
     let deployment = contemporary_config.deployment(target_triple);
 
-    let Some(application_name) = deployment.application_name else {
+    let Some(application_name) = deployment.application_name() else {
         error!("No application name specified in config");
         exit(1);
     };
