@@ -179,27 +179,51 @@
     "plural": false,
     "description": null
   },
+  "I18N_LANGUAGE_CODE": {
+    "context": "i18n.rs",
+    "definedIn": "src/patterns/i18n.rs:23",
+    "plural": false,
+    "description": null
+  },
   "I18N_QUOTE_STRINGS": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:57",
+    "definedIn": "src/patterns/i18n.rs:89",
     "plural": false,
     "description": null
   },
   "I18N_QUOTE_STRING_DESCRIPTION": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:64",
+    "definedIn": "src/patterns/i18n.rs:96",
     "plural": false,
     "description": null
   },
   "I18N_QUOTE_STRING_QUOTED": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:75",
+    "definedIn": "src/patterns/i18n.rs:107",
+    "plural": false,
+    "description": null
+  },
+  "I18N_SELECTED_LANGUAGE": {
+    "context": "i18n.rs",
+    "definedIn": "src/patterns/i18n.rs:77",
+    "plural": false,
+    "description": null
+  },
+  "I18N_SETUP": {
+    "context": "i18n.rs",
+    "definedIn": "src/patterns/i18n.rs:65",
+    "plural": false,
+    "description": null
+  },
+  "I18N_SETUP_DESCRIPTION": {
+    "context": "i18n.rs",
+    "definedIn": "src/patterns/i18n.rs:72",
     "plural": false,
     "description": null
   },
   "I18N_TITLE": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:41",
+    "definedIn": "src/patterns/i18n.rs:49",
     "plural": false,
     "description": null
   },
@@ -229,7 +253,7 @@
   },
   "QUOTE_STRINGS_PLACEHOLDER": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:22",
+    "definedIn": "src/patterns/i18n.rs:29",
     "plural": false,
     "description": null
   },

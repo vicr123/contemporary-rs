@@ -13,7 +13,16 @@ impl CldrDelimitersData {
         for range in Locale::split_language_range(lang) {
             if let Some(file) = Self::get(format!("{range}/delimiters.json").as_str()) {
                 let mut root: DelimitersFile = serde_json::from_slice(file.data.as_ref()).unwrap();
-                return Some(root.main.remove(&range).unwrap().delimiters);
+                let mut delimiters = root.main.remove(&range).unwrap().delimiters;
+                if range.starts_with("fr") && delimiters.quotation_start == "«" {
+                    delimiters = Delimiters {
+                        quotation_start: "« ".to_string(),
+                        quotation_end: " »".to_string(),
+                        alternate_quotation_start: delimiters.alternate_quotation_start,
+                        alternate_quotation_end: delimiters.alternate_quotation_end,
+                    }
+                }
+                return Some(delimiters);
             }
         }
         None

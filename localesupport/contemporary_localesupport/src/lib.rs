@@ -13,8 +13,10 @@ pub struct Locale {
     cldr_data: HashMap<String, CldrData>,
 }
 
+#[derive(Debug)]
 pub enum LocaleError {
     RegionAgnosticError,
+    CustomLocaleError,
 }
 
 impl Locale {
@@ -117,12 +119,18 @@ impl Locale {
 
     fn human_readable_language_name_internal(of: &Locale, r#in: &Locale) -> String {
         let locale = &r#in.messages_icu;
-        let display_names = icu::experimental::displaynames::LanguageDisplayNames::try_new(
+        let Ok(display_names) = icu::experimental::displaynames::LanguageDisplayNames::try_new(
             locale.clone().into(),
             Default::default(),
-        )
-        .unwrap();
-        display_names.of(of.into()).unwrap_or("").into()
+        ) else {
+            return "Unknown Language".into();
+        };
+
+        let Ok(language) = of.try_into() else {
+            return "Unknown Language".into();
+        };
+
+        display_names.of(language).unwrap_or("").into()
     }
 
     pub fn human_readable_region_name(&self) -> Option<String> {
@@ -139,11 +147,13 @@ impl Locale {
 
     fn human_readable_region_name_internal(of: &Locale, r#in: &Locale) -> Option<String> {
         let locale = &r#in.messages_icu;
-        let display_names = icu::experimental::displaynames::RegionDisplayNames::try_new(
+        let Ok(display_names) = icu::experimental::displaynames::RegionDisplayNames::try_new(
             locale.clone().into(),
             Default::default(),
-        )
-        .unwrap();
+        ) else {
+            return None;
+        };
+
         let region = of.try_into();
         let Ok(region) = region else {
             return None;
@@ -181,11 +191,15 @@ impl Locale {
     }
 }
 
-impl From<&Locale> for Language {
-    fn from(value: &Locale) -> Self {
+impl TryFrom<&Locale> for Language {
+    type Error = LocaleError;
+
+    fn try_from(value: &Locale) -> Result<Self, Self::Error> {
         let message_language = value.messages.first().unwrap();
-        let locale = icu::locale::Locale::try_from_str(message_language).unwrap();
-        locale.id.language
+        let Ok(locale) = icu::locale::Locale::try_from_str(message_language) else {
+            return Err(LocaleError::CustomLocaleError);
+        };
+        Ok(locale.id.language)
     }
 }
 
@@ -194,7 +208,9 @@ impl TryFrom<&Locale> for Region {
 
     fn try_from(value: &Locale) -> Result<Self, Self::Error> {
         let message_language = value.messages.first().unwrap();
-        let locale = icu::locale::Locale::try_from_str(message_language).unwrap();
+        let Ok(locale) = icu::locale::Locale::try_from_str(message_language) else {
+            return Err(LocaleError::CustomLocaleError);
+        };
         locale.id.region.ok_or(LocaleError::RegionAgnosticError)
     }
 }
