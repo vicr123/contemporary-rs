@@ -10,8 +10,9 @@ macro_rules! extract_plural_rule {
         $items
             .get(stringify!($n))
             .map(|str| {
+                let string = match_line_endings(str);
                 quote! {
-                    $n: Some(I18nString::Borrowed(#str))
+                    $n: Some(I18nString::Borrowed(#string))
                 }
             })
             .unwrap_or(quote! {
@@ -20,6 +21,31 @@ macro_rules! extract_plural_rule {
     };
 }
 
+fn match_line_endings(string: &str) -> proc_macro2::TokenStream {
+    if true {
+        let windows_string = string.replace("\n", "\r\n");
+        let unix_string = string.replace("\r\n", "\n");
+
+        return quote! {
+            {
+                #[cfg(target_os = "windows")]
+                {#windows_string}
+
+                #[cfg(not(target_os = "windows"))]
+                {#unix_string}
+            }
+        };
+    }
+
+    quote! { #string }
+}
+
+/// Generates an `I18nSource` containing the strings from the translation files located in the
+/// configured translation directory.
+///
+/// By default, when strings are loaded (at compile time), the line endings are automatically
+/// changed to match the compiled platform's line endings. If you wish to disable this behaviour,
+/// set `match_line_endings` to false in your i18n configuration.
 pub fn tr_load(_body: TokenStream) -> TokenStream {
     let manifest_dir = env::var("CARGO_MANIFEST_DIR").expect("Failed to get CARGO_MANIFEST_DIR");
 
@@ -35,11 +61,14 @@ pub fn tr_load(_body: TokenStream) -> TokenStream {
         let decoded_file = load::translation(&file).unwrap();
         for (key, entry) in decoded_file {
             strings.push(match entry {
-                load::TranslationEntry::Entry(string) => quote! {
-                    #key => I18nEntry::Entry(I18nStringEntry {
-                        entry: I18nString::Borrowed(#string),
-                    })
-                },
+                load::TranslationEntry::Entry(string) => {
+                    let matched_string = match_line_endings(string.as_str());
+                    quote! {
+                        #key => I18nEntry::Entry(I18nStringEntry {
+                            entry: I18nString::Borrowed(#matched_string),
+                        })
+                    }
+                }
                 load::TranslationEntry::PluralEntry(items) => {
                     let other = items.get("other");
                     let Some(other) = other else {

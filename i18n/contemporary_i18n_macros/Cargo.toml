@@ -17,3 +17,4 @@ quote = "1"
 once_cell = { workspace = true }
 contemporary_i18n_core = { path = "../contemporary_i18n_core" }
 contemporary_i18n_parse = { path = "../contemporary_i18n_parse" }
+proc-macro2 = "1"

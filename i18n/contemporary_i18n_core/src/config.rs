@@ -37,6 +37,7 @@ pub struct Config {
 pub struct I18n {
     pub default_language: String,
     translation_directory: PathBuf,
+    pub match_line_endings: bool,
 }
 
 impl Default for I18n {
@@ -44,6 +45,7 @@ impl Default for I18n {
         Self {
             default_language: "en".into(),
             translation_directory: "translations".into(),
+            match_line_endings: true,
         }
     }
 }
