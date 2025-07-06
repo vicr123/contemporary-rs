@@ -6,3 +6,6 @@ edition = "2024"
 [dependencies]
 icu = { workspace = true, features = ["experimental"] }
 locale_config = { workspace = true }
+rust-embed = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }

@@ -1244,6 +1244,9 @@ version = "0.1.0"
 dependencies = [
  "icu",
  "locale_config",
+ "rust-embed",
+ "serde",
+ "serde_json",
 ]
 
 [[package]]

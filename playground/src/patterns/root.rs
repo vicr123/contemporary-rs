@@ -1,4 +1,5 @@
 use crate::patterns::dialog_boxes::DialogBoxes;
+use crate::patterns::i18n::I18n;
 use contemporary::components::grandstand::grandstand;
 use contemporary::components::layer::layer;
 use contemporary::components::pager::pager;
@@ -12,6 +13,7 @@ use gpui::{
 
 pub struct PatternsRoot {
     dialog_boxes: Entity<DialogBoxes>,
+    i18n: Entity<I18n>,
 
     current_page: usize,
 }
@@ -20,6 +22,7 @@ impl PatternsRoot {
     pub fn new(cx: &mut App) -> Entity<PatternsRoot> {
         cx.new(|cx| PatternsRoot {
             dialog_boxes: DialogBoxes::new(cx),
+            i18n: I18n::new(cx),
             current_page: 0,
         })
     }
@@ -47,7 +50,7 @@ impl Render for PatternsRoot {
                         div().flex_grow().p(px(2.)).child(
                             uniform_list(
                                 "sidebar-items",
-                                1,
+                                2,
                                 cx.processor(|this, range, _, cx| {
                                     let theme = cx.global::<Theme>();
                                     let mut items = Vec::new();
@@ -65,6 +68,7 @@ impl Render for PatternsRoot {
                                                 }))
                                                 .child(match ix {
                                                     0 => tr!("DIALOG_BOXES_TITLE"),
+                                                    1 => tr!("I18N_TITLE"),
                                                     _ => format!("Item {item}").into(),
                                                 })
                                                 .when(this.current_page == ix, |div| {
@@ -83,7 +87,8 @@ impl Render for PatternsRoot {
             .child(
                 pager("main-area", self.current_page)
                     .flex_grow()
-                    .page(self.dialog_boxes.clone().into_any_element()),
+                    .page(self.dialog_boxes.clone().into_any_element())
+                    .page(self.i18n.clone().into_any_element()),
             )
     }
 }

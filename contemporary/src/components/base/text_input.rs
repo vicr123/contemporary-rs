@@ -2,11 +2,11 @@ use std::ops::Range;
 
 use crate::styling::theme::{Theme, VariableColor};
 use gpui::{
-    App, Bounds, ClipboardItem, Context, CursorStyle, ElementId, ElementInputHandler, Entity,
-    EntityInputHandler, FocusHandle, Focusable, GlobalElementId, Hsla, KeyBinding, LayoutId,
-    MouseButton, MouseDownEvent, MouseMoveEvent, MouseUpEvent, PaintQuad, Pixels, Point, Rgba,
-    ShapedLine, SharedString, Style, TextRun, UTF16Selection, UnderlineStyle, Window, actions, div,
-    fill, point, prelude::*, px, relative, size,
+    actions, div, fill, point, prelude::*, px, relative, size,
+    App, Bounds, ClipboardItem, Context, CursorStyle, ElementId, ElementInputHandler,
+    Entity, EntityInputHandler, FocusHandle, Focusable, GlobalElementId, Hsla, KeyBinding, LayoutId,
+    MouseButton, MouseDownEvent, MouseMoveEvent, MouseUpEvent, PaintQuad, Pixels, Point, Rgba, ShapedLine,
+    SharedString, Style, TextRun, UTF16Selection, UnderlineStyle, Window,
 };
 use unicode_segmentation::*;
 
@@ -50,7 +50,7 @@ pub fn bind_text_input_keys(cx: &mut App) {
 
 pub struct TextInput {
     focus_handle: FocusHandle,
-    content: SharedString,
+    pub content: SharedString,
     placeholder: SharedString,
     selected_range: Range<usize>,
     selection_reversed: bool,

@@ -179,6 +179,30 @@
     "plural": false,
     "description": null
   },
+  "I18N_QUOTE_STRINGS": {
+    "context": "i18n.rs",
+    "definedIn": "src/patterns/i18n.rs:57",
+    "plural": false,
+    "description": null
+  },
+  "I18N_QUOTE_STRING_DESCRIPTION": {
+    "context": "i18n.rs",
+    "definedIn": "src/patterns/i18n.rs:64",
+    "plural": false,
+    "description": null
+  },
+  "I18N_QUOTE_STRING_QUOTED": {
+    "context": "i18n.rs",
+    "definedIn": "src/patterns/i18n.rs:74",
+    "plural": false,
+    "description": null
+  },
+  "I18N_TITLE": {
+    "context": "i18n.rs",
+    "definedIn": "src/patterns/i18n.rs:41",
+    "plural": false,
+    "description": null
+  },
   "MENU_THEME": {
     "context": "main.rs",
     "definedIn": "src/main.rs:73",
@@ -193,13 +217,19 @@
   },
   "PATTERNS_TITLE": {
     "context": "root.rs",
-    "definedIn": "src/patterns/root.rs:43",
+    "definedIn": "src/patterns/root.rs:46",
     "plural": false,
     "description": null
   },
   "PROGRESS_BARS_TITLE": {
     "context": "progress_bars.rs",
     "definedIn": "src/components/progress_bars.rs:28",
+    "plural": false,
+    "description": null
+  },
+  "QUOTE_STRINGS_PLACEHOLDER": {
+    "context": "i18n.rs",
+    "definedIn": "src/patterns/i18n.rs:22",
     "plural": false,
     "description": null
   },

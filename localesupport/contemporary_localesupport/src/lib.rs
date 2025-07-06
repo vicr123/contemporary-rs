@@ -1,11 +1,16 @@
-use icu::locale::Locale as IcuLocale;
+mod cldr;
+
+use crate::cldr::CldrData;
 use icu::locale::subtags::{Language, Region};
+use icu::locale::Locale as IcuLocale;
 use locale_config::Locale as LocaleConfigLocale;
+use std::collections::HashMap;
 use std::fmt::Display;
 
 pub struct Locale {
     pub messages: Vec<String>,
     messages_icu: IcuLocale,
+    cldr_data: HashMap<String, CldrData>,
 }
 
 pub enum LocaleError {
@@ -34,20 +39,35 @@ impl Locale {
     }
 
     pub fn new_from_parts(messages: Vec<String>) -> Locale {
+        // When we add other lookup areas to this locale we should collect them all here and
+        // dedupe the array
+        let required_cldr_data = messages.clone();
+
         Locale {
             messages_icu: Self::create_icu_locale(messages.first().unwrap())
                 .unwrap_or_else(|| Self::create_icu_locale("en").unwrap()),
             messages,
+            cldr_data: required_cldr_data
+                .into_iter()
+                .map(|language| {
+                    let cldr_data = CldrData::new(language.as_str());
+                    (language, cldr_data)
+                })
+                .collect(),
         }
     }
 
     pub fn new_from_locale_config_locale(locale_config_locale: LocaleConfigLocale) -> Locale {
-        Self::new_from_parts(
-            locale_config_locale
-                .tags_for("messages")
-                .flat_map(|language_range| Self::split_language_range(language_range.as_ref()))
-                .collect(),
-        )
+        let mut parts = locale_config_locale
+            .tags_for("messages")
+            .flat_map(|language_range| Self::split_language_range(language_range.as_ref()))
+            .filter(|language_range| !language_range.is_empty())
+            .peekable();
+        if parts.peek().is_none() {
+            Self::new_from_parts(vec!["en".to_string()])
+        } else {
+            Self::new_from_parts(parts.collect())
+        }
     }
 
     pub fn new_from_locale_identifier(identifier: impl Into<String>) -> Locale {
@@ -135,11 +155,29 @@ impl Locale {
     }
 
     pub fn quote_string(&self, string: impl Display) -> String {
-        format!("\"{string}\"")
+        let cldr_locale = self.messages.first().unwrap();
+        let delimiters = &self
+            .cldr_data
+            .get(cldr_locale)
+            .expect("CLDR data for messages locale not created.")
+            .delimiters;
+        format!(
+            "{}{string}{}",
+            delimiters.quotation_start, delimiters.quotation_end
+        )
     }
 
     pub fn quote_string_alternate(&self, string: impl Display) -> String {
-        format!("'{string}'")
+        let cldr_locale = self.messages.first().unwrap();
+        let delimiters = &self
+            .cldr_data
+            .get(cldr_locale)
+            .expect("CLDR data for messages locale not created.")
+            .delimiters;
+        format!(
+            "{}{string}{}",
+            delimiters.alternate_quotation_start, delimiters.alternate_quotation_end
+        )
     }
 }
 

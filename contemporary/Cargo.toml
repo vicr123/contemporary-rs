@@ -15,7 +15,7 @@ indexmap = { workspace = true }
 url = "2"
 unicode-segmentation = "1"
 once_cell = { workspace = true }
-rust-embed = "8.7.2"
+rust-embed = { workspace = true }
 smol = "2"
 async-channel = "2"
 

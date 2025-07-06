@@ -45,6 +45,10 @@ impl TextField {
         self.borderless = borderless;
         self
     }
+
+    pub fn current_text(&self, cx: &App) -> SharedString {
+        self.text_input.read(cx).content.clone()
+    }
 }
 
 impl Focusable for TextField {
