@@ -1,8 +1,10 @@
-use gpui::{px, Rgba};
-use windows::UI::ViewManagement::{UIColorType, UISettings};
-use crate::styling::contemporary::{make_contemporary_base_theme, ContemporaryDark, ContemporaryLight};
+use crate::styling::contemporary::{
+    ContemporaryDark, ContemporaryLight, make_contemporary_base_theme,
+};
 use crate::styling::rgb::rgba_tuple;
 use crate::styling::theme::{Theme, ThemeType};
+use gpui::{Rgba, px};
+use windows::UI::ViewManagement::{UIColorType, UISettings};
 
 pub fn create_windows_theme(theme_type: ThemeType) -> Theme {
     let ui_settings = UISettings::new().unwrap();
@@ -14,8 +16,9 @@ pub fn create_windows_theme(theme_type: ThemeType) -> Theme {
             // https://learn.microsoft.com/en-us/windows/apps/desktop/modernize/ui/apply-windows-themes
 
             // "modernize"
-            ((5 * foreground.G as u32) + (2 * foreground.R as u32) + foreground.B as u32) > (8 * 128)
-        },
+            ((5 * foreground.G as u32) + (2 * foreground.R as u32) + foreground.B as u32)
+                > (8 * 128)
+        }
         ThemeType::Light => false,
         ThemeType::Dark => true,
     };
@@ -29,7 +32,8 @@ pub fn create_windows_theme(theme_type: ThemeType) -> Theme {
                 ui_settings.GetColorValue(UIColorType::Accent)
             } else {
                 ui_settings.GetColorValue(UIColorType::AccentLight1)
-            }.unwrap();
+            }
+            .unwrap();
             rgba_tuple(color.R, color.G, color.B, color.A as f32 / 255.)
         },
 

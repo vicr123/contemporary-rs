@@ -1,8 +1,8 @@
-use crate::styling::theme::{variable_transparent, Theme, VariableColor};
+use crate::styling::theme::{Theme, VariableColor, variable_transparent};
 use gpui::prelude::FluentBuilder;
 use gpui::{
-    div, px, AnyElement, App, ClickEvent, Div, ElementId, InteractiveElement,
-    IntoElement, ParentElement, RenderOnce, Stateful, StatefulInteractiveElement, StyleRefinement, Styled, Window,
+    AnyElement, App, ClickEvent, Div, ElementId, InteractiveElement, IntoElement, ParentElement,
+    RenderOnce, Stateful, StatefulInteractiveElement, StyleRefinement, Styled, Window, div, px,
 };
 
 #[derive(IntoElement)]

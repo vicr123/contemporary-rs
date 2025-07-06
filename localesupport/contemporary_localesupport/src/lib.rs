@@ -1,8 +1,8 @@
 mod cldr;
 
 use crate::cldr::CldrData;
-use icu::locale::subtags::{Language, Region};
 use icu::locale::Locale as IcuLocale;
+use icu::locale::subtags::{Language, Region};
 use locale_config::Locale as LocaleConfigLocale;
 use std::collections::HashMap;
 use std::fmt::Display;

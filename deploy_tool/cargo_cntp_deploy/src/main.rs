@@ -1,7 +1,7 @@
 use clap::Parser;
 use clap_verbosity_flag::InfoLevel;
 
-use contemporary_bundle_lib::tool_setup::{setup_tool, DeploymentType};
+use contemporary_bundle_lib::tool_setup::{DeploymentType, setup_tool};
 use std::path::Path;
 use std::process::exit;
 use tracing::{error, info};

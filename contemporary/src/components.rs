@@ -1,3 +1,4 @@
+pub mod application_menu;
 mod base;
 pub mod button;
 pub mod checkbox;
@@ -13,4 +14,3 @@ pub mod progress_bar;
 pub mod scrim;
 pub mod subtitle;
 pub mod text_field;
-pub mod application_menu;

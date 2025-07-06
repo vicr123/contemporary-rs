@@ -4,8 +4,8 @@ use async_channel::Sender;
 use gpui::{App, AsyncApp, Global};
 use objc2::__framework_prelude::Retained;
 use objc2::runtime::{NSObject, NSObjectProtocol};
-use objc2::{define_class, msg_send, sel, DefinedClass, MainThreadMarker, MainThreadOnly};
-use objc2_foundation::{ns_string, NSDistributedNotificationCenter, NSNotification};
+use objc2::{DefinedClass, MainThreadMarker, MainThreadOnly, define_class, msg_send, sel};
+use objc2_foundation::{NSDistributedNotificationCenter, NSNotification, ns_string};
 
 struct AppleInterfaceThemeChangedListenerFields {
     tx: Sender<()>,

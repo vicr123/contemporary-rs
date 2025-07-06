@@ -5,7 +5,7 @@ use contemporary::components::progress_bar::progress_bar;
 use contemporary::components::subtitle::subtitle;
 use contemporary_i18n::tr;
 use gpui::{
-    div, px, App, AppContext, Context, Entity, IntoElement, ParentElement, Render, Styled, Window,
+    App, AppContext, Context, Entity, IntoElement, ParentElement, Render, Styled, Window, div, px,
 };
 
 pub struct ProgressBars;

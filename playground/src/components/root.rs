@@ -9,8 +9,8 @@ use contemporary::styling::theme::Theme;
 use contemporary_i18n::tr;
 use gpui::prelude::FluentBuilder;
 use gpui::{
-    div, px, uniform_list, App, AppContext, Context, Entity, InteractiveElement,
-    IntoElement, ParentElement, Render, StatefulInteractiveElement, Styled, Window,
+    App, AppContext, Context, Entity, InteractiveElement, IntoElement, ParentElement, Render,
+    StatefulInteractiveElement, Styled, Window, div, px, uniform_list,
 };
 
 pub struct ComponentsRoot {

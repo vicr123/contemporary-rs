@@ -1,14 +1,14 @@
 use crate::icon::get_svg_icon_contents;
 use crate::tool_setup::ToolSetup;
-use plist::{to_file_xml, Dictionary, Value};
+use plist::{Dictionary, Value, to_file_xml};
 use resvg::render;
 use resvg::tiny_skia::{Pixmap, Transform};
 use resvg::usvg::{Options, Tree};
 use std::collections::HashMap;
-use std::fs::{copy, create_dir_all, remove_dir_all, OpenOptions};
+use std::fs::{OpenOptions, copy, create_dir_all, remove_dir_all};
 use std::io::Write;
 use std::path::PathBuf;
-use std::process::{exit, Command};
+use std::process::{Command, exit};
 use tempfile::TempDir;
 use tracing::error;
 

@@ -5,8 +5,8 @@ use contemporary::components::layer::layer;
 use contemporary::components::subtitle::subtitle;
 use contemporary_i18n::{tr, trn};
 use gpui::{
-    div, px, App, AppContext, ClickEvent, Context, Entity, IntoElement, ParentElement,
-    Render, Styled, Window,
+    App, AppContext, ClickEvent, Context, Entity, IntoElement, ParentElement, Render, Styled,
+    Window, div, px,
 };
 
 pub struct Buttons {

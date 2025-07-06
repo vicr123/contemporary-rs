@@ -28,7 +28,7 @@ impl I18n {
 impl Render for I18n {
     fn render(&mut self, _window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
         let quote_strings_text = self.quote_strings_text_field.read(cx).current_text(cx);
-        
+
         let locale = &i18n_manager!().locale;
 
         div()
@@ -68,12 +68,14 @@ impl Render for I18n {
                                     .child(tr!(
                                         "I18N_QUOTE_STRING_QUOTED",
                                         "Your favourite song is {{favourite_song}}",
-                                        favourite_song = locale.quote_string(quote_strings_text.clone())
+                                        favourite_song =
+                                            locale.quote_string(quote_strings_text.clone())
                                     ))
                                     .child(tr!(
                                         "I18N_QUOTE_STRING_QUOTED",
                                         "Your favourite song is {{favourite_song}}",
-                                        favourite_song = locale.quote_string_alternate(quote_strings_text)
+                                        favourite_song =
+                                            locale.quote_string_alternate(quote_strings_text)
                                     )),
                             ),
                     ),

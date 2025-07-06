@@ -1,7 +1,5 @@
 use crate::components::icon::icon;
-use gpui::{
-    div, px, App, IntoElement, ParentElement, RenderOnce, SharedString, Styled, Window,
-};
+use gpui::{App, IntoElement, ParentElement, RenderOnce, SharedString, Styled, Window, div, px};
 
 #[derive(IntoElement)]
 pub struct IconText {

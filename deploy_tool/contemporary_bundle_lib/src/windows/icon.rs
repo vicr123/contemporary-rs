@@ -1,6 +1,6 @@
+use crate::windows::group_icon::GroupIconEntry;
 use std::io;
 use std::io::{Cursor, Write};
-use crate::windows::group_icon::GroupIconEntry;
 
 pub struct Icon {
     width: u32,
@@ -14,7 +14,7 @@ pub struct Icon {
     clr_important: u32,
     image_data: Vec<u8>,
 
-    pub icon_id: u16
+    pub icon_id: u16,
 }
 
 impl Icon {
@@ -30,7 +30,7 @@ impl Icon {
             clr_used: 0,
             clr_important: 0,
             image_data,
-            icon_id
+            icon_id,
         }
     }
 
@@ -43,7 +43,7 @@ impl Icon {
                 let idx = ((y * width + x) * 4) as usize;
                 data.push(rgba_pixels[idx + 2]); // B
                 data.push(rgba_pixels[idx + 1]); // G
-                data.push(rgba_pixels[idx]);     // R
+                data.push(rgba_pixels[idx]); // R
                 data.push(rgba_pixels[idx + 3]); // A
             }
         }

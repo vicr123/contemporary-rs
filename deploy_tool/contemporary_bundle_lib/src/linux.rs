@@ -9,11 +9,11 @@ use resvg::usvg::{Options, Tree};
 use std::collections::HashMap;
 use std::env::consts::ARCH;
 use std::fmt::Error;
-use std::fs::{copy, create_dir_all, remove_dir_all, set_permissions, write, File, Permissions};
+use std::fs::{File, Permissions, copy, create_dir_all, remove_dir_all, set_permissions, write};
 use std::io::{Read, Write};
-use std::os::unix::fs::{symlink, PermissionsExt};
+use std::os::unix::fs::{PermissionsExt, symlink};
 use std::path::{Path, PathBuf};
-use std::process::{exit, Command};
+use std::process::{Command, exit};
 use tempfile::TempDir;
 use tracing::{error, info};
 

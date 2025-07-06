@@ -1,6 +1,6 @@
 pub mod contemporary;
-pub mod theme;
 mod rgb;
+pub mod theme;
 
 #[cfg(target_os = "macos")]
 mod macos;

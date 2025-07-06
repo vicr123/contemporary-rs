@@ -1,7 +1,7 @@
 use crate::styling::theme::Theme;
 use gpui::{
-    div, point, px, size, AnyElement, App, Bounds, Div, IntoElement,
-    ParentElement, RenderOnce, Styled, TitlebarOptions, Window, WindowBounds, WindowDecorations, WindowOptions,
+    AnyElement, App, Bounds, Div, IntoElement, ParentElement, RenderOnce, Styled, TitlebarOptions,
+    Window, WindowBounds, WindowDecorations, WindowOptions, div, point, px, size,
 };
 
 #[derive(IntoElement)]

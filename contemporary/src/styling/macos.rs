@@ -1,9 +1,9 @@
 use crate::styling::contemporary::{
-    make_contemporary_base_theme, ContemporaryDark, ContemporaryLight,
+    ContemporaryDark, ContemporaryLight, make_contemporary_base_theme,
 };
 use crate::styling::theme::{Theme, ThemeType};
 use gpui::px;
-use objc2_foundation::{ns_string, NSUserDefaults};
+use objc2_foundation::{NSUserDefaults, ns_string};
 
 pub fn create_macos_theme(theme_type: ThemeType) -> Theme {
     let apple_interface_style = unsafe {

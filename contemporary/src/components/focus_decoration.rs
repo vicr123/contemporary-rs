@@ -2,8 +2,8 @@ use crate::hsv::Hsva;
 use crate::lerp::Lerpable;
 use crate::styling::theme::Theme;
 use gpui::{
-    div, pulsating_between, px, Animation, AnimationExt, App, Div, IntoElement, RenderOnce,
-    StyleRefinement, Styled, Window,
+    Animation, AnimationExt, App, Div, IntoElement, RenderOnce, StyleRefinement, Styled, Window,
+    div, pulsating_between, px,
 };
 use std::time::Duration;
 

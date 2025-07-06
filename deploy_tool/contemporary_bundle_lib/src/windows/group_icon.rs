@@ -4,7 +4,7 @@ use std::io::{Cursor, Write};
 pub struct GroupIcon {
     id_reserved: u16,
     id_type: u16,
-    entries: Vec<GroupIconEntry>
+    entries: Vec<GroupIconEntry>,
 }
 
 pub struct GroupIconEntry {
@@ -23,7 +23,7 @@ impl Default for GroupIcon {
         GroupIcon {
             id_reserved: 0,
             id_type: 1,
-            entries: Vec::new()
+            entries: Vec::new(),
         }
     }
 }

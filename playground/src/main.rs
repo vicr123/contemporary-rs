@@ -3,7 +3,7 @@
 
 use std::rc::Rc;
 
-use crate::actions::{register_actions, DarkTheme, LightTheme, SystemTheme};
+use crate::actions::{DarkTheme, LightTheme, SystemTheme, register_actions};
 use crate::main_window::MainWindow;
 use contemporary::application::new_contemporary_application;
 use contemporary::macros::application_details;
@@ -12,12 +12,12 @@ use contemporary::styling::theme::ThemeType::{Dark, Light, System};
 use contemporary::styling::theme::{Theme, ThemeType};
 use contemporary::{
     application::{ApplicationLink, Details, License, Versions},
-    setup::{setup_contemporary, Contemporary, ContemporaryMenus},
+    setup::{Contemporary, ContemporaryMenus, setup_contemporary},
     window::contemporary_window_options,
 };
-use contemporary_i18n::{tr, tr_load, I18N_MANAGER};
+use contemporary_i18n::{I18N_MANAGER, tr, tr_load};
 use contemporary_icon_tool_macros::application_icon;
-use gpui::{actions, px, size, App, Bounds, Menu, MenuItem, WindowBounds, WindowOptions};
+use gpui::{App, Bounds, Menu, MenuItem, WindowBounds, WindowOptions, actions, px, size};
 use indexmap::IndexMap;
 use smol_macros::main;
 

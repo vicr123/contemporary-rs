@@ -1,4 +1,4 @@
-use plist::{to_writer_binary, Dictionary, Value};
+use plist::{Dictionary, Value, to_writer_binary};
 
 pub struct DSStore {
     entries: Vec<DSStoreEntry>,

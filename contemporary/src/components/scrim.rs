@@ -1,4 +1,8 @@
-use gpui::{anchored, deferred, div, point, px, rgba, AnyElement, App, ClickEvent, Div, Element, ElementId, InteractiveElement, IntoElement, ParentElement, RenderOnce, Stateful, StatefulInteractiveElement, Styled, Window};
+use gpui::{
+    AnyElement, App, ClickEvent, Div, Element, ElementId, InteractiveElement, IntoElement,
+    ParentElement, RenderOnce, Stateful, StatefulInteractiveElement, Styled, Window, anchored,
+    deferred, div, point, px, rgba,
+};
 
 #[derive(IntoElement)]
 pub struct Scrim {

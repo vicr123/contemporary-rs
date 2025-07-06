@@ -9,8 +9,8 @@ use contemporary::styling::theme::Theme;
 use contemporary::surface::surface;
 use contemporary_i18n::tr;
 use gpui::{
-    div, px, App, AppContext, Context, Entity, InteractiveElement, IntoElement,
-    Menu, MenuItem, ParentElement, Render, Styled, Window,
+    App, AppContext, Context, Entity, InteractiveElement, IntoElement, Menu, MenuItem,
+    ParentElement, Render, Styled, Window, div, px,
 };
 
 pub struct MainSurface {

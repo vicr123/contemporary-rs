@@ -1,11 +1,14 @@
-use crate::components::button::{button, Button};
+use crate::components::button::{Button, button};
 use crate::components::icon_text::icon_text;
 use crate::components::layer::layer;
-use crate::components::scrim::{scrim, Scrim};
+use crate::components::scrim::{Scrim, scrim};
 use crate::styling::theme::{Theme, VariableColor};
 use contemporary_i18n::tr;
 use gpui::prelude::FluentBuilder;
-use gpui::{div, px, relative, AnyElement, App, ClickEvent, ElementId, InteractiveElement, IntoElement, ParentElement, RenderOnce, SharedString, Styled, Window};
+use gpui::{
+    AnyElement, App, ClickEvent, ElementId, InteractiveElement, IntoElement, ParentElement,
+    RenderOnce, SharedString, Styled, Window, div, px, relative,
+};
 
 #[derive(IntoElement)]
 pub struct DialogBox {
@@ -77,7 +80,10 @@ impl DialogBox {
         self
     }
 
-    pub fn on_click_outside(mut self, fun: impl Fn(&ClickEvent, &mut Window, &mut App) + 'static) -> Self {
+    pub fn on_click_outside(
+        mut self,
+        fun: impl Fn(&ClickEvent, &mut Window, &mut App) + 'static,
+    ) -> Self {
         self.scrim = self.scrim.on_click(fun);
         self
     }

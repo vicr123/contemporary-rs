@@ -11,7 +11,7 @@ use std::fs::{copy, create_dir_all};
 use std::path::{Path, PathBuf};
 use std::process::exit;
 use tracing::error;
-use winres_edit::{resource_type, Id, Resource, Resources};
+use winres_edit::{Id, Resource, Resources, resource_type};
 
 pub fn bundle_windows(setup_data: &ToolSetup, executable_path: HashMap<String, PathBuf>) {
     let target_triple = setup_data.targets.first().unwrap();

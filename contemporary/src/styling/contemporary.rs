@@ -1,6 +1,6 @@
 use crate::styling::rgb::{rgb_tuple, rgba_tuple};
 use crate::styling::theme::{Theme, ThemeType};
-use gpui::{px, Pixels, Rgba};
+use gpui::{Pixels, Rgba, px};
 
 pub trait ContemporaryTheme {
     const TYPE: ThemeType;

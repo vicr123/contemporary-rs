@@ -5,14 +5,14 @@ use crate::tool_setup::ToolSetup;
 use resvg::render;
 use resvg::tiny_skia::{Pixmap, Rect};
 use resvg::usvg::{Options, Transform, Tree};
-use std::fs::{copy, create_dir_all, read_dir, remove_file, write, OpenOptions};
+use std::fs::{OpenOptions, copy, create_dir_all, read_dir, remove_file, write};
 use std::io;
 use std::io::Read;
 use std::os::unix::fs::symlink;
 use std::path::Path;
 use std::process::exit;
 use tempfile::TempDir;
-use tiff::encoder::{colortype, Rational, TiffEncoder};
+use tiff::encoder::{Rational, TiffEncoder, colortype};
 use tiff::tags::ResolutionUnit;
 use tracing::{debug, error, info};
 

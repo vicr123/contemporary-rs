@@ -1,6 +1,6 @@
 use crate::styling::theme::Theme;
 use gpui::{
-    div, px, svg, App, IntoElement, ParentElement, RenderOnce, Rgba, SharedString, Styled, Window,
+    App, IntoElement, ParentElement, RenderOnce, Rgba, SharedString, Styled, Window, div, px, svg,
 };
 
 #[derive(IntoElement)]

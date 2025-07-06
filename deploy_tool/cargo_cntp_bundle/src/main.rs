@@ -1,6 +1,6 @@
 use clap::Parser;
 use clap_verbosity_flag::InfoLevel;
-use contemporary_bundle_lib::tool_setup::{setup_tool, DeploymentType};
+use contemporary_bundle_lib::tool_setup::{DeploymentType, setup_tool};
 use current_platform::CURRENT_PLATFORM;
 use std::collections::HashMap;
 use std::env::consts::EXE_EXTENSION;

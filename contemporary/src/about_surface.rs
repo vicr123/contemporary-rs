@@ -1,16 +1,16 @@
 use crate::application::{ApplicationLink, Details, Versions};
 use crate::components::button::button;
 use crate::components::constrainer::constrainer;
-use crate::components::grandstand::{grandstand, Grandstand};
+use crate::components::grandstand::{Grandstand, grandstand};
 use crate::components::icon_text::icon_text;
 use crate::components::layer::layer;
 use crate::components::subtitle::subtitle;
 use crate::styling::theme::Theme;
 use crate::surface::surface;
-use contemporary_i18n::{i18n_manager, tr, Variable};
+use contemporary_i18n::{Variable, i18n_manager, tr};
 use gpui::{
-    div, img, px, App, AppContext, ClickEvent, IntoElement, ParentElement, RenderOnce, Styled,
-    Window,
+    App, AppContext, ClickEvent, IntoElement, ParentElement, RenderOnce, Styled, Window, div, img,
+    px,
 };
 
 #[derive(IntoElement)]

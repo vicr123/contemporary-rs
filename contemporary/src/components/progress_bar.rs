@@ -1,7 +1,7 @@
 use crate::styling::theme::Theme;
 use gpui::{
-    div, px, relative, Animation, AnimationExt, App, Div, ElementId,
-    InteractiveElement, IntoElement, ParentElement, RenderOnce, Stateful, StyleRefinement, Styled, Window,
+    Animation, AnimationExt, App, Div, ElementId, InteractiveElement, IntoElement, ParentElement,
+    RenderOnce, Stateful, StyleRefinement, Styled, Window, div, px, relative,
 };
 use std::time::Duration;
 

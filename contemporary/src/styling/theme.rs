@@ -1,6 +1,6 @@
 use crate::hsv::Hsva;
 use crate::styling::contemporary::{
-    make_contemporary_base_theme, ContemporaryDark, ContemporaryLight,
+    ContemporaryDark, ContemporaryLight, make_contemporary_base_theme,
 };
 use crate::styling::rgb::{rgb_tuple, rgba_tuple};
 use gpui::{Global, Pixels, Rgba};
@@ -166,7 +166,8 @@ impl Theme {
             return create_macos_theme(theme_type);
         }
 
-        #[cfg(target_os = "windows")] {
+        #[cfg(target_os = "windows")]
+        {
             return create_windows_theme(theme_type);
         }
 

@@ -2,7 +2,7 @@ use contemporary_i18n_parse::{tr::TrMacroInput, trn::TrnMacroInput};
 use proc_macro::TokenStream;
 
 use quote::quote;
-use syn::{parse_macro_input, Error};
+use syn::{Error, parse_macro_input};
 
 use crate::config::CURRENT_CRATE;
 

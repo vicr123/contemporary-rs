@@ -1,24 +1,24 @@
+use crate::components::application_menu::ApplicationMenu;
 use crate::components::button::button;
 use crate::styling::theme::Theme;
 use gpui::prelude::FluentBuilder;
 use gpui::{
-    div, img, px, rgb, svg, AnyElement, App, AppContext,
-    Context, Entity, InteractiveElement, IntoElement, MouseButton, ParentElement, Render, RenderOnce, Styled, Window, WindowControlArea,
+    AnyElement, App, AppContext, Context, Entity, InteractiveElement, IntoElement, MouseButton,
+    ParentElement, Render, RenderOnce, Styled, Window, WindowControlArea, div, img, px, rgb, svg,
 };
-use crate::components::application_menu::ApplicationMenu;
 
 #[derive(IntoElement)]
 pub struct Surface {
     child: AnyElement,
     actions: AnyElement,
-    application_menu: Option<Entity<ApplicationMenu>>
+    application_menu: Option<Entity<ApplicationMenu>>,
 }
 
 pub fn surface() -> Surface {
     Surface {
         child: div().into_any_element(),
         actions: div().into_any_element(),
-        application_menu: None
+        application_menu: None,
     }
 }
 
@@ -59,11 +59,17 @@ impl RenderOnce for Surface {
 #[derive(IntoElement)]
 struct WindowTitle {
     actions: AnyElement,
-    application_menu: Option<Entity<ApplicationMenu>>
+    application_menu: Option<Entity<ApplicationMenu>>,
 }
 
-fn window_controls(actions: AnyElement, application_menu: Option<Entity<ApplicationMenu>>) -> WindowTitle {
-    WindowTitle { actions, application_menu }
+fn window_controls(
+    actions: AnyElement,
+    application_menu: Option<Entity<ApplicationMenu>>,
+) -> WindowTitle {
+    WindowTitle {
+        actions,
+        application_menu,
+    }
 }
 
 #[allow(unreachable_code)]
@@ -92,16 +98,15 @@ impl RenderOnce for WindowTitle {
                             .h(px(40.))
                             .child(img("contemporary-icon:/application").w(px(24.)).h(px(24.)))
                             .when_some(self.application_menu, |this, application_menu| {
-                                this
-                                    .child(application_menu.clone())
+                                this.child(application_menu.clone())
                                     .on_click(move |_, _, cx| {
-                                    application_menu.update(cx, |this, cx| {
-                                        println!("Opening application menu");
-                                        this.set_open(true);
-                                        cx.notify();
+                                        application_menu.update(cx, |this, cx| {
+                                            println!("Opening application menu");
+                                            this.set_open(true);
+                                            cx.notify();
+                                        })
                                     })
-                                })
-                            })
+                            }),
                     )
                     .occlude()
             })

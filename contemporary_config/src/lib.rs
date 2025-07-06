@@ -274,8 +274,9 @@ impl LocalisedString {
         }
         None
     }
-    
+
     pub fn resolve_languages_or_default(&self, languages: &[String]) -> String {
-        self.resolve_languages(languages).unwrap_or_else(|| self.default_value())
+        self.resolve_languages(languages)
+            .unwrap_or_else(|| self.default_value())
     }
 }

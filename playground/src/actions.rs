@@ -1,6 +1,6 @@
 use contemporary::styling::theme::Theme;
 use contemporary::styling::theme::ThemeType::{Dark, Light, System};
-use gpui::{actions, App};
+use gpui::{App, actions};
 
 actions!(playground, [SystemTheme, LightTheme, DarkTheme]);
 

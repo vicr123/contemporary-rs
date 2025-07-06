@@ -73,25 +73,25 @@
   },
   "DIALOG_CANCEL": {
     "context": "dialog_box.rs",
-    "definedIn": "src/components/dialog_box.rs:32",
+    "definedIn": "src/components/dialog_box.rs:35",
     "plural": false,
     "description": null
   },
   "DIALOG_NO": {
     "context": "dialog_box.rs",
-    "definedIn": "src/components/dialog_box.rs:35",
+    "definedIn": "src/components/dialog_box.rs:38",
     "plural": false,
     "description": null
   },
   "DIALOG_OK": {
     "context": "dialog_box.rs",
-    "definedIn": "src/components/dialog_box.rs:28",
+    "definedIn": "src/components/dialog_box.rs:31",
     "plural": false,
     "description": null
   },
   "DIALOG_YES": {
     "context": "dialog_box.rs",
-    "definedIn": "src/components/dialog_box.rs:34",
+    "definedIn": "src/components/dialog_box.rs:37",
     "plural": false,
     "description": null
   },
