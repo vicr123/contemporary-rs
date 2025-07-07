@@ -60,7 +60,7 @@ impl AboutSurface {
     ) -> Self {
         self.grandstand = self
             .grandstand
-            .on_click(move |event, window, cx| fun(event, window, cx));
+            .on_back_click(move |event, window, cx| fun(event, window, cx));
         self
     }
 }

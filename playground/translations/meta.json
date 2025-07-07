@@ -89,6 +89,12 @@
     "plural": false,
     "description": null
   },
+  "CLOSE": {
+    "context": "popovers.rs",
+    "definedIn": "src/patterns/popovers.rs:150",
+    "plural": false,
+    "description": null
+  },
   "COMPONENTS_BUTTON": {
     "context": "main_surface.rs",
     "definedIn": "src/main_surface.rs:80",
@@ -251,6 +257,12 @@
     "plural": false,
     "description": null
   },
+  "INFORMATIONAL_POPOVER_DESCRIPTION": {
+    "context": "popovers.rs",
+    "definedIn": "src/patterns/popovers.rs:143",
+    "plural": false,
+    "description": null
+  },
   "MENU_THEME": {
     "context": "main.rs",
     "definedIn": "src/main.rs:73",
@@ -265,7 +277,49 @@
   },
   "PATTERNS_TITLE": {
     "context": "root.rs",
-    "definedIn": "src/patterns/root.rs:46",
+    "definedIn": "src/patterns/root.rs:49",
+    "plural": false,
+    "description": null
+  },
+  "POPOVERS_DESCRIPTION": {
+    "context": "popovers.rs",
+    "definedIn": "src/patterns/popovers.rs:60",
+    "plural": false,
+    "description": null
+  },
+  "POPOVERS_TITLE": {
+    "context": "popovers.rs",
+    "definedIn": "src/patterns/popovers.rs:37",
+    "plural": false,
+    "description": null
+  },
+  "POPOVER_BOTTOM": {
+    "context": "popovers.rs",
+    "definedIn": "src/patterns/popovers.rs:66",
+    "plural": false,
+    "description": null
+  },
+  "POPOVER_INFORMATIONAL": {
+    "context": "popovers.rs",
+    "definedIn": "src/patterns/popovers.rs:123",
+    "plural": false,
+    "description": null
+  },
+  "POPOVER_LEADING": {
+    "context": "popovers.rs",
+    "definedIn": "src/patterns/popovers.rs:102",
+    "plural": false,
+    "description": null
+  },
+  "POPOVER_TOP": {
+    "context": "popovers.rs",
+    "definedIn": "src/patterns/popovers.rs:90",
+    "plural": false,
+    "description": null
+  },
+  "POPOVER_TRAILING": {
+    "context": "popovers.rs",
+    "definedIn": "src/patterns/popovers.rs:78",
     "plural": false,
     "description": null
   },

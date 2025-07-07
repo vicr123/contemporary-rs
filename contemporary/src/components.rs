@@ -10,6 +10,7 @@ pub mod icon;
 pub mod icon_text;
 pub mod layer;
 pub mod pager;
+pub mod popover;
 pub mod progress_bar;
 pub mod scrim;
 pub mod subtitle;

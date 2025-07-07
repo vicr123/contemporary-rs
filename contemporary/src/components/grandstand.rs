@@ -15,7 +15,7 @@ type ClickHandler = Option<Rc<dyn Fn(&ClickEvent, &mut Window, &mut App)>>;
 #[derive(IntoElement)]
 pub struct Grandstand {
     id: ElementId,
-    on_click: ClickHandler,
+    on_back_click: ClickHandler,
     text: SharedString,
     div: Div,
 }
@@ -23,15 +23,18 @@ pub struct Grandstand {
 pub fn grandstand(id: impl Into<ElementId>) -> Grandstand {
     Grandstand {
         id: id.into(),
-        on_click: None,
+        on_back_click: None,
         text: "".into(),
         div: div(),
     }
 }
 
 impl Grandstand {
-    pub fn on_click(mut self, fun: impl Fn(&ClickEvent, &mut Window, &mut App) + 'static) -> Self {
-        self.on_click = Some(Rc::new(fun));
+    pub fn on_back_click(
+        mut self,
+        fun: impl Fn(&ClickEvent, &mut Window, &mut App) + 'static,
+    ) -> Self {
+        self.on_back_click = Some(Rc::new(fun));
         self
     }
 
@@ -57,7 +60,7 @@ impl RenderOnce for Grandstand {
                     .flex()
                     .justify_center()
                     .gap(px(4.))
-                    .when_some(self.on_click, move |div, on_click| {
+                    .when_some(self.on_back_click, move |div, on_click| {
                         div.child(
                             button("back-button")
                                 .flat()
