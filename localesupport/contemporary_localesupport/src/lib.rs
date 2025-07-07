@@ -1,8 +1,11 @@
 mod cldr;
+pub mod locale_formattable;
 
 use crate::cldr::CldrData;
-use icu::locale::Locale as IcuLocale;
+use icu::decimal::DecimalFormatter;
+use icu::decimal::input::Decimal;
 use icu::locale::subtags::{Language, Region};
+use icu::locale::{Locale as IcuLocale, locale};
 use locale_config::Locale as LocaleConfigLocale;
 use std::collections::HashMap;
 use std::fmt::Display;
@@ -188,6 +191,21 @@ impl Locale {
             "{}{string}{}",
             delimiters.alternate_quotation_start, delimiters.alternate_quotation_end
         )
+    }
+
+    fn create_decimal_formatter(&self) -> DecimalFormatter {
+        DecimalFormatter::try_new(self.messages_icu.clone().into(), Default::default())
+            .unwrap_or_else(|_| {
+                DecimalFormatter::try_new(locale!("en").into(), Default::default()).unwrap()
+            })
+    }
+
+    pub fn format_decimal<T>(&self, i: T) -> String
+    where
+        T: Into<Decimal>,
+    {
+        let d = i.into();
+        self.create_decimal_formatter().format_to_string(&d)
     }
 }
 

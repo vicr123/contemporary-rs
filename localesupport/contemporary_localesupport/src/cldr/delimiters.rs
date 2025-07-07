@@ -16,8 +16,8 @@ impl CldrDelimitersData {
                 let mut delimiters = root.main.remove(&range).unwrap().delimiters;
                 if range.starts_with("fr") && delimiters.quotation_start == "«" {
                     delimiters = Delimiters {
-                        quotation_start: "« ".to_string(),
-                        quotation_end: " »".to_string(),
+                        quotation_start: "«\u{A0}".to_string(),
+                        quotation_end: "\u{A0}»".to_string(),
                         alternate_quotation_start: delimiters.alternate_quotation_start,
                         alternate_quotation_end: delimiters.alternate_quotation_end,
                     }

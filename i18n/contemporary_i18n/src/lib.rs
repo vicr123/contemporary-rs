@@ -6,6 +6,7 @@ pub use contemporary_i18n_core::{
     I18nEntry, I18nPluralStringEntry, I18nSource, I18nStringEntry, string::I18nString,
 };
 pub use contemporary_localesupport::Locale;
+pub use contemporary_localesupport::locale_formattable::LocaleFormattable;
 pub use phf;
 
 pub static I18N_MANAGER: Lazy<RwLock<I18nManager>> =

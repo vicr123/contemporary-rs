@@ -3,7 +3,7 @@ use contemporary::components::grandstand::grandstand;
 use contemporary::components::layer::layer;
 use contemporary::components::subtitle::subtitle;
 use contemporary::components::text_field::TextField;
-use contemporary_i18n::{Locale, i18n_manager, tr};
+use contemporary_i18n::{Locale, LocaleFormattable, i18n_manager, tr};
 use gpui::{
     App, AppContext, Context, Entity, IntoElement, ParentElement, Render, Styled, Window, div, px,
 };
@@ -109,6 +109,36 @@ impl Render for I18n {
                                         favourite_song =
                                             locale.quote_string_alternate(quote_strings_text)
                                     )),
+                            ),
+                    )
+                    .child(
+                        layer("i18n-numeric-formats")
+                            .flex()
+                            .flex_col()
+                            .p(px(8.))
+                            .w_full()
+                            .child(subtitle(tr!("I18N_NUMERIC_FORMATS", "Numeric Formats")))
+                            .child(
+                                div()
+                                    .flex()
+                                    .flex_col()
+                                    .gap(px(8.))
+                                    .child(tr!(
+                                        "I18N_NUMERIC_FORMAT_DESCRIPTION",
+                                        "Numbers are formatted in the following manner in this locale:"
+                                    ))
+                                    .child(tr!(
+                                        "I18N_NUMERIC_FORMAT_PI",
+                                        "Pi: {{pi}}",
+                                        pi =
+                                            std::f64::consts::PI.to_locale_string(&locale)
+                                    ))
+                                    .child(tr!(
+                                        "I18N_NUMERIC_FORMAT_NEGATIVE_E",
+                                        "-e: {{e_neg}}",
+                                        e_neg =
+                                            (-std::f64::consts::E).to_locale_string(&locale)
+                                    ))
                             ),
                     ),
             )
