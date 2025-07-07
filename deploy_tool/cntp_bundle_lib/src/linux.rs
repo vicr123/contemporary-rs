@@ -1,6 +1,6 @@
 use crate::icon::get_svg_icon_contents;
 use crate::tool_setup::ToolSetup;
-use contemporary_config::{ContemporaryConfig, LocalisedString};
+use cntp_config::{ContemporaryConfig, LocalisedString};
 use isahc::config::{Configurable, RedirectPolicy};
 use isahc::{Request, RequestExt};
 use resvg::render;
