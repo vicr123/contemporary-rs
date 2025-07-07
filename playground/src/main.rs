@@ -5,6 +5,8 @@ use std::rc::Rc;
 
 use crate::actions::{DarkTheme, LightTheme, SystemTheme, register_actions};
 use crate::main_window::MainWindow;
+use cntp_i18n::{I18N_MANAGER, tr, tr_load};
+use cntp_icon_tool_macros::application_icon;
 use contemporary::application::new_contemporary_application;
 use contemporary::macros::application_details;
 use contemporary::setup::ShowAll;
@@ -15,8 +17,6 @@ use contemporary::{
     setup::{Contemporary, ContemporaryMenus, setup_contemporary},
     window::contemporary_window_options,
 };
-use contemporary_i18n::{I18N_MANAGER, tr, tr_load};
-use contemporary_icon_tool_macros::application_icon;
 use gpui::{App, Bounds, Menu, MenuItem, WindowBounds, WindowOptions, actions, px, size};
 use indexmap::IndexMap;
 use smol_macros::main;

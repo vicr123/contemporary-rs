@@ -2,11 +2,11 @@ use crate::components::buttons::Buttons;
 use crate::components::checkboxes_radio_buttons::CheckboxesRadioButtons;
 use crate::components::progress_bars::ProgressBars;
 use crate::components::text_input::TextInput;
+use cntp_i18n::tr;
 use contemporary::components::grandstand::grandstand;
 use contemporary::components::layer::layer;
 use contemporary::components::pager::pager;
 use contemporary::styling::theme::Theme;
-use contemporary_i18n::tr;
 use gpui::prelude::FluentBuilder;
 use gpui::{
     App, AppContext, Context, Entity, InteractiveElement, IntoElement, ParentElement, Render,

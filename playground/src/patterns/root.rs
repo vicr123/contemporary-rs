@@ -1,11 +1,11 @@
 use crate::patterns::dialog_boxes::DialogBoxes;
 use crate::patterns::i18n::I18n;
 use crate::patterns::popovers::Popovers;
+use cntp_i18n::tr;
 use contemporary::components::grandstand::grandstand;
 use contemporary::components::layer::layer;
 use contemporary::components::pager::pager;
 use contemporary::styling::theme::Theme;
-use contemporary_i18n::tr;
 use gpui::prelude::FluentBuilder;
 use gpui::{
     App, AppContext, Context, Entity, InteractiveElement, IntoElement, ParentElement, Render,

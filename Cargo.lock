@@ -691,8 +691,8 @@ dependencies = [
  "cargo_metadata 0.20.0",
  "clap",
  "clap-verbosity-flag",
- "contemporary_bundle_lib",
- "contemporary_config",
+ "cntp_bundle_lib",
+ "cntp_config",
  "current_platform",
  "open",
  "tracing",
@@ -705,8 +705,8 @@ version = "0.1.0"
 dependencies = [
  "clap",
  "clap-verbosity-flag",
- "contemporary_bundle_lib",
- "contemporary_config",
+ "cntp_bundle_lib",
+ "cntp_config",
  "current_platform",
  "open",
  "tracing",
@@ -722,8 +722,7 @@ dependencies = [
  "clap",
  "clap-cargo",
  "clap-verbosity-flag",
- "contemporary_i18n_gen",
- "syn 2.0.104",
+ "cntp_i18n_gen",
  "tracing",
  "tracing-subscriber",
 ]
@@ -961,6 +960,133 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b94f61472cee1439c0b966b47e3aca9ae07e45d070759512cd390ea2bebc6675"
 
 [[package]]
+name = "cntp_bundle_lib"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "cargo_metadata 0.20.0",
+ "cntp_config",
+ "cntp_icon_tool_core",
+ "current_platform",
+ "image",
+ "isahc",
+ "plist",
+ "regex",
+ "resvg",
+ "tempfile",
+ "tiff 0.10.0",
+ "tracing",
+ "winres-edit",
+]
+
+[[package]]
+name = "cntp_config"
+version = "0.1.0"
+dependencies = [
+ "serde",
+ "serde_json",
+ "toml",
+ "tracing",
+]
+
+[[package]]
+name = "cntp_i18n"
+version = "0.1.0"
+dependencies = [
+ "cntp_i18n_core",
+ "cntp_i18n_macros",
+ "cntp_localesupport",
+ "once_cell",
+ "phf",
+]
+
+[[package]]
+name = "cntp_i18n_core"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "cntp_localesupport",
+ "gpui",
+ "icu",
+ "serde",
+ "serde_json",
+ "toml",
+]
+
+[[package]]
+name = "cntp_i18n_gen"
+version = "0.1.0"
+dependencies = [
+ "cntp_i18n_core",
+ "cntp_i18n_parse",
+ "icu",
+ "itertools 0.14.0",
+ "proc-macro2",
+ "serde_json",
+ "syn 2.0.104",
+ "tracing",
+ "walkdir",
+]
+
+[[package]]
+name = "cntp_i18n_macros"
+version = "0.1.0"
+dependencies = [
+ "cntp_i18n_core",
+ "cntp_i18n_parse",
+ "once_cell",
+ "proc-macro2",
+ "quote",
+ "syn 2.0.104",
+]
+
+[[package]]
+name = "cntp_i18n_parse"
+version = "0.1.0"
+dependencies = [
+ "syn 2.0.104",
+]
+
+[[package]]
+name = "cntp_icon_tool_core"
+version = "0.1.0"
+dependencies = [
+ "regex",
+]
+
+[[package]]
+name = "cntp_icon_tool_macros"
+version = "0.1.0"
+dependencies = [
+ "cntp_config",
+ "cntp_icon_tool_core",
+ "quote",
+ "syn 2.0.104",
+]
+
+[[package]]
+name = "cntp_localesupport"
+version = "0.1.0"
+dependencies = [
+ "icu",
+ "locale_config",
+ "rust-embed",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
+name = "cntp_macros"
+version = "0.1.0"
+dependencies = [
+ "cntp_config",
+ "quote",
+ "serde",
+ "serde_json",
+ "syn 2.0.104",
+]
+
+[[package]]
 name = "cocoa"
 version = "0.25.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1106,10 +1232,10 @@ name = "contemporary"
 version = "0.1.0"
 dependencies = [
  "async-channel 2.3.1",
- "contemporary_config",
- "contemporary_i18n",
- "contemporary_i18n_gen",
- "contemporary_macros",
+ "cntp_config",
+ "cntp_i18n",
+ "cntp_i18n_gen",
+ "cntp_macros",
  "freedesktop-icons",
  "gpui",
  "indexmap",
@@ -1124,141 +1250,6 @@ dependencies = [
  "unicode-segmentation",
  "url",
  "windows 0.61.3",
-]
-
-[[package]]
-name = "contemporary_bundle_lib"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "cargo_metadata 0.20.0",
- "contemporary_config",
- "contemporary_icon_tool_core",
- "current_platform",
- "image",
- "isahc",
- "plist",
- "regex",
- "resvg",
- "tempfile",
- "tiff 0.10.0",
- "tracing",
- "winres-edit",
-]
-
-[[package]]
-name = "contemporary_config"
-version = "0.1.0"
-dependencies = [
- "serde",
- "serde_json",
- "toml",
- "tracing",
-]
-
-[[package]]
-name = "contemporary_i18n"
-version = "0.1.0"
-dependencies = [
- "contemporary_i18n_core",
- "contemporary_i18n_macros",
- "contemporary_localesupport",
- "fxhash",
- "icu",
- "once_cell",
- "phf",
- "serde",
- "serde_json",
-]
-
-[[package]]
-name = "contemporary_i18n_core"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "contemporary_localesupport",
- "gpui",
- "icu",
- "serde",
- "serde_json",
- "toml",
-]
-
-[[package]]
-name = "contemporary_i18n_gen"
-version = "0.1.0"
-dependencies = [
- "contemporary_i18n_core",
- "contemporary_i18n_parse",
- "icu",
- "itertools 0.14.0",
- "proc-macro2",
- "serde",
- "serde_json",
- "syn 2.0.104",
- "tracing",
- "walkdir",
-]
-
-[[package]]
-name = "contemporary_i18n_macros"
-version = "0.1.0"
-dependencies = [
- "contemporary_i18n_core",
- "contemporary_i18n_parse",
- "once_cell",
- "proc-macro2",
- "quote",
- "serde",
- "serde_json",
- "syn 2.0.104",
- "toml",
-]
-
-[[package]]
-name = "contemporary_i18n_parse"
-version = "0.1.0"
-dependencies = [
- "syn 2.0.104",
-]
-
-[[package]]
-name = "contemporary_icon_tool_core"
-version = "0.1.0"
-dependencies = [
- "regex",
-]
-
-[[package]]
-name = "contemporary_icon_tool_macros"
-version = "0.1.0"
-dependencies = [
- "contemporary_config",
- "contemporary_icon_tool_core",
- "quote",
- "syn 2.0.104",
-]
-
-[[package]]
-name = "contemporary_localesupport"
-version = "0.1.0"
-dependencies = [
- "icu",
- "locale_config",
- "rust-embed",
- "serde",
- "serde_json",
-]
-
-[[package]]
-name = "contemporary_macros"
-version = "0.1.0"
-dependencies = [
- "contemporary_config",
- "quote",
- "serde",
- "serde_json",
- "syn 2.0.104",
 ]
 
 [[package]]
@@ -2253,15 +2244,6 @@ dependencies = [
  "pin-project-lite",
  "pin-utils",
  "slab",
-]
-
-[[package]]
-name = "fxhash"
-version = "0.2.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c31b6d751ae2c7f11320402d34e41349dd1016f8d5d45e48c4312bc8625af50c"
-dependencies = [
- "byteorder",
 ]
 
 [[package]]
@@ -4267,10 +4249,10 @@ checksum = "7edddbd0b52d732b21ad9a5fab5c704c14cd949e5e9a1ec5929a24fded1b904c"
 name = "playground"
 version = "0.1.0"
 dependencies = [
+ "cntp_i18n",
+ "cntp_i18n_gen",
+ "cntp_icon_tool_macros",
  "contemporary",
- "contemporary_i18n",
- "contemporary_i18n_gen",
- "contemporary_icon_tool_macros",
  "gpui",
  "indexmap",
  "smol",

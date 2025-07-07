@@ -1,9 +1,9 @@
+use cntp_i18n::{tr, trn};
 use contemporary::components::button::button;
 use contemporary::components::constrainer::constrainer;
 use contemporary::components::grandstand::grandstand;
 use contemporary::components::layer::layer;
 use contemporary::components::subtitle::subtitle;
-use contemporary_i18n::{tr, trn};
 use gpui::{
     App, AppContext, ClickEvent, Context, Entity, IntoElement, ParentElement, Render, Styled,
     Window, div, px,

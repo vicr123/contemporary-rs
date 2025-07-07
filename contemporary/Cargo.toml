@@ -4,9 +4,9 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-contemporary_i18n = { path = "../i18n/contemporary_i18n", features = ["gpui"] }
-contemporary_macros = { path = "../contemporary_macros" }
-contemporary_config = { path = "../contemporary_config" }
+cntp_i18n = { path = "../i18n/cntp_i18n", features = ["gpui"] }
+cntp_macros = { path = "../cntp_macros" }
+cntp_config = { path = "../cntp_config" }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 schemars = "0.8"
@@ -30,4 +30,4 @@ objc2-foundation = "0.3"
 windows = "0.61"
 
 [build-dependencies]
-contemporary_i18n_gen = { path = "../i18n/contemporary_i18n_gen" }
+cntp_i18n_gen = { path = "../i18n/cntp_i18n_gen" }

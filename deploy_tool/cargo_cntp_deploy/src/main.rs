@@ -1,19 +1,19 @@
 use clap::Parser;
 use clap_verbosity_flag::InfoLevel;
 
-use contemporary_bundle_lib::tool_setup::{DeploymentType, setup_tool};
+use cntp_bundle_lib::tool_setup::{DeploymentType, setup_tool};
 use std::path::Path;
 use std::process::exit;
 use tracing::{error, info};
 
 #[cfg(target_os = "linux")]
-use contemporary_bundle_lib::linux::deploy_linux;
+use cntp_bundle_lib::linux::deploy_linux;
 
 #[cfg(target_os = "macos")]
-use contemporary_bundle_lib::macos::deploy::deploy_macos;
+use cntp_bundle_lib::macos::deploy::deploy_macos;
 
 #[cfg(target_os = "windows")]
-use contemporary_bundle_lib::windows::deploy::deploy_windows;
+use cntp_bundle_lib::windows::deploy::deploy_windows;
 
 #[derive(Parser, Debug)]
 #[command(name = "cargo cntp-deploy")] // all of this is necessary so things work as expected wrt. cargo

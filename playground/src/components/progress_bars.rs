@@ -1,9 +1,9 @@
+use cntp_i18n::tr;
 use contemporary::components::constrainer::constrainer;
 use contemporary::components::grandstand::grandstand;
 use contemporary::components::layer::layer;
 use contemporary::components::progress_bar::progress_bar;
 use contemporary::components::subtitle::subtitle;
-use contemporary_i18n::tr;
 use gpui::{
     App, AppContext, Context, Entity, IntoElement, ParentElement, Render, Styled, Window, div, px,
 };

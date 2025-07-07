@@ -4,7 +4,7 @@ use cargo_metadata::camino::Utf8PathBuf;
 use clap::{Parser, Subcommand};
 use clap_cargo::style::CLAP_STYLING;
 use clap_verbosity_flag::InfoLevel;
-use contemporary_i18n_gen::generate;
+use cntp_i18n_gen::generate;
 use tracing::error;
 
 #[derive(Parser, Debug)]

@@ -2,7 +2,7 @@ use crate::application::{ApplicationLink, Details, Versions};
 use crate::components::text_field::bind_text_input_keys;
 use crate::platform_support::setup_platform;
 use crate::styling::theme::Theme;
-use contemporary_i18n::{I18N_MANAGER, i18n_manager, tr, tr_load};
+use cntp_i18n::{I18N_MANAGER, i18n_manager, tr, tr_load};
 use gpui::{Action, App, Global, KeyBinding, Menu, MenuItem, actions};
 use schemars::JsonSchema;
 use serde::Deserialize;
@@ -96,7 +96,7 @@ pub fn setup_contemporary(cx: &mut App, mut application: Contemporary) {
                 HideOthers,
             ),
             MenuItem::action(
-                tr!("APPLE_APP_MENU_SHOW_ALL", "Show All", 
+                tr!("APPLE_APP_MENU_SHOW_ALL", "Show All",
                     #description = "Please use the string that macOS uses for the Show All action in the application menu."),
                 ShowAll,
             ),

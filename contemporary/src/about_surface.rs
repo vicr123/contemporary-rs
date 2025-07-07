@@ -7,7 +7,7 @@ use crate::components::layer::layer;
 use crate::components::subtitle::subtitle;
 use crate::styling::theme::Theme;
 use crate::surface::surface;
-use contemporary_i18n::{Variable, i18n_manager, tr};
+use cntp_i18n::{Variable, i18n_manager, tr};
 use gpui::{
     App, AppContext, ClickEvent, IntoElement, ParentElement, RenderOnce, Styled, Window, div, img,
     px,

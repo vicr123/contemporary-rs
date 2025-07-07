@@ -1,10 +1,10 @@
+use cntp_i18n::tr;
 use contemporary::components::button::button;
 use contemporary::components::constrainer::constrainer;
 use contemporary::components::dialog_box::{StandardButton, dialog_box};
 use contemporary::components::grandstand::grandstand;
 use contemporary::components::layer::layer;
 use contemporary::components::subtitle::subtitle;
-use contemporary_i18n::tr;
 use gpui::prelude::FluentBuilder;
 use gpui::{
     App, AppContext, Context, Entity, IntoElement, ParentElement, Render, Styled, Window, div, px,
@@ -136,7 +136,7 @@ This operation has the potential to cause:
 - Unrecoverable corruption
 
 Only proceed if you are an expert user and fully understand the risks involved. Improper handling could lead to disastrous and irreparable results."#).into(),
-                                                tr!("DIALOG_BOX_NUCLEAR_REACTOR_INFORMATIONAL", 
+                                                tr!("DIALOG_BOX_NUCLEAR_REACTOR_INFORMATIONAL",
                                                     "This is the informative text displayed in grey below the main text. It provides additional context and warnings about the dangerous operation. Attempting this operation without proper expertise and precautions could lead to permanent and devastating damage to your systems and data. Proceed at your own risk."
                                                 ).into(),
                     )

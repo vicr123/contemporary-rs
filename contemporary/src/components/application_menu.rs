@@ -5,7 +5,7 @@ use crate::components::icon_text::icon_text;
 use crate::components::scrim::scrim;
 use crate::setup::{About, OpenLink};
 use crate::styling::theme::{Theme, VariableColor};
-use contemporary_i18n::{i18n_manager, tr};
+use cntp_i18n::{i18n_manager, tr};
 use gpui::prelude::FluentBuilder;
 use gpui::{
     App, AppContext, ClickEvent, Context, Entity, InteractiveElement, IntoElement, Menu, MenuItem,

@@ -1,9 +1,9 @@
+use cntp_i18n::tr;
 use contemporary::components::constrainer::constrainer;
 use contemporary::components::grandstand::grandstand;
 use contemporary::components::layer::layer;
 use contemporary::components::subtitle::subtitle;
 use contemporary::components::text_field::TextField;
-use contemporary_i18n::tr;
 use gpui::{
     App, AppContext, Context, Entity, IntoElement, ParentElement, Render, Styled, Window, div, px,
 };

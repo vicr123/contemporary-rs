@@ -1,0 +1,15 @@
+[package]
+name = "cntp_i18n_gen"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+syn = { workspace = true, features = ["visit", "parsing", "full"] }
+cntp_i18n_core = { path = "../cntp_i18n_core" }
+tracing = { workspace = true }
+cntp_i18n_parse = { path = "../cntp_i18n_parse" }
+walkdir = "2"
+serde_json = { workspace = true, features = ["preserve_order"] }
+icu = { workspace = true }
+itertools = "0.14"
+proc-macro2 = { version = "1", features = ["span-locations"] }

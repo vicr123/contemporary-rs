@@ -1,0 +1,15 @@
+[package]
+name = "cntp_icon_tool_macros"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+name = "cntp_icon_tool_macros"
+path = "src/lib.rs"
+proc-macro = true
+
+[dependencies]
+cntp_icon_tool_core = { path = "../cntp_icon_tool_core" }
+cntp_config = { path = "../../cntp_config" }
+syn = { workspace = true }
+quote = "1"

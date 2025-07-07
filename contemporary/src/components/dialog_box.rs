@@ -3,7 +3,7 @@ use crate::components::icon_text::icon_text;
 use crate::components::layer::layer;
 use crate::components::scrim::{Scrim, scrim};
 use crate::styling::theme::{Theme, VariableColor};
-use contemporary_i18n::tr;
+use cntp_i18n::tr;
 use gpui::prelude::FluentBuilder;
 use gpui::{
     AnyElement, App, ClickEvent, ElementId, InteractiveElement, IntoElement, ParentElement,

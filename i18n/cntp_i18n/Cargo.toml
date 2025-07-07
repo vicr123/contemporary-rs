@@ -1,0 +1,14 @@
+[package]
+name = "cntp_i18n"
+version = "0.1.0"
+edition = "2024"
+
+[features]
+gpui = ["cntp_i18n_core/gpui"]
+
+[dependencies]
+cntp_i18n_core = { path = "../cntp_i18n_core" }
+cntp_i18n_macros = { path = "../cntp_i18n_macros" }
+cntp_localesupport = { path = "../../localesupport/cntp_localesupport" }
+once_cell = { workspace = true }
+phf = { version = "0.12", features = ["macros"] }

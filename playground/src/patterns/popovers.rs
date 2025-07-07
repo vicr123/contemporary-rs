@@ -1,3 +1,4 @@
+use cntp_i18n::tr;
 use contemporary::components::button::button;
 use contemporary::components::constrainer::constrainer;
 use contemporary::components::grandstand::grandstand;
@@ -5,7 +6,6 @@ use contemporary::components::icon_text::icon_text;
 use contemporary::components::layer::layer;
 use contemporary::components::popover::popover;
 use contemporary::components::subtitle::subtitle;
-use contemporary_i18n::tr;
 use gpui::prelude::FluentBuilder;
 use gpui::{
     App, AppContext, Context, Entity, IntoElement, ParentElement, Render, Styled, Window, div, px,

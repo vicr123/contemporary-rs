@@ -1,0 +1,7 @@
+[package]
+name = "cntp_i18n_parse"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+syn = { workspace = true }

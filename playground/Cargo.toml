@@ -4,13 +4,13 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-contemporary_i18n = { path = "../i18n/contemporary_i18n", features = ["gpui"] }
+cntp_i18n = { path = "../i18n/cntp_i18n", features = ["gpui"] }
 contemporary = { path = "../contemporary" }
 gpui = { workspace = true }
 indexmap = { workspace = true }
-contemporary_icon_tool_macros = { path = "../icon_tool/contemporary_icon_tool_macros" }
+cntp_icon_tool_macros = { path = "../icon_tool/cntp_icon_tool_macros" }
 smol = "2"
 smol-macros = "0.1"
 
 [build-dependencies]
-contemporary_i18n_gen = { path = "../i18n/contemporary_i18n_gen" }
+cntp_i18n_gen = { path = "../i18n/cntp_i18n_gen" }

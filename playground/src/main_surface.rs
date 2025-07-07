@@ -2,12 +2,12 @@ use crate::actions::{DarkTheme, LightTheme, SystemTheme};
 use crate::components::root::ComponentsRoot;
 use crate::main_surface::MainSurfaceTab::{Components, Patterns};
 use crate::patterns::root::PatternsRoot;
+use cntp_i18n::tr;
 use contemporary::components::application_menu::ApplicationMenu;
 use contemporary::components::button::button;
 use contemporary::components::pager::pager;
 use contemporary::styling::theme::Theme;
 use contemporary::surface::surface;
-use contemporary_i18n::tr;
 use gpui::{
     App, AppContext, Context, Entity, InteractiveElement, IntoElement, Menu, MenuItem,
     ParentElement, Render, Styled, Window, div, px,
