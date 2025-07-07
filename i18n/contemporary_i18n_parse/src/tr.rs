@@ -2,12 +2,12 @@ use syn::parse::{Parse, ParseStream};
 use syn::punctuated::Punctuated;
 use syn::{LitStr, Token};
 
-use crate::NamedArg;
+use crate::{MaybeFormattedNamedArg, NamedArg};
 
 pub struct TrMacroInput {
     pub translation_id: LitStr,
     pub default_string: Option<LitStr>,
-    pub variables: Punctuated<NamedArg, Token![,]>,
+    pub variables: Punctuated<MaybeFormattedNamedArg, Token![,]>,
     pub context: Punctuated<NamedArg, Token![,]>,
 }
 
@@ -34,10 +34,11 @@ impl Parse for TrMacroInput {
                     input.parse::<Token![#]>()?;
                 }
 
-                let parse_result: NamedArg = input.parse()?;
                 if is_context {
+                    let parse_result: NamedArg = input.parse()?;
                     context.push(parse_result);
                 } else {
+                    let parse_result: MaybeFormattedNamedArg = input.parse()?;
                     variables.push(parse_result);
                 }
             }
