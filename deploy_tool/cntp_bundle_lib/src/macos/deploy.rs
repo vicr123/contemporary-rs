@@ -67,10 +67,28 @@ pub fn deploy_macos(setup_data: &ToolSetup, output_file: &str) {
         exit(1);
     };
 
-    // TODO: Calculate an approximate size for the DMG on the fly
+    // Calculate the size of the app_root folder. Multiply each item by 2 and add 32, and sum it all up.
+    let mut unprocessed_directories = vec![app_root.clone()];
+    let mut total_size = 0;
+    while let Some(directory) = unprocessed_directories.pop() {
+        for entry in read_dir(directory).unwrap() {
+            let entry = entry.unwrap();
+            let ty = entry.file_type().unwrap();
+            if ty.is_dir() {
+                unprocessed_directories.push(entry.path());
+            } else {
+                total_size += entry.metadata().unwrap().len() * 2 + 32;
+            }
+        }
+    }
+
+    if total_size < 52428800 {
+        total_size = 52428800;
+    }
+
     let temp_dir = TempDir::new().expect("Failed to create temporary directory");
     let Ok(editable_disk_image) = DiskImage::new(
-        52428800,
+        total_size,
         &application_name.default_value(),
         temp_dir.path().join("testdmg").with_extension("dmg"),
         "HFS+",
