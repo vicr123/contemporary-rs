@@ -43,6 +43,7 @@ fn mane() {
             |_, cx| {
                 let window = MainWindow::new(cx);
                 let weak_window = window.downgrade();
+                let weak_window_2 = window.downgrade();
 
                 setup_contemporary(
                     cx,
@@ -83,6 +84,12 @@ fn mane() {
                                     cx.notify()
                                 })
                             }),
+                            on_settings: Some(Rc::new(move |cx| {
+                                weak_window_2.upgrade().unwrap().update(cx, |window, cx| {
+                                    window.settings_surface_open(true);
+                                    cx.notify()
+                                })
+                            })),
                         },
                     },
                 );

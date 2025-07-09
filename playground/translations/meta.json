@@ -265,7 +265,7 @@
   },
   "MENU_THEME": {
     "context": "main.rs",
-    "definedIn": "src/main.rs:73",
+    "definedIn": "src/main.rs:74",
     "plural": false,
     "description": null
   },
@@ -341,6 +341,18 @@
     "plural": false,
     "description": null
   },
+  "SETTINGS": {
+    "context": "main_window.rs",
+    "definedIn": "src/main_window.rs:42",
+    "plural": false,
+    "description": null
+  },
+  "SETTINGS_DESCRIPTION": {
+    "context": "main_window.rs",
+    "definedIn": "src/main_window.rs:44",
+    "plural": false,
+    "description": null
+  },
   "TEXT_FIELDS_TITLE": {
     "context": "text_input.rs",
     "definedIn": "src/components/text_input.rs:78",
@@ -367,19 +379,19 @@
   },
   "THEME_DARK": {
     "context": "main.rs",
-    "definedIn": "src/main.rs:77",
+    "definedIn": "src/main.rs:78",
     "plural": false,
     "description": null
   },
   "THEME_LIGHT": {
     "context": "main.rs",
-    "definedIn": "src/main.rs:76",
+    "definedIn": "src/main.rs:77",
     "plural": false,
     "description": null
   },
   "THEME_SYSTEM": {
     "context": "main.rs",
-    "definedIn": "src/main.rs:75",
+    "definedIn": "src/main.rs:76",
     "plural": false,
     "description": null
   }

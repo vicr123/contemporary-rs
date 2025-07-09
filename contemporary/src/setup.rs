@@ -10,7 +10,10 @@ use std::collections::HashMap;
 use std::rc::Rc;
 use std::sync::{Arc, Mutex};
 
-actions!(contemporary, [Quit, HideSelf, HideOthers, ShowAll, About]);
+actions!(
+    contemporary,
+    [Quit, HideSelf, HideOthers, ShowAll, About, Settings]
+);
 
 #[derive(PartialEq, Clone, Default, Deserialize, JsonSchema, Action)]
 pub struct OpenLink {
@@ -26,10 +29,12 @@ pub struct Contemporary {
 pub struct ContemporaryMenus {
     pub menus: Vec<Menu>,
     pub on_about: Rc<dyn Fn(&mut App)>,
+    pub on_settings: Option<Rc<dyn Fn(&mut App)>>,
 }
 
 struct Callbacks {
     pub on_about: Rc<dyn Fn(&mut App)>,
+    pub on_settings: Option<Rc<dyn Fn(&mut App)>>,
 }
 
 impl Global for Callbacks {}
@@ -43,10 +48,12 @@ pub fn setup_contemporary(cx: &mut App, mut application: Contemporary) {
     cx.on_action(hide_others);
     cx.on_action(show_all);
     cx.on_action(about);
+    cx.on_action(settings);
     cx.on_action(open_link);
     cx.bind_keys([KeyBinding::new("cmd-h", HideSelf, None)]);
     cx.bind_keys([KeyBinding::new("cmd-alt-h", HideOthers, None)]);
     cx.bind_keys([KeyBinding::new("cmd-q", Quit, None)]);
+    cx.bind_keys([KeyBinding::new("cmd-,", Settings, None)]);
 
     if let Some(link) = application
         .details
@@ -65,53 +72,70 @@ pub fn setup_contemporary(cx: &mut App, mut application: Contemporary) {
     I18N_MANAGER.write().unwrap().load_source(tr_load!());
     let locale = &i18n_manager!().locale;
 
-    let mut menus = vec![Menu {
-        name: application.details.generatable.application_name
-            .resolve_languages_or_default(&locale.messages).into(),
-        items: vec![
-            MenuItem::action(
-                tr!("APPLE_APP_MENU_ABOUT", "About {{application}}", application=application.details.generatable.application_name
-                                .resolve_languages_or_default(&locale.messages),
-                    #description = "Please use the string that macOS uses for the About action in the application menu."
-                ),
-                About,
+    let mut application_menu_items = vec![
+        MenuItem::action(
+            tr!("APPLE_APP_MENU_ABOUT", "About {{application}}", application=application.details.generatable.application_name
+                            .resolve_languages_or_default(&locale.messages),
+                #description = "Please use the string that macOS uses for the About action in the application menu."
             ),
-            MenuItem::separator(),
-            MenuItem::Submenu(Menu {
-                name: tr!("APPLE_APP_MENU_SERVICES", "Services",
+            About,
+        ),
+        MenuItem::separator(),
+    ];
+    if application.menus.on_settings.is_some() {
+        application_menu_items.push(MenuItem::action(
+            tr!("APPLE_APP_MENU_SETTINGS", "Settings...",
+                    #description = "Please use the string that macOS uses for the Settings action in the application menu. Don't forget the ellipsis at the end."
+                ),
+            Settings,
+        ));
+        application_menu_items.push(MenuItem::separator());
+    }
+    application_menu_items.append(&mut vec![
+        MenuItem::Submenu(Menu {
+            name: tr!("APPLE_APP_MENU_SERVICES", "Services",
                     #description = "Please use the string that macOS uses for the Services action in the application menu."
                 ).into(),
-                items: vec![],
-            }),
-            MenuItem::separator(),
-            MenuItem::action(
-                tr!("APPLE_APP_MENU_HIDE_SELF", "Hide {{application}}", application = application.details.generatable.application_name
+            items: vec![],
+        }),
+        MenuItem::separator(),
+        MenuItem::action(
+            tr!("APPLE_APP_MENU_HIDE_SELF", "Hide {{application}}", application = application.details.generatable.application_name
                                 .resolve_languages_or_default(&locale.messages),
                     #description = "Please use the string that macOS uses for the Hide this application action in the application menu."),
-                HideSelf,
-            ),
-            MenuItem::action(
-                tr!("APPLE_APP_MENU_HIDE_OTHERS", "Hide Others",
+            HideSelf,
+        ),
+        MenuItem::action(
+            tr!("APPLE_APP_MENU_HIDE_OTHERS", "Hide Others",
                     #description = "Please use the string that macOS uses for the Hide Others action in the application menu."),
-                HideOthers,
-            ),
-            MenuItem::action(
-                tr!("APPLE_APP_MENU_SHOW_ALL", "Show All",
+            HideOthers,
+        ),
+        MenuItem::action(
+            tr!("APPLE_APP_MENU_SHOW_ALL", "Show All",
                     #description = "Please use the string that macOS uses for the Show All action in the application menu."),
-                ShowAll,
-            ),
-            MenuItem::separator(),
-            MenuItem::action(
-                tr!(
+            ShowAll,
+        ),
+        MenuItem::separator(),
+        MenuItem::action(
+            tr!(
                     "APPLE_APP_MENU_QUIT",
                     "Quit {{application}}",
                     application = application.details.generatable.application_name
                                 .resolve_languages_or_default(&locale.messages),
                     #description = "Please use the string that macOS uses for the Quit action in the application menu."
                 ),
-                Quit,
-            ),
-        ],
+            Quit,
+        ),
+    ]);
+
+    let mut menus = vec![Menu {
+        name: application
+            .details
+            .generatable
+            .application_name
+            .resolve_languages_or_default(&locale.messages)
+            .into(),
+        items: application_menu_items,
     }];
     let window_menu = application
         .menus
@@ -186,6 +210,7 @@ pub fn setup_contemporary(cx: &mut App, mut application: Contemporary) {
     cx.set_global(Theme::default());
     cx.set_global(Callbacks {
         on_about: application.menus.on_about,
+        on_settings: application.menus.on_settings,
     });
     cx.set_global(Versions {
         contemporary_version: "alpha",
@@ -214,6 +239,13 @@ fn show_all(_: &ShowAll, cx: &mut App) {
 fn about(_: &About, cx: &mut App) {
     let callbacks = cx.global::<Callbacks>();
     callbacks.on_about.clone()(cx);
+}
+
+fn settings(_: &Settings, cx: &mut App) {
+    let callbacks = cx.global::<Callbacks>();
+    if let Some(on_settings) = &callbacks.on_settings {
+        on_settings.clone()(cx);
+    }
 }
 
 fn open_link(action: &OpenLink, cx: &mut App) {

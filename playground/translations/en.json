@@ -59,6 +59,8 @@
   "PROGRESS_BARS_TITLE": "Progress Bars",
   "QUOTE_STRINGS_PLACEHOLDER": "What's your favourite song?",
   "RADIO_BUTTONS_TITLE": "Radio Buttons",
+  "SETTINGS": "Settings",
+  "SETTINGS_DESCRIPTION": "The Settings surface would ordinarily display now.",
   "TEXT_FIELDS_TITLE": "Text Fields",
   "TEXT_FIELD_DISABLED_PLACEHOLDER": "Disabled Text Field",
   "TEXT_FIELD_PLACEHOLDER": "Text Field",

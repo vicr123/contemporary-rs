@@ -10,6 +10,7 @@
   "APPLE_APP_MENU_HIDE_SELF": "Hide {{application}}",
   "APPLE_APP_MENU_QUIT": "Quit {{application}}",
   "APPLE_APP_MENU_SERVICES": "Services",
+  "APPLE_APP_MENU_SETTINGS": "Settings...",
   "APPLE_APP_MENU_SHOW_ALL": "Show All",
   "DIALOG_CANCEL": "Cancel",
   "DIALOG_NO": "No",
