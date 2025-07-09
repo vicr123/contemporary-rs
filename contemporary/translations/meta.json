@@ -145,14 +145,20 @@
   },
   "MENU_HELP": {
     "context": "setup.rs",
-    "definedIn": "src/setup.rs:157",
+    "definedIn": "src/setup.rs:176",
     "plural": false,
     "description": "Please use the string that macOS uses for the Help menu."
   },
   "MENU_HELP_CONTENTS": {
     "context": "setup.rs",
-    "definedIn": "src/setup.rs:127",
+    "definedIn": "src/setup.rs:146",
     "plural": false,
     "description": null
+  },
+  "WINDOW_MENU": {
+    "context": "setup.rs",
+    "definedIn": "src/setup.rs:129",
+    "plural": false,
+    "description": "Please use the string that macOS uses for the Window menu."
   }
 }

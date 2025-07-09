@@ -113,7 +113,26 @@ pub fn setup_contemporary(cx: &mut App, mut application: Contemporary) {
             ),
         ],
     }];
+    let window_menu = application
+        .menus
+        .menus
+        .iter()
+        .position(|menu| menu.name == "Window");
+    if let Some(window_menu_index) = window_menu {
+        let window_menu = &mut application.menus.menus[window_menu_index];
+        window_menu.name = tr!("WINDOW_MENU").into();
+    }
     menus.append(&mut application.menus.menus);
+    if window_menu.is_none() {
+        // Create a default "Window" menu
+        menus.push(Menu {
+            name: tr!("WINDOW_MENU", "Window",
+                #description = "Please use the string that macOS uses for the Window menu."
+            )
+            .into(),
+            items: vec![],
+        })
+    }
 
     let help_menu_items = application
         .details

@@ -24,5 +24,6 @@
   "KEY_SHIFT": "Shift",
   "MENU_GO_BACK": "Back",
   "MENU_HELP": "Help",
-  "MENU_HELP_CONTENTS": "{{application}} Help"
+  "MENU_HELP_CONTENTS": "{{application}} Help",
+  "WINDOW_MENU": "Window"
 }
