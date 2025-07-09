@@ -91,10 +91,9 @@ impl RenderOnce for Button {
                 |div| div.bg(background),
             )
             .flex()
-            .content_center()
+            .items_center()
             .justify_center()
             .p(px(6.0))
-            // .pb(px(4.0))
             .text_color(theme.button_foreground)
             .rounded(theme.border_radius)
             .when(!self.disabled, |div| {
