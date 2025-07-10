@@ -215,6 +215,12 @@
     "plural": false,
     "description": null
   },
+  "I18N_NUMERIC_FORMAT_SPEED_OF_LIGHT": {
+    "context": "i18n.rs",
+    "definedIn": "src/patterns/i18n.rs:143",
+    "plural": false,
+    "description": null
+  },
   "I18N_QUOTE_STRINGS": {
     "context": "i18n.rs",
     "definedIn": "src/patterns/i18n.rs:89",

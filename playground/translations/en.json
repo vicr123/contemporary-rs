@@ -38,6 +38,7 @@
   "I18N_NUMERIC_FORMAT_DESCRIPTION": "Numbers are formatted in the following manner in this locale:",
   "I18N_NUMERIC_FORMAT_NEGATIVE_E": "-e: {{e_neg}}",
   "I18N_NUMERIC_FORMAT_PI": "Pi: {{pi}}",
+  "I18N_NUMERIC_FORMAT_SPEED_OF_LIGHT": "The speed of light: {{speed_of_light}} m/s",
   "I18N_QUOTE_STRINGS": "Quote Strings",
   "I18N_QUOTE_STRING_DESCRIPTION": "Type some text below to see it quoted.",
   "I18N_QUOTE_STRING_QUOTED": "Your favourite song is {{favourite_song}}",

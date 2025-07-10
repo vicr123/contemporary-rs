@@ -139,6 +139,12 @@ impl Render for I18n {
                                         e_neg =
                                             (-std::f64::consts::E).to_locale_string(&locale)
                                     ))
+                                    .child(tr!(
+                                        "I18N_NUMERIC_FORMAT_SPEED_OF_LIGHT",
+                                        "The speed of light: {{speed_of_light}} m/s",
+                                        speed_of_light =
+                                            299_792_458.to_locale_string(&locale)
+                                    ))
                             ),
                     ),
             )
