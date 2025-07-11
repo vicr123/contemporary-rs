@@ -1,3 +1,6 @@
+use crate::platform_support::linux::desktop_environment::DesktopEnvironment;
+use crate::platform_support::linux::gnome::theme::create_gnome_theme;
+use crate::platform_support::linux::kde::theme::create_kde_theme;
 use crate::styling::contemporary::{
     make_contemporary_base_theme, ContemporaryDark, ContemporaryLight,
 };
@@ -32,10 +35,16 @@ pub fn create_linux_theme(theme_type: ThemeType) -> Theme {
 
     Theme {
         theme_type,
-        ..if is_dark_mode {
-            make_contemporary_base_theme::<ContemporaryDark>()
-        } else {
-            make_contemporary_base_theme::<ContemporaryLight>()
+        ..match DesktopEnvironment::current() {
+            Some(DesktopEnvironment::KDE) => create_kde_theme(is_dark_mode),
+            Some(DesktopEnvironment::GNOME) => create_gnome_theme(is_dark_mode),
+            None => {
+                if is_dark_mode {
+                    make_contemporary_base_theme::<ContemporaryDark>()
+                } else {
+                    make_contemporary_base_theme::<ContemporaryLight>()
+                }
+            }
         }
     }
 }

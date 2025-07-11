@@ -4,6 +4,7 @@ use crate::styling::contemporary::{
 };
 use crate::styling::rgb::rgba_tuple;
 use gpui::{Global, Pixels, Rgba};
+use std::rc::Rc;
 
 #[derive(PartialEq, Copy, Clone)]
 pub enum ThemeType {
@@ -12,14 +13,14 @@ pub enum ThemeType {
     Dark,
 }
 
-#[derive(Copy, Clone)]
+#[derive(Clone)]
 pub struct Theme {
     pub theme_type: ThemeType,
 
     pub background: Rgba,
     pub foreground: Rgba,
 
-    pub system_font_family: &'static str,
+    pub system_font_family: String,
     pub system_font_size: Pixels,
     pub heading_font_size: Pixels,
 

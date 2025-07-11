@@ -1,12 +1,12 @@
-use crate::components::base::text_input::TextInput;
 pub use crate::components::base::text_input::bind_text_input_keys;
+use crate::components::base::text_input::TextInput;
 use crate::components::focus_decoration::focus_decoration;
 use crate::styling::theme::Theme;
 use gpui::prelude::FluentBuilder;
 use gpui::{
-    App, AppContext, Context, ElementId, Entity, FocusHandle, Focusable, InteractiveElement,
-    IntoElement, MouseUpEvent, ParentElement, Refineable, Render, SharedString,
-    StatefulInteractiveElement, StyleRefinement, Styled, Window, div, px,
+    div, px, App, AppContext, Context, ElementId, Entity, FocusHandle,
+    Focusable, InteractiveElement, IntoElement, MouseUpEvent, ParentElement, Refineable,
+    Render, SharedString, StatefulInteractiveElement, StyleRefinement, Styled, Window,
 };
 
 pub struct TextField {
@@ -69,6 +69,7 @@ impl Render for TextField {
     fn render(&mut self, window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
         let theme = cx
             .global::<Theme>()
+            .clone()
             .disable_when(self.text_input.read(cx).is_disabled());
 
         let mut david = div()

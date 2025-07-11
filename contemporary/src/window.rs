@@ -1,7 +1,7 @@
 use crate::styling::theme::Theme;
 use gpui::{
-    AnyElement, App, Bounds, Div, IntoElement, ParentElement, RenderOnce, Styled, TitlebarOptions,
-    Window, WindowBounds, WindowDecorations, WindowOptions, div, point, px, size,
+    div, point, px, size, AnyElement, App, Bounds, Div, IntoElement,
+    ParentElement, RenderOnce, Styled, TitlebarOptions, Window, WindowBounds, WindowDecorations, WindowOptions,
 };
 
 #[derive(IntoElement)]
@@ -29,7 +29,7 @@ impl RenderOnce for ContemporaryWindow {
             .text_size(theme.system_font_size)
             .w_full()
             .h_full()
-            .font_family(theme.system_font_family)
+            .font_family(theme.system_font_family.clone())
             .flex()
             .flex_col()
     }

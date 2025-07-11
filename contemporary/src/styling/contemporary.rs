@@ -53,7 +53,7 @@ where
         theme_type: T::TYPE,
         background: T::BACKGROUND,
         foreground: T::FOREGROUND,
-        system_font_family: T::SYSTEM_FONT_FAMILY,
+        system_font_family: T::SYSTEM_FONT_FAMILY.to_string(),
         system_font_size: T::SYSTEM_FONT_SIZE,
         heading_font_size: T::HEADING_FONT_SIZE,
         button_background: T::BUTTON_BACKGROUND,

@@ -1,9 +1,9 @@
-use crate::styling::theme::{Theme, VariableColor, variable_transparent};
+use crate::styling::theme::{variable_transparent, Theme, VariableColor};
 use gpui::prelude::FluentBuilder;
 use gpui::{
-    AnyElement, App, ClickEvent, Div, ElementId, InteractiveElement, IntoElement, ParentElement,
-    RenderOnce, Rgba, Stateful, StatefulInteractiveElement, StyleRefinement, Styled, Window, div,
-    px,
+    div, px, AnyElement, App, ClickEvent, Div, ElementId, InteractiveElement,
+    IntoElement, ParentElement, RenderOnce, Rgba, Stateful, StatefulInteractiveElement, StyleRefinement, Styled,
+    Window,
 };
 
 #[derive(IntoElement)]
@@ -90,7 +90,7 @@ impl InteractiveElement for Button {
 
 impl RenderOnce for Button {
     fn render(self, _window: &mut Window, cx: &mut App) -> impl IntoElement {
-        let theme = cx.global::<Theme>().disable_when(self.disabled);
+        let theme = cx.global::<Theme>().clone().disable_when(self.disabled);
 
         let background = if self.flat {
             variable_transparent()
