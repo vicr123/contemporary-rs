@@ -2,8 +2,8 @@ use crate::application::{ApplicationLink, Details, Versions};
 use crate::components::text_field::bind_text_input_keys;
 use crate::platform_support::setup_platform;
 use crate::styling::theme::Theme;
-use cntp_i18n::{I18N_MANAGER, i18n_manager, tr, tr_load};
-use gpui::{Action, App, Global, KeyBinding, Menu, MenuItem, actions};
+use cntp_i18n::{i18n_manager, tr, tr_load, I18N_MANAGER};
+use gpui::{actions, Action, App, Global, KeyBinding, Menu, MenuItem};
 use schemars::JsonSchema;
 use serde::Deserialize;
 use std::collections::HashMap;
@@ -52,8 +52,8 @@ pub fn setup_contemporary(cx: &mut App, mut application: Contemporary) {
     cx.on_action(open_link);
     cx.bind_keys([KeyBinding::new("cmd-h", HideSelf, None)]);
     cx.bind_keys([KeyBinding::new("cmd-alt-h", HideOthers, None)]);
-    cx.bind_keys([KeyBinding::new("cmd-q", Quit, None)]);
-    cx.bind_keys([KeyBinding::new("cmd-,", Settings, None)]);
+    cx.bind_keys([KeyBinding::new("secondary-q", Quit, None)]);
+    cx.bind_keys([KeyBinding::new("secondary-,", Settings, None)]);
 
     if let Some(link) = application
         .details
