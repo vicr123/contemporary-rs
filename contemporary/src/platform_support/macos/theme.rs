@@ -22,7 +22,7 @@ pub fn create_macos_theme(theme_type: ThemeType) -> Theme {
 
     Theme {
         theme_type,
-        system_font_family: ".AppleSystemUIFont",
+        system_font_family: ".AppleSystemUIFont".to_string(),
         system_font_size: px(13.),
 
         ..{

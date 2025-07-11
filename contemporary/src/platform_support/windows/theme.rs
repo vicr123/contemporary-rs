@@ -1,8 +1,8 @@
 use crate::styling::contemporary::{
-    make_contemporary_base_theme, ContemporaryDark, ContemporaryLight,
+    ContemporaryDark, ContemporaryLight, make_contemporary_base_theme,
 };
 use crate::styling::theme::{Theme, ThemeType};
-use gpui::{px, Rgba};
+use gpui::{Rgba, px};
 use windows::UI::ViewManagement::{UIColorType, UISettings};
 
 pub fn create_windows_theme(theme_type: ThemeType) -> Theme {
@@ -24,7 +24,7 @@ pub fn create_windows_theme(theme_type: ThemeType) -> Theme {
 
     Theme {
         theme_type,
-        system_font_family: "Segoe UI",
+        system_font_family: "Segoe UI".to_string(),
         system_font_size: px(13.),
         button_background: {
             let color = if is_dark_mode {
