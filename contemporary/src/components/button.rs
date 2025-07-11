@@ -2,7 +2,8 @@ use crate::styling::theme::{Theme, VariableColor, variable_transparent};
 use gpui::prelude::FluentBuilder;
 use gpui::{
     AnyElement, App, ClickEvent, Div, ElementId, InteractiveElement, IntoElement, ParentElement,
-    RenderOnce, Stateful, StatefulInteractiveElement, StyleRefinement, Styled, Window, div, px,
+    RenderOnce, Rgba, Stateful, StatefulInteractiveElement, StyleRefinement, Styled, Window, div,
+    px,
 };
 
 #[derive(IntoElement)]
@@ -12,6 +13,9 @@ pub struct Button {
     disabled: bool,
     checked: bool,
     destructive: bool,
+
+    button_color: Option<Rgba>,
+    button_text_color: Option<Rgba>,
 }
 
 pub fn button(id: impl Into<ElementId>) -> Button {
@@ -21,6 +25,8 @@ pub fn button(id: impl Into<ElementId>) -> Button {
         disabled: false,
         checked: false,
         destructive: false,
+        button_color: None,
+        button_text_color: None,
     }
 }
 
@@ -46,6 +52,16 @@ impl Button {
 
     pub fn destructive(mut self) -> Self {
         self.destructive = true;
+        self
+    }
+
+    pub fn button_color(mut self, color: impl Into<Rgba>) -> Self {
+        self.button_color = Some(color.into());
+        self
+    }
+
+    pub fn button_text_color(mut self, color: impl Into<Rgba>) -> Self {
+        self.button_text_color = Some(color.into());
         self
     }
 
@@ -81,7 +97,7 @@ impl RenderOnce for Button {
         } else if self.destructive {
             theme.destructive_accent_color
         } else {
-            theme.button_background
+            self.button_color.unwrap_or(theme.button_background)
         };
 
         self.div
@@ -94,7 +110,7 @@ impl RenderOnce for Button {
             .items_center()
             .justify_center()
             .p(px(6.0))
-            .text_color(theme.button_foreground)
+            .text_color(self.button_text_color.unwrap_or(theme.button_foreground))
             .rounded(theme.border_radius)
             .when(!self.disabled, |div| {
                 div.when(!self.checked, |div| {
