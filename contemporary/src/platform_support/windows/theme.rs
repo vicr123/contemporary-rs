@@ -34,7 +34,13 @@ pub fn create_windows_theme(theme_type: ThemeType) -> Theme {
                 ui_settings.GetColorValue(UIColorType::AccentLight1)
             }
             .unwrap();
-            rgba_tuple(color.R, color.G, color.B, color.A as f32 / 255.)
+            
+            Rgba {
+                r: color.R as f32 / 255.0,
+                g: color.G as f32 / 255.0,
+                b: color.B as f32 / 255.0,
+                a: color.A as f32 / 255.0,
+            };
         },
 
         ..{

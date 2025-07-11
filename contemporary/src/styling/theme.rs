@@ -1,15 +1,9 @@
 use crate::hsv::Hsva;
 use crate::styling::contemporary::{
-    ContemporaryDark, ContemporaryLight, make_contemporary_base_theme,
+    make_contemporary_base_theme, ContemporaryDark, ContemporaryLight,
 };
-use crate::styling::rgb::{rgb_tuple, rgba_tuple};
+use crate::styling::rgb::rgba_tuple;
 use gpui::{Global, Pixels, Rgba};
-
-#[cfg(target_os = "macos")]
-use crate::styling::macos::create_macos_theme;
-
-#[cfg(target_os = "windows")]
-use crate::styling::windows::create_windows_theme;
 
 #[derive(PartialEq, Copy, Clone)]
 pub enum ThemeType {
@@ -163,16 +157,20 @@ impl Theme {
     pub fn default_of_type(theme_type: ThemeType) -> Theme {
         #[cfg(target_os = "macos")]
         {
-            return create_macos_theme(theme_type);
+            return crate::platform_support::macos::theme::create_macos_theme(theme_type);
         }
 
         #[cfg(target_os = "windows")]
         {
-            return create_windows_theme(theme_type);
+            return crate::platform_support::windows::theme::create_windows_theme(theme_type);
+        }
+
+        #[cfg(target_os = "linux")]
+        {
+            return crate::platform_support::linux::theme::create_linux_theme(theme_type);
         }
 
         Self {
-            button_background: rgb_tuple(0, 50, 150),
             ..match theme_type {
                 ThemeType::System => make_contemporary_base_theme::<ContemporaryDark>(),
                 ThemeType::Light => make_contemporary_base_theme::<ContemporaryLight>(),

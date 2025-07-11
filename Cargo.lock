@@ -1231,6 +1231,7 @@ dependencies = [
 name = "contemporary"
 version = "0.1.0"
 dependencies = [
+ "ashpd",
  "async-channel 2.5.0",
  "cntp_config",
  "cntp_i18n",
