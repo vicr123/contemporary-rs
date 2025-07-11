@@ -3,10 +3,10 @@ use once_cell::sync::Lazy;
 use std::sync::RwLock;
 
 pub use cntp_i18n_core::{
-    I18nEntry, I18nPluralStringEntry, I18nSource, I18nStringEntry, string::I18nString,
+    string::I18nString, I18nEntry, I18nPluralStringEntry, I18nSource, I18nStringEntry,
 };
-pub use cntp_localesupport::Locale;
 pub use cntp_localesupport::locale_formattable::LocaleFormattable;
+pub use cntp_localesupport::Locale;
 pub use phf;
 
 pub static I18N_MANAGER: Lazy<RwLock<I18nManager>> =
@@ -67,6 +67,11 @@ impl I18nManager {
                     }
                 }
             };
+
+            // If the translation is empty, fall back to the next source
+            if resolved.is_empty() {
+                continue;
+            }
 
             // Substitute the variables
             for (name, substitution) in variables.into_iter() {

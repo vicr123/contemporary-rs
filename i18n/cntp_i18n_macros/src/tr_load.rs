@@ -60,50 +60,60 @@ pub fn tr_load(_body: TokenStream) -> TokenStream {
         let language = file.file_stem().unwrap().to_str().unwrap();
         let decoded_file = load::translation(&file).unwrap();
         for (key, entry) in decoded_file {
-            strings.push(match entry {
+            if let Some(token_stream) = match entry {
                 load::TranslationEntry::Entry(string) => {
-                    let matched_string = match_line_endings(string.as_str());
-                    quote! {
-                        #key => I18nEntry::Entry(I18nStringEntry {
-                            entry: I18nString::Borrowed(#matched_string),
+                    if string.is_empty() {
+                        None
+                    } else {
+                        let matched_string = match_line_endings(string.as_str());
+                        Some(quote! {
+                            #key => I18nEntry::Entry(I18nStringEntry {
+                                entry: I18nString::Borrowed(#matched_string),
+                            })
                         })
                     }
                 }
                 load::TranslationEntry::PluralEntry(items) => {
-                    let other = items.get("other");
-                    let Some(other) = other else {
-                        panic!(
-                            "Translation key {key} for language {language} has plural entry \
+                    if items.iter().all(|(key, value)| value.is_empty()) {
+                        None
+                    } else {
+                        let other = items.get("other");
+                        let Some(other) = other else {
+                            panic!(
+                                "Translation key {key} for language {language} has plural entry \
                             without other",
-                        )
-                        // return ParseBuffer::error(format!(
-                        //     "Translation key {} has plural entry without other",
-                        //     variable.name.to_string(),
-                        //     input.translation_id.value()
-                        // ))
-                        // .to_compile_error()
-                        // .into();
-                    };
+                            )
+                            // return ParseBuffer::error(format!(
+                            //     "Translation key {} has plural entry without other",
+                            //     variable.name.to_string(),
+                            //     input.translation_id.value()
+                            // ))
+                            // .to_compile_error()
+                            // .into();
+                        };
 
-                    let zero = extract_plural_rule!(items, zero);
-                    let one = extract_plural_rule!(items, one);
-                    let two = extract_plural_rule!(items, two);
-                    let few = extract_plural_rule!(items, few);
-                    let many = extract_plural_rule!(items, many);
+                        let zero = extract_plural_rule!(items, zero);
+                        let one = extract_plural_rule!(items, one);
+                        let two = extract_plural_rule!(items, two);
+                        let few = extract_plural_rule!(items, few);
+                        let many = extract_plural_rule!(items, many);
 
-                    quote! {
-                        #key => I18nEntry::PluralEntry(I18nPluralStringEntry {
-                            locale: I18nString::Borrowed(#language),
-                            #zero,
-                            #one,
-                            #two,
-                            #few,
-                            #many,
-                            other: I18nString::Borrowed(#other)
+                        Some(quote! {
+                            #key => I18nEntry::PluralEntry(I18nPluralStringEntry {
+                                locale: I18nString::Borrowed(#language),
+                                #zero,
+                                #one,
+                                #two,
+                                #few,
+                                #many,
+                                other: I18nString::Borrowed(#other)
+                            })
                         })
                     }
                 }
-            })
+            } {
+                strings.push(token_stream);
+            }
         }
 
         language_map.push(quote! {
