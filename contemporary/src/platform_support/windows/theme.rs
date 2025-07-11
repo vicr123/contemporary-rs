@@ -1,9 +1,8 @@
 use crate::styling::contemporary::{
-    ContemporaryDark, ContemporaryLight, make_contemporary_base_theme,
+    make_contemporary_base_theme, ContemporaryDark, ContemporaryLight,
 };
-use crate::styling::rgb::rgba_tuple;
 use crate::styling::theme::{Theme, ThemeType};
-use gpui::{Rgba, px};
+use gpui::{px, Rgba};
 use windows::UI::ViewManagement::{UIColorType, UISettings};
 
 pub fn create_windows_theme(theme_type: ThemeType) -> Theme {
@@ -34,13 +33,13 @@ pub fn create_windows_theme(theme_type: ThemeType) -> Theme {
                 ui_settings.GetColorValue(UIColorType::AccentLight1)
             }
             .unwrap();
-            
+
             Rgba {
                 r: color.R as f32 / 255.0,
                 g: color.G as f32 / 255.0,
                 b: color.B as f32 / 255.0,
                 a: color.A as f32 / 255.0,
-            };
+            }
         },
 
         ..{
