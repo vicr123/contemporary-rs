@@ -1,9 +1,9 @@
 use crate::transition::float_transition_element::TransitionExt;
 use gpui::prelude::FluentBuilder;
 use gpui::{
-    Animation, AnyElement, App, ClickEvent, Div, ElementId, InteractiveElement, IntoElement,
-    ParentElement, RenderOnce, Stateful, StatefulInteractiveElement, Styled, Window, anchored,
-    black, deferred, div, point, px,
+    anchored, black, deferred, div, point, px, Animation, AnyElement,
+    App, ClickEvent, Div, ElementId, InteractiveElement, IntoElement, ParentElement,
+    RenderOnce, Stateful, StatefulInteractiveElement, Styled, Window,
 };
 use std::time::Duration;
 
@@ -44,7 +44,7 @@ impl RenderOnce for Scrim {
                 .w(window_size.width)
                 .h(window_size.height)
                 .child(
-                    div()
+                    self.scrim_div
                         .absolute()
                         .bg(black())
                         .w_full()
