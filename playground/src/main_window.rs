@@ -5,7 +5,6 @@ use contemporary::components::dialog_box::{StandardButton, dialog_box};
 use contemporary::components::pager::lift_animation::LiftAnimation;
 use contemporary::components::pager::pager;
 use contemporary::window::contemporary_window;
-use gpui::prelude::FluentBuilder;
 use gpui::{App, AppContext, Context, Entity, IntoElement, ParentElement, Render, Styled, Window};
 
 pub struct MainWindow {
@@ -52,22 +51,21 @@ impl Render for MainWindow {
                             .into_any_element(),
                     ),
             )
-            .when(self.is_settings_surface_open, |w| {
-                w.child(
-                    dialog_box("settings-surface")
-                        .title(tr!("SETTINGS", "Settings").into())
-                        .content(tr!(
-                            "SETTINGS_DESCRIPTION",
-                            "The Settings surface would ordinarily display now."
-                        ))
-                        .standard_button(
-                            StandardButton::Ok,
-                            cx.listener(|this, _, _, cx| {
-                                this.is_settings_surface_open = false;
-                                cx.notify();
-                            }),
-                        ),
-                )
-            })
+            .child(
+                dialog_box("settings-surface")
+                    .visible(self.is_settings_surface_open)
+                    .title(tr!("SETTINGS", "Settings").into())
+                    .content(tr!(
+                        "SETTINGS_DESCRIPTION",
+                        "The Settings surface would ordinarily display now."
+                    ))
+                    .standard_button(
+                        StandardButton::Ok,
+                        cx.listener(|this, _, _, cx| {
+                            this.is_settings_surface_open = false;
+                            cx.notify();
+                        }),
+                    ),
+            )
     }
 }
