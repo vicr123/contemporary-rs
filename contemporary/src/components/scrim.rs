@@ -1,21 +1,37 @@
+use crate::transition::float_transition_element::TransitionExt;
+use gpui::prelude::FluentBuilder;
 use gpui::{
-    AnyElement, App, ClickEvent, Div, Element, ElementId, InteractiveElement, IntoElement,
+    Animation, AnyElement, App, ClickEvent, Div, ElementId, InteractiveElement, IntoElement,
     ParentElement, RenderOnce, Stateful, StatefulInteractiveElement, Styled, Window, anchored,
-    deferred, div, point, px, rgba,
+    black, deferred, div, point, px,
 };
+use std::time::Duration;
 
 #[derive(IntoElement)]
 pub struct Scrim {
-    div: Stateful<Div>,
+    root_div: Stateful<Div>,
+    scrim_div: Stateful<Div>,
+    child_div: Div,
+    visible: bool,
 }
 
 pub fn scrim(id: impl Into<ElementId>) -> Scrim {
-    Scrim { div: div().id(id) }
+    Scrim {
+        root_div: div().id(id),
+        scrim_div: div().id("scrim"),
+        child_div: div(),
+        visible: false,
+    }
 }
 
 impl Scrim {
     pub fn on_click(mut self, fun: impl Fn(&ClickEvent, &mut Window, &mut App) + 'static) -> Self {
-        self.div = self.div.on_click(fun);
+        self.scrim_div = self.scrim_div.on_click(fun);
+        self
+    }
+
+    pub fn visible(mut self, visible: bool) -> Self {
+        self.visible = visible;
         self
     }
 }
@@ -24,18 +40,35 @@ impl RenderOnce for Scrim {
     fn render(self, window: &mut Window, cx: &mut App) -> impl IntoElement {
         let window_size = window.viewport_size();
         anchored().position(point(px(0.), px(0.))).child(deferred(
-            div()
+            self.root_div
                 .w(window_size.width)
                 .h(window_size.height)
-                .bg(rgba(0x00000090))
-                .occlude()
-                .child(self.div.w_full().h_full()),
+                .child(
+                    div()
+                        .absolute()
+                        .bg(black())
+                        .w_full()
+                        .h_full()
+                        .with_transition(
+                            "scrim-transition",
+                            if self.visible { 0.7 } else { 0. },
+                            Animation::new(Duration::from_millis(250)),
+                            |div, opacity| {
+                                div.opacity(opacity).when_else(
+                                    opacity == 0.,
+                                    |div| div.invisible(),
+                                    |div| div.occlude(),
+                                )
+                            },
+                        ),
+                )
+                .child(self.child_div.absolute().w_full().h_full()),
         ))
     }
 }
 
 impl ParentElement for Scrim {
     fn extend(&mut self, elements: impl IntoIterator<Item = AnyElement>) {
-        self.div.extend(elements);
+        self.child_div.extend(elements);
     }
 }

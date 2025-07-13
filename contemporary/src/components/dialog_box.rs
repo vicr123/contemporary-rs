@@ -16,6 +16,7 @@ pub struct DialogBox {
     title: Option<SharedString>,
     content: AnyElement,
     buttons: Vec<Button>,
+    visible: bool,
 }
 
 pub enum StandardButton {
@@ -48,6 +49,7 @@ pub fn dialog_box(id: impl Into<ElementId>) -> DialogBox {
         title: None,
         content: div().into_any_element(),
         buttons: vec![],
+        visible: false,
     }
 }
 
@@ -97,6 +99,11 @@ impl DialogBox {
             .push(standard_button.button().on_click(callback));
         self
     }
+
+    pub fn visible(mut self, visible: bool) -> Self {
+        self.visible = visible;
+        self
+    }
 }
 
 impl RenderOnce for DialogBox {
@@ -108,34 +115,36 @@ impl RenderOnce for DialogBox {
             move |layer, button| layer.child(button.flex_grow()),
         );
 
-        self.scrim.child(
+        self.scrim.visible(self.visible).child(
             div()
                 .flex()
                 .w_full()
                 .h_full()
                 .items_center()
                 .justify_center()
-                .child(
-                    div()
-                        .bg(theme.background)
-                        .border_color(theme.border_color)
-                        .border(px(1.))
-                        .rounded(theme.border_radius)
-                        .max_w(relative(0.9))
-                        .flex()
-                        .flex_col()
-                        .occlude()
-                        .when_some(self.title, |david, title| {
-                            david.child(
-                                layer("title-layer")
-                                    .p(px(9.))
-                                    .text_size(theme.heading_font_size)
-                                    .child(title),
-                            )
-                        })
-                        .child(div().p(px(9.)).child(self.content))
-                        .child(buttons_layer),
-                ),
+                .when(self.visible, |david| {
+                    david.child(
+                        div()
+                            .bg(theme.background)
+                            .border_color(theme.border_color)
+                            .border(px(1.))
+                            .rounded(theme.border_radius)
+                            .max_w(relative(0.9))
+                            .flex()
+                            .flex_col()
+                            .occlude()
+                            .when_some(self.title, |david, title| {
+                                david.child(
+                                    layer("title-layer")
+                                        .p(px(9.))
+                                        .text_size(theme.heading_font_size)
+                                        .child(title),
+                                )
+                            })
+                            .child(div().p(px(9.)).child(self.content))
+                            .child(buttons_layer),
+                    )
+                }),
         )
     }
 }

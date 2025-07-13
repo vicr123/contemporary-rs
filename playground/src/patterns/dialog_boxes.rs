@@ -5,7 +5,6 @@ use contemporary::components::dialog_box::{StandardButton, dialog_box};
 use contemporary::components::grandstand::grandstand;
 use contemporary::components::layer::layer;
 use contemporary::components::subtitle::subtitle;
-use gpui::prelude::FluentBuilder;
 use gpui::{
     App, AppContext, Context, Entity, IntoElement, ParentElement, Render, Styled, Window, div, px,
 };
@@ -79,55 +78,50 @@ impl Render for DialogBoxes {
                             ),
                     ),
             )
-            .when(self.informational_dialog_open, |div| {
-                div.child(dialog_box("informational-dialog-box")
-                    .title(
-                        tr!("DIALOG_BOX_INFORMATIONAL_TITLE", "Message Box Title").into()
-                    )
-                    .content(
-                        tr!("DIALOG_BOX_INFORMATIONAL_CONTENT", "This is the main text of the message box. It conveys the primary information or message that needs to be communicated to the user.")
-                    )
-                    .standard_button(StandardButton::Ok, cx.listener(|this, _, _, cx| {
-                        this.informational_dialog_open = false;
-                        cx.notify()
-                    }))
-                    .on_click_outside(cx.listener(|this, _, _, cx| {
-                        this.informational_dialog_open = false;
-                        cx.notify()
-                    }))
+            .child(dialog_box("informational-dialog-box").visible(self.informational_dialog_open)
+                .title(
+                    tr!("DIALOG_BOX_INFORMATIONAL_TITLE", "Message Box Title").into()
                 )
-            })
-            .when(self.goblin_dialog_box_open, |div| {
-                div.child(dialog_box("goblin-dialog-box")
-                    .content(
-                        tr!("DIALOG_BOX_GOBLIN_CONTENT", r#"After battling through hordes of goblins, you finally stand before the throne of the Goblin King himself. The grotesque creature eyes you with contempt from his towering seat.
+                .content(
+                    tr!("DIALOG_BOX_INFORMATIONAL_CONTENT", "This is the main text of the message box. It conveys the primary information or message that needs to be communicated to the user.")
+                )
+                .standard_button(StandardButton::Ok, cx.listener(|this, _, _, cx| {
+                    this.informational_dialog_open = false;
+                    cx.notify()
+                }))
+                .on_click_outside(cx.listener(|this, _, _, cx| {
+                    this.informational_dialog_open = false;
+                    cx.notify()
+                }))
+            )
+            .child(dialog_box("goblin-dialog-box").visible(self.goblin_dialog_box_open)
+                .content(
+                    tr!("DIALOG_BOX_GOBLIN_CONTENT", r#"After battling through hordes of goblins, you finally stand before the throne of the Goblin King himself. The grotesque creature eyes you with contempt from his towering seat.
 
 "So, you're the meddlesome adventurer who's been causing trouble in my kingdom, he growls. I'll give you one chance to save your miserable hide. Swear fealty to me, and I'll let you live as my servant. Refuse, and you'll spend the rest of your days in the darkest pit of my dungeons!"
 
 The Goblin King leans forward, his putrid breath washing over you as he awaits your answer. The weight of your decision could shape the fate of the entire goblin realm."#
                         ))
-                    .button(
-                        button("refuse-button")
-                            .child(tr!("DIALOG_BOX_GOBLIN_REFUSE", "Refuse"))
-                            .on_click(cx.listener(|this, _, _, cx| {
-                                this.goblin_dialog_box_open = false;
-                                cx.notify()
-                            })),
-                    ).button(
-                    button("swear-fealty-button")
-                        .child(tr!("DIALOG_BOX_GOBLIN_SWEAR_FEALTY", "Swear Fealty"))
+                .button(
+                    button("refuse-button")
+                        .child(tr!("DIALOG_BOX_GOBLIN_REFUSE", "Refuse"))
                         .on_click(cx.listener(|this, _, _, cx| {
                             this.goblin_dialog_box_open = false;
-                        }))
+                            cx.notify()
+                        })),
+                ).button(
+                button("swear-fealty-button")
+                    .child(tr!("DIALOG_BOX_GOBLIN_SWEAR_FEALTY", "Swear Fealty"))
+                    .on_click(cx.listener(|this, _, _, cx| {
+                        this.goblin_dialog_box_open = false;
+                    }))
+            )
+            )
+            .child(dialog_box("nuclear-reactor-dialog-box").visible(self.nuclear_reactor_dialog_box_open)
+                .title(
+                    tr!("DIALOG_BOX_NUCLEAR_REACTOR_TITLE", "Danger! Extremely Hazardous Operation!").into()
                 )
-                )
-            })
-            .when(self.nuclear_reactor_dialog_box_open, |div| {
-                div.child(dialog_box("nuclear-reactor-dialog-box")
-                    .title(
-                        tr!("DIALOG_BOX_NUCLEAR_REACTOR_TITLE", "Danger! Extremely Hazardous Operation!").into()
-                    )
-                    .content_text_informational(tr!("DIALOG_BOX_NUCLEAR_REACTOR_CONTENT", r#"You are attempting to perform an extremely hazardous operation that could result in catastrophic consequences if not executed with extreme caution.
+                .content_text_informational(tr!("DIALOG_BOX_NUCLEAR_REACTOR_CONTENT", r#"You are attempting to perform an extremely hazardous operation that could result in catastrophic consequences if not executed with extreme caution.
 
 This operation has the potential to cause:
 - Complete data loss
@@ -136,19 +130,18 @@ This operation has the potential to cause:
 - Unrecoverable corruption
 
 Only proceed if you are an expert user and fully understand the risks involved. Improper handling could lead to disastrous and irreparable results."#).into(),
-                                                tr!("DIALOG_BOX_NUCLEAR_REACTOR_INFORMATIONAL",
+                                            tr!("DIALOG_BOX_NUCLEAR_REACTOR_INFORMATIONAL",
                                                     "This is the informative text displayed in grey below the main text. It provides additional context and warnings about the dangerous operation. Attempting this operation without proper expertise and precautions could lead to permanent and devastating damage to your systems and data. Proceed at your own risk."
                                                 ).into(),
-                    )
-                    .standard_button(StandardButton::Cancel, cx.listener(|this, _, _, cx| {
-                        this.nuclear_reactor_dialog_box_open = false;
-                        cx.notify()
-                    }))
-                    .button(StandardButton::Ok.button().destructive().on_click(cx.listener(|this, _, _, cx| {
-                        this.nuclear_reactor_dialog_box_open = false;
-                        cx.notify()
-                    })))
                 )
-            })
+                .standard_button(StandardButton::Cancel, cx.listener(|this, _, _, cx| {
+                    this.nuclear_reactor_dialog_box_open = false;
+                    cx.notify()
+                }))
+                .button(StandardButton::Ok.button().destructive().on_click(cx.listener(|this, _, _, cx| {
+                    this.nuclear_reactor_dialog_box_open = false;
+                    cx.notify()
+                })))
+            )
     }
 }

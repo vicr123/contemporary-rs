@@ -62,10 +62,7 @@ impl Render for Popovers {
                                     ))
                                     .child(
                                         button("bottom-popover")
-                                            .child(tr!(
-                                                "POPOVER_BOTTOM",
-                                                "Bottom Popover"
-                                            ))
+                                            .child(tr!("POPOVER_BOTTOM", "Bottom Popover"))
                                             .on_click(cx.listener(|this, _, _, cx| {
                                                 this.informational_popover_open = true;
                                                 this.informational_popover_side = 1;
@@ -74,10 +71,7 @@ impl Render for Popovers {
                                     )
                                     .child(
                                         button("trailing-popover")
-                                            .child(tr!(
-                                                "POPOVER_TRAILING",
-                                                "Trailing Popover"
-                                            ))
+                                            .child(tr!("POPOVER_TRAILING", "Trailing Popover"))
                                             .on_click(cx.listener(|this, _, _, cx| {
                                                 this.informational_popover_open = true;
                                                 this.informational_popover_side = 3;
@@ -86,10 +80,7 @@ impl Render for Popovers {
                                     )
                                     .child(
                                         button("top-popover")
-                                            .child(tr!(
-                                                "POPOVER_TOP",
-                                                "Top Popover"
-                                            ))
+                                            .child(tr!("POPOVER_TOP", "Top Popover"))
                                             .on_click(cx.listener(|this, _, _, cx| {
                                                 this.informational_popover_open = true;
                                                 this.informational_popover_side = 0;
@@ -98,22 +89,33 @@ impl Render for Popovers {
                                     )
                                     .child(
                                         button("leading-popover")
-                                            .child(tr!(
-                                                "POPOVER_LEADING",
-                                                "Leading Popover"
-                                            ))
+                                            .child(tr!("POPOVER_LEADING", "Leading Popover"))
                                             .on_click(cx.listener(|this, _, _, cx| {
                                                 this.informational_popover_open = true;
                                                 this.informational_popover_side = 2;
                                                 cx.notify()
                                             })),
-                                    )
+                                    ),
                             ),
                     ),
             )
-            .when(self.informational_popover_open, |david| {
-                david.child(
-                    popover("informational-popover").size_neg(100.).when(self.informational_popover_side == 0, |popover| popover.anchor_top()).when(self.informational_popover_side == 1, |popover| popover.anchor_bottom()).when(self.informational_popover_side == 2, |popover| popover.anchor_leading()).when(self.informational_popover_side == 3, |popover| popover.anchor_trailing()).content(
+            .child(
+                popover("informational-popover")
+                    .visible(self.informational_popover_open)
+                    .size_neg(100.)
+                    .when(self.informational_popover_side == 0, |popover| {
+                        popover.anchor_top()
+                    })
+                    .when(self.informational_popover_side == 1, |popover| {
+                        popover.anchor_bottom()
+                    })
+                    .when(self.informational_popover_side == 2, |popover| {
+                        popover.anchor_leading()
+                    })
+                    .when(self.informational_popover_side == 3, |popover| {
+                        popover.anchor_trailing()
+                    })
+                    .content(
                         div()
                             .flex()
                             .flex_col()
@@ -122,9 +124,9 @@ impl Render for Popovers {
                                 grandstand("informational-popover-grandstand")
                                     .text(tr!("POPOVER_INFORMATIONAL", "Informational Popover"))
                                     .on_back_click(cx.listener(|this, _, _, cx| {
-                                    this.informational_popover_open = false;
-                                    cx.notify()
-                                })),
+                                        this.informational_popover_open = false;
+                                        cx.notify()
+                                    })),
                             )
                             .child(
                                 constrainer("informational-dialog-box-constrainer").child(
@@ -158,7 +160,6 @@ impl Render for Popovers {
                                 ),
                             ),
                     ),
-                )
-            })
+            )
     }
 }

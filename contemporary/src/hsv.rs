@@ -105,8 +105,9 @@ impl From<Hsla> for Hsva {
 }
 
 impl Lerpable for Hsva {
-    fn lerp(self, with: Self, t: f32) -> Self {
-        let rgb: Rgba = self.into();
-        rgb.lerp(with.into(), t).into()
+    fn lerp(&self, with: &Self, t: f32) -> Self {
+        let rgb: Rgba = self.clone().into();
+        let other_rgb: Rgba = with.clone().into();
+        rgb.lerp(&other_rgb, t).into()
     }
 }

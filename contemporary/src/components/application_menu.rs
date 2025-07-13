@@ -51,6 +51,7 @@ impl Render for ApplicationMenu {
 
         div().child(
             scrim("application-menu")
+                .visible(self.is_open)
                 .on_click(cx.listener(|this, _, _, cx| {
                     this.set_open(false);
                     cx.notify();

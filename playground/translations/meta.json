@@ -91,7 +91,7 @@
   },
   "CLOSE": {
     "context": "popovers.rs",
-    "definedIn": "src/patterns/popovers.rs:150",
+    "definedIn": "src/patterns/popovers.rs:152",
     "plural": false,
     "description": null
   },
@@ -109,79 +109,79 @@
   },
   "DIALOG_BOXES_DESCRIPTION": {
     "context": "dialog_boxes.rs",
-    "definedIn": "src/patterns/dialog_boxes.rs:57",
+    "definedIn": "src/patterns/dialog_boxes.rs:56",
     "plural": false,
     "description": null
   },
   "DIALOG_BOXES_TITLE": {
     "context": "dialog_boxes.rs",
-    "definedIn": "src/patterns/dialog_boxes.rs:38",
+    "definedIn": "src/patterns/dialog_boxes.rs:37",
     "plural": false,
     "description": null
   },
   "DIALOG_BOX_GOBLIN": {
     "context": "dialog_boxes.rs",
-    "definedIn": "src/patterns/dialog_boxes.rs:70",
+    "definedIn": "src/patterns/dialog_boxes.rs:69",
     "plural": false,
     "description": null
   },
   "DIALOG_BOX_GOBLIN_CONTENT": {
     "context": "dialog_boxes.rs",
-    "definedIn": "src/patterns/dialog_boxes.rs:103",
+    "definedIn": "src/patterns/dialog_boxes.rs:99",
     "plural": false,
     "description": null
   },
   "DIALOG_BOX_GOBLIN_REFUSE": {
     "context": "dialog_boxes.rs",
-    "definedIn": "src/patterns/dialog_boxes.rs:111",
+    "definedIn": "src/patterns/dialog_boxes.rs:107",
     "plural": false,
     "description": null
   },
   "DIALOG_BOX_GOBLIN_SWEAR_FEALTY": {
     "context": "dialog_boxes.rs",
-    "definedIn": "src/patterns/dialog_boxes.rs:118",
+    "definedIn": "src/patterns/dialog_boxes.rs:114",
     "plural": false,
     "description": null
   },
   "DIALOG_BOX_INFORMATIONAL": {
     "context": "dialog_boxes.rs",
-    "definedIn": "src/patterns/dialog_boxes.rs:61",
+    "definedIn": "src/patterns/dialog_boxes.rs:60",
     "plural": false,
     "description": null
   },
   "DIALOG_BOX_INFORMATIONAL_CONTENT": {
     "context": "dialog_boxes.rs",
-    "definedIn": "src/patterns/dialog_boxes.rs:88",
+    "definedIn": "src/patterns/dialog_boxes.rs:86",
     "plural": false,
     "description": null
   },
   "DIALOG_BOX_INFORMATIONAL_TITLE": {
     "context": "dialog_boxes.rs",
-    "definedIn": "src/patterns/dialog_boxes.rs:85",
+    "definedIn": "src/patterns/dialog_boxes.rs:83",
     "plural": false,
     "description": null
   },
   "DIALOG_BOX_NUCLEAR_REACTOR": {
     "context": "dialog_boxes.rs",
-    "definedIn": "src/patterns/dialog_boxes.rs:75",
+    "definedIn": "src/patterns/dialog_boxes.rs:74",
     "plural": false,
     "description": null
   },
   "DIALOG_BOX_NUCLEAR_REACTOR_CONTENT": {
     "context": "dialog_boxes.rs",
-    "definedIn": "src/patterns/dialog_boxes.rs:130",
+    "definedIn": "src/patterns/dialog_boxes.rs:124",
     "plural": false,
     "description": null
   },
   "DIALOG_BOX_NUCLEAR_REACTOR_INFORMATIONAL": {
     "context": "dialog_boxes.rs",
-    "definedIn": "src/patterns/dialog_boxes.rs:139",
+    "definedIn": "src/patterns/dialog_boxes.rs:133",
     "plural": false,
     "description": null
   },
   "DIALOG_BOX_NUCLEAR_REACTOR_TITLE": {
     "context": "dialog_boxes.rs",
-    "definedIn": "src/patterns/dialog_boxes.rs:128",
+    "definedIn": "src/patterns/dialog_boxes.rs:122",
     "plural": false,
     "description": null
   },
@@ -265,7 +265,7 @@
   },
   "INFORMATIONAL_POPOVER_DESCRIPTION": {
     "context": "popovers.rs",
-    "definedIn": "src/patterns/popovers.rs:143",
+    "definedIn": "src/patterns/popovers.rs:145",
     "plural": false,
     "description": null
   },
@@ -301,31 +301,31 @@
   },
   "POPOVER_BOTTOM": {
     "context": "popovers.rs",
-    "definedIn": "src/patterns/popovers.rs:66",
+    "definedIn": "src/patterns/popovers.rs:65",
     "plural": false,
     "description": null
   },
   "POPOVER_INFORMATIONAL": {
     "context": "popovers.rs",
-    "definedIn": "src/patterns/popovers.rs:123",
+    "definedIn": "src/patterns/popovers.rs:125",
     "plural": false,
     "description": null
   },
   "POPOVER_LEADING": {
     "context": "popovers.rs",
-    "definedIn": "src/patterns/popovers.rs:102",
+    "definedIn": "src/patterns/popovers.rs:92",
     "plural": false,
     "description": null
   },
   "POPOVER_TOP": {
     "context": "popovers.rs",
-    "definedIn": "src/patterns/popovers.rs:90",
+    "definedIn": "src/patterns/popovers.rs:83",
     "plural": false,
     "description": null
   },
   "POPOVER_TRAILING": {
     "context": "popovers.rs",
-    "definedIn": "src/patterns/popovers.rs:78",
+    "definedIn": "src/patterns/popovers.rs:74",
     "plural": false,
     "description": null
   },

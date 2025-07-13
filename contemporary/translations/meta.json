@@ -79,25 +79,25 @@
   },
   "DIALOG_CANCEL": {
     "context": "dialog_box.rs",
-    "definedIn": "src/components/dialog_box.rs:35",
+    "definedIn": "src/components/dialog_box.rs:36",
     "plural": false,
     "description": null
   },
   "DIALOG_NO": {
     "context": "dialog_box.rs",
-    "definedIn": "src/components/dialog_box.rs:38",
+    "definedIn": "src/components/dialog_box.rs:39",
     "plural": false,
     "description": null
   },
   "DIALOG_OK": {
     "context": "dialog_box.rs",
-    "definedIn": "src/components/dialog_box.rs:31",
+    "definedIn": "src/components/dialog_box.rs:32",
     "plural": false,
     "description": null
   },
   "DIALOG_YES": {
     "context": "dialog_box.rs",
-    "definedIn": "src/components/dialog_box.rs:37",
+    "definedIn": "src/components/dialog_box.rs:38",
     "plural": false,
     "description": null
   },
@@ -115,37 +115,37 @@
   },
   "KEY_ALT": {
     "context": "application_menu.rs",
-    "definedIn": "src/components/application_menu.rs:302",
+    "definedIn": "src/components/application_menu.rs:303",
     "plural": false,
     "description": "Alt key, as shown next to menu items"
   },
   "KEY_CONTROL": {
     "context": "application_menu.rs",
-    "definedIn": "src/components/application_menu.rs:296",
+    "definedIn": "src/components/application_menu.rs:297",
     "plural": false,
     "description": "Control key, as shown next to menu items"
   },
   "KEY_FUNCTION": {
     "context": "application_menu.rs",
-    "definedIn": "src/components/application_menu.rs:308",
+    "definedIn": "src/components/application_menu.rs:309",
     "plural": false,
     "description": "Function key, as shown next to menu items"
   },
   "KEY_PLATFORM": {
     "context": "application_menu.rs",
-    "definedIn": "src/components/application_menu.rs:305",
+    "definedIn": "src/components/application_menu.rs:306",
     "plural": false,
     "description": "Super key, as shown next to menu items"
   },
   "KEY_SHIFT": {
     "context": "application_menu.rs",
-    "definedIn": "src/components/application_menu.rs:299",
+    "definedIn": "src/components/application_menu.rs:300",
     "plural": false,
     "description": "Shift key, as shown next to menu items"
   },
   "MENU_GO_BACK": {
     "context": "application_menu.rs",
-    "definedIn": "src/components/application_menu.rs:86",
+    "definedIn": "src/components/application_menu.rs:87",
     "plural": false,
     "description": null
   },

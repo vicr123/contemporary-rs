@@ -1,14 +1,15 @@
 use crate::components::scrim::{Scrim, scrim};
 use crate::styling::theme::Theme;
+use crate::transition::float_transition_element::TransitionExt;
 use gpui::prelude::FluentBuilder;
 use gpui::{
-    AnyElement, App, ElementId, InteractiveElement, IntoElement, Length, ParentElement, RenderOnce,
-    Styled, Window, div, px, relative,
+    Animation, AnyElement, App, ElementId, InteractiveElement, IntoElement, ParentElement,
+    RenderOnce, Styled, Window, div, ease_out_quint, px,
 };
 use std::cmp::PartialEq;
-use std::ops::Sub;
+use std::time::Duration;
 
-#[derive(PartialEq)]
+#[derive(PartialEq, Copy, Clone)]
 enum Anchor {
     Top,
     Leading,
@@ -17,7 +18,7 @@ enum Anchor {
 }
 
 enum Size {
-    Length(Length),
+    Pixels(f32),
     Neg(f32),
 }
 
@@ -27,14 +28,16 @@ pub struct Popover {
     content: AnyElement,
     size: Size,
     anchor: Anchor,
+    visible: bool,
 }
 
 pub fn popover(id: impl Into<ElementId>) -> Popover {
     Popover {
         scrim: scrim(id),
         content: div().into_any_element(),
-        size: Size::Length(relative(1.).into()),
+        size: Size::Pixels(300.),
         anchor: Anchor::Bottom,
+        visible: false,
     }
 }
 
@@ -44,8 +47,8 @@ impl Popover {
         self
     }
 
-    pub fn size(mut self, size: impl Into<Length>) -> Self {
-        self.size = Size::Length(size.into());
+    pub fn size(mut self, size: f32) -> Self {
+        self.size = Size::Pixels(size.into());
         self
     }
 
@@ -73,13 +76,18 @@ impl Popover {
         self.anchor = Anchor::Trailing;
         self
     }
+
+    pub fn visible(mut self, visible: bool) -> Self {
+        self.visible = visible;
+        self
+    }
 }
 
 impl RenderOnce for Popover {
     fn render(self, window: &mut Window, cx: &mut App) -> impl IntoElement {
         let theme = cx.global::<Theme>();
 
-        self.scrim.child(
+        self.scrim.visible(self.visible).child(
             div()
                 .flex()
                 .w_full()
@@ -102,30 +110,42 @@ impl RenderOnce for Popover {
                         .rounded(theme.border_radius)
                         .flex()
                         .flex_col()
-                        .when(
-                            self.anchor == Anchor::Bottom || self.anchor == Anchor::Top,
-                            |div| {
-                                div.h(match self.size {
-                                    Size::Length(length) => length,
+                        .child(self.content)
+                        .when(self.visible, |div| div.occlude())
+                        .with_transition(
+                            "side-transition",
+                            if self.visible {
+                                match self.size {
+                                    Size::Pixels(length) => length,
                                     Size::Neg(pixels) => {
-                                        window.viewport_size().height.sub(px(pixels)).into()
+                                        if self.anchor == Anchor::Bottom
+                                            || self.anchor == Anchor::Top
+                                        {
+                                            window.viewport_size().height.0 - pixels
+                                        } else {
+                                            window.viewport_size().width.0 - pixels
+                                        }
                                     }
-                                })
+                                }
+                            } else {
+                                0.
                             },
-                        )
-                        .when(
-                            self.anchor == Anchor::Leading || self.anchor == Anchor::Trailing,
-                            |div| {
-                                div.w(match self.size {
-                                    Size::Length(length) => length,
-                                    Size::Neg(pixels) => {
-                                        window.viewport_size().width.sub(px(pixels)).into()
-                                    }
-                                })
+                            Animation::new(Duration::from_millis(250))
+                                .with_easing(ease_out_quint()),
+                            move |david, value| {
+                                david
+                                    .when(
+                                        self.anchor == Anchor::Bottom || self.anchor == Anchor::Top,
+                                        |div| div.h(px(value)),
+                                    )
+                                    .when(
+                                        self.anchor == Anchor::Leading
+                                            || self.anchor == Anchor::Trailing,
+                                        |div| div.w(px(value)),
+                                    )
+                                    .when(value == 0., |div| div.invisible())
                             },
-                        )
-                        .occlude()
-                        .child(self.content),
+                        ),
                 ),
         )
     }

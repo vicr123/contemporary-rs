@@ -32,7 +32,7 @@ impl RenderOnce for FocusDecoration {
                 Animation::new(Duration::from_secs(1))
                     .repeat()
                     .with_easing(pulsating_between(0., 1.)),
-                move |div, delta| div.border_color(p1.lerp(p2.into(), delta)),
+                move |div, delta| div.border_color(p1.lerp(&p2.into(), delta)),
             )
     }
 }
