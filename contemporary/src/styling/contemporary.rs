@@ -1,6 +1,7 @@
 use crate::styling::rgb::{rgb_tuple, rgba_tuple};
 use crate::styling::theme::{Theme, ThemeType};
 use gpui::{Pixels, Rgba, px};
+use std::time::Duration;
 
 pub trait ContemporaryTheme {
     const TYPE: ThemeType;
@@ -63,5 +64,6 @@ where
         layer_background: T::LAYER,
         focus_decoration: T::FOCUS_DECORATION,
         destructive_accent_color: T::DESTRUCTIVE_ACCENT,
+        animation_duration: Duration::from_millis(250),
     }
 }

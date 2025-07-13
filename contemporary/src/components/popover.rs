@@ -7,7 +7,6 @@ use gpui::{
     RenderOnce, Styled, Window, div, ease_out_quint, px,
 };
 use std::cmp::PartialEq;
-use std::time::Duration;
 
 #[derive(PartialEq, Copy, Clone)]
 enum Anchor {
@@ -130,8 +129,7 @@ impl RenderOnce for Popover {
                             } else {
                                 0.
                             },
-                            Animation::new(Duration::from_millis(250))
-                                .with_easing(ease_out_quint()),
+                            Animation::new(theme.animation_duration).with_easing(ease_out_quint()),
                             move |david, value| {
                                 david
                                     .when(

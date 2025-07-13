@@ -1,10 +1,10 @@
 use crate::hsv::Hsva;
 use crate::styling::contemporary::{
-    make_contemporary_base_theme, ContemporaryDark, ContemporaryLight,
+    ContemporaryDark, ContemporaryLight, make_contemporary_base_theme,
 };
 use crate::styling::rgb::rgba_tuple;
 use gpui::{Global, Pixels, Rgba};
-use std::rc::Rc;
+use std::time::Duration;
 
 #[derive(PartialEq, Copy, Clone)]
 pub enum ThemeType {
@@ -34,6 +34,8 @@ pub struct Theme {
 
     pub focus_decoration: Rgba,
     pub destructive_accent_color: Rgba,
+
+    pub animation_duration: Duration,
 }
 
 pub trait VariableColor {
@@ -112,6 +114,7 @@ impl Theme {
         self.border_radius = other.border_radius;
         self.focus_decoration = other.focus_decoration;
         self.destructive_accent_color = other.destructive_accent_color;
+        self.animation_duration = other.animation_duration;
     }
 
     pub fn disabled(self) -> Self {
