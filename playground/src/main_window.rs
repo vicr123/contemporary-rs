@@ -2,9 +2,10 @@ use crate::main_surface::MainSurface;
 use cntp_i18n::tr;
 use contemporary::about_surface::about_surface;
 use contemporary::components::dialog_box::{StandardButton, dialog_box};
+use contemporary::components::pager::pager;
 use contemporary::window::contemporary_window;
 use gpui::prelude::FluentBuilder;
-use gpui::{App, AppContext, Context, Entity, IntoElement, ParentElement, Render, Window};
+use gpui::{App, AppContext, Context, Entity, IntoElement, ParentElement, Render, Styled, Window};
 
 pub struct MainWindow {
     main_surface: Entity<MainSurface>,
@@ -35,7 +36,20 @@ impl MainWindow {
 impl Render for MainWindow {
     fn render(&mut self, _window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
         contemporary_window()
-            .child(self.main_surface.clone())
+            .child(
+                pager("main-pager", if self.is_about_surface_open { 1 } else { 0 })
+                    .w_full()
+                    .h_full()
+                    .page(self.main_surface.clone().into_any_element())
+                    .page(
+                        about_surface()
+                            .on_back_click(cx.listener(|this, _, _, cx| {
+                                this.is_about_surface_open = false;
+                                cx.notify();
+                            }))
+                            .into_any_element(),
+                    ),
+            )
             .when(self.is_settings_surface_open, |w| {
                 w.child(
                     dialog_box("settings-surface")
@@ -52,12 +66,6 @@ impl Render for MainWindow {
                             }),
                         ),
                 )
-            })
-            .when(self.is_about_surface_open, |w| {
-                w.child(about_surface().on_back_click(cx.listener(|this, _, _, cx| {
-                    this.is_about_surface_open = false;
-                    cx.notify();
-                })))
             })
     }
 }
