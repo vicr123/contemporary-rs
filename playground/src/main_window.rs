@@ -2,6 +2,7 @@ use crate::main_surface::MainSurface;
 use cntp_i18n::tr;
 use contemporary::about_surface::about_surface;
 use contemporary::components::dialog_box::{StandardButton, dialog_box};
+use contemporary::components::pager::lift_animation::LiftAnimation;
 use contemporary::components::pager::pager;
 use contemporary::window::contemporary_window;
 use gpui::prelude::FluentBuilder;
@@ -40,6 +41,7 @@ impl Render for MainWindow {
                 pager("main-pager", if self.is_about_surface_open { 1 } else { 0 })
                     .w_full()
                     .h_full()
+                    .animation(LiftAnimation::new())
                     .page(self.main_surface.clone().into_any_element())
                     .page(
                         about_surface()

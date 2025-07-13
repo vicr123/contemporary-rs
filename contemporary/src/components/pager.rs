@@ -1,3 +1,10 @@
+pub mod fade_animation;
+pub mod lift_animation;
+pub mod pager_animation;
+
+use crate::components::pager::pager_animation::{
+    PagerAnimation, PagerAnimationDirection, PagerElement,
+};
 use crate::styling::theme::Theme;
 use gpui::{
     AnyElement, App, Bounds, Div, Element, ElementId, GlobalElementId, InspectorElementId,
@@ -13,6 +20,8 @@ pub struct Pager {
     elements: Vec<Option<Div>>,
     page: usize,
     style_refinement: StyleRefinement,
+    animation: Option<Box<dyn PagerAnimation>>,
+    force_direction: Option<PagerAnimationDirection>,
 }
 
 pub fn pager(id: impl Into<ElementId>, page: usize) -> Pager {
@@ -21,6 +30,8 @@ pub fn pager(id: impl Into<ElementId>, page: usize) -> Pager {
         elements: vec![],
         page,
         style_refinement: StyleRefinement::default(),
+        animation: None,
+        force_direction: None,
     }
 }
 
@@ -29,6 +40,16 @@ impl Pager {
         self.elements.push(Some(
             div().absolute().w_full().h_full().occlude().child(element),
         ));
+        self
+    }
+
+    pub fn animation(mut self, animation: Box<dyn PagerAnimation>) -> Pager {
+        self.animation = Some(animation);
+        self
+    }
+
+    pub fn animation_direction(mut self, direction: PagerAnimationDirection) -> Pager {
+        self.force_direction = Some(direction);
         self
     }
 }
@@ -48,6 +69,8 @@ impl RenderOnce for Pager {
             current_page_number: self.page,
             elements: self.elements,
             animation_duration: theme.animation_duration,
+            animation: self.animation,
+            force_direction: self.force_direction,
         }
     }
 }
@@ -58,6 +81,8 @@ struct PagerInternal {
     elements: Vec<Option<Div>>,
     style_refinement: StyleRefinement,
     animation_duration: Duration,
+    animation: Option<Box<dyn PagerAnimation>>,
+    force_direction: Option<PagerAnimationDirection>,
 }
 
 impl IntoElement for PagerInternal {
@@ -78,6 +103,7 @@ struct PagerRequestLayoutState {
     current_page: AnyElement,
     previous_page: AnyElement,
     animation_done: bool,
+    top_element: PagerElement,
 }
 
 impl Element for PagerInternal {
@@ -134,9 +160,21 @@ impl Element for PagerInternal {
                 .take()
                 .unwrap_or_else(|| div());
 
+            let mut top_element = PagerElement::Current;
+
             // Set up animations
-            previous_page = previous_page.opacity(1. - delta);
-            current_page = current_page.opacity(delta);
+            if let Some(animation) = &mut self.animation {
+                let animation_direction = self.force_direction.unwrap_or_else(|| {
+                    if state.current_page > state.previous_current_page {
+                        PagerAnimationDirection::Forward
+                    } else {
+                        PagerAnimationDirection::Backward
+                    }
+                });
+                previous_page = animation.animate_out(previous_page, animation_direction, delta);
+                current_page = animation.animate_in(current_page, animation_direction, delta);
+                top_element = animation.top_element(animation_direction);
+            }
 
             let mut previous_page = previous_page.into_any_element();
             let mut current_page = current_page.into_any_element();
@@ -161,6 +199,7 @@ impl Element for PagerInternal {
                         current_page,
                         previous_page,
                         animation_done: done,
+                        top_element,
                     },
                 ),
                 state,
@@ -177,7 +216,7 @@ impl Element for PagerInternal {
         window: &mut Window,
         cx: &mut App,
     ) -> Self::PrepaintState {
-        if !request_layout.animation_done {
+        if !request_layout.animation_done && self.animation.is_some() {
             request_layout.previous_page.prepaint(window, cx);
         }
         request_layout.current_page.prepaint(window, cx);
@@ -193,9 +232,16 @@ impl Element for PagerInternal {
         window: &mut Window,
         cx: &mut App,
     ) {
-        if !request_layout.animation_done {
+        if request_layout.top_element == PagerElement::Previous {
+            // Render the current page at the bottom
+            request_layout.current_page.paint(window, cx);
+        }
+        if !request_layout.animation_done && self.animation.is_some() {
             request_layout.previous_page.paint(window, cx);
         }
-        request_layout.current_page.paint(window, cx);
+        if request_layout.top_element == PagerElement::Current {
+            // Render the current page at the top
+            request_layout.current_page.paint(window, cx);
+        }
     }
 }

@@ -349,13 +349,13 @@
   },
   "SETTINGS": {
     "context": "main_window.rs",
-    "definedIn": "src/main_window.rs:56",
+    "definedIn": "src/main_window.rs:58",
     "plural": false,
     "description": null
   },
   "SETTINGS_DESCRIPTION": {
     "context": "main_window.rs",
-    "definedIn": "src/main_window.rs:58",
+    "definedIn": "src/main_window.rs:60",
     "plural": false,
     "description": null
   },
