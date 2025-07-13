@@ -20,17 +20,17 @@ pub fn create_macos_theme(theme_type: ThemeType) -> Theme {
         ThemeType::Dark => true,
     };
 
+    let base_theme = if is_dark_mode {
+        make_contemporary_base_theme::<ContemporaryDark>()
+    } else {
+        make_contemporary_base_theme::<ContemporaryLight>()
+    };
+
     Theme {
         theme_type,
         system_font_family: ".AppleSystemUIFont".to_string(),
         system_font_size: px(13.),
 
-        ..{
-            if is_dark_mode {
-                make_contemporary_base_theme::<ContemporaryDark>()
-            } else {
-                make_contemporary_base_theme::<ContemporaryLight>()
-            }
-        }
+        ..base_theme
     }
 }

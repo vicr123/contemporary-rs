@@ -6,7 +6,7 @@ pub mod slide_horizontal_animation;
 use crate::components::pager::pager_animation::{
     PagerAnimation, PagerAnimationDirection, PagerElement,
 };
-use crate::styling::theme::Theme;
+use crate::platform_support::platform_settings::PlatformSettings;
 use gpui::{
     AnyElement, App, Bounds, Div, Element, ElementId, GlobalElementId, InspectorElementId,
     InteractiveElement, IntoElement, LayoutId, ParentElement, Pixels, Refineable, RenderOnce,
@@ -63,13 +63,13 @@ impl Styled for Pager {
 
 impl RenderOnce for Pager {
     fn render(mut self, _window: &mut Window, cx: &mut App) -> impl IntoElement {
-        let theme = cx.global::<Theme>();
+        let platform_settings = cx.global::<PlatformSettings>();
         PagerInternal {
             id: self.id,
             style_refinement: self.style_refinement,
             current_page_number: self.page,
             elements: self.elements,
-            animation_duration: theme.animation_duration,
+            animation_duration: platform_settings.animation_duration,
             animation: self.animation,
             force_direction: self.force_direction,
         }
@@ -122,7 +122,7 @@ impl Element for PagerInternal {
     fn request_layout(
         &mut self,
         id: Option<&GlobalElementId>,
-        inspector_id: Option<&InspectorElementId>,
+        _inspector_id: Option<&InspectorElementId>,
         window: &mut Window,
         cx: &mut App,
     ) -> (LayoutId, Self::RequestLayoutState) {
@@ -210,9 +210,9 @@ impl Element for PagerInternal {
 
     fn prepaint(
         &mut self,
-        id: Option<&GlobalElementId>,
-        inspector_id: Option<&InspectorElementId>,
-        bounds: Bounds<Pixels>,
+        _id: Option<&GlobalElementId>,
+        _inspector_id: Option<&InspectorElementId>,
+        _bounds: Bounds<Pixels>,
         request_layout: &mut Self::RequestLayoutState,
         window: &mut Window,
         cx: &mut App,
@@ -225,11 +225,11 @@ impl Element for PagerInternal {
 
     fn paint(
         &mut self,
-        id: Option<&GlobalElementId>,
-        inspector_id: Option<&InspectorElementId>,
-        bounds: Bounds<Pixels>,
+        _id: Option<&GlobalElementId>,
+        _inspector_id: Option<&InspectorElementId>,
+        _bounds: Bounds<Pixels>,
         request_layout: &mut Self::RequestLayoutState,
-        prepaint: &mut Self::PrepaintState,
+        _prepaint: &mut Self::PrepaintState,
         window: &mut Window,
         cx: &mut App,
     ) {

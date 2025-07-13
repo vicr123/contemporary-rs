@@ -1,9 +1,10 @@
 use crate::application::{ApplicationLink, Details, Versions};
 use crate::components::text_field::bind_text_input_keys;
+use crate::platform_support::platform_settings::PlatformSettings;
 use crate::platform_support::setup_platform;
 use crate::styling::theme::Theme;
-use cntp_i18n::{i18n_manager, tr, tr_load, I18N_MANAGER};
-use gpui::{actions, Action, App, Global, KeyBinding, Menu, MenuItem};
+use cntp_i18n::{I18N_MANAGER, i18n_manager, tr, tr_load};
+use gpui::{Action, App, Global, KeyBinding, Menu, MenuItem, actions};
 use schemars::JsonSchema;
 use serde::Deserialize;
 use std::collections::HashMap;
@@ -208,6 +209,7 @@ pub fn setup_contemporary(cx: &mut App, mut application: Contemporary) {
 
     cx.set_global(application.details);
     cx.set_global(Theme::default());
+    cx.set_global(PlatformSettings::default());
     cx.set_global(Callbacks {
         on_about: application.menus.on_about,
         on_settings: application.menus.on_settings,

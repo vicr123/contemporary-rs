@@ -26,6 +26,7 @@ ashpd = { version = "0.11", features = ["async-std"], default-features = false }
 [target.'cfg(target_os="macos")'.dependencies]
 objc2 = "0.6"
 objc2-foundation = "0.3"
+objc2-app-kit = "0.3"
 
 [target.'cfg(target_os="windows")'.dependencies]
 windows = "0.61"

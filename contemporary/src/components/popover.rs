@@ -1,4 +1,5 @@
 use crate::components::scrim::{Scrim, scrim};
+use crate::platform_support::platform_settings::PlatformSettings;
 use crate::styling::theme::Theme;
 use crate::transition::float_transition_element::TransitionExt;
 use gpui::prelude::FluentBuilder;
@@ -85,6 +86,7 @@ impl Popover {
 impl RenderOnce for Popover {
     fn render(self, window: &mut Window, cx: &mut App) -> impl IntoElement {
         let theme = cx.global::<Theme>();
+        let platform_settings = cx.global::<PlatformSettings>();
 
         self.scrim.visible(self.visible).child(
             div()
@@ -129,7 +131,8 @@ impl RenderOnce for Popover {
                             } else {
                                 0.
                             },
-                            Animation::new(theme.animation_duration).with_easing(ease_out_quint()),
+                            Animation::new(platform_settings.animation_duration)
+                                .with_easing(ease_out_quint()),
                             move |david, value| {
                                 david
                                     .when(

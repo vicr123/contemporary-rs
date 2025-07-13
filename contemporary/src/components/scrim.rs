@@ -1,4 +1,4 @@
-use crate::styling::theme::Theme;
+use crate::platform_support::platform_settings::PlatformSettings;
 use crate::transition::float_transition_element::TransitionExt;
 use gpui::prelude::FluentBuilder;
 use gpui::{
@@ -38,7 +38,7 @@ impl Scrim {
 
 impl RenderOnce for Scrim {
     fn render(self, window: &mut Window, cx: &mut App) -> impl IntoElement {
-        let theme = cx.global::<Theme>();
+        let platform_settings = cx.global::<PlatformSettings>();
         let window_size = window.viewport_size();
         anchored().position(point(px(0.), px(0.))).child(deferred(
             self.root_div
@@ -53,7 +53,7 @@ impl RenderOnce for Scrim {
                         .with_transition(
                             "scrim-transition",
                             if self.visible { 0.7 } else { 0. },
-                            Animation::new(theme.animation_duration),
+                            Animation::new(platform_settings.animation_duration),
                             |div, opacity| {
                                 div.opacity(opacity).when_else(
                                     opacity == 0.,
