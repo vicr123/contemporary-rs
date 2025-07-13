@@ -4,7 +4,9 @@ use crate::patterns::popovers::Popovers;
 use cntp_i18n::tr;
 use contemporary::components::grandstand::grandstand;
 use contemporary::components::layer::layer;
+use contemporary::components::pager::lift_animation::LiftAnimation;
 use contemporary::components::pager::pager;
+use contemporary::components::pager::pager_animation::PagerAnimationDirection;
 use contemporary::styling::theme::Theme;
 use gpui::prelude::FluentBuilder;
 use gpui::{
@@ -91,6 +93,8 @@ impl Render for PatternsRoot {
             .child(
                 pager("main-area", self.current_page)
                     .flex_grow()
+                    .animation(LiftAnimation::new())
+                    .animation_direction(PagerAnimationDirection::Forward)
                     .page(self.dialog_boxes.clone().into_any_element())
                     .page(self.i18n.clone().into_any_element())
                     .page(self.popovers.clone().into_any_element()),

@@ -1,271 +1,271 @@
 {
   "BORDERLESS_TEXT_FIELD_PLACEHOLDER": {
     "context": "text_input.rs",
-    "definedIn": "src/components/text_input.rs:31",
+    "definedIn": "src/components/text_input.rs:32",
     "plural": false,
     "description": null
   },
   "BUTTONS_CHECKABLE_BUTTON": {
     "context": "buttons.rs",
-    "definedIn": "src/components/buttons.rs:78",
+    "definedIn": "src/components/buttons.rs:81",
     "plural": false,
     "description": null
   },
   "BUTTONS_COUNT_TEXT": {
     "context": "buttons.rs",
-    "definedIn": "src/components/buttons.rs:86",
+    "definedIn": "src/components/buttons.rs:89",
     "plural": true,
     "description": null
   },
   "BUTTONS_DEFAULT_BUTTON": {
     "context": "buttons.rs",
-    "definedIn": "src/components/buttons.rs:60",
+    "definedIn": "src/components/buttons.rs:63",
     "plural": false,
     "description": null
   },
   "BUTTONS_DISABLED_BUTTON": {
     "context": "buttons.rs",
-    "definedIn": "src/components/buttons.rs:73",
+    "definedIn": "src/components/buttons.rs:76",
     "plural": false,
     "description": null
   },
   "BUTTONS_FLAT_BUTTON": {
     "context": "buttons.rs",
-    "definedIn": "src/components/buttons.rs:107",
+    "definedIn": "src/components/buttons.rs:110",
     "plural": false,
     "description": null
   },
   "BUTTONS_FLAT_CHECKABLE_BUTTON": {
     "context": "buttons.rs",
-    "definedIn": "src/components/buttons.rs:113",
+    "definedIn": "src/components/buttons.rs:116",
     "plural": false,
     "description": null
   },
   "BUTTONS_FLAT_DISABLED_BUTTON": {
     "context": "buttons.rs",
-    "definedIn": "src/components/buttons.rs:110",
+    "definedIn": "src/components/buttons.rs:113",
     "plural": false,
     "description": null
   },
   "BUTTONS_FLAT_TITLE": {
     "context": "buttons.rs",
-    "definedIn": "src/components/buttons.rs:98",
+    "definedIn": "src/components/buttons.rs:101",
     "plural": false,
     "description": null
   },
   "BUTTONS_NORMAL_TITLE": {
     "context": "buttons.rs",
-    "definedIn": "src/components/buttons.rs:53",
+    "definedIn": "src/components/buttons.rs:56",
     "plural": false,
     "description": null
   },
   "BUTTONS_TITLE": {
     "context": "buttons.rs",
-    "definedIn": "src/components/buttons.rs:37",
+    "definedIn": "src/components/buttons.rs:40",
     "plural": false,
     "description": null
   },
   "CHECKBOXES_OFF": {
     "context": "checkboxes_radio_buttons.rs",
-    "definedIn": "src/components/checkboxes_radio_buttons.rs:64",
+    "definedIn": "src/components/checkboxes_radio_buttons.rs:67",
     "plural": false,
     "description": null
   },
   "CHECKBOXES_ON": {
     "context": "checkboxes_radio_buttons.rs",
-    "definedIn": "src/components/checkboxes_radio_buttons.rs:75",
+    "definedIn": "src/components/checkboxes_radio_buttons.rs:78",
     "plural": false,
     "description": null
   },
   "CHECKBOXES_RADIO_BUTTONS_TITLE": {
     "context": "checkboxes_radio_buttons.rs",
-    "definedIn": "src/components/checkboxes_radio_buttons.rs:38",
+    "definedIn": "src/components/checkboxes_radio_buttons.rs:41",
     "plural": false,
     "description": null
   },
   "CHECKBOXES_TITLE": {
     "context": "checkboxes_radio_buttons.rs",
-    "definedIn": "src/components/checkboxes_radio_buttons.rs:56",
+    "definedIn": "src/components/checkboxes_radio_buttons.rs:59",
     "plural": false,
     "description": null
   },
   "CLOSE": {
     "context": "popovers.rs",
-    "definedIn": "src/patterns/popovers.rs:152",
+    "definedIn": "src/patterns/popovers.rs:155",
     "plural": false,
     "description": null
   },
   "COMPONENTS_BUTTON": {
     "context": "main_surface.rs",
-    "definedIn": "src/main_surface.rs:80",
+    "definedIn": "src/main_surface.rs:81",
     "plural": false,
     "description": null
   },
   "COMPONENTS_TITLE": {
     "context": "root.rs",
-    "definedIn": "src/components/root.rs:52",
+    "definedIn": "src/components/root.rs:54",
     "plural": false,
     "description": null
   },
   "DIALOG_BOXES_DESCRIPTION": {
     "context": "dialog_boxes.rs",
-    "definedIn": "src/patterns/dialog_boxes.rs:56",
+    "definedIn": "src/patterns/dialog_boxes.rs:59",
     "plural": false,
     "description": null
   },
   "DIALOG_BOXES_TITLE": {
     "context": "dialog_boxes.rs",
-    "definedIn": "src/patterns/dialog_boxes.rs:37",
+    "definedIn": "src/patterns/dialog_boxes.rs:40",
     "plural": false,
     "description": null
   },
   "DIALOG_BOX_GOBLIN": {
     "context": "dialog_boxes.rs",
-    "definedIn": "src/patterns/dialog_boxes.rs:69",
+    "definedIn": "src/patterns/dialog_boxes.rs:72",
     "plural": false,
     "description": null
   },
   "DIALOG_BOX_GOBLIN_CONTENT": {
     "context": "dialog_boxes.rs",
-    "definedIn": "src/patterns/dialog_boxes.rs:99",
+    "definedIn": "src/patterns/dialog_boxes.rs:102",
     "plural": false,
     "description": null
   },
   "DIALOG_BOX_GOBLIN_REFUSE": {
     "context": "dialog_boxes.rs",
-    "definedIn": "src/patterns/dialog_boxes.rs:107",
+    "definedIn": "src/patterns/dialog_boxes.rs:110",
     "plural": false,
     "description": null
   },
   "DIALOG_BOX_GOBLIN_SWEAR_FEALTY": {
     "context": "dialog_boxes.rs",
-    "definedIn": "src/patterns/dialog_boxes.rs:114",
+    "definedIn": "src/patterns/dialog_boxes.rs:117",
     "plural": false,
     "description": null
   },
   "DIALOG_BOX_INFORMATIONAL": {
     "context": "dialog_boxes.rs",
-    "definedIn": "src/patterns/dialog_boxes.rs:60",
+    "definedIn": "src/patterns/dialog_boxes.rs:63",
     "plural": false,
     "description": null
   },
   "DIALOG_BOX_INFORMATIONAL_CONTENT": {
     "context": "dialog_boxes.rs",
-    "definedIn": "src/patterns/dialog_boxes.rs:86",
+    "definedIn": "src/patterns/dialog_boxes.rs:89",
     "plural": false,
     "description": null
   },
   "DIALOG_BOX_INFORMATIONAL_TITLE": {
     "context": "dialog_boxes.rs",
-    "definedIn": "src/patterns/dialog_boxes.rs:83",
+    "definedIn": "src/patterns/dialog_boxes.rs:86",
     "plural": false,
     "description": null
   },
   "DIALOG_BOX_NUCLEAR_REACTOR": {
     "context": "dialog_boxes.rs",
-    "definedIn": "src/patterns/dialog_boxes.rs:74",
+    "definedIn": "src/patterns/dialog_boxes.rs:77",
     "plural": false,
     "description": null
   },
   "DIALOG_BOX_NUCLEAR_REACTOR_CONTENT": {
     "context": "dialog_boxes.rs",
-    "definedIn": "src/patterns/dialog_boxes.rs:124",
+    "definedIn": "src/patterns/dialog_boxes.rs:127",
     "plural": false,
     "description": null
   },
   "DIALOG_BOX_NUCLEAR_REACTOR_INFORMATIONAL": {
     "context": "dialog_boxes.rs",
-    "definedIn": "src/patterns/dialog_boxes.rs:133",
+    "definedIn": "src/patterns/dialog_boxes.rs:136",
     "plural": false,
     "description": null
   },
   "DIALOG_BOX_NUCLEAR_REACTOR_TITLE": {
     "context": "dialog_boxes.rs",
-    "definedIn": "src/patterns/dialog_boxes.rs:122",
+    "definedIn": "src/patterns/dialog_boxes.rs:125",
     "plural": false,
     "description": null
   },
   "I18N_LANGUAGE_CODE": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:23",
+    "definedIn": "src/patterns/i18n.rs:24",
     "plural": false,
     "description": null
   },
   "I18N_NUMERIC_FORMATS": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:120",
+    "definedIn": "src/patterns/i18n.rs:123",
     "plural": false,
     "description": null
   },
   "I18N_NUMERIC_FORMAT_DESCRIPTION": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:127",
+    "definedIn": "src/patterns/i18n.rs:130",
     "plural": false,
     "description": null
   },
   "I18N_NUMERIC_FORMAT_NEGATIVE_E": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:137",
+    "definedIn": "src/patterns/i18n.rs:140",
     "plural": false,
     "description": null
   },
   "I18N_NUMERIC_FORMAT_PI": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:131",
+    "definedIn": "src/patterns/i18n.rs:134",
     "plural": false,
     "description": null
   },
   "I18N_NUMERIC_FORMAT_SPEED_OF_LIGHT": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:143",
+    "definedIn": "src/patterns/i18n.rs:146",
     "plural": false,
     "description": null
   },
   "I18N_QUOTE_STRINGS": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:89",
+    "definedIn": "src/patterns/i18n.rs:92",
     "plural": false,
     "description": null
   },
   "I18N_QUOTE_STRING_DESCRIPTION": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:96",
+    "definedIn": "src/patterns/i18n.rs:99",
     "plural": false,
     "description": null
   },
   "I18N_QUOTE_STRING_QUOTED": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:107",
+    "definedIn": "src/patterns/i18n.rs:110",
     "plural": false,
     "description": null
   },
   "I18N_SELECTED_LANGUAGE": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:77",
+    "definedIn": "src/patterns/i18n.rs:80",
     "plural": false,
     "description": null
   },
   "I18N_SETUP": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:65",
+    "definedIn": "src/patterns/i18n.rs:68",
     "plural": false,
     "description": null
   },
   "I18N_SETUP_DESCRIPTION": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:72",
+    "definedIn": "src/patterns/i18n.rs:75",
     "plural": false,
     "description": null
   },
   "I18N_TITLE": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:49",
+    "definedIn": "src/patterns/i18n.rs:52",
     "plural": false,
     "description": null
   },
   "INFORMATIONAL_POPOVER_DESCRIPTION": {
     "context": "popovers.rs",
-    "definedIn": "src/patterns/popovers.rs:145",
+    "definedIn": "src/patterns/popovers.rs:148",
     "plural": false,
     "description": null
   },
@@ -277,73 +277,73 @@
   },
   "PATTERNS_BUTTON": {
     "context": "main_surface.rs",
-    "definedIn": "src/main_surface.rs:89",
+    "definedIn": "src/main_surface.rs:90",
     "plural": false,
     "description": null
   },
   "PATTERNS_TITLE": {
     "context": "root.rs",
-    "definedIn": "src/patterns/root.rs:49",
+    "definedIn": "src/patterns/root.rs:51",
     "plural": false,
     "description": null
   },
   "POPOVERS_DESCRIPTION": {
     "context": "popovers.rs",
-    "definedIn": "src/patterns/popovers.rs:60",
+    "definedIn": "src/patterns/popovers.rs:63",
     "plural": false,
     "description": null
   },
   "POPOVERS_TITLE": {
     "context": "popovers.rs",
-    "definedIn": "src/patterns/popovers.rs:37",
+    "definedIn": "src/patterns/popovers.rs:40",
     "plural": false,
     "description": null
   },
   "POPOVER_BOTTOM": {
     "context": "popovers.rs",
-    "definedIn": "src/patterns/popovers.rs:65",
+    "definedIn": "src/patterns/popovers.rs:68",
     "plural": false,
     "description": null
   },
   "POPOVER_INFORMATIONAL": {
     "context": "popovers.rs",
-    "definedIn": "src/patterns/popovers.rs:125",
+    "definedIn": "src/patterns/popovers.rs:128",
     "plural": false,
     "description": null
   },
   "POPOVER_LEADING": {
     "context": "popovers.rs",
-    "definedIn": "src/patterns/popovers.rs:92",
+    "definedIn": "src/patterns/popovers.rs:95",
     "plural": false,
     "description": null
   },
   "POPOVER_TOP": {
     "context": "popovers.rs",
-    "definedIn": "src/patterns/popovers.rs:83",
+    "definedIn": "src/patterns/popovers.rs:86",
     "plural": false,
     "description": null
   },
   "POPOVER_TRAILING": {
     "context": "popovers.rs",
-    "definedIn": "src/patterns/popovers.rs:74",
+    "definedIn": "src/patterns/popovers.rs:77",
     "plural": false,
     "description": null
   },
   "PROGRESS_BARS_TITLE": {
     "context": "progress_bars.rs",
-    "definedIn": "src/components/progress_bars.rs:28",
+    "definedIn": "src/components/progress_bars.rs:31",
     "plural": false,
     "description": null
   },
   "QUOTE_STRINGS_PLACEHOLDER": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:29",
+    "definedIn": "src/patterns/i18n.rs:30",
     "plural": false,
     "description": null
   },
   "RADIO_BUTTONS_TITLE": {
     "context": "checkboxes_radio_buttons.rs",
-    "definedIn": "src/components/checkboxes_radio_buttons.rs:91",
+    "definedIn": "src/components/checkboxes_radio_buttons.rs:94",
     "plural": false,
     "description": null
   },
@@ -361,25 +361,25 @@
   },
   "TEXT_FIELDS_TITLE": {
     "context": "text_input.rs",
-    "definedIn": "src/components/text_input.rs:78",
+    "definedIn": "src/components/text_input.rs:81",
     "plural": false,
     "description": null
   },
   "TEXT_FIELD_DISABLED_PLACEHOLDER": {
     "context": "text_input.rs",
-    "definedIn": "src/components/text_input.rs:37",
+    "definedIn": "src/components/text_input.rs:38",
     "plural": false,
     "description": null
   },
   "TEXT_FIELD_PLACEHOLDER": {
     "context": "text_input.rs",
-    "definedIn": "src/components/text_input.rs:25",
+    "definedIn": "src/components/text_input.rs:26",
     "plural": false,
     "description": null
   },
   "TEXT_INPUT_TITLE": {
     "context": "text_input.rs",
-    "definedIn": "src/components/text_input.rs:62",
+    "definedIn": "src/components/text_input.rs:65",
     "plural": false,
     "description": null
   },

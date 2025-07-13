@@ -4,6 +4,7 @@ use contemporary::components::grandstand::grandstand;
 use contemporary::components::layer::layer;
 use contemporary::components::subtitle::subtitle;
 use contemporary::components::text_field::TextField;
+use contemporary::styling::theme::Theme;
 use gpui::{
     App, AppContext, Context, Entity, IntoElement, ParentElement, Render, Styled, Window, div, px,
 };
@@ -34,12 +35,14 @@ impl I18n {
 
 impl Render for I18n {
     fn render(&mut self, _window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
+        let theme = cx.global::<Theme>();
         let requested_locale = self.i18n_language.read(cx).current_text(cx);
         let quote_strings_text = self.quote_strings_text_field.read(cx).current_text(cx);
 
         let locale = Locale::new_from_locale_identifier(requested_locale);
 
         div()
+            .bg(theme.background)
             .w_full()
             .h_full()
             .flex()

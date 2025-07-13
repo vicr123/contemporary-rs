@@ -4,6 +4,7 @@ use contemporary::components::constrainer::constrainer;
 use contemporary::components::grandstand::grandstand;
 use contemporary::components::layer::layer;
 use contemporary::components::subtitle::subtitle;
+use contemporary::styling::theme::Theme;
 use gpui::{
     App, AppContext, ClickEvent, Context, Entity, IntoElement, ParentElement, Render, Styled,
     Window, div, px,
@@ -27,7 +28,9 @@ impl Buttons {
 
 impl Render for Buttons {
     fn render(&mut self, _window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
+        let theme = cx.global::<Theme>();
         div()
+            .bg(theme.background)
             .w_full()
             .h_full()
             .flex()

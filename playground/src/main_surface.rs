@@ -6,6 +6,7 @@ use cntp_i18n::tr;
 use contemporary::components::application_menu::ApplicationMenu;
 use contemporary::components::button::button;
 use contemporary::components::pager::pager;
+use contemporary::components::pager::slide_horizontal_animation::SlideHorizontalAnimation;
 use contemporary::styling::theme::Theme;
 use contemporary::surface::surface;
 use gpui::{
@@ -99,6 +100,7 @@ impl Render for MainSurface {
                 pager("main-pager", self.selected_tab.index())
                     .w_full()
                     .h_full()
+                    .animation(SlideHorizontalAnimation::new())
                     .page(self.components_root.clone().into_any_element())
                     .page(self.patterns_root.clone().into_any_element()),
             )

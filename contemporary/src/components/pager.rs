@@ -1,6 +1,7 @@
 pub mod fade_animation;
 pub mod lift_animation;
 pub mod pager_animation;
+pub mod slide_horizontal_animation;
 
 use crate::components::pager::pager_animation::{
     PagerAnimation, PagerAnimationDirection, PagerElement,
