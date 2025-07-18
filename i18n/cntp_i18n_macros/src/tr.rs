@@ -27,7 +27,7 @@ pub fn tr(body: TokenStream) -> TokenStream {
                 return Error::new(
                     variable.name.span(),
                     format!(
-                        "Translation variable {} specified when rendering key {} but not used",
+                        "Unused translation variable {} specified when rendering key {}",
                         variable.name,
                         input.translation_id.value()
                     ),
@@ -117,7 +117,7 @@ pub fn trn(body: TokenStream) -> TokenStream {
             return Error::new(
                 variable.name.span(),
                 format!(
-                    "Translation variable {} specified when rendering key {} but not used",
+                    "Unused translation variable {} specified when rendering key {}",
                     variable.name,
                     input.translation_id.value()
                 ),
