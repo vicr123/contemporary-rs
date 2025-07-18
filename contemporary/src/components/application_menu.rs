@@ -8,9 +8,9 @@ use crate::styling::theme::{Theme, VariableColor};
 use cntp_i18n::{i18n_manager, tr};
 use gpui::prelude::FluentBuilder;
 use gpui::{
-    App, AppContext, ClickEvent, Context, Entity, InteractiveElement, IntoElement, Menu, MenuItem,
-    OwnedMenu, OwnedMenuItem, ParentElement, Render, RenderOnce, SharedString, Styled, Window, div,
-    img, px,
+    div, img, px, App, AppContext, ClickEvent, Context, Entity, InteractiveElement,
+    IntoElement, Menu, MenuItem, OwnedMenu, OwnedMenuItem, ParentElement, Render, RenderOnce, SharedString,
+    Styled, Window,
 };
 use std::rc::Rc;
 
@@ -263,6 +263,8 @@ impl RenderOnce for MenuList {
                                 .flex()
                                 .items_center()
                                 .justify_between()
+                                .text_ellipsis()
+                                .overflow_hidden()
                                 .child(menu.name.clone())
                                 .child(icon("go-next".into())),
                         )
@@ -323,7 +325,7 @@ impl RenderOnce for MenuList {
                                 .flex()
                                 .items_center()
                                 .justify_between()
-                                .child(name)
+                                .child(div().text_ellipsis().overflow_hidden().child(name))
                                 .child(div().text_color(theme.foreground.disabled()).child(keybind)))
                         .flat()
                         .on_click(move |event, window, cx| {
