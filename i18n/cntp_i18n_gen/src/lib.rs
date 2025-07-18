@@ -298,8 +298,7 @@ pub fn generate(manifest_directory: &Path) -> GenerationResult {
                             "{}:{}",
                             v.to_path_buf()
                                 .iter()
-                                .map(OsStr::to_str)
-                                .flatten()
+                                .flat_map(OsStr::to_str)
                                 .join("/")
                             , value.line_no
                         )),

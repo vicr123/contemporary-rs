@@ -74,7 +74,7 @@ pub fn tr_load(_body: TokenStream) -> TokenStream {
                     }
                 }
                 load::TranslationEntry::PluralEntry(items) => {
-                    if items.iter().all(|(key, value)| value.is_empty()) {
+                    if items.iter().all(|(_key, value)| value.is_empty()) {
                         None
                     } else {
                         let other = items.get("other");
