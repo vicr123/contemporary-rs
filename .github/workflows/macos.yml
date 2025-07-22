@@ -25,7 +25,7 @@ jobs:
       - name: Build (x86_64)
         run: cargo build --verbose --release --target x86_64-apple-darwin
       - name: Bundle
-        run: cargo run --package cargo-cntp-bundle --bin cargo-cntp-bundle -- cntp-bundle --target x86_64-apple-darwin --target aarch64-apple-darwin cntp-bundle
+        run: cargo run --package cargo-cntp-bundle --bin cargo-cntp-bundle -- cntp-bundle --target x86_64-apple-darwin --target aarch64-apple-darwin
         working-directory: playground
       - name: Deploy
         run: cargo run --package cargo-cntp-deploy --bin cargo-cntp-deploy -- cntp-deploy --target x86_64-apple-darwin --target aarch64-apple-darwin --output-file "$HOME/Contemporary_Playground-macOS.dmg"
