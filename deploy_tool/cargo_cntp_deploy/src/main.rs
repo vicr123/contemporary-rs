@@ -1,4 +1,5 @@
 use clap::Parser;
+use clap_cargo::style::CLAP_STYLING;
 use clap_verbosity_flag::InfoLevel;
 
 use cntp_bundle_lib::tool_setup::{DeploymentType, setup_tool};
@@ -18,7 +19,12 @@ use cntp_bundle_lib::windows::deploy::deploy_windows;
 #[derive(Parser, Debug)]
 #[command(name = "cargo cntp-deploy")] // all of this is necessary so things work as expected wrt. cargo
 #[command(bin_name = "cargo")]
-#[command(version, about, long_about = None)]
+#[command(styles = CLAP_STYLING)]
+enum Command {
+    CntpDeploy(Args),
+}
+
+#[derive(Parser, Debug)]
 struct Args {
     /// The profile to build
     #[arg(short, long)]
@@ -41,7 +47,7 @@ struct Args {
 }
 
 fn main() {
-    let args = Args::parse();
+    let Command::CntpDeploy(args) = Command::parse();
 
     tracing_subscriber::fmt()
         .with_target(false)

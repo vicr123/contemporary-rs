@@ -690,6 +690,7 @@ version = "0.1.0"
 dependencies = [
  "cargo_metadata 0.20.0",
  "clap",
+ "clap-cargo",
  "clap-verbosity-flag",
  "cntp_bundle_lib",
  "cntp_config",
@@ -704,6 +705,7 @@ name = "cargo-cntp-deploy"
 version = "0.1.0"
 dependencies = [
  "clap",
+ "clap-cargo",
  "clap-verbosity-flag",
  "cntp_bundle_lib",
  "cntp_config",

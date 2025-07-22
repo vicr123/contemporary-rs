@@ -5,7 +5,7 @@ edition = "2024"
 
 [dependencies]
 clap = { version = "4", features = ["derive"] }
-clap-cargo = { version = "0.15", features = ["cargo_metadata"] }
+clap-cargo = { workspace = true }
 cargo_metadata = "0.20"
 tracing = { workspace = true }
 anyhow = { workspace = true }

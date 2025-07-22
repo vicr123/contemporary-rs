@@ -5,6 +5,7 @@ edition = "2024"
 
 [dependencies]
 clap = { version = "4", features = ["derive"] }
+clap-cargo = { workspace = true }
 cntp_config = { path = "../../cntp_config" }
 cntp_bundle_lib = { path = "../cntp_bundle_lib" }
 tracing = { workspace = true }

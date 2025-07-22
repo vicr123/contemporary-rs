@@ -8,14 +8,14 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [ windows-latest, windows-11-arm ]
+        os: [windows-latest, windows-11-arm]
     runs-on: ${{ matrix.os }}
     env:
       ARCH: "${{ endsWith(matrix.os, 'arm') && 'aarch64' || 'x86_64' }}"
     steps:
       - uses: actions/checkout@v4
         with:
-          submodules: 'true'
+          submodules: "true"
       - name: Install Rust
         if: matrix.os == 'windows-11-arm'
         run: |
@@ -28,10 +28,10 @@ jobs:
       - name: Build
         run: cargo build --verbose --release
       - name: Bundle
-        run: cargo run --package cargo-cntp-bundle --bin cargo-cntp-bundle
+        run: cargo run --package cargo-cntp-bundle --bin cargo-cntp-bundle -- cntp-bundle
         working-directory: playground
       - name: Deploy
-        run: cargo run --package cargo-cntp-deploy --bin cargo-cntp-deploy -- --output-file "$env:GITHUB_WORKSPACE/Contemporary_Playground-$env:ARCH.exe"
+        run: cargo run --package cargo-cntp-deploy --bin cargo-cntp-deploy -- cntp-deploy --output-file "$env:GITHUB_WORKSPACE/Contemporary_Playground-$env:ARCH.exe"
         working-directory: playground
       - uses: actions/upload-artifact@v4
         with:
