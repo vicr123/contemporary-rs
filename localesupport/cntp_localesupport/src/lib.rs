@@ -1,5 +1,6 @@
 mod cldr;
 pub mod locale_formattable;
+pub mod modifiers;
 
 use crate::cldr::CldrData;
 use icu::decimal::DecimalFormatter;
