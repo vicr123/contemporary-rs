@@ -111,10 +111,13 @@ impl I18nManager {
         variables: &'a T,
         lookup_crate: &str,
         hash: u64,
+        locale_override: Option<&Locale>,
     ) -> I18nString
     where
         &'a T: IntoIterator<Item = LookupVariable<'a>>,
     {
+        let locale = locale_override.unwrap_or(&self.locale);
+
         let mut state = FxHasher::default();
         hash.hash(&mut state);
         for variable in variables.into_iter() {
@@ -123,18 +126,26 @@ impl I18nManager {
         let full_call_hash = state.finish();
 
         self.cache.get(&full_call_hash).clone().unwrap_or_else(|| {
-            let result = self.lookup(key, variables, lookup_crate);
+            let result = self.lookup(key, variables, lookup_crate, Some(locale));
             self.cache.insert(full_call_hash, result.clone());
             result
         })
     }
 
-    pub fn lookup<'a, T>(&self, key: &str, variables: &'a T, lookup_crate: &str) -> I18nString
+    pub fn lookup<'a, T>(
+        &self,
+        key: &str,
+        variables: &'a T,
+        lookup_crate: &str,
+        locale_override: Option<&Locale>,
+    ) -> I18nString
     where
         &'a T: IntoIterator<Item = LookupVariable<'a>>,
     {
+        let locale = locale_override.unwrap_or(&self.locale);
+
         for source in &self.sources {
-            let Some(entry) = source.lookup(&self.locale, key, lookup_crate) else {
+            let Some(entry) = source.lookup(locale, key, lookup_crate) else {
                 continue;
             };
 
@@ -195,8 +206,8 @@ impl I18nManager {
                             format!("{{{{{name}}}}}").as_str(),
                             subsequent
                                 .iter()
-                                .fold(initial.transform(&self.locale), |v, modi| {
-                                    modi.0.transform(&self.locale, v, modi.1)
+                                .fold(initial.transform(&locale), |v, modi| {
+                                    modi.0.transform(&locale, v, modi.1)
                                 })
                                 .as_str(),
                         )

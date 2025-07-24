@@ -184,6 +184,22 @@ pub fn tr(body: TokenStream) -> TokenStream {
         }
     }
 
+    let locale = input
+        .context
+        .iter()
+        .find(|x| x.name == "locale")
+        .map(|x| {
+            let value = &x.value;
+            quote! {
+                Some(#value)
+            }
+        })
+        .unwrap_or_else(|| {
+            quote! {
+                None
+            }
+        });
+
     let key = input.translation_id.value();
     let current_crate = &*CURRENT_CRATE;
     let token_length = z.len();
@@ -203,7 +219,7 @@ pub fn tr(body: TokenStream) -> TokenStream {
 
             i18n.read().unwrap().lookup_cached::<[(&'_ str, Variable); #token_length]>(#key, &[
                 #( #z )*
-            ], #current_crate, #hash)
+            ], #current_crate, #hash, #locale)
         }
     }
     .into()
@@ -275,6 +291,22 @@ pub fn trn(body: TokenStream) -> TokenStream {
         }
     }
 
+    let locale = input
+        .context
+        .iter()
+        .find(|x| x.name == "locale")
+        .map(|x| {
+            let value = &x.value;
+            quote! {
+                Some(#value)
+            }
+        })
+        .unwrap_or_else(|| {
+            quote! {
+                None
+            }
+        });
+
     let key = input.translation_id.value();
     let current_crate = &*CURRENT_CRATE;
     let token_length = z.len();
@@ -294,7 +326,7 @@ pub fn trn(body: TokenStream) -> TokenStream {
 
             i18n.read().unwrap().lookup_cached::<[(&'_ str, Variable); #token_length]>(#key, &[
                 #( #z )*
-            ], #current_crate, #hash)
+            ], #current_crate, #hash, #locale)
         }
     }
     .into()

@@ -170,22 +170,26 @@ impl Render for I18n {
                                     .child(tr!(
                                         "I18N_DATE_TIME_BASIC_MEDIUM",
                                         "YMD (medium): {{time}}",
-                                        time:date=local_time
+                                        time:date=local_time,
+                                        #locale=&locale
                                     ))
                                     .child(tr!(
                                         "I18N_DATE_TIME_BASIC_LONG",
                                         "YMD (short): {{time}}",
-                                        time:date("YMD", length="short")=local_time
+                                        time:date("YMD", length="short")=local_time,
+                                        #locale=&locale
                                     ))
                                     .child(tr!(
                                         "I18N_DATE_TIME_ADV_SHORT",
                                         "Custom (short): {{time}}",
-                                        time:date(date="E", length="short", time="minute")=local_time
+                                        time:date(date="E", length="short", time="minute")=local_time,
+                                        #locale=&locale
                                     ))
                                     .child(tr!(
                                         "I18N_DATE_TIME_ADV_LONG",
                                         "Custom (long): {{time}}",
-                                        time:date(date="MD", length="long", time="microsecond")=local_time
+                                        time:date(date="MD", length="long", time="microsecond")=local_time,
+                                        #locale=&locale
                                     ))
                             ),
                     ),
