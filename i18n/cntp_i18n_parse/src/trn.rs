@@ -1,3 +1,4 @@
+use std::hash::Hash;
 use syn::parse::{Parse, ParseStream};
 use syn::punctuated::Punctuated;
 use syn::{LitStr, Token};
@@ -51,5 +52,13 @@ impl Parse for TrnMacroInput {
             variables,
             context,
         })
+    }
+}
+
+impl Hash for TrnMacroInput {
+    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+        self.translation_id.hash(state);
+        self.variables.hash(state);
+        self.context.hash(state);
     }
 }

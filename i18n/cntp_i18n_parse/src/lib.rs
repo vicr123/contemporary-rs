@@ -8,6 +8,7 @@ use syn::{
     token::Paren,
 };
 
+#[derive(Hash)]
 pub struct NamedArg {
     pub name: Ident,
     pub value: Expr,
@@ -22,6 +23,7 @@ impl Parse for NamedArg {
     }
 }
 
+#[derive(Hash)]
 pub struct MaybeFormattedNamedArg {
     pub name: Ident,
     pub value: Expr,
@@ -49,6 +51,7 @@ impl Parse for MaybeFormattedNamedArg {
     }
 }
 
+#[derive(Hash)]
 pub struct MaybeNamedFormatterArg {
     pub name: Option<Ident>,
     pub value: LitStr,
@@ -69,6 +72,7 @@ impl Parse for MaybeNamedFormatterArg {
     }
 }
 
+#[derive(Hash)]
 pub struct FormatterInvocation {
     pub name: Path,
     pub args: Punctuated<MaybeNamedFormatterArg, Token![,]>,

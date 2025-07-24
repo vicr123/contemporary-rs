@@ -1,6 +1,9 @@
 pub use cntp_i18n_macros::{tr, tr_load, trn};
 use cntp_localesupport::modifiers::ModifierVariable;
 use once_cell::sync::Lazy;
+use quick_cache::sync::Cache;
+use rustc_hash::FxHasher;
+use std::hash::{Hash, Hasher};
 use std::sync::RwLock;
 
 pub use cntp_i18n_core::{
@@ -24,15 +27,21 @@ macro_rules! i18n_manager {
 pub struct I18nManager {
     sources: Vec<Box<dyn I18nSource>>,
     pub locale: Locale,
+    cache: Cache<u64, I18nString>,
 }
 
-pub struct BaseStringModifierInvocation<'a, T: ?Sized>(
+pub trait ErasedStringModifierTransform {
+    fn transform(&self, locale: &Locale) -> String;
+    fn hash(&self, state: &mut FxHasher);
+}
+
+pub struct BaseStringModifierInvocation<'a, T: ?Sized + Hash>(
     &'a dyn StringModifier<&'a T>,
     &'a [ModifierVariable<'a>],
     &'a T,
 );
 
-impl<'a, T> BaseStringModifierInvocation<'a, T> {
+impl<'a, T: ?Sized + Hash> BaseStringModifierInvocation<'a, T> {
     pub fn new(
         modifier: &'a dyn StringModifier<&'a T>,
         variables: &'a [ModifierVariable<'a>],
@@ -42,14 +51,15 @@ impl<'a, T> BaseStringModifierInvocation<'a, T> {
     }
 }
 
-pub trait ErasedStringModifierTransform {
-    fn transform(&self, locale: &Locale) -> String;
-}
-
-impl<'a, T> ErasedStringModifierTransform for BaseStringModifierInvocation<'a, T> {
+impl<'a, T: ?Sized + Hash> ErasedStringModifierTransform for BaseStringModifierInvocation<'a, T> {
     fn transform(&self, locale: &Locale) -> String {
         let BaseStringModifierInvocation(modifier, variables, input) = self;
         modifier.transform(locale, input, variables)
+    }
+
+    fn hash(&self, state: &mut FxHasher) {
+        let BaseStringModifierInvocation(_, _, input) = self;
+        input.hash(state);
     }
 }
 
@@ -76,11 +86,47 @@ pub enum Variable<'a> {
     Count(isize),
 }
 
+impl Variable<'_> {
+    fn hash_value(&self, state: &mut FxHasher) {
+        match self {
+            Variable::Modified(modifier, _) => {
+                modifier.hash(state);
+            }
+            Variable::String(string) => string.hash(state),
+            Variable::Count(count) => count.hash(state),
+        }
+    }
+}
+
 type LookupVariable<'a> = &'a (&'a str, Variable<'a>);
 
 impl I18nManager {
     pub fn load_source(&mut self, source: impl I18nSource + 'static) {
         self.sources.push(Box::new(source));
+    }
+
+    pub fn lookup_cached<'a, T>(
+        &self,
+        key: &str,
+        variables: &'a T,
+        lookup_crate: &str,
+        hash: u64,
+    ) -> I18nString
+    where
+        &'a T: IntoIterator<Item = LookupVariable<'a>>,
+    {
+        let mut state = FxHasher::default();
+        hash.hash(&mut state);
+        for variable in variables.into_iter() {
+            variable.1.hash_value(&mut state);
+        }
+        let full_call_hash = state.finish();
+
+        self.cache.get(&full_call_hash).clone().unwrap_or_else(|| {
+            let result = self.lookup(key, variables, lookup_crate);
+            self.cache.insert(full_call_hash, result.clone());
+            result
+        })
     }
 
     pub fn lookup<'a, T>(&self, key: &str, variables: &'a T, lookup_crate: &str) -> I18nString
@@ -171,6 +217,7 @@ impl Default for I18nManager {
         I18nManager {
             sources: vec![],
             locale: Locale::current(),
+            cache: Cache::new(500),
         }
     }
 }

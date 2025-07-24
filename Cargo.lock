@@ -28,6 +28,7 @@ checksum = "5a15f179cd60c4584b8a8c596927aadc462e27f2ca70c04e0071964a73ba7a75"
 dependencies = [
  "cfg-if",
  "const-random",
+ "getrandom 0.3.3",
  "once_cell",
  "version_check",
  "zerocopy",
@@ -1000,6 +1001,8 @@ dependencies = [
  "cntp_localesupport",
  "once_cell",
  "phf",
+ "quick_cache",
+ "rustc-hash 2.1.1",
 ]
 
 [[package]]
@@ -1039,6 +1042,7 @@ dependencies = [
  "once_cell",
  "proc-macro2",
  "quote",
+ "rustc-hash 2.1.1",
  "syn 2.0.104",
 ]
 
@@ -4469,6 +4473,18 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8927b0664f5c5a98265138b7e3f90aa19a6b21353182469ace36d4ac527b7b1b"
 dependencies = [
  "memchr",
+]
+
+[[package]]
+name = "quick_cache"
+version = "0.6.14"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6b450dad8382b1b95061d5ca1eb792081fb082adf48c678791fe917509596d5f"
+dependencies = [
+ "ahash",
+ "equivalent",
+ "hashbrown 0.15.4",
+ "parking_lot",
 ]
 
 [[package]]

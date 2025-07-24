@@ -32,3 +32,4 @@ anyhow = "1"
 tracing = "0.1"
 rust-embed = { version = "8.7.2", features = ["include-exclude"] }
 clap-cargo = { version = "0.15", features = ["cargo_metadata"] }
+rustc-hash = "2"

@@ -2,8 +2,8 @@ use cntp_i18n_parse::{
     MaybeFormattedNamedArg, MaybeNamedFormatterArg, tr::TrMacroInput, trn::TrnMacroInput,
 };
 use proc_macro::TokenStream;
-
 use quote::quote;
+use std::hash::{Hash, Hasher};
 use syn::{Error, Ident, Path, parse_macro_input, punctuated::Punctuated, token::Comma};
 
 use crate::config::CURRENT_CRATE;
@@ -22,7 +22,7 @@ pub fn resolve_modifier(path: Path) -> proc_macro2::TokenStream {
 }
 
 pub fn non_count_variable(
-    variable: MaybeFormattedNamedArg,
+    variable: &MaybeFormattedNamedArg,
     bsmi_decls: &mut Vec<proc_macro2::TokenStream>,
     ssmi_decls: &mut Vec<proc_macro2::TokenStream>,
     z: &mut Vec<proc_macro2::TokenStream>,
@@ -95,7 +95,7 @@ pub fn non_count_variable(
             ),
         });
     } else {
-        let expr = variable.value;
+        let expr = &variable.value;
         z.push(quote! {
             (
                 #var_name,
@@ -144,7 +144,7 @@ pub fn tr(body: TokenStream) -> TokenStream {
     let mut ssmi_decls = Vec::new();
 
     let mut z = Vec::new();
-    for variable in input.variables {
+    for variable in input.variables.iter() {
         // Ensure the variable is used
         if let Some(default_string) = &input.default_string {
             if !default_string
@@ -167,7 +167,7 @@ pub fn tr(body: TokenStream) -> TokenStream {
         if variable.name == "count" {
             // Special handling
             let var_name = variable.name.to_string();
-            let expr = variable.value;
+            let expr = &variable.value;
             z.push(quote! {
                 (
                     #var_name,
@@ -186,6 +186,10 @@ pub fn tr(body: TokenStream) -> TokenStream {
     let current_crate = &*CURRENT_CRATE;
     let token_length = z.len();
 
+    let mut state = rustc_hash::FxHasher::default();
+    input.hash(&mut state);
+    let hash = state.finish();
+
     quote! {
         {
             use cntp_i18n::I18N_MANAGER as i18n;
@@ -195,9 +199,9 @@ pub fn tr(body: TokenStream) -> TokenStream {
             #( #bsmi_decls )*
             #( #ssmi_decls )*
 
-            i18n.read().unwrap().lookup::<[(&'_ str, Variable); #token_length]>(#key, &[
+            i18n.read().unwrap().lookup_cached::<[(&'_ str, Variable); #token_length]>(#key, &[
                 #( #z )*
-            ], #current_crate)
+            ], #current_crate, #hash)
         }
     }
     .into()
@@ -232,7 +236,7 @@ pub fn trn(body: TokenStream) -> TokenStream {
     let mut ssmi_decls = Vec::new();
 
     let mut z = Vec::new();
-    for variable in input.variables {
+    for variable in &input.variables {
         let is_used = input.default_strings.iter().any(|default_string| {
             default_string
                 .value()
@@ -254,7 +258,7 @@ pub fn trn(body: TokenStream) -> TokenStream {
         if variable.name == "count" {
             // Special handling
             let var_name = variable.name.to_string();
-            let expr = variable.value;
+            let expr = &variable.value;
             z.push(quote! {
                 (
                     #var_name,
@@ -273,6 +277,10 @@ pub fn trn(body: TokenStream) -> TokenStream {
     let current_crate = &*CURRENT_CRATE;
     let token_length = z.len();
 
+    let mut state = rustc_hash::FxHasher::default();
+    input.hash(&mut state);
+    let hash = state.finish();
+
     quote! {
         {
             use cntp_i18n::I18N_MANAGER as i18n;
@@ -282,9 +290,9 @@ pub fn trn(body: TokenStream) -> TokenStream {
             #( #bsmi_decls )*
             #( #ssmi_decls )*
 
-            i18n.read().unwrap().lookup::<[(&'_ str, Variable); #token_length]>(#key, &[
+            i18n.read().unwrap().lookup_cached::<[(&'_ str, Variable); #token_length]>(#key, &[
                 #( #z )*
-            ], #current_crate)
+            ], #current_crate, #hash)
         }
     }
     .into()
