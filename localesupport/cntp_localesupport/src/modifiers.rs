@@ -1,4 +1,6 @@
+mod date;
 mod quote;
+pub use date::Date;
 pub use quote::Quote;
 
 use crate::Locale;
