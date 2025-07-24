@@ -2,7 +2,7 @@ pub mod tr;
 pub mod trn;
 
 use syn::{
-    Expr, Ident, LitStr, Token, parenthesized,
+    Expr, Ident, LitStr, Path, Token, parenthesized,
     parse::{Parse, ParseStream},
     punctuated::Punctuated,
     token::Paren,
@@ -70,13 +70,13 @@ impl Parse for MaybeNamedFormatterArg {
 }
 
 pub struct FormatterInvocation {
-    pub name: Ident,
+    pub name: Path,
     pub args: Punctuated<MaybeNamedFormatterArg, Token![,]>,
 }
 
 impl Parse for FormatterInvocation {
     fn parse(input: ParseStream) -> syn::Result<Self> {
-        let name: Ident = input.parse()?;
+        let name: Path = input.parse()?;
         let args = if input.peek(Paren) {
             let content;
             parenthesized!(content in input);

@@ -2,9 +2,22 @@ use cntp_i18n_parse::{tr::TrMacroInput, trn::TrnMacroInput};
 use proc_macro::TokenStream;
 
 use quote::quote;
-use syn::{Error, parse_macro_input};
+use syn::{Error, Path, parse_macro_input};
 
 use crate::config::CURRENT_CRATE;
+
+pub fn resolve_modifier(path: Path) -> proc_macro2::TokenStream {
+    if let Some(ident) = path.get_ident() {
+        let name = ident.to_string();
+
+        match name.as_str() {
+            "quote" => quote! { cntp_i18n::Quote },
+            _ => quote! { #path },
+        }
+    } else {
+        quote! { #path }
+    }
+}
 
 /// Returns a translated string for the given key.
 ///

@@ -3,9 +3,9 @@ pub use quote::Quote;
 
 use crate::Locale;
 
-type ModifierVariable<'a> = &'a (Option<&'a str>, &'a str);
+pub type ModifierVariable<'a> = &'a (Option<&'a str>, &'a str);
 
-pub trait StringModifier<T>: Default {
+pub trait StringModifier<T> {
     fn transform<'a>(
         &self,
         locale: &Locale,
