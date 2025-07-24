@@ -1,3 +1,4 @@
+use chrono::{DateTime, Local};
 use cntp_i18n::{Locale, LocaleFormattable, i18n_manager, tr};
 use contemporary::components::constrainer::constrainer;
 use contemporary::components::grandstand::grandstand;
@@ -40,6 +41,8 @@ impl Render for I18n {
         let quote_strings_text = self.quote_strings_text_field.read(cx).current_text(cx);
 
         let locale = Locale::new_from_locale_identifier(requested_locale);
+
+        let local_time: DateTime<Local> = Local::now();
 
         div()
             .bg(theme.background)
@@ -145,6 +148,44 @@ impl Render for I18n {
                                         "The speed of light: {{speed_of_light}} m/s",
                                         speed_of_light =
                                             299_792_458.to_locale_string(&locale)
+                                    ))
+                            ),
+                    )
+                    .child(
+                        layer("i18n-date-time")
+                            .flex()
+                            .flex_col()
+                            .p(px(8.))
+                            .w_full()
+                            .child(subtitle(tr!("I18N_DATE_TIME", "Date & Time")))
+                            .child(
+                                div()
+                                    .flex()
+                                    .flex_col()
+                                    .gap(px(8.))
+                                    .child(tr!(
+                                        "I18N_DATE_TIME_DESCRIPTION",
+                                        "Dates are formatted in the following manner in this locale:"
+                                    ))
+                                    .child(tr!(
+                                        "I18N_DATE_TIME_BASIC_MEDIUM",
+                                        "YMD (medium): {{time}}",
+                                        time:date=local_time
+                                    ))
+                                    .child(tr!(
+                                        "I18N_DATE_TIME_BASIC_LONG",
+                                        "YMD (short): {{time}}",
+                                        time:date("YMD", length="short")=local_time
+                                    ))
+                                    .child(tr!(
+                                        "I18N_DATE_TIME_ADV_SHORT",
+                                        "Custom (short): {{time}}",
+                                        time:date(date="E", length="short", time="minute")=local_time
+                                    ))
+                                    .child(tr!(
+                                        "I18N_DATE_TIME_ADV_LONG",
+                                        "Custom (long): {{time}}",
+                                        time:date(date="MD", length="long", time="microsecond")=local_time
                                     ))
                             ),
                     ),
