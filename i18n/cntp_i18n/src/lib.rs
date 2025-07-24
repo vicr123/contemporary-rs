@@ -53,8 +53,19 @@ impl<'a, T> ErasedStringModifierTransform for BaseStringModifierInvocation<'a, T
     }
 }
 
-pub type SubsequentStringModifierInvocation<'a> =
-    (&'a dyn StringModifier<String>, &'a [ModifierVariable<'a>]);
+pub struct SubsequentStringModifierInvocation<'a>(
+    &'a dyn StringModifier<String>,
+    &'a [ModifierVariable<'a>],
+);
+
+impl<'a> SubsequentStringModifierInvocation<'a> {
+    pub fn new(
+        modifier: &'a dyn StringModifier<String>,
+        variables: &'a [ModifierVariable<'a>],
+    ) -> Self {
+        SubsequentStringModifierInvocation(modifier, variables)
+    }
+}
 
 pub enum Variable<'a> {
     Modified(
