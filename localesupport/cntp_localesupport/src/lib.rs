@@ -8,12 +8,16 @@ use icu::decimal::input::Decimal;
 use icu::locale::subtags::{Language, Region};
 use icu::locale::{Locale as IcuLocale, locale};
 use locale_config::Locale as LocaleConfigLocale;
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use std::fmt::Display;
 
 pub struct Locale {
     pub messages: Vec<String>,
+    pub numeric: Vec<String>,
+    pub time: Vec<String>,
     messages_icu: IcuLocale,
+    numeric_icu: IcuLocale,
+    time_icu: IcuLocale,
     cldr_data: HashMap<String, CldrData>,
 }
 
@@ -44,15 +48,30 @@ impl Locale {
         None
     }
 
-    pub fn new_from_parts(messages: Vec<String>) -> Locale {
+    pub fn new_from_parts(
+        messages: Vec<String>,
+        numeric: Vec<String>,
+        time: Vec<String>,
+    ) -> Locale {
         // When we add other lookup areas to this locale we should collect them all here and
         // dedupe the array
-        let required_cldr_data = messages.clone();
+        let required_cldr_data = messages
+            .clone()
+            .into_iter()
+            .chain(numeric.clone().into_iter())
+            .chain(time.clone().into_iter())
+            .collect::<HashSet<_>>();
 
         Locale {
             messages_icu: Self::create_icu_locale(messages.first().unwrap())
                 .unwrap_or_else(|| Self::create_icu_locale("en").unwrap()),
             messages,
+            numeric_icu: Self::create_icu_locale(numeric.first().unwrap())
+                .unwrap_or_else(|| Self::create_icu_locale("en").unwrap()),
+            numeric,
+            time_icu: Self::create_icu_locale(time.first().unwrap())
+                .unwrap_or_else(|| Self::create_icu_locale("en").unwrap()),
+            time,
             cldr_data: required_cldr_data
                 .into_iter()
                 .map(|language| {
@@ -64,20 +83,34 @@ impl Locale {
     }
 
     pub fn new_from_locale_config_locale(locale_config_locale: LocaleConfigLocale) -> Locale {
-        let mut parts = locale_config_locale
-            .tags_for("messages")
-            .flat_map(|language_range| Self::split_language_range(language_range.as_ref()))
-            .filter(|language_range| !language_range.is_empty())
-            .peekable();
-        if parts.peek().is_none() {
-            Self::new_from_parts(vec!["en".to_string()])
-        } else {
-            Self::new_from_parts(parts.collect())
-        }
+        let extract_language_range = |tag: &str| -> Vec<String> {
+            let mut parts = locale_config_locale
+                .tags_for(tag)
+                .flat_map(|language_range| Locale::split_language_range(language_range.as_ref()))
+                .filter(|language_range| !language_range.is_empty())
+                .peekable();
+
+            if parts.peek().is_none() {
+                vec!["en".to_string()]
+            } else {
+                parts.collect()
+            }
+        };
+
+        Self::new_from_parts(
+            extract_language_range("messages"),
+            extract_language_range("numeric"),
+            extract_language_range("time"),
+        )
     }
 
     pub fn new_from_locale_identifier(identifier: impl Into<String>) -> Locale {
-        Self::new_from_parts(vec![identifier.into()])
+        let identifier = identifier.into();
+        Self::new_from_parts(
+            vec![identifier.clone()],
+            vec![identifier.clone()],
+            vec![identifier],
+        )
     }
 
     pub fn is_regional(&self) -> bool {
@@ -195,7 +228,7 @@ impl Locale {
     }
 
     fn create_decimal_formatter(&self) -> DecimalFormatter {
-        DecimalFormatter::try_new(self.messages_icu.clone().into(), Default::default())
+        DecimalFormatter::try_new(self.numeric_icu.clone().into(), Default::default())
             .unwrap_or_else(|_| {
                 DecimalFormatter::try_new(locale!("en").into(), Default::default()).unwrap()
             })

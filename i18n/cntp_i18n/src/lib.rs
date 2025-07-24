@@ -123,6 +123,9 @@ impl I18nManager {
         for variable in variables.into_iter() {
             variable.1.hash_value(&mut state);
         }
+        if let Some(locale) = locale_override {
+            locale.messages.hash(&mut state);
+        }
         let full_call_hash = state.finish();
 
         self.cache.get(&full_call_hash).clone().unwrap_or_else(|| {

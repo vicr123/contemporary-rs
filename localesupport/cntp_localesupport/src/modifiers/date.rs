@@ -258,8 +258,7 @@ impl Date {
         input: DateTime<Iso>,
         variables: CompositeDateTimeFieldSet,
     ) -> String {
-        let dtf =
-            DateTimeFormatter::try_new(locale.messages_icu.clone().into(), variables).unwrap();
+        let dtf = DateTimeFormatter::try_new(locale.time_icu.clone().into(), variables).unwrap();
 
         dtf.format(&input).to_string()
     }

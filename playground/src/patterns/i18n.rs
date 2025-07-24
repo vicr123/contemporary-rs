@@ -106,12 +106,14 @@ impl Render for I18n {
                                     .child(tr!(
                                         "I18N_QUOTE_STRING_QUOTED",
                                         "Your favourite song is {{favourite_song}}",
-                                        favourite_song:quote=quote_strings_text
+                                        favourite_song:quote=quote_strings_text,
+                                        #locale=&locale
                                     ))
                                     .child(tr!(
                                         "I18N_QUOTE_STRING_QUOTED",
                                         "Your favourite song is {{favourite_song}}",
-                                        favourite_song:quote("alt")=quote_strings_text
+                                        favourite_song:quote("alt")=quote_strings_text,
+                                        #locale=&locale
                                     ))
                             ),
                     )
