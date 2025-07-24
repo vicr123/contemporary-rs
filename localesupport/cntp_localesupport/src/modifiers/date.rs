@@ -278,3 +278,56 @@ impl StringModifier<&str> for Date {
         Date::make_date_string(locale, date, fset)
     }
 }
+
+#[cfg(feature = "chrono")]
+impl<T: chrono::TimeZone> StringModifier<chrono::DateTime<T>> for Date {
+    fn transform<'a>(
+        &self,
+        locale: &Locale,
+        input: chrono::DateTime<T>,
+        variables: &'a [super::ModifierVariable<'a>],
+    ) -> String {
+        use chrono::Offset;
+        use icu::time::{ZonedDateTime, zone::UtcOffset};
+
+        let fset = Date::make_field_set(variables);
+        let offset = UtcOffset::try_from_seconds(input.offset().fix().local_minus_utc()).unwrap();
+        let epoch = input.timestamp_millis();
+
+        let zdt =
+            ZonedDateTime::<Iso, UtcOffset>::from_epoch_milliseconds_and_utc_offset(epoch, offset);
+
+        let date = DateTime {
+            date: zdt.date,
+            time: zdt.time,
+        };
+
+        Date::make_date_string(locale, date, fset)
+    }
+}
+
+#[cfg(feature = "chrono")]
+impl StringModifier<chrono::NaiveDateTime> for Date {
+    fn transform<'a>(
+        &self,
+        locale: &Locale,
+        input: chrono::NaiveDateTime,
+        variables: &'a [super::ModifierVariable<'a>],
+    ) -> String {
+        use icu::time::{ZonedDateTime, zone::UtcOffset};
+
+        let fset = Date::make_field_set(variables);
+        let offset = UtcOffset::try_from_seconds(0).unwrap();
+        let epoch = input.and_utc().timestamp_millis();
+
+        let zdt =
+            ZonedDateTime::<Iso, UtcOffset>::from_epoch_milliseconds_and_utc_offset(epoch, offset);
+
+        let date = DateTime {
+            date: zdt.date,
+            time: zdt.time,
+        };
+
+        Date::make_date_string(locale, date, fset)
+    }
+}
