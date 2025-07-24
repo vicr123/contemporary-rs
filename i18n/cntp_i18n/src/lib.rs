@@ -209,8 +209,8 @@ impl I18nManager {
                             format!("{{{{{name}}}}}").as_str(),
                             subsequent
                                 .iter()
-                                .fold(initial.transform(&locale), |v, modi| {
-                                    modi.0.transform(&locale, v, modi.1)
+                                .fold(initial.transform(locale), |v, modi| {
+                                    modi.0.transform(locale, v, modi.1)
                                 })
                                 .as_str(),
                         )

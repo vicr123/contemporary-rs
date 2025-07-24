@@ -58,8 +58,8 @@ impl Locale {
         let required_cldr_data = messages
             .clone()
             .into_iter()
-            .chain(numeric.clone().into_iter())
-            .chain(time.clone().into_iter())
+            .chain(numeric.clone())
+            .chain(time.clone())
             .collect::<HashSet<_>>();
 
         Locale {
