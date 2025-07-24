@@ -1,8 +1,8 @@
 use cntp_i18n_parse::{tr::TrMacroInput, trn::TrnMacroInput};
-use proc_macro::TokenStream;
+use proc_macro::{Span, TokenStream};
 
 use quote::quote;
-use syn::{Error, Path, parse_macro_input};
+use syn::{Error, Ident, Path, parse_macro_input};
 
 use crate::config::CURRENT_CRATE;
 
@@ -28,6 +28,8 @@ pub fn resolve_modifier(path: Path) -> proc_macro2::TokenStream {
 /// ```
 pub fn tr(body: TokenStream) -> TokenStream {
     let input = parse_macro_input!(body as TrMacroInput);
+
+    let mut bsmi_decls = Vec::new();
 
     let mut z = Vec::new();
     for variable in input.variables {
@@ -64,17 +66,49 @@ pub fn tr(body: TokenStream) -> TokenStream {
                 ),
             });
         } else {
+            let bsmi_ref = if let Some(mod_invoke) = variable.formatters.first() {
+                let bsmi_name: Ident = Ident::new(
+                    &format!("bsmi_decl_{}", bsmi_decls.len()),
+                    proc_macro2::Span::call_site(),
+                );
+                let bsmi_path = resolve_modifier(mod_invoke.name.clone());
+                let bsmi_expr = variable.value.clone();
+
+                let bsmi_decl = quote! { let #bsmi_name = BaseStringModifierInvocation::new(&#bsmi_path, &[], &#bsmi_expr); };
+
+                bsmi_decls.push(bsmi_decl);
+
+                Some(quote! {
+                    (&#bsmi_name as &dyn ErasedStringModifierTransform)
+                })
+            } else {
+                None
+            };
+
             let var_name = variable.name.to_string();
-            let expr = variable.value;
-            z.push(quote! {
-                (
-                    #var_name,
-                    {
-                        use cntp_i18n::Variable;
-                        Variable::String(#expr.to_string())
-                    }
-                ),
-            });
+
+            if let Some(bsmi_ref) = bsmi_ref {
+                z.push(quote! {
+                    (
+                        #var_name,
+                        {
+                            use cntp_i18n::Variable;
+                            Variable::Modified(#bsmi_ref, &[])
+                        }
+                    ),
+                });
+            } else {
+                let expr = variable.value;
+                z.push(quote! {
+                    (
+                        #var_name,
+                        {
+                            use cntp_i18n::Variable;
+                            Variable::String(#expr.to_string())
+                        }
+                    ),
+                });
+            }
         }
     }
 
@@ -85,7 +119,11 @@ pub fn tr(body: TokenStream) -> TokenStream {
     quote! {
         {
             use cntp_i18n::I18N_MANAGER as i18n;
-            use cntp_i18n::Variable;
+            use cntp_i18n::{Variable, BaseStringModifierInvocation, ErasedStringModifierTransform,
+                SubsequentStringModifierInvocation, StringModifier};
+
+            #( #bsmi_decls )*
+
             i18n.read().unwrap().lookup::<[(&'_ str, Variable); #token_length]>(#key, &[
                 #( #z )*
             ], #current_crate)

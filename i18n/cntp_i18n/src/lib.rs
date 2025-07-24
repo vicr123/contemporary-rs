@@ -131,13 +131,18 @@ impl I18nManager {
                         panic!("Substitution variable ({name}) not of type string (is {count})",)
                     }
                     Variable::String(string) => resolved
-                        .replace(format!("{{{{{name}}}}}",).as_str(), string.as_str())
+                        .replace(format!("{{{{{name}}}}}").as_str(), string.as_str())
                         .into(),
-                    Variable::Modified(initial, subsequent) => subsequent
-                        .iter()
-                        .fold(initial.transform(&self.locale), |v, modi| {
-                            modi.0.transform(&self.locale, v, modi.1)
-                        })
+                    Variable::Modified(initial, subsequent) => resolved
+                        .replace(
+                            format!("{{{{{name}}}}}").as_str(),
+                            subsequent
+                                .iter()
+                                .fold(initial.transform(&self.locale), |v, modi| {
+                                    modi.0.transform(&self.locale, v, modi.1)
+                                })
+                                .as_str(),
+                        )
                         .into(),
                 }
             }

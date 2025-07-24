@@ -100,11 +100,16 @@ impl Render for I18n {
                                         "Type some text below to see it quoted."
                                     ))
                                     .child(self.quote_strings_text_field.clone())
+                                    // .child(tr!(
+                                    //     "I18N_QUOTE_STRING_QUOTED",
+                                    //     "Your favourite song is {{favourite_song}}",
+                                    //     favourite_song =
+                                    //         locale.quote_string(quote_strings_text.clone())
+                                    // ))
                                     .child(tr!(
                                         "I18N_QUOTE_STRING_QUOTED",
                                         "Your favourite song is {{favourite_song}}",
-                                        favourite_song =
-                                            locale.quote_string(quote_strings_text.clone())
+                                        favourite_song:quote=quote_strings_text
                                     ))
                                     .child(tr!(
                                         "I18N_QUOTE_STRING_QUOTED",
