@@ -116,20 +116,18 @@ impl I18nManager {
     where
         &'a T: IntoIterator<Item = LookupVariable<'a>>,
     {
-        let locale = locale_override.unwrap_or(&self.locale);
-
         let mut state = FxHasher::default();
         hash.hash(&mut state);
         for variable in variables.into_iter() {
             variable.1.hash_value(&mut state);
         }
         if let Some(locale) = locale_override {
-            locale.messages.hash(&mut state);
+            (&locale).hash(&mut state);
         }
         let full_call_hash = state.finish();
 
         self.cache.get(&full_call_hash).clone().unwrap_or_else(|| {
-            let result = self.lookup(key, variables, lookup_crate, Some(locale));
+            let result = self.lookup(key, variables, lookup_crate, locale_override);
             self.cache.insert(full_call_hash, result.clone());
             result
         })

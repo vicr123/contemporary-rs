@@ -10,6 +10,7 @@ use icu::locale::{Locale as IcuLocale, locale};
 use locale_config::Locale as LocaleConfigLocale;
 use std::collections::{HashMap, HashSet};
 use std::fmt::Display;
+use std::hash::Hash;
 
 pub struct Locale {
     pub messages: Vec<String>,
@@ -19,6 +20,14 @@ pub struct Locale {
     numeric_icu: IcuLocale,
     time_icu: IcuLocale,
     cldr_data: HashMap<String, CldrData>,
+}
+
+impl Hash for Locale {
+    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+        self.messages_icu.hash(state);
+        self.numeric_icu.hash(state);
+        self.time_icu.hash(state);
+    }
 }
 
 #[derive(Debug)]
