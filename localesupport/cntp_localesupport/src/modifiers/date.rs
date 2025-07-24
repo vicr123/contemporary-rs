@@ -225,7 +225,9 @@ impl Date {
     fn make_field_set<'a>(
         variables: &'a [super::ModifierVariable<'a>],
     ) -> CompositeDateTimeFieldSet {
-        if let Some((None, string)) = variables.first() {
+        if variables.is_empty() {
+            CompositeDateTimeFieldSet::Date(DateFieldSet::YMD(YMD::medium()))
+        } else if let Some((None, string)) = variables.first() {
             let length = variables
                 .iter()
                 .find(|v| v.0 == Some("length"))
@@ -280,11 +282,11 @@ impl StringModifier<&str> for Date {
 }
 
 #[cfg(feature = "chrono")]
-impl<T: chrono::TimeZone> StringModifier<chrono::DateTime<T>> for Date {
+impl<T: chrono::TimeZone> StringModifier<&chrono::DateTime<T>> for Date {
     fn transform<'a>(
         &self,
         locale: &Locale,
-        input: chrono::DateTime<T>,
+        input: &chrono::DateTime<T>,
         variables: &'a [super::ModifierVariable<'a>],
     ) -> String {
         use chrono::Offset;
@@ -307,11 +309,11 @@ impl<T: chrono::TimeZone> StringModifier<chrono::DateTime<T>> for Date {
 }
 
 #[cfg(feature = "chrono")]
-impl StringModifier<chrono::NaiveDateTime> for Date {
+impl StringModifier<&chrono::NaiveDateTime> for Date {
     fn transform<'a>(
         &self,
         locale: &Locale,
-        input: chrono::NaiveDateTime,
+        input: &chrono::NaiveDateTime,
         variables: &'a [super::ModifierVariable<'a>],
     ) -> String {
         use icu::time::{ZonedDateTime, zone::UtcOffset};

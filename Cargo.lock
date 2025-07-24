@@ -4334,6 +4334,7 @@ checksum = "7edddbd0b52d732b21ad9a5fab5c704c14cd949e5e9a1ec5929a24fded1b904c"
 name = "playground"
 version = "0.1.0"
 dependencies = [
+ "chrono",
  "cntp_i18n",
  "cntp_i18n_gen",
  "cntp_icon_tool_macros",

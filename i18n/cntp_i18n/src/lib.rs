@@ -11,7 +11,7 @@ pub use cntp_i18n_core::{
 };
 pub use cntp_localesupport::Locale;
 pub use cntp_localesupport::locale_formattable::LocaleFormattable;
-pub use cntp_localesupport::modifiers::{Quote, StringModifier};
+pub use cntp_localesupport::modifiers::{Date, Quote, StringModifier};
 pub use phf;
 
 pub static I18N_MANAGER: Lazy<RwLock<I18nManager>> =

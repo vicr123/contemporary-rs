@@ -14,6 +14,7 @@ pub fn resolve_modifier(path: Path) -> proc_macro2::TokenStream {
 
         match name.as_str() {
             "quote" => quote! { cntp_i18n::Quote },
+            "date" => quote! { cntp_i18n::Date },
             _ => quote! { #path },
         }
     } else {
@@ -115,6 +116,7 @@ pub fn create_mi_vars(
         .iter()
         .map(|arg| {
             let name = if let Some(name) = arg.name.clone() {
+                let name = name.to_string();
                 quote! { Some(#name) }
             } else {
                 quote! { None }
