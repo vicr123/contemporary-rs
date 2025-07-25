@@ -1,13 +1,13 @@
 use cntp_i18n::tr;
 use contemporary::components::button::button;
 use contemporary::components::constrainer::constrainer;
-use contemporary::components::dialog_box::{dialog_box, StandardButton};
+use contemporary::components::dialog_box::{StandardButton, dialog_box};
 use contemporary::components::grandstand::grandstand;
 use contemporary::components::layer::layer;
 use contemporary::components::subtitle::subtitle;
 use contemporary::styling::theme::Theme;
 use gpui::{
-    div, px, App, AppContext, Context, Entity, IntoElement, ParentElement, Render, Styled, Window,
+    App, AppContext, Context, Entity, IntoElement, ParentElement, Render, Styled, Window, div, px,
 };
 
 pub struct DialogBoxes {
@@ -157,13 +157,9 @@ Only proceed if you are an expert user and fully understand the risks involved. 
                     tr!("DIALOG_BOX_ERROR_TITLE", "Unable to erase the CD").into()
                 )
                 .content(tr!("DIALOG_BOX_ERROR_CONTENT", r#"Sorry, we can't erase the CD because power calibration failed."#))
-                .button(
-                    button("sorry-button")
-                        .child(tr!("DIALOG_BOX_BUTTON_SORRY", "Sorry"))
-                        .on_click(cx.listener(|this, _, _, cx| {
-                            this.error_dialog_box_open = false;
-                        }))
-                )
+                .standard_button(StandardButton::Sorry, cx.listener(|this, _, _, cx| {
+                    this.error_dialog_box_open = false;
+                }))
             )
     }
 }

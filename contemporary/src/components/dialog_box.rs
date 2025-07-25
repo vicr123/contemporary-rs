@@ -24,6 +24,7 @@ pub enum StandardButton {
     Cancel,
     Yes,
     No,
+    Sorry,
 }
 
 impl StandardButton {
@@ -37,6 +38,7 @@ impl StandardButton {
             ),
             StandardButton::Yes => ("yes-button", "dialog-ok", tr!("DIALOG_YES", "Yes")),
             StandardButton::No => ("no-button", "dialog-cancel", tr!("DIALOG_NO", "No")),
+            StandardButton::Sorry => ("sorry-button", "dialog-ok", tr!("DIALOG_SORRY", "Sorry")),
         };
 
         button(id).child(icon_text(icon.into(), text.into()))

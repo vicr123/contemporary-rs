@@ -22,7 +22,6 @@
   "COMPONENTS_TITLE": "Components",
   "DIALOG_BOXES_DESCRIPTION": "Click on a button to open a dialog box",
   "DIALOG_BOXES_TITLE": "Dialog Boxes",
-  "DIALOG_BOX_BUTTON_SORRY": "Sorry",
   "DIALOG_BOX_ERROR": "An error has occurred",
   "DIALOG_BOX_ERROR_CONTENT": "Sorry, we can't erase the CD because power calibration failed.",
   "DIALOG_BOX_ERROR_TITLE": "Unable to erase the CD",

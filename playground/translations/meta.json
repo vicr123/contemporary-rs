@@ -119,12 +119,6 @@
     "plural": false,
     "description": null
   },
-  "DIALOG_BOX_BUTTON_SORRY": {
-    "context": "dialog_boxes.rs",
-    "definedIn": "src/patterns/dialog_boxes.rs:162",
-    "plural": false,
-    "description": null
-  },
   "DIALOG_BOX_ERROR": {
     "context": "dialog_boxes.rs",
     "definedIn": "src/patterns/dialog_boxes.rs:83",
