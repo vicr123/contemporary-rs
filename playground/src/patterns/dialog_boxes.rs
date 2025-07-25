@@ -154,9 +154,12 @@ Only proceed if you are an expert user and fully understand the risks involved. 
             )
             .child(dialog_box("error-dialog-box").visible(self.error_dialog_box_open)
                 .title(
-                    tr!("DIALOG_BOX_ERROR_TITLE", "Unable to erase the CD").into()
+                    tr!("DIALOG_BOX_ERROR_TITLE", "This disc can't be erased.").into()
                 )
-                .content(tr!("DIALOG_BOX_ERROR_CONTENT", r#"Sorry, we can't erase the CD because power calibration failed."#))
+                .content_text_informational(
+                    tr!("DIALOG_BOX_ERROR_CONTENT", "The disc in the drive is not rewritable, so it cannot be erased.").into(),
+                    tr!("DIALOG_BOX_ERROR_INFO", "If you need to destroy the data on the disc, you should physically break it in half.").into()
+                )
                 .standard_button(StandardButton::Sorry, cx.listener(|this, _, _, cx| {
                     this.error_dialog_box_open = false;
                 }))

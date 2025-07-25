@@ -127,7 +127,13 @@
   },
   "DIALOG_BOX_ERROR_CONTENT": {
     "context": "dialog_boxes.rs",
-    "definedIn": "src/patterns/dialog_boxes.rs:159",
+    "definedIn": "src/patterns/dialog_boxes.rs:160",
+    "plural": false,
+    "description": null
+  },
+  "DIALOG_BOX_ERROR_INFO": {
+    "context": "dialog_boxes.rs",
+    "definedIn": "src/patterns/dialog_boxes.rs:161",
     "plural": false,
     "description": null
   },
