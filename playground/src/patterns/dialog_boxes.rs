@@ -1,19 +1,20 @@
 use cntp_i18n::tr;
 use contemporary::components::button::button;
 use contemporary::components::constrainer::constrainer;
-use contemporary::components::dialog_box::{StandardButton, dialog_box};
+use contemporary::components::dialog_box::{dialog_box, StandardButton};
 use contemporary::components::grandstand::grandstand;
 use contemporary::components::layer::layer;
 use contemporary::components::subtitle::subtitle;
 use contemporary::styling::theme::Theme;
 use gpui::{
-    App, AppContext, Context, Entity, IntoElement, ParentElement, Render, Styled, Window, div, px,
+    div, px, App, AppContext, Context, Entity, IntoElement, ParentElement, Render, Styled, Window,
 };
 
 pub struct DialogBoxes {
     informational_dialog_open: bool,
     goblin_dialog_box_open: bool,
     nuclear_reactor_dialog_box_open: bool,
+    error_dialog_box_open: bool,
 }
 
 impl DialogBoxes {
@@ -22,6 +23,7 @@ impl DialogBoxes {
             informational_dialog_open: false,
             goblin_dialog_box_open: false,
             nuclear_reactor_dialog_box_open: false,
+            error_dialog_box_open: false,
         })
     }
 }
@@ -77,6 +79,10 @@ impl Render for DialogBoxes {
                                     .child(tr!("DIALOG_BOX_NUCLEAR_REACTOR", "Shut down the nuclear reactor!"))
                                     .on_click(cx.listener(|this, _, _, cx| {
                                         this.nuclear_reactor_dialog_box_open = true;
+                                    }))).child(button("error-dialog-box")
+                                    .child(tr!("DIALOG_BOX_ERROR", "An error has occurred"))
+                                    .on_click(cx.listener(|this, _, _, cx| {
+                                        this.error_dialog_box_open = true;
                                     }))),
                             ),
                     ),
@@ -145,6 +151,19 @@ Only proceed if you are an expert user and fully understand the risks involved. 
                     this.nuclear_reactor_dialog_box_open = false;
                     cx.notify()
                 })))
+            )
+            .child(dialog_box("error-dialog-box").visible(self.error_dialog_box_open)
+                .title(
+                    tr!("DIALOG_BOX_ERROR_TITLE", "Unable to erase the CD").into()
+                )
+                .content(tr!("DIALOG_BOX_ERROR_CONTENT", r#"Sorry, we can't erase the CD because power calibration failed."#))
+                .button(
+                    button("sorry-button")
+                        .child(tr!("DIALOG_BOX_BUTTON_SORRY", "Sorry"))
+                        .on_click(cx.listener(|this, _, _, cx| {
+                            this.error_dialog_box_open = false;
+                        }))
+                )
             )
     }
 }
