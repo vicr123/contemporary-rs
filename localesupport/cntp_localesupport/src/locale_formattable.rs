@@ -3,14 +3,14 @@ use icu::decimal::input::Decimal;
 use std::str::FromStr;
 
 pub trait LocaleFormattable {
-    fn to_locale_string(self, locale: &Locale) -> String;
+    fn to_locale_string(&self, locale: &Locale) -> String;
 }
 
 macro_rules! locale_formattable_integer_impl {
     ($typ:ty) => {
         impl LocaleFormattable for $typ {
-            fn to_locale_string(self, locale: &Locale) -> String {
-                locale.format_decimal(Decimal::from(self))
+            fn to_locale_string(&self, locale: &Locale) -> String {
+                locale.format_decimal(Decimal::from(*self))
             }
         }
     };
@@ -30,7 +30,7 @@ locale_formattable_integer_impl!(u128);
 macro_rules! locale_formattable_stringable_impl {
     ($typ:ty) => {
         impl LocaleFormattable for $typ {
-            fn to_locale_string(self, locale: &Locale) -> String {
+            fn to_locale_string(&self, locale: &Locale) -> String {
                 locale.format_decimal(Decimal::from_str(self.to_string().as_str()).unwrap())
             }
         }
@@ -39,3 +39,15 @@ macro_rules! locale_formattable_stringable_impl {
 
 locale_formattable_stringable_impl!(f32);
 locale_formattable_stringable_impl!(f64);
+
+impl LocaleFormattable for str {
+    fn to_locale_string(&self, _: &Locale) -> String {
+        self.to_string()
+    }
+}
+
+impl LocaleFormattable for String {
+    fn to_locale_string(&self, locale: &Locale) -> String {
+        self.as_str().to_locale_string(locale)
+    }
+}

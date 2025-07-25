@@ -97,12 +97,19 @@ pub fn non_count_variable(
         });
     } else {
         let expr = &variable.value;
+
+        let to = if variable.use_locale_string {
+            quote! { to_locale_string(&i18n.locale) }
+        } else {
+            quote! { to_string() }
+        };
+
         z.push(quote! {
             (
                 #var_name,
                 {
                     use cntp_i18n::Variable;
-                    Variable::String(#expr.to_string())
+                    Variable::String(#expr.#to)
                 }
             ),
         });
@@ -210,14 +217,16 @@ pub fn tr(body: TokenStream) -> TokenStream {
 
     quote! {
         {
-            use cntp_i18n::I18N_MANAGER as i18n;
+            use cntp_i18n::I18N_MANAGER;
             use cntp_i18n::{Variable, BaseStringModifierInvocation, ErasedStringModifierTransform,
-                SubsequentStringModifierInvocation, StringModifier};
+                SubsequentStringModifierInvocation, StringModifier, LocaleFormattable};
 
             #( #bsmi_decls )*
             #( #ssmi_decls )*
 
-            i18n.read().unwrap().lookup_cached::<[(&'_ str, Variable); #token_length]>(#key, &[
+            let i18n = I18N_MANAGER.read().unwrap();
+
+            i18n.lookup_cached::<[(&'_ str, Variable); #token_length]>(#key, &[
                 #( #z )*
             ], #current_crate, #hash, #locale)
         }
@@ -317,14 +326,16 @@ pub fn trn(body: TokenStream) -> TokenStream {
 
     quote! {
         {
-            use cntp_i18n::I18N_MANAGER as i18n;
+            use cntp_i18n::I18N_MANAGER;
             use cntp_i18n::{Variable, BaseStringModifierInvocation, ErasedStringModifierTransform,
-                SubsequentStringModifierInvocation, StringModifier};
+                SubsequentStringModifierInvocation, StringModifier, LocaleFormattable};
 
             #( #bsmi_decls )*
             #( #ssmi_decls )*
 
-            i18n.read().unwrap().lookup_cached::<[(&'_ str, Variable); #token_length]>(#key, &[
+            let i18n = I18N_MANAGER.read().unwrap();
+
+            i18n.lookup_cached::<[(&'_ str, Variable); #token_length]>(#key, &[
                 #( #z )*
             ], #current_crate, #hash, #locale)
         }

@@ -28,6 +28,7 @@ pub struct MaybeFormattedNamedArg {
     pub name: Ident,
     pub value: Expr,
     pub formatters: Punctuated<FormatterInvocation, Token![:]>,
+    pub use_locale_string: bool,
 }
 
 impl Parse for MaybeFormattedNamedArg {
@@ -41,12 +42,21 @@ impl Parse for MaybeFormattedNamedArg {
         }
 
         input.parse::<Token![=]>()?;
+
+        let use_locale_string = if input.peek(Token![!]) {
+            input.parse::<Token![!]>()?;
+            false
+        } else {
+            true
+        };
+
         let value: Expr = input.parse()?;
 
         Ok(MaybeFormattedNamedArg {
             name,
             value,
             formatters,
+            use_locale_string,
         })
     }
 }
