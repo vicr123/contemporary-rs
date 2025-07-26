@@ -12,7 +12,7 @@ use icu::{
         },
         options::{Alignment, Length, SubsecondDigits, TimePrecision, YearStyle},
     },
-    time::DateTime,
+    time::{DateTime, ZonedDateTime, zone::UtcOffset},
 };
 
 use crate::{Locale, modifiers::StringModifier};
@@ -315,8 +315,6 @@ impl StringModifier<&chrono::NaiveDateTime> for Date {
         input: &chrono::NaiveDateTime,
         variables: &'a [super::ModifierVariable<'a>],
     ) -> String {
-        use icu::time::{ZonedDateTime, zone::UtcOffset};
-
         let fset = Date::make_field_set(variables);
         let offset = UtcOffset::try_from_seconds(0).unwrap();
         let epoch = input.and_utc().timestamp_millis();
@@ -332,3 +330,69 @@ impl StringModifier<&chrono::NaiveDateTime> for Date {
         Date::make_date_string(locale, date, fset)
     }
 }
+
+macro_rules! float_impl_date {
+    ($t:ty) => {
+        impl StringModifier<&$t> for Date {
+            fn transform<'a>(
+                &self,
+                locale: &Locale,
+                input: &$t,
+                variables: &'a [super::ModifierVariable<'a>],
+            ) -> String {
+                let fset = Date::make_field_set(variables);
+                let offset = UtcOffset::try_from_seconds(0).unwrap();
+                let epoch = (*input as f64 * 1000_f64).trunc() as i64;
+
+                let zdt = ZonedDateTime::<Iso, UtcOffset>::from_epoch_milliseconds_and_utc_offset(
+                    epoch, offset,
+                );
+
+                let date = DateTime {
+                    date: zdt.date,
+                    time: zdt.time,
+                };
+
+                Date::make_date_string(locale, date, fset)
+            }
+        }
+    };
+}
+
+float_impl_date!(f32);
+float_impl_date!(f64);
+
+macro_rules! int_impl_date {
+    ($t:ty) => {
+        impl StringModifier<&$t> for Date {
+            fn transform<'a>(
+                &self,
+                locale: &Locale,
+                input: &$t,
+                variables: &'a [super::ModifierVariable<'a>],
+            ) -> String {
+                let fset = Date::make_field_set(variables);
+                let offset = UtcOffset::try_from_seconds(0).unwrap();
+                let epoch = *input as i64;
+
+                let zdt = ZonedDateTime::<Iso, UtcOffset>::from_epoch_milliseconds_and_utc_offset(
+                    epoch, offset,
+                );
+
+                let date = DateTime {
+                    date: zdt.date,
+                    time: zdt.time,
+                };
+
+                Date::make_date_string(locale, date, fset)
+            }
+        }
+    };
+}
+
+int_impl_date!(i8);
+int_impl_date!(i16);
+int_impl_date!(i32);
+int_impl_date!(i64);
+int_impl_date!(i128);
+int_impl_date!(isize);
