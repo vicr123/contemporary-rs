@@ -1,4 +1,5 @@
 use crate::lerp::Lerpable;
+use crate::transition::Transition;
 use gpui::{
     Animation, AnyElement, App, Bounds, Element, ElementId, GlobalElementId, InspectorElementId,
     IntoElement, LayoutId, Pixels, Rgba, Window,
@@ -33,12 +34,6 @@ impl<TElement: IntoElement + 'static, TValueType: PartialEq + Clone + Lerpable +
     }
 }
 
-struct TransitionState<TValueType> {
-    start: Instant,
-    animate_from: TValueType,
-    animate_to: TValueType,
-}
-
 impl<TElement: IntoElement + 'static, TValueType: PartialEq + Clone + Lerpable + 'static> Element
     for TransitionElement<TElement, TValueType>
 {
@@ -61,41 +56,24 @@ impl<TElement: IntoElement + 'static, TValueType: PartialEq + Clone + Lerpable +
         cx: &mut App,
     ) -> (LayoutId, Self::RequestLayoutState) {
         window.with_element_state(global_id.unwrap(), |state, window| {
-            let mut state = state.unwrap_or_else(|| TransitionState {
+            let mut state = state.unwrap_or_else(|| Transition {
                 start: Instant::now(),
+                animation: self.animation.clone(),
                 animate_from: self.target_value.clone(),
                 animate_to: self.target_value.clone(),
             });
 
             if self.target_value != state.animate_to {
-                state.start = Instant::now();
-                // TODO: This should be taken from the current value
-                state.animate_from = state.animate_to;
-                state.animate_to = self.target_value.clone();
+                state.set_new_target(self.target_value.clone());
             }
 
-            let mut delta =
-                state.start.elapsed().as_secs_f32() / self.animation.duration.as_secs_f32();
-
-            let mut done = false;
-            if delta > 1.0 {
-                done = true;
-                delta = 1.0;
-            }
-            let delta = (self.animation.easing)(delta);
-
-            debug_assert!(
-                (0.0..=1.0).contains(&delta),
-                "delta should always be between 0 and 1"
-            );
-
-            let calculated_animation_value = state.animate_from.lerp(&state.animate_to, delta);
+            let calculated_animation_value = state.current_value();
 
             let element = self.element.take().expect("should only be called once");
             let mut element =
                 (self.animator)(element, calculated_animation_value).into_any_element();
 
-            if !done {
+            if !state.is_done() {
                 window.request_animation_frame();
             }
 

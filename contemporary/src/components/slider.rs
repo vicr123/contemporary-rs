@@ -1,8 +1,11 @@
+use crate::platform_support::platform_settings::PlatformSettings;
 use crate::styling::theme::Theme;
+use crate::transition::Transition;
 use gpui::{
-    App, BorderStyle, Bounds, Corners, Element, ElementId, GlobalElementId, InspectorElementId,
-    IntoElement, LayoutId, MouseDownEvent, MouseMoveEvent, MouseUpEvent, Pixels, Point, Refineable,
-    Size, Style, StyleRefinement, Styled, Window, px, quad, transparent_white,
+    Animation, App, BorderStyle, Bounds, Corners, Element, ElementId, GlobalElementId,
+    InspectorElementId, IntoElement, LayoutId, MouseDownEvent, MouseMoveEvent, MouseUpEvent,
+    Pixels, Point, Refineable, Size, Style, StyleRefinement, Styled, Window, px, quad,
+    transparent_white,
 };
 use std::cell::RefCell;
 use std::panic::Location;
@@ -14,9 +17,9 @@ pub struct SliderChangeEvent {
     pub new_value: u32,
 }
 
-#[derive(Clone)]
 struct SliderInteractiveState {
     active_state: Option<SliderInteractiveActiveState>,
+    thumb_inset: Transition<f32>,
 }
 
 #[derive(Clone)]
@@ -80,6 +83,7 @@ impl IntoElement for Slider {
 }
 
 pub struct SliderPrepaintState {
+    thumb_full_size: Size<Pixels>,
     thumb_bounds: Bounds<Pixels>,
     fill_bounds: Bounds<Pixels>,
 }
@@ -125,11 +129,18 @@ impl Element for Slider {
         bounds: Bounds<Pixels>,
         _request_layout: &mut Self::RequestLayoutState,
         window: &mut Window,
-        _cx: &mut App,
+        cx: &mut App,
     ) -> Self::PrepaintState {
+        let platform_settings = cx.global::<PlatformSettings>();
         let state_cell = window.with_optional_element_state(id, |state, cx| {
             let state = state.flatten().unwrap_or_else(|| {
-                Rc::new(RefCell::new(SliderInteractiveState { active_state: None }))
+                Rc::new(RefCell::new(SliderInteractiveState {
+                    active_state: None,
+                    thumb_inset: Transition::new(
+                        Animation::new(platform_settings.animation_duration / 4),
+                        0.,
+                    ),
+                }))
             });
 
             (state.clone(), Some(state))
@@ -156,7 +167,15 @@ impl Element for Slider {
         let fill_size =
             px((thumb_x.0 + thumb_size.0 + drag_delta).clamp(thumb_size.0, bounds.size.width.0));
 
+        if !state.thumb_inset.is_done() {
+            window.request_animation_frame();
+        }
+
         SliderPrepaintState {
+            thumb_full_size: Size {
+                width: thumb_size,
+                height: thumb_size,
+            },
             thumb_bounds:
                 Bounds {
                     origin: Point {
@@ -170,11 +189,7 @@ impl Element for Slider {
                         height: thumb_size,
                     },
                 }
-                .inset(if state.active_state.is_some() {
-                    px(4.)
-                } else {
-                    px(0.)
-                }),
+                .inset(px(state.thumb_inset.current_value())),
             fill_bounds: Bounds {
                 origin: bounds.origin,
                 size: Size {
@@ -234,7 +249,7 @@ impl Element for Slider {
         ));
 
         if let Some(on_change_handler) = self.on_change.as_ref() {
-            let thumb_bounds = prepaint.thumb_bounds;
+            let thumb_full_size = prepaint.thumb_full_size;
             let mouse_down_current_view = window.current_view();
             let mouse_up_current_view = window.current_view();
             let mouse_move_current_view = window.current_view();
@@ -258,12 +273,14 @@ impl Element for Slider {
 
                         window.prevent_default();
                         cx.stop_propagation();
-                        mouse_down_state.borrow_mut().active_state =
-                            Some(SliderInteractiveActiveState {
-                                start_drag_coordinate: event.position.x.into(),
-                                current_drag_coordinate: event.position.x.into(),
-                                start_value: current_value,
-                            });
+
+                        let mut state = mouse_down_state.borrow_mut();
+                        state.active_state = Some(SliderInteractiveActiveState {
+                            start_drag_coordinate: event.position.x.into(),
+                            current_drag_coordinate: event.position.x.into(),
+                            start_value: current_value,
+                        });
+                        state.thumb_inset.set_new_target(4.);
                         cx.notify(mouse_down_current_view);
                     });
                     cx.on_mouse_event(move |event: &MouseMoveEvent, _, window, cx| {
@@ -278,7 +295,7 @@ impl Element for Slider {
 
                         // Calculate the new value to be set
                         let pixels_moved = event.position.x.0 - active_state.start_drag_coordinate;
-                        let total_pixels = bounds.size.width.0 - thumb_bounds.size.width.0;
+                        let total_pixels = bounds.size.width.0 - thumb_full_size.width.0;
                         let percentage_moved = pixels_moved / total_pixels;
                         let new_value = ((max_value as f32 * percentage_moved) as i64
                             + active_state.start_value as i64)
@@ -304,6 +321,7 @@ impl Element for Slider {
                         window.prevent_default();
                         cx.stop_propagation();
                         state.active_state = None;
+                        state.thumb_inset.set_new_target(0.);
                         cx.notify(mouse_up_current_view);
                     });
                 }
