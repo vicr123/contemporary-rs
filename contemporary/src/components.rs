@@ -13,5 +13,6 @@ pub mod pager;
 pub mod popover;
 pub mod progress_bar;
 pub mod scrim;
+pub mod slider;
 pub mod subtitle;
 pub mod text_field;

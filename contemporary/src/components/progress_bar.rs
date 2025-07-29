@@ -45,6 +45,8 @@ impl RenderOnce for ProgressBar {
         self.div
             .rounded(theme.border_radius)
             .bg(theme.layer_background)
+            .border_color(theme.border_color)
+            .border(px(1.))
             .h(px(28.))
             .w_full()
             .child(

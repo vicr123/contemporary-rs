@@ -103,7 +103,7 @@
   },
   "COMPONENTS_TITLE": {
     "context": "root.rs",
-    "definedIn": "src/components/root.rs:54",
+    "definedIn": "src/components/root.rs:57",
     "plural": false,
     "description": null
   },
@@ -206,6 +206,12 @@
   "DIALOG_BOX_NUCLEAR_REACTOR_TITLE": {
     "context": "dialog_boxes.rs",
     "definedIn": "src/patterns/dialog_boxes.rs:131",
+    "plural": false,
+    "description": null
+  },
+  "HORIZONTAL_SLIDERS_TITLE": {
+    "context": "ranges.rs",
+    "definedIn": "src/components/ranges.rs:50",
     "plural": false,
     "description": null
   },
@@ -407,6 +413,12 @@
     "plural": false,
     "description": null
   },
+  "RANGES_TITLE": {
+    "context": "ranges.rs",
+    "definedIn": "src/components/ranges.rs:33",
+    "plural": false,
+    "description": null
+  },
   "SETTINGS": {
     "context": "main_window.rs",
     "definedIn": "src/main_window.rs:57",
@@ -416,6 +428,12 @@
   "SETTINGS_DESCRIPTION": {
     "context": "main_window.rs",
     "definedIn": "src/main_window.rs:59",
+    "plural": false,
+    "description": null
+  },
+  "SLIDER_VALUE_TEXT": {
+    "context": "ranges.rs",
+    "definedIn": "src/components/ranges.rs:73",
     "plural": false,
     "description": null
   },
