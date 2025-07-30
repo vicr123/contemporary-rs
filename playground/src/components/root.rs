@@ -12,8 +12,8 @@ use contemporary::components::pager::pager_animation::PagerAnimationDirection;
 use contemporary::styling::theme::Theme;
 use gpui::prelude::FluentBuilder;
 use gpui::{
-    App, AppContext, Context, Entity, InteractiveElement, IntoElement, ParentElement, Render,
-    StatefulInteractiveElement, Styled, Window, div, px, uniform_list,
+    div, px, uniform_list, App, AppContext, Context, Entity, InteractiveElement,
+    IntoElement, ParentElement, Render, StatefulInteractiveElement, Styled, Window,
 };
 
 pub struct ComponentsRoot {

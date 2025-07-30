@@ -1,10 +1,11 @@
 use crate::platform_support::platform_settings::PlatformSettings;
+use crate::styling::theme::Theme;
 use crate::transition::float_transition_element::TransitionExt;
 use gpui::prelude::FluentBuilder;
 use gpui::{
-    Animation, AnyElement, App, ClickEvent, Div, ElementId, InteractiveElement, IntoElement,
-    ParentElement, RenderOnce, Stateful, StatefulInteractiveElement, Styled, Window, anchored,
-    black, deferred, div, point, px,
+    anchored, black, deferred, div, point, px, Animation, AnyElement,
+    App, ClickEvent, Div, ElementId, InteractiveElement, IntoElement, ParentElement,
+    RenderOnce, Stateful, StatefulInteractiveElement, Styled, Window,
 };
 
 #[derive(IntoElement)]
@@ -38,12 +39,16 @@ impl Scrim {
 
 impl RenderOnce for Scrim {
     fn render(self, window: &mut Window, cx: &mut App) -> impl IntoElement {
+        let theme = cx.global::<Theme>();
         let platform_settings = cx.global::<PlatformSettings>();
         let window_size = window.viewport_size();
+        let inset = window.client_inset().unwrap_or_else(|| px(0.));
         anchored().position(point(px(0.), px(0.))).child(deferred(
             self.root_div
-                .w(window_size.width)
-                .h(window_size.height)
+                .w(window_size.width - inset - inset)
+                .h(window_size.height - inset - inset)
+                .m(inset)
+                .rounded(theme.border_radius)
                 .child(
                     self.scrim_div
                         .absolute()

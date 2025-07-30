@@ -1,14 +1,17 @@
-use gpui::Global;
+use std::rc::Rc;
+use gpui::{px, Global, Pixels, Window};
 use std::time::Duration;
 
 pub struct PlatformSettings {
     pub animation_duration: Duration,
+    pub resize_grip_size: Rc<dyn Fn(&Window) -> Pixels>
 }
 
 impl PlatformSettings {
     pub fn new() -> Self {
         Self {
             animation_duration: Duration::from_millis(250),
+            resize_grip_size: Rc::new(|_| { px(0.) })
         }
     }
 

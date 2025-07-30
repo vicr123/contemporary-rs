@@ -421,13 +421,13 @@
   },
   "SETTINGS": {
     "context": "main_window.rs",
-    "definedIn": "src/main_window.rs:57",
+    "definedIn": "src/main_window.rs:59",
     "plural": false,
     "description": null
   },
   "SETTINGS_DESCRIPTION": {
     "context": "main_window.rs",
-    "definedIn": "src/main_window.rs:59",
+    "definedIn": "src/main_window.rs:61",
     "plural": false,
     "description": null
   },
