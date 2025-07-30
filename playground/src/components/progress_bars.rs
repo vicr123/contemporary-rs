@@ -3,6 +3,7 @@ use contemporary::components::constrainer::constrainer;
 use contemporary::components::grandstand::grandstand;
 use contemporary::components::layer::layer;
 use contemporary::components::progress_bar::progress_bar;
+use contemporary::components::spinner::spinner;
 use contemporary::components::subtitle::subtitle;
 use contemporary::styling::theme::Theme;
 use gpui::{
@@ -54,6 +55,23 @@ impl Render for ProgressBars {
                                     .child(
                                         progress_bar().indeterminate("indeterminate-progress-bar"),
                                     ),
+                            ),
+                    )
+                    .child(
+                        layer("spinners")
+                            .flex()
+                            .flex_col()
+                            .p(px(8.))
+                            .w_full()
+                            .child(subtitle(tr!("SPINNERS_TITLE", "Spinners")))
+                            .child(
+                                div()
+                                    .flex()
+                                    .flex_col()
+                                    .gap(px(8.))
+                                    .child(spinner())
+                                    .child(spinner().size(px(64.)))
+                                    .child(spinner().size(px(16.))),
                             ),
                     ),
             )

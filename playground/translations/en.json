@@ -75,6 +75,7 @@
   "SETTINGS": "Settings",
   "SETTINGS_DESCRIPTION": "The Settings surface would ordinarily display now.",
   "SLIDER_VALUE_TEXT": "Slider value: {{value}}",
+  "SPINNERS_TITLE": "Spinners",
   "TEXT_FIELDS_TITLE": "Text Fields",
   "TEXT_FIELD_DISABLED_PLACEHOLDER": "Disabled Text Field",
   "TEXT_FIELD_PLACEHOLDER": "Text Field",

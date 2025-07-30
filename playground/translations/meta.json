@@ -397,7 +397,7 @@
   },
   "PROGRESS_BARS_TITLE": {
     "context": "progress_bars.rs",
-    "definedIn": "src/components/progress_bars.rs:31",
+    "definedIn": "src/components/progress_bars.rs:32",
     "plural": false,
     "description": null
   },
@@ -434,6 +434,12 @@
   "SLIDER_VALUE_TEXT": {
     "context": "ranges.rs",
     "definedIn": "src/components/ranges.rs:72",
+    "plural": false,
+    "description": null
+  },
+  "SPINNERS_TITLE": {
+    "context": "progress_bars.rs",
+    "definedIn": "src/components/progress_bars.rs:66",
     "plural": false,
     "description": null
   },
