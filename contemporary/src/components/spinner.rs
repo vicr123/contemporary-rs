@@ -1,3 +1,4 @@
+use crate::easing::ease_in_out_cubic;
 use crate::styling::theme::Theme;
 use gpui::{
     App, Bounds, Element, ElementId, GlobalElementId, InspectorElementId, IntoElement, LayoutId,
@@ -54,8 +55,8 @@ impl Element for Spinner {
 
     fn request_layout(
         &mut self,
-        id: Option<&GlobalElementId>,
-        inspector_id: Option<&InspectorElementId>,
+        _id: Option<&GlobalElementId>,
+        _inspector_id: Option<&InspectorElementId>,
         window: &mut Window,
         cx: &mut App,
     ) -> (LayoutId, Self::RequestLayoutState) {
@@ -71,11 +72,11 @@ impl Element for Spinner {
     fn prepaint(
         &mut self,
         id: Option<&GlobalElementId>,
-        inspector_id: Option<&InspectorElementId>,
+        _inspector_id: Option<&InspectorElementId>,
         bounds: Bounds<Pixels>,
-        request_layout: &mut Self::RequestLayoutState,
+        _request_layout: &mut Self::RequestLayoutState,
         window: &mut Window,
-        cx: &mut App,
+        _cx: &mut App,
     ) -> Self::PrepaintState {
         let size = bounds.size.width.min(bounds.size.height);
         let centered_bounds = Bounds::centered_at(
@@ -124,7 +125,7 @@ impl Element for Spinner {
                     x if x < ARC_ANIMATE_TIME * 2 + ARC_ANIMATE_DELAY => {
                         // Decrease arc length to 15 degrees over 500 ms
                         (LARGE_ARC - SMALL_ARC) as f32
-                            * ease_in_out(
+                            * ease_in_out_cubic(
                                 (x - ARC_ANIMATE_TIME - ARC_ANIMATE_DELAY) as f32
                                     / ARC_ANIMATE_TIME as f32,
                             )
@@ -151,7 +152,7 @@ impl Element for Spinner {
                     SMALL_ARC as f32
                         + (LARGE_ARC - SMALL_ARC) as f32
                             * (1.
-                                - ease_in_out(
+                                - ease_in_out_cubic(
                                     (x - ARC_ANIMATE_TIME - ARC_ANIMATE_DELAY) as f32
                                         / ARC_ANIMATE_TIME as f32,
                                 ))
@@ -183,10 +184,10 @@ impl Element for Spinner {
 
     fn paint(
         &mut self,
-        id: Option<&GlobalElementId>,
-        inspector_id: Option<&InspectorElementId>,
-        bounds: Bounds<Pixels>,
-        request_layout: &mut Self::RequestLayoutState,
+        _id: Option<&GlobalElementId>,
+        _inspector_id: Option<&InspectorElementId>,
+        _bounds: Bounds<Pixels>,
+        _request_layout: &mut Self::RequestLayoutState,
         prepaint: &mut Self::PrepaintState,
         window: &mut Window,
         cx: &mut App,

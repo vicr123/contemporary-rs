@@ -2,6 +2,7 @@ pub mod about_surface;
 pub mod application;
 pub mod assets;
 pub mod components;
+pub mod easing;
 pub mod hsv;
 pub mod icon_tool;
 pub mod lerp;
