@@ -54,7 +54,7 @@ impl RenderOnce for Grandstand {
     fn render(self, _window: &mut Window, cx: &mut App) -> impl IntoElement {
         let theme = cx.global::<Theme>();
 
-        layer(self.id).child(
+        layer().child(
             self.div.flex().flex_row().child(div().h(px(20.0))).child(
                 div()
                     .flex()

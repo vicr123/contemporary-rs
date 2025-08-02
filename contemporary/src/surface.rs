@@ -1,10 +1,11 @@
 use crate::components::application_menu::ApplicationMenu;
 use crate::components::button::button;
+use crate::jobs::job_button::JobButton;
 use crate::styling::theme::Theme;
 use gpui::prelude::FluentBuilder;
 use gpui::{
-    div, img, px, rgb, svg, AnyElement, App, AppContext,
-    Context, Entity, InteractiveElement, IntoElement, MouseButton, ParentElement, Render, RenderOnce, Styled, Window, WindowControlArea,
+    AnyElement, App, AppContext, Context, Entity, InteractiveElement, IntoElement, MouseButton,
+    ParentElement, Render, RenderOnce, Styled, Window, WindowControlArea, div, img, px, rgb, svg,
 };
 
 #[derive(IntoElement)]
@@ -75,6 +76,8 @@ fn window_controls(
 #[allow(unreachable_code)]
 impl RenderOnce for WindowTitle {
     fn render(self, window: &mut Window, cx: &mut App) -> impl IntoElement {
+        let job_button = JobButton::use_job_button(window, cx);
+
         let theme = cx.global::<Theme>();
 
         div()
@@ -119,11 +122,10 @@ impl RenderOnce for WindowTitle {
                     .child(self.actions),
             )
             .window_control_area(WindowControlArea::Drag)
-            .when(!cfg!(target_os = "macos"), |david| {
-                david.child(
-                    div()
-                        .flex()
-                        .occlude()
+            .child(div().flex().occlude().child(job_button.clone()).when(
+                !cfg!(target_os = "macos"),
+                |david| {
+                    david
                         .child(
                             button("window-minimise")
                                 .flat()
@@ -172,9 +174,9 @@ impl RenderOnce for WindowTitle {
                                 )
                                 .on_click(move |_, _, cx| cx.quit())
                                 .window_control_area(WindowControlArea::Close),
-                        ),
-                )
-            })
+                        )
+                },
+            ))
             .on_mouse_down(MouseButton::Left, move |_, window, _| {
                 window.start_window_move()
             })

@@ -40,7 +40,7 @@ impl Render for ProgressBars {
                     .p(px(8.))
                     .gap(px(8.))
                     .child(
-                        layer("normal-progress-bars")
+                        layer()
                             .flex()
                             .flex_col()
                             .p(px(8.))
@@ -58,7 +58,7 @@ impl Render for ProgressBars {
                             ),
                     )
                     .child(
-                        layer("spinners")
+                        layer()
                             .flex()
                             .flex_col()
                             .p(px(8.))

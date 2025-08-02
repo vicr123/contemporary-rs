@@ -48,7 +48,7 @@ impl Render for Popovers {
                     .p(px(8.))
                     .gap(px(8.))
                     .child(
-                        layer("normal-popovers")
+                        layer()
                             .flex()
                             .flex_col()
                             .p(px(8.))
@@ -133,7 +133,7 @@ impl Render for Popovers {
                             )
                             .child(
                                 constrainer("informational-dialog-box-constrainer").child(
-                                    layer("normal-popovers")
+                                    layer()
                                         .flex()
                                         .flex_col()
                                         .p(px(8.))

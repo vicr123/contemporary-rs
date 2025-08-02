@@ -1,5 +1,6 @@
 use crate::patterns::dialog_boxes::DialogBoxes;
 use crate::patterns::i18n::I18n;
+use crate::patterns::jobs::Jobs;
 use crate::patterns::popovers::Popovers;
 use cntp_i18n::tr;
 use contemporary::components::grandstand::grandstand;
@@ -18,6 +19,7 @@ pub struct PatternsRoot {
     dialog_boxes: Entity<DialogBoxes>,
     i18n: Entity<I18n>,
     popovers: Entity<Popovers>,
+    jobs: Entity<Jobs>,
 
     current_page: usize,
 }
@@ -28,6 +30,7 @@ impl PatternsRoot {
             dialog_boxes: DialogBoxes::new(cx),
             i18n: I18n::new(cx),
             popovers: Popovers::new(cx),
+            jobs: Jobs::new(cx),
             current_page: 0,
         })
     }
@@ -42,7 +45,7 @@ impl Render for PatternsRoot {
             .h_full()
             .gap(px(2.))
             .child(
-                layer("sidebar-layer")
+                layer()
                     .w(px(300.))
                     .flex()
                     .flex_col()
@@ -55,7 +58,7 @@ impl Render for PatternsRoot {
                         div().flex_grow().p(px(2.)).child(
                             uniform_list(
                                 "sidebar-items",
-                                3,
+                                4,
                                 cx.processor(|this, range, _, cx| {
                                     let theme = cx.global::<Theme>();
                                     let mut items = Vec::new();
@@ -75,6 +78,7 @@ impl Render for PatternsRoot {
                                                     0 => tr!("DIALOG_BOXES_TITLE"),
                                                     1 => tr!("I18N_TITLE"),
                                                     2 => tr!("POPOVERS_TITLE"),
+                                                    3 => tr!("JOBS_TITLE"),
                                                     _ => format!("Item {item}").into(),
                                                 })
                                                 .when(this.current_page == ix, |div| {
@@ -97,7 +101,8 @@ impl Render for PatternsRoot {
                     .animation_direction(PagerAnimationDirection::Forward)
                     .page(self.dialog_boxes.clone().into_any_element())
                     .page(self.i18n.clone().into_any_element())
-                    .page(self.popovers.clone().into_any_element()),
+                    .page(self.popovers.clone().into_any_element())
+                    .page(self.jobs.clone().into_any_element()),
             )
     }
 }

@@ -48,7 +48,7 @@ impl Render for Buttons {
                     .p(px(8.))
                     .gap(px(8.))
                     .child(
-                        layer("normal-buttons")
+                        layer()
                             .flex()
                             .flex_col()
                             .p(px(8.))
@@ -93,7 +93,7 @@ impl Render for Buttons {
                             )),
                     )
                     .child(
-                        layer("flat-buttons")
+                        layer()
                             .flex()
                             .flex_col()
                             .p(px(8.))

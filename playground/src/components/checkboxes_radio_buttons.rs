@@ -51,7 +51,7 @@ impl Render for CheckboxesRadioButtons {
                     .p(px(8.))
                     .gap(px(8.))
                     .child(
-                        layer("checkboxes")
+                        layer()
                             .flex()
                             .flex_col()
                             .p(px(8.))
@@ -86,7 +86,7 @@ impl Render for CheckboxesRadioButtons {
                             ),
                     )
                     .child(
-                        layer("radio-buttons")
+                        layer()
                             .flex()
                             .flex_col()
                             .p(px(8.))

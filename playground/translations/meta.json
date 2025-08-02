@@ -329,9 +329,57 @@
     "plural": false,
     "description": null
   },
+  "INDETERMINATE_JOB_IN_PROGRESS_DESCRIPTION": {
+    "context": "jobs.rs",
+    "definedIn": "src/patterns/jobs.rs:104",
+    "plural": false,
+    "description": null
+  },
+  "INDETERMINATE_JOB_TITLE": {
+    "context": "jobs.rs",
+    "definedIn": "src/patterns/jobs.rs:104",
+    "plural": false,
+    "description": null
+  },
   "INFORMATIONAL_POPOVER_DESCRIPTION": {
     "context": "popovers.rs",
     "definedIn": "src/patterns/popovers.rs:148",
+    "plural": false,
+    "description": null
+  },
+  "JOBS_DESCRIPTION": {
+    "context": "jobs.rs",
+    "definedIn": "src/patterns/jobs.rs:61",
+    "plural": false,
+    "description": null
+  },
+  "JOBS_TITLE": {
+    "context": "jobs.rs",
+    "definedIn": "src/patterns/jobs.rs:38",
+    "plural": false,
+    "description": null
+  },
+  "JOB_FAILING_START": {
+    "context": "jobs.rs",
+    "definedIn": "src/patterns/jobs.rs:135",
+    "plural": false,
+    "description": null
+  },
+  "JOB_INDETERMINATE_START": {
+    "context": "jobs.rs",
+    "definedIn": "src/patterns/jobs.rs:102",
+    "plural": false,
+    "description": null
+  },
+  "JOB_NORMAL_START": {
+    "context": "jobs.rs",
+    "definedIn": "src/patterns/jobs.rs:66",
+    "plural": false,
+    "description": null
+  },
+  "JOB_TRANSIENT_START": {
+    "context": "jobs.rs",
+    "definedIn": "src/patterns/jobs.rs:128",
     "plural": false,
     "description": null
   },
@@ -349,7 +397,7 @@
   },
   "PATTERNS_TITLE": {
     "context": "root.rs",
-    "definedIn": "src/patterns/root.rs:51",
+    "definedIn": "src/patterns/root.rs:54",
     "plural": false,
     "description": null
   },
@@ -440,6 +488,24 @@
   "SPINNERS_TITLE": {
     "context": "progress_bars.rs",
     "definedIn": "src/components/progress_bars.rs:66",
+    "plural": false,
+    "description": null
+  },
+  "STANDARD_JOB_COMPLETE_DESCRIPTION": {
+    "context": "jobs.rs",
+    "definedIn": "src/patterns/jobs.rs:115",
+    "plural": false,
+    "description": null
+  },
+  "STANDARD_JOB_IN_PROGRESS_DESCRIPTION": {
+    "context": "jobs.rs",
+    "definedIn": "src/patterns/jobs.rs:68",
+    "plural": false,
+    "description": null
+  },
+  "STANDARD_JOB_TITLE": {
+    "context": "jobs.rs",
+    "definedIn": "src/patterns/jobs.rs:68",
     "plural": false,
     "description": null
   },

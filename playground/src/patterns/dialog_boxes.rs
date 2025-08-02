@@ -50,7 +50,7 @@ impl Render for DialogBoxes {
                     .p(px(8.))
                     .gap(px(8.))
                     .child(
-                        layer("normal-dialog-boxes")
+                        layer()
                             .flex()
                             .flex_col()
                             .p(px(8.))

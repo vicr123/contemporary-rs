@@ -5,6 +5,7 @@ pub mod components;
 pub mod easing;
 pub mod hsv;
 pub mod icon_tool;
+pub mod jobs;
 pub mod lerp;
 pub mod macros;
 mod platform_support;

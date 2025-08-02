@@ -1,16 +1,16 @@
 use crate::styling::theme::Theme;
 use gpui::{
-    AnyElement, App, Div, ElementId, InteractiveElement, IntoElement, ParentElement, RenderOnce,
-    Stateful, StyleRefinement, Styled, Window, div,
+    AnyElement, App, Div, IntoElement, ParentElement, RenderOnce, StyleRefinement, Styled, Window,
+    div,
 };
 
 #[derive(IntoElement)]
 pub struct Layer {
-    div: Stateful<Div>,
+    div: Div,
 }
 
-pub fn layer(id: impl Into<ElementId>) -> Layer {
-    Layer { div: div().id(id) }
+pub fn layer() -> Layer {
+    Layer { div: div() }
 }
 
 impl Layer {}

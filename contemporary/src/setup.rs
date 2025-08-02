@@ -1,10 +1,11 @@
 use crate::application::{ApplicationLink, Details, Versions};
 use crate::components::text_field::bind_text_input_keys;
+use crate::jobs::job_manager::JobManager;
 use crate::platform_support::platform_settings::PlatformSettings;
 use crate::platform_support::setup_platform;
 use crate::styling::theme::Theme;
 use cntp_i18n::{I18N_MANAGER, i18n_manager, tr, tr_load};
-use gpui::{Action, App, Global, KeyBinding, Menu, MenuItem, actions};
+use gpui::{Action, App, AppContext, Global, KeyBinding, Menu, MenuItem, actions};
 use schemars::JsonSchema;
 use serde::Deserialize;
 use std::collections::HashMap;
@@ -218,6 +219,7 @@ pub fn setup_contemporary(cx: &mut App, mut application: Contemporary) {
         contemporary_version: "alpha",
         versions: Arc::new(Mutex::new(HashMap::new())),
     });
+    cx.set_global(JobManager::new());
 
     setup_platform(cx);
 }

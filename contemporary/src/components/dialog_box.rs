@@ -113,7 +113,7 @@ impl RenderOnce for DialogBox {
         let theme = cx.global::<Theme>();
 
         let buttons_layer = self.buttons.into_iter().fold(
-            layer("buttons-layer").flex().p(px(9.)).gap(px(6.)),
+            layer().flex().p(px(9.)).gap(px(6.)),
             move |layer, button| layer.child(button.flex_grow()),
         );
 
@@ -137,7 +137,7 @@ impl RenderOnce for DialogBox {
                             .occlude()
                             .when_some(self.title, |david, title| {
                                 david.child(
-                                    layer("title-layer")
+                                    layer()
                                         .p(px(9.))
                                         .text_size(theme.heading_font_size)
                                         .child(title),

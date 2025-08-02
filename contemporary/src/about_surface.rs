@@ -133,7 +133,7 @@ impl RenderOnce for AboutSurface {
                                 ),
                         )
                         .child(
-                            layer("software-layer").child(
+                            layer().child(
                                 div()
                                     .p(px(4.))
                                     .flex()
@@ -175,7 +175,7 @@ impl RenderOnce for AboutSurface {
                             ),
                         )
                         .child(
-                            layer("copyright-layer").child(
+                            layer().child(
                                 div()
                                     .p(px(4.))
                                     .flex()

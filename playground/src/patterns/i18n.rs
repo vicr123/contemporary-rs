@@ -63,7 +63,7 @@ impl Render for I18n {
                     .p(px(8.))
                     .gap(px(8.))
                     .child(
-                        layer("i18n-setup")
+                        layer()
                             .flex()
                             .flex_col()
                             .p(px(8.))
@@ -87,7 +87,7 @@ impl Render for I18n {
                             ),
                     )
                     .child(
-                        layer("i18n-quote-string")
+                        layer()
                             .flex()
                             .flex_col()
                             .p(px(8.))
@@ -118,7 +118,7 @@ impl Render for I18n {
                             ),
                     )
                     .child(
-                        layer("i18n-numeric-formats")
+                        layer()
                             .flex()
                             .flex_col()
                             .p(px(8.))
@@ -154,7 +154,7 @@ impl Render for I18n {
                             ),
                     )
                     .child(
-                        layer("i18n-date-time")
+                        layer()
                             .flex()
                             .flex_col()
                             .p(px(8.))

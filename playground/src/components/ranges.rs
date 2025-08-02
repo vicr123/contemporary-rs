@@ -41,7 +41,7 @@ impl Render for Ranges {
                     .p(px(8.))
                     .gap(px(8.))
                     .child(
-                        layer("horizontal-sliders")
+                        layer()
                             .flex()
                             .flex_col()
                             .p(px(8.))

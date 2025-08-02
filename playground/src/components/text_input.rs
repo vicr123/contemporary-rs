@@ -73,7 +73,7 @@ impl Render for TextInput {
                     .p(px(8.))
                     .gap(px(8.))
                     .child(
-                        layer("text-fields")
+                        layer()
                             .flex()
                             .flex_col()
                             .p(px(8.))
