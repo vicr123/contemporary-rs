@@ -1,8 +1,10 @@
 use crate::jobs::job::{Job, JobStatus};
-use gpui::{App, BorrowAppContext, Entity, Global};
+use gpui::{App, AppContext, AsyncApp, BorrowAppContext, Entity, Global};
 
+use cancellation_token::CancellationTokenSource;
 use std::cell::RefCell;
 use std::rc::Rc;
+use std::time::Duration;
 
 pub type Jobling = Rc<RefCell<dyn Job>>;
 pub type JoblingEntity = Entity<Jobling>;
@@ -31,7 +33,7 @@ impl JobManager {
         }
     }
 
-    pub fn add_job(&mut self, job: JoblingEntity, cx: &mut App) {
+    pub fn track_job(&mut self, job: JoblingEntity, cx: &mut App) {
         cx.observe(&job, |job_entity, cx| {
             cx.update_global::<Self, ()>(|this, cx| {
                 let job = job_entity.read(cx);
@@ -48,6 +50,50 @@ impl JobManager {
         .detach();
         self.jobs.push(job.clone());
         self.unfinished_jobs.push(job);
+    }
+
+    pub fn track_job_delayed(&mut self, job: JoblingEntity, delay: Duration, cx: &mut App) {
+        let cancellation_token_source = CancellationTokenSource::new();
+        let cancellation_token = cancellation_token_source.token();
+
+        let job_clone = job.clone();
+
+        cx.spawn(async move |cx: &mut AsyncApp| {
+            cx.background_executor().timer(delay).await;
+            if cancellation_token.is_canceled() {
+                return;
+            }
+            cx.update_global::<Self, ()>(|this, cx| {
+                let should_track = cx.read_entity(&job_clone, |job_item, cx| {
+                    // Track the job because it's taking too long
+                    job_item.borrow().status() != JobStatus::Completed
+                });
+
+                if should_track && !cancellation_token.is_canceled() {
+                    this.track_job(job_clone.clone(), cx);
+                }
+            })
+            .unwrap()
+        })
+        .detach();
+
+        cx.observe(&job.clone(), move |job_entity, cx| {
+            if matches!(
+                job.read(cx).borrow().status(),
+                JobStatus::RequiresAttention | JobStatus::Failed
+            ) {
+                // Immediately register the job now
+                cancellation_token_source.cancel();
+                cx.update_global::<Self, ()>(|this, cx| {
+                    this.track_job(job_entity.clone(), cx);
+                })
+            }
+        })
+        .detach();
+    }
+
+    pub fn track_job_delayed_default(&mut self, job: JoblingEntity, cx: &mut App) {
+        self.track_job_delayed(job, Duration::from_secs(1), cx);
     }
 
     fn tracked_jobs(&self, cx: &App) -> impl Iterator<Item = &JoblingEntity> {

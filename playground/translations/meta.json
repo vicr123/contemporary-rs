@@ -377,6 +377,72 @@
     "plural": false,
     "description": null
   },
+  "JOB_DELAYED_TRACKING_DESCRIPTION": {
+    "context": "jobs.rs",
+    "definedIn": "src/patterns/jobs.rs:221",
+    "plural": false,
+    "description": null
+  },
+  "JOB_DELAYED_TRACKING_QUICK": {
+    "context": "jobs.rs",
+    "definedIn": "src/patterns/jobs.rs:226",
+    "plural": false,
+    "description": null
+  },
+  "JOB_DELAYED_TRACKING_QUICK_FAIL": {
+    "context": "jobs.rs",
+    "definedIn": "src/patterns/jobs.rs:298",
+    "plural": false,
+    "description": null
+  },
+  "JOB_DELAYED_TRACKING_QUICK_FAIL_IN_PROGRESS_DESCRIPTION": {
+    "context": "jobs.rs",
+    "definedIn": "src/patterns/jobs.rs:300",
+    "plural": false,
+    "description": null
+  },
+  "JOB_DELAYED_TRACKING_QUICK_FAIL_TITLE": {
+    "context": "jobs.rs",
+    "definedIn": "src/patterns/jobs.rs:300",
+    "plural": false,
+    "description": null
+  },
+  "JOB_DELAYED_TRACKING_QUICK_IN_PROGRESS_DESCRIPTION": {
+    "context": "jobs.rs",
+    "definedIn": "src/patterns/jobs.rs:228",
+    "plural": false,
+    "description": null
+  },
+  "JOB_DELAYED_TRACKING_QUICK_TITLE": {
+    "context": "jobs.rs",
+    "definedIn": "src/patterns/jobs.rs:228",
+    "plural": false,
+    "description": null
+  },
+  "JOB_DELAYED_TRACKING_SLOW": {
+    "context": "jobs.rs",
+    "definedIn": "src/patterns/jobs.rs:262",
+    "plural": false,
+    "description": null
+  },
+  "JOB_DELAYED_TRACKING_SLOW_IN_PROGRESS_DESCRIPTION": {
+    "context": "jobs.rs",
+    "definedIn": "src/patterns/jobs.rs:264",
+    "plural": false,
+    "description": null
+  },
+  "JOB_DELAYED_TRACKING_SLOW_TITLE": {
+    "context": "jobs.rs",
+    "definedIn": "src/patterns/jobs.rs:264",
+    "plural": false,
+    "description": null
+  },
+  "JOB_DELAYED_TRACKING_TITLE": {
+    "context": "jobs.rs",
+    "definedIn": "src/patterns/jobs.rs:214",
+    "plural": false,
+    "description": null
+  },
   "JOB_FAILING_START": {
     "context": "jobs.rs",
     "definedIn": "src/patterns/jobs.rs:164",
@@ -386,6 +452,18 @@
   "JOB_INDETERMINATE_START": {
     "context": "jobs.rs",
     "definedIn": "src/patterns/jobs.rs:102",
+    "plural": false,
+    "description": null
+  },
+  "JOB_MENU_DESCRIPTION": {
+    "context": "jobs.rs",
+    "definedIn": "src/patterns/jobs.rs:355",
+    "plural": false,
+    "description": null
+  },
+  "JOB_MENU_TITLE": {
+    "context": "jobs.rs",
+    "definedIn": "src/patterns/jobs.rs:348",
     "plural": false,
     "description": null
   },
@@ -404,6 +482,12 @@
   "MENU_THEME": {
     "context": "main.rs",
     "definedIn": "src/main.rs:74",
+    "plural": false,
+    "description": null
+  },
+  "OPEN_JOB_MENU": {
+    "context": "jobs.rs",
+    "definedIn": "src/patterns/jobs.rs:358",
     "plural": false,
     "description": null
   },
@@ -511,7 +595,7 @@
   },
   "STANDARD_JOB_COMPLETE_DESCRIPTION": {
     "context": "jobs.rs",
-    "definedIn": "src/patterns/jobs.rs:151",
+    "definedIn": "src/patterns/jobs.rs:89",
     "plural": false,
     "description": null
   },

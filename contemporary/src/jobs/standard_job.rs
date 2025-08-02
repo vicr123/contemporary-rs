@@ -65,14 +65,14 @@ impl StandardJob {
 impl Job for StandardJob {
     fn progress(&self) -> f32 {
         match self.status {
-            JobStatus::InProgress | JobStatus::RequiresAttention => {
+            JobStatus::InProgress | JobStatus::RequiresAttention | JobStatus::Failed => {
                 if self.max_progress == 0 {
                     0.
                 } else {
                     self.progress as f32 / self.max_progress as f32
                 }
             }
-            JobStatus::Completed | JobStatus::Failed => 1.,
+            JobStatus::Completed => 1.,
         }
     }
 
