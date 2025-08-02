@@ -12,6 +12,7 @@ pub struct StandardJob {
     description: SharedString,
     status: JobStatus,
     cancellation_callback: Option<Box<dyn Fn()>>,
+    transient: bool,
 }
 
 impl StandardJob {
@@ -23,17 +24,21 @@ impl StandardJob {
             description,
             status: JobStatus::InProgress,
             cancellation_callback: None,
+            transient: false,
         }
     }
 
     pub fn new_indeterminate(title: SharedString, description: SharedString) -> Self {
         Self {
-            progress: 0,
             max_progress: 0,
-            title,
-            description,
-            status: JobStatus::InProgress,
-            cancellation_callback: None,
+            ..Self::new(title, description)
+        }
+    }
+
+    pub fn new_transient(title: SharedString, description: SharedString) -> Self {
+        Self {
+            transient: true,
+            ..Self::new(title, description)
         }
     }
 
@@ -80,6 +85,10 @@ impl Job for StandardJob {
 
     fn status(&self) -> JobStatus {
         self.status
+    }
+
+    fn transient(&self) -> bool {
+        self.transient
     }
 
     fn element(&self) -> AnyElement {

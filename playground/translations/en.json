@@ -37,6 +37,9 @@
   "DIALOG_BOX_NUCLEAR_REACTOR_CONTENT": "You are attempting to perform an extremely hazardous operation that could result in catastrophic consequences if not executed with extreme caution.\n\nThis operation has the potential to cause:\n- Complete data loss\n- Irreversible system damage\n- Breach of security protocols\n- Unrecoverable corruption\n\nOnly proceed if you are an expert user and fully understand the risks involved. Improper handling could lead to disastrous and irreparable results.",
   "DIALOG_BOX_NUCLEAR_REACTOR_INFORMATIONAL": "This is the informative text displayed in grey below the main text. It provides additional context and warnings about the dangerous operation. Attempting this operation without proper expertise and precautions could lead to permanent and devastating damage to your systems and data. Proceed at your own risk.",
   "DIALOG_BOX_NUCLEAR_REACTOR_TITLE": "Danger! Extremely Hazardous Operation!",
+  "FAILING_JOB_COMPLETE_DESCRIPTION": "This job has failed.",
+  "FAILING_JOB_IN_PROGRESS_DESCRIPTION": "This job will fail halfway through processing.",
+  "FAILING_JOB_TITLE": "Failing Job",
   "HORIZONTAL_SLIDERS_TITLE": "Horizontal Sliders",
   "I18N_DATE_TIME": "Date & Time",
   "I18N_DATE_TIME_ADV_LONG": "Custom (long): {{time}}",
@@ -93,5 +96,7 @@
   "TEXT_INPUT_TITLE": "Text Input",
   "THEME_DARK": "Dark",
   "THEME_LIGHT": "Light",
-  "THEME_SYSTEM": "System"
+  "THEME_SYSTEM": "System",
+  "TRANSIENT_JOB_IN_PROGRESS_DESCRIPTION": "This job is transient and so will disappear automatically once it is complete.",
+  "TRANSIENT_JOB_TITLE": "Transient Job"
 }

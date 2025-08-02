@@ -28,3 +28,13 @@ pub trait Job {
     /// Returns an element to be rendered in the Jobs pane
     fn element(&self) -> AnyElement;
 }
+
+impl JobStatus {
+    pub fn is_complete(&self) -> bool {
+        matches!(*self, JobStatus::Completed | JobStatus::Failed)
+    }
+
+    pub fn is_in_progress(&self) -> bool {
+        matches!(*self, JobStatus::InProgress | JobStatus::RequiresAttention)
+    }
+}

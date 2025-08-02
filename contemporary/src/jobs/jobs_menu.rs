@@ -5,25 +5,15 @@ use crate::styling::theme::Theme;
 use cntp_i18n::tr;
 use gpui::prelude::FluentBuilder;
 use gpui::{
-    App, InteractiveElement, IntoElement, ListAlignment, ListState, ParentElement, RenderOnce,
-    Styled, Window, div, list, px,
+    App, BorrowAppContext, InteractiveElement, IntoElement, ListAlignment, ListState,
+    ParentElement, RenderOnce, Styled, Window, div, list, px,
 };
-use std::rc::Rc;
 
 #[derive(IntoElement)]
-pub struct JobsMenu {
-    is_open: bool,
-    set_open: Rc<dyn Fn(&bool, &mut Window, &mut App)>,
-}
+pub struct JobsMenu {}
 
-pub fn jobs_menu(
-    is_open: bool,
-    set_open: impl Fn(&bool, &mut Window, &mut App) + 'static,
-) -> JobsMenu {
-    JobsMenu {
-        is_open,
-        set_open: Rc::new(set_open),
-    }
+pub fn jobs_menu() -> JobsMenu {
+    JobsMenu {}
 }
 
 impl RenderOnce for JobsMenu {
@@ -31,25 +21,25 @@ impl RenderOnce for JobsMenu {
         let theme = cx.global::<Theme>();
         let job_manager = cx.global::<JobManager>();
 
-        let set_open = self.set_open.clone();
-
         let list_state = ListState::new(
-            job_manager.job_len(),
+            job_manager.job_len(cx),
             ListAlignment::Top,
             px(0.),
             |index, window, cx| {
                 let job_manager = cx.global::<JobManager>();
-                let job = job_manager.job(index).read(cx);
-                job.borrow().element()
+                let job = job_manager.job(index, cx).unwrap();
+                job.read(cx).borrow().element()
             },
         );
 
         scrim("jobs-menu")
-            .visible(self.is_open)
+            .visible(job_manager.is_job_menu_open)
             .on_click(move |_, window, cx| {
-                set_open(&false, window, cx);
+                let job_manager = cx.update_global::<JobManager, ()>(|manager, cx| {
+                    manager.set_job_menu_open(false, cx);
+                });
             })
-            .when(self.is_open, |david| {
+            .when(job_manager.is_job_menu_open, |david| {
                 david.child(
                     div()
                         .bg(theme.background)

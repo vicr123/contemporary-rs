@@ -209,6 +209,24 @@
     "plural": false,
     "description": null
   },
+  "FAILING_JOB_COMPLETE_DESCRIPTION": {
+    "context": "jobs.rs",
+    "definedIn": "src/patterns/jobs.rs:187",
+    "plural": false,
+    "description": null
+  },
+  "FAILING_JOB_IN_PROGRESS_DESCRIPTION": {
+    "context": "jobs.rs",
+    "definedIn": "src/patterns/jobs.rs:166",
+    "plural": false,
+    "description": null
+  },
+  "FAILING_JOB_TITLE": {
+    "context": "jobs.rs",
+    "definedIn": "src/patterns/jobs.rs:166",
+    "plural": false,
+    "description": null
+  },
   "HORIZONTAL_SLIDERS_TITLE": {
     "context": "ranges.rs",
     "definedIn": "src/components/ranges.rs:50",
@@ -361,7 +379,7 @@
   },
   "JOB_FAILING_START": {
     "context": "jobs.rs",
-    "definedIn": "src/patterns/jobs.rs:135",
+    "definedIn": "src/patterns/jobs.rs:164",
     "plural": false,
     "description": null
   },
@@ -493,7 +511,7 @@
   },
   "STANDARD_JOB_COMPLETE_DESCRIPTION": {
     "context": "jobs.rs",
-    "definedIn": "src/patterns/jobs.rs:115",
+    "definedIn": "src/patterns/jobs.rs:151",
     "plural": false,
     "description": null
   },
@@ -548,6 +566,18 @@
   "THEME_SYSTEM": {
     "context": "main.rs",
     "definedIn": "src/main.rs:76",
+    "plural": false,
+    "description": null
+  },
+  "TRANSIENT_JOB_IN_PROGRESS_DESCRIPTION": {
+    "context": "jobs.rs",
+    "definedIn": "src/patterns/jobs.rs:130",
+    "plural": false,
+    "description": null
+  },
+  "TRANSIENT_JOB_TITLE": {
+    "context": "jobs.rs",
+    "definedIn": "src/patterns/jobs.rs:130",
     "plural": false,
     "description": null
   }

@@ -127,14 +127,72 @@ impl Render for Jobs {
                                         button("job-transient")
                                             .child(tr!("JOB_TRANSIENT_START", "Start Transient Job"))
                                             .on_click(cx.listener(|this, _, _, cx| {
-                                                // TODO: Add a transient job that runs for 10 seconds and then completes
+                                                let job = Rc::new(RefCell::new(StandardJob::new_transient(tr!("TRANSIENT_JOB_TITLE", "Transient Job").into(), tr!("TRANSIENT_JOB_IN_PROGRESS_DESCRIPTION", "This job is transient and so will disappear automatically once it is complete.").into())));
+                                                let job_entity_source = job.clone();
+                                                let job_entity = cx.new::<Jobling>(|_| {
+                                                    job_entity_source
+                                                });
+
+                                                let job_clone = job_entity.clone();
+                                                cx.spawn(async move |_, cx: &mut AsyncApp| {
+                                                    let instant = Instant::now();
+                                                    while instant.elapsed().as_secs_f32() < 10. {
+                                                        job_clone.update(cx, |_, cx| {
+                                                            job.borrow_mut().update_job_progress(
+                                                                (instant.elapsed().as_secs_f32() * 1000.) as u64,
+                                                                10000,
+                                                            );
+                                                            cx.notify();
+                                                        }).unwrap();
+                                                        cx.background_executor().timer(Duration::from_millis(10)).await;
+                                                    }
+                                                    job_clone.update(cx, |_, cx| {
+                                                        job.borrow_mut().update_job_status(
+                                                            tr!("STANDARD_JOB_COMPLETE_DESCRIPTION", "This job is now complete.").into(),
+                                                            JobStatus::Completed
+                                                        );
+                                                        cx.notify();
+                                                    }).unwrap();
+                                                }).detach();
+                                                cx.update_global::<JobManager, ()>(|job_manager, cx| {
+                                                    job_manager.add_job(job_entity, cx);
+                                                });
                                             })),
                                     )
                                     .child(
                                         button("job-failing")
                                             .child(tr!("JOB_FAILING_START", "Start Failing Job"))
                                             .on_click(cx.listener(|this, _, _, cx| {
-                                                // TODO: Add a job that runs halfway and then fails
+                                                let job = Rc::new(RefCell::new(StandardJob::new(tr!("FAILING_JOB_TITLE", "Failing Job").into(), tr!("FAILING_JOB_IN_PROGRESS_DESCRIPTION", "This job will fail halfway through processing.").into())));
+                                                let job_entity_source = job.clone();
+                                                let job_entity = cx.new::<Jobling>(|_| {
+                                                    job_entity_source
+                                                });
+
+                                                let job_clone = job_entity.clone();
+                                                cx.spawn(async move |_, cx: &mut AsyncApp| {
+                                                    let instant = Instant::now();
+                                                    while instant.elapsed().as_secs_f32() < 5. {
+                                                        job_clone.update(cx, |_, cx| {
+                                                            job.borrow_mut().update_job_progress(
+                                                                (instant.elapsed().as_secs_f32() * 1000.) as u64,
+                                                                10000,
+                                                            );
+                                                            cx.notify();
+                                                        }).unwrap();
+                                                        cx.background_executor().timer(Duration::from_millis(10)).await;
+                                                    }
+                                                    job_clone.update(cx, |_, cx| {
+                                                        job.borrow_mut().update_job_status(
+                                                            tr!("FAILING_JOB_COMPLETE_DESCRIPTION", "This job has failed.").into(),
+                                                            JobStatus::Failed
+                                                        );
+                                                        cx.notify();
+                                                    }).unwrap();
+                                                }).detach();
+                                                cx.update_global::<JobManager, ()>(|job_manager, cx| {
+                                                    job_manager.add_job(job_entity, cx);
+                                                });
                                             })),
                                     ),
                             ),
