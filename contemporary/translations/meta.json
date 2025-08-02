@@ -119,12 +119,6 @@
     "plural": false,
     "description": null
   },
-  "JOBS_BUTTON_TEXT": {
-    "context": "job_button.rs",
-    "definedIn": "src/jobs/job_button.rs:45",
-    "plural": false,
-    "description": null
-  },
   "JOBS_MENU_TITLE": {
     "context": "jobs_menu.rs",
     "definedIn": "src/jobs/jobs_menu.rs:56",

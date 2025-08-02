@@ -13,7 +13,7 @@ pub struct JobManager {
     unfinished_jobs: Vec<JoblingEntity>,
 }
 
-#[derive(PartialEq)]
+#[derive(Copy, Clone, PartialEq)]
 pub enum JobButtonState {
     Hidden,
     Idle,
@@ -71,11 +71,11 @@ impl JobManager {
     }
 
     pub fn aggregate_progress(&self, cx: &App) -> f32 {
-        self.jobs
+        self.unfinished_jobs
             .iter()
             .map(|job| job.read(cx).borrow().progress())
             .sum::<f32>()
-            / self.jobs.len() as f32
+            / self.unfinished_jobs.len() as f32
     }
 
     pub fn set_job_menu_open(&mut self, open: bool, cx: &App) {
