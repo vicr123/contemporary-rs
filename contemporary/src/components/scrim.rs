@@ -3,9 +3,9 @@ use crate::styling::theme::Theme;
 use crate::transition::float_transition_element::TransitionExt;
 use gpui::prelude::FluentBuilder;
 use gpui::{
-    anchored, black, deferred, div, point, px, Animation, AnyElement,
-    App, ClickEvent, Div, ElementId, InteractiveElement, IntoElement, ParentElement,
-    RenderOnce, Stateful, StatefulInteractiveElement, Styled, Window,
+    Animation, AnyElement, App, ClickEvent, Div, ElementId, InteractiveElement, IntoElement,
+    ParentElement, RenderOnce, Stateful, StatefulInteractiveElement, Styled, Window, anchored,
+    black, deferred, div, point, px,
 };
 
 #[derive(IntoElement)]

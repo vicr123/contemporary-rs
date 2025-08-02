@@ -1,6 +1,6 @@
-use ashpd::desktop::settings::{Settings, APPEARANCE_NAMESPACE, COLOR_SCHEME_KEY};
 use crate::styling::theme::Theme;
 use crate::styling::theme::ThemeType::System;
+use ashpd::desktop::settings::{APPEARANCE_NAMESPACE, COLOR_SCHEME_KEY, Settings};
 use gpui::{App, AsyncApp};
 use smol::stream::StreamExt;
 
@@ -10,10 +10,11 @@ pub fn setup_xdg_portal_interface_theme_changed_listener(cx: &mut App) {
             return;
         };
 
-        let Ok(mut color_scheme_changed) = portal_settings.receive_color_scheme_changed().await else {
+        let Ok(mut color_scheme_changed) = portal_settings.receive_color_scheme_changed().await
+        else {
             return;
         };
-        
+
         loop {
             _ = color_scheme_changed.next().await;
 

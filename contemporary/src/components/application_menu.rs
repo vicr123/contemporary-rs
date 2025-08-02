@@ -8,9 +8,9 @@ use crate::styling::theme::{Theme, VariableColor};
 use cntp_i18n::{i18n_manager, tr};
 use gpui::prelude::FluentBuilder;
 use gpui::{
-    div, img, px, App, AppContext, ClickEvent, Context, Entity, InteractiveElement,
-    IntoElement, Menu, MenuItem, OwnedMenu, OwnedMenuItem, ParentElement, Render, RenderOnce, SharedString,
-    Styled, Window,
+    App, AppContext, ClickEvent, Context, Entity, InteractiveElement, IntoElement, Menu, MenuItem,
+    OwnedMenu, OwnedMenuItem, ParentElement, Render, RenderOnce, SharedString, Styled, Window, div,
+    img, px,
 };
 use std::rc::Rc;
 

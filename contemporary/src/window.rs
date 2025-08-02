@@ -2,10 +2,10 @@ use crate::platform_support::platform_settings::PlatformSettings;
 use crate::styling::theme::Theme;
 use gpui::prelude::FluentBuilder;
 use gpui::{
-    canvas, div, point, px, size, transparent_black, AnyElement, App,
-    Bounds, CursorStyle, Decorations, Div, Hitbox, HitboxBehavior, InteractiveElement,
-    IntoElement, MouseButton, ParentElement, Pixels, Point, RenderOnce, ResizeEdge, Size,
-    Styled, Tiling, TitlebarOptions, Window, WindowBounds, WindowDecorations, WindowOptions,
+    AnyElement, App, Bounds, CursorStyle, Decorations, Div, Hitbox, HitboxBehavior,
+    InteractiveElement, IntoElement, MouseButton, ParentElement, Pixels, Point, RenderOnce,
+    ResizeEdge, Size, Styled, Tiling, TitlebarOptions, Window, WindowBounds, WindowDecorations,
+    WindowOptions, canvas, div, point, px, size, transparent_black,
 };
 
 struct ResizeHitbox {

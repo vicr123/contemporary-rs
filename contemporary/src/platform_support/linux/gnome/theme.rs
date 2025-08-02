@@ -1,5 +1,5 @@
 use crate::styling::contemporary::{
-    make_contemporary_base_theme, ContemporaryDark, ContemporaryLight,
+    ContemporaryDark, ContemporaryLight, make_contemporary_base_theme,
 };
 use crate::styling::theme::Theme;
 

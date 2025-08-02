@@ -1,5 +1,5 @@
 use crate::platform_support::platform_settings::PlatformSettings;
-use gpui::{px, Decorations};
+use gpui::{Decorations, px};
 use std::rc::Rc;
 
 pub fn create_linux_platform_settings() -> PlatformSettings {

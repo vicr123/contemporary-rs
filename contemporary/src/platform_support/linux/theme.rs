@@ -2,10 +2,10 @@ use crate::platform_support::linux::desktop_environment::DesktopEnvironment;
 use crate::platform_support::linux::gnome::theme::create_gnome_theme;
 use crate::platform_support::linux::kde::theme::create_kde_theme;
 use crate::styling::contemporary::{
-    make_contemporary_base_theme, ContemporaryDark, ContemporaryLight,
+    ContemporaryDark, ContemporaryLight, make_contemporary_base_theme,
 };
 use crate::styling::theme::{Theme, ThemeType};
-use ashpd::desktop::settings::{Settings, APPEARANCE_NAMESPACE, COLOR_SCHEME_KEY};
+use ashpd::desktop::settings::{APPEARANCE_NAMESPACE, COLOR_SCHEME_KEY, Settings};
 
 pub fn create_linux_theme(theme_type: ThemeType) -> Theme {
     let is_dark_mode = match theme_type {

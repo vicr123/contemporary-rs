@@ -10,8 +10,8 @@ use contemporary::components::pager::slide_horizontal_animation::SlideHorizontal
 use contemporary::styling::theme::Theme;
 use contemporary::surface::surface;
 use gpui::{
-    div, px, App, AppContext, Context, Entity, InteractiveElement, IntoElement,
-    Menu, MenuItem, ParentElement, Render, Styled, Window,
+    App, AppContext, Context, Entity, InteractiveElement, IntoElement, Menu, MenuItem,
+    ParentElement, Render, Styled, Window, div, px,
 };
 
 pub struct MainSurface {
