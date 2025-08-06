@@ -1,5 +1,5 @@
 use chrono::{DateTime, Local};
-use cntp_i18n::{Locale, LocaleFormattable, i18n_manager, tr};
+use cntp_i18n::{LayoutDirection, Locale, LocaleFormattable, i18n_manager, tr};
 use contemporary::components::constrainer::constrainer;
 use contemporary::components::grandstand::grandstand;
 use contemporary::components::layer::layer;
@@ -43,6 +43,7 @@ impl Render for I18n {
         let locale = Locale::new_from_locale_identifier(requested_locale);
 
         let local_time: DateTime<Local> = Local::now();
+        let layout_direction = locale.layout_direction();
 
         div()
             .bg(theme.background)
@@ -83,7 +84,14 @@ impl Render for I18n {
                                         "I18N_SELECTED_LANGUAGE",
                                         "Language: {{language}}",
                                         language = locale.human_readable_locale_name()
-                                    )),
+                                    ))
+                                    .child(tr!(
+                                        "I18N_LAYOUT_DIRECTION",
+                                        "Layout Direction: {{layout_direction}}",
+                                        layout_direction = match layout_direction {
+                                            LayoutDirection::LeftToRight => tr!("LAYOUT_DIRECTION_LTR", "Left-to-Right"),
+                                            LayoutDirection::RightToLeft => tr!("LAYOUT_DIRECTION_RTL", "Right-to-Left")
+                                        })),
                             ),
                     )
                     .child(

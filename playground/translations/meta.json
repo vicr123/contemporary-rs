@@ -235,37 +235,37 @@
   },
   "I18N_DATE_TIME": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:162",
+    "definedIn": "src/patterns/i18n.rs:170",
     "plural": false,
     "description": null
   },
   "I18N_DATE_TIME_ADV_LONG": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:191",
+    "definedIn": "src/patterns/i18n.rs:199",
     "plural": false,
     "description": null
   },
   "I18N_DATE_TIME_ADV_SHORT": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:185",
+    "definedIn": "src/patterns/i18n.rs:193",
     "plural": false,
     "description": null
   },
   "I18N_DATE_TIME_BASIC_LONG": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:179",
+    "definedIn": "src/patterns/i18n.rs:187",
     "plural": false,
     "description": null
   },
   "I18N_DATE_TIME_BASIC_MEDIUM": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:173",
+    "definedIn": "src/patterns/i18n.rs:181",
     "plural": false,
     "description": null
   },
   "I18N_DATE_TIME_DESCRIPTION": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:169",
+    "definedIn": "src/patterns/i18n.rs:177",
     "plural": false,
     "description": null
   },
@@ -275,75 +275,81 @@
     "plural": false,
     "description": null
   },
+  "I18N_LAYOUT_DIRECTION": {
+    "context": "i18n.rs",
+    "definedIn": "src/patterns/i18n.rs:89",
+    "plural": false,
+    "description": null
+  },
   "I18N_NUMERIC_FORMATS": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:126",
+    "definedIn": "src/patterns/i18n.rs:134",
     "plural": false,
     "description": null
   },
   "I18N_NUMERIC_FORMAT_DESCRIPTION": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:133",
+    "definedIn": "src/patterns/i18n.rs:141",
     "plural": false,
     "description": null
   },
   "I18N_NUMERIC_FORMAT_NEGATIVE_E": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:143",
+    "definedIn": "src/patterns/i18n.rs:151",
     "plural": false,
     "description": null
   },
   "I18N_NUMERIC_FORMAT_PI": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:137",
+    "definedIn": "src/patterns/i18n.rs:145",
     "plural": false,
     "description": null
   },
   "I18N_NUMERIC_FORMAT_SPEED_OF_LIGHT": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:149",
+    "definedIn": "src/patterns/i18n.rs:157",
     "plural": false,
     "description": null
   },
   "I18N_QUOTE_STRINGS": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:95",
+    "definedIn": "src/patterns/i18n.rs:103",
     "plural": false,
     "description": null
   },
   "I18N_QUOTE_STRING_DESCRIPTION": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:102",
+    "definedIn": "src/patterns/i18n.rs:110",
     "plural": false,
     "description": null
   },
   "I18N_QUOTE_STRING_QUOTED": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:113",
+    "definedIn": "src/patterns/i18n.rs:121",
     "plural": false,
     "description": null
   },
   "I18N_SELECTED_LANGUAGE": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:83",
+    "definedIn": "src/patterns/i18n.rs:84",
     "plural": false,
     "description": null
   },
   "I18N_SETUP": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:71",
+    "definedIn": "src/patterns/i18n.rs:72",
     "plural": false,
     "description": null
   },
   "I18N_SETUP_DESCRIPTION": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:78",
+    "definedIn": "src/patterns/i18n.rs:79",
     "plural": false,
     "description": null
   },
   "I18N_TITLE": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:55",
+    "definedIn": "src/patterns/i18n.rs:56",
     "plural": false,
     "description": null
   },
@@ -476,6 +482,18 @@
   "JOB_TRANSIENT_START": {
     "context": "jobs.rs",
     "definedIn": "src/patterns/jobs.rs:128",
+    "plural": false,
+    "description": null
+  },
+  "LAYOUT_DIRECTION_LTR": {
+    "context": "i18n.rs",
+    "definedIn": "src/patterns/i18n.rs:92",
+    "plural": false,
+    "description": null
+  },
+  "LAYOUT_DIRECTION_RTL": {
+    "context": "i18n.rs",
+    "definedIn": "src/patterns/i18n.rs:93",
     "plural": false,
     "description": null
   },

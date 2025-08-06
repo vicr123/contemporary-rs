@@ -6,11 +6,16 @@ use crate::cldr::CldrData;
 use icu::decimal::DecimalFormatter;
 use icu::decimal::input::Decimal;
 use icu::locale::subtags::{Language, Region};
-use icu::locale::{Locale as IcuLocale, locale};
+use icu::locale::{Direction, Locale as IcuLocale, LocaleDirectionality, locale};
 use locale_config::Locale as LocaleConfigLocale;
 use std::collections::{HashMap, HashSet};
 use std::fmt::Display;
 use std::hash::Hash;
+
+pub enum LayoutDirection {
+    LeftToRight,
+    RightToLeft,
+}
 
 pub struct Locale {
     pub messages: Vec<String>,
@@ -249,6 +254,19 @@ impl Locale {
     {
         let d = i.into();
         self.create_decimal_formatter().format_to_string(&d)
+    }
+
+    pub fn layout_direction(&self) -> LayoutDirection {
+        let directionality = LocaleDirectionality::new_common();
+
+        match directionality
+            .get(&self.messages_icu.id)
+            .unwrap_or(Direction::LeftToRight)
+        {
+            Direction::LeftToRight => LayoutDirection::LeftToRight,
+            Direction::RightToLeft => LayoutDirection::RightToLeft,
+            _ => LayoutDirection::LeftToRight,
+        }
     }
 }
 
