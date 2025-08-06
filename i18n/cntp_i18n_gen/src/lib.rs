@@ -82,6 +82,10 @@ impl<'ast> Visit<'ast> for TrMacroVisitor {
                             },
                         );
                     }
+
+                    for variable in contents.variables {
+                        self.visit_expr(&variable.value);
+                    }
                 }
             }
             "trn" => {
@@ -123,6 +127,10 @@ impl<'ast> Visit<'ast> for TrMacroVisitor {
                                 line_no: mac.tokens.span().start().line,
                             },
                         );
+                    }
+
+                    for variable in contents.variables {
+                        self.visit_expr(&variable.value);
                     }
                 }
             }
