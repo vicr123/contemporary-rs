@@ -235,37 +235,37 @@
   },
   "I18N_DATE_TIME": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:170",
+    "definedIn": "src/patterns/i18n.rs:169",
     "plural": false,
     "description": null
   },
   "I18N_DATE_TIME_ADV_LONG": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:199",
+    "definedIn": "src/patterns/i18n.rs:198",
     "plural": false,
     "description": null
   },
   "I18N_DATE_TIME_ADV_SHORT": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:193",
+    "definedIn": "src/patterns/i18n.rs:192",
     "plural": false,
     "description": null
   },
   "I18N_DATE_TIME_BASIC_LONG": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:187",
+    "definedIn": "src/patterns/i18n.rs:186",
     "plural": false,
     "description": null
   },
   "I18N_DATE_TIME_BASIC_MEDIUM": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:181",
+    "definedIn": "src/patterns/i18n.rs:180",
     "plural": false,
     "description": null
   },
   "I18N_DATE_TIME_DESCRIPTION": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:177",
+    "definedIn": "src/patterns/i18n.rs:176",
     "plural": false,
     "description": null
   },
@@ -283,31 +283,31 @@
   },
   "I18N_NUMERIC_FORMATS": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:134",
+    "definedIn": "src/patterns/i18n.rs:133",
     "plural": false,
     "description": null
   },
   "I18N_NUMERIC_FORMAT_DESCRIPTION": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:141",
+    "definedIn": "src/patterns/i18n.rs:140",
     "plural": false,
     "description": null
   },
   "I18N_NUMERIC_FORMAT_NEGATIVE_E": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:151",
+    "definedIn": "src/patterns/i18n.rs:150",
     "plural": false,
     "description": null
   },
   "I18N_NUMERIC_FORMAT_PI": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:145",
+    "definedIn": "src/patterns/i18n.rs:144",
     "plural": false,
     "description": null
   },
   "I18N_NUMERIC_FORMAT_SPEED_OF_LIGHT": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:157",
+    "definedIn": "src/patterns/i18n.rs:156",
     "plural": false,
     "description": null
   },
@@ -325,7 +325,7 @@
   },
   "I18N_QUOTE_STRING_QUOTED": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:121",
+    "definedIn": "src/patterns/i18n.rs:115",
     "plural": false,
     "description": null
   },

@@ -520,6 +520,7 @@ pub fn generate(manifest_directory: &Path) -> GenerationResult {
 }
 
 pub fn generate_default(manifest_directory: &Path) {
+    println!("cargo::rerun-if-changed=src");
     if let GenerationResult::ErrorsEncountered(errors) = generate(&manifest_directory) {
         println!(
             "cargo::warning={} error(s) generated while building translation file.",
