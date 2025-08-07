@@ -93,16 +93,51 @@ impl TrMacroVisitor {
         }
     }
 
-    pub fn print_errors(&self) {
+    pub fn print_errors(&self, root_directory: &Path) {
         for error in self.errors.iter() {
-            error.print_error();
+            error.print_error(root_directory);
         }
     }
 }
 
 impl VisitorError {
-    pub fn print_error(&self) {
-        error!("{}", self.error_type.error_string())
+    pub fn print_error(&self, root_directory: &Path) {
+        error!("{}", self.error_string(root_directory))
+    }
+
+    pub fn error_string(&self, root_directory: &Path) -> String {
+        match &self.error_type {
+            VisitorErrorType::BadPluralArgumentCount {
+                id,
+                expected_count,
+                actual_count,
+            } => format!(
+                "expected category count {expected_count} but received actual string count {actual_count} for {id}",
+            ),
+            VisitorErrorType::DuplicateDefinition {
+                id,
+                last_seen_file,
+                last_seen_line,
+            } => {
+                format!(
+                    "Duplicate definition for {id}. Last seen in {}:{last_seen_line}",
+                    last_seen_file
+                        .strip_prefix(root_directory)
+                        .unwrap()
+                        .to_str()
+                        .unwrap(),
+                )
+            }
+            VisitorErrorType::MissingDefinition { id } => format!(
+                "Missing definition for {id}. Referenced at {}:{}",
+                self.file
+                    .strip_prefix(root_directory)
+                    .unwrap()
+                    .to_str()
+                    .unwrap(),
+                self.span.start().line,
+            ),
+        }
     }
 }
 
@@ -121,31 +156,6 @@ pub enum VisitorErrorType {
     MissingDefinition {
         id: String,
     },
-}
-
-impl VisitorErrorType {
-    pub fn error_string(&self) -> String {
-        match self {
-            VisitorErrorType::BadPluralArgumentCount {
-                id,
-                expected_count,
-                actual_count,
-            } => format!(
-                "expected category count {expected_count} but received actual string count {actual_count} for {id}",
-            ),
-            VisitorErrorType::DuplicateDefinition {
-                id,
-                last_seen_file,
-                last_seen_line,
-            } => {
-                format!(
-                    "Duplicate definition for {id}. Last seen in {}:{last_seen_line}",
-                    last_seen_file.file_name().unwrap().to_str().unwrap(),
-                )
-            }
-            VisitorErrorType::MissingDefinition { id } => format!("Missing definition for {id}"),
-        }
-    }
 }
 
 #[derive(Debug, Clone)]
@@ -374,7 +384,7 @@ pub fn generate(manifest_directory: &Path) -> GenerationResult {
     }
 
     visitor.finish();
-    visitor.print_errors();
+    visitor.print_errors(manifest_directory);
     errors_encountered.push_visitor_errors(visitor.errors);
 
     info!(
@@ -507,4 +517,23 @@ pub fn generate(manifest_directory: &Path) -> GenerationResult {
     } else {
         GenerationResult::Successful
     }
+}
+
+pub fn generate_default(manifest_directory: &Path) {
+    if let GenerationResult::ErrorsEncountered(errors) = generate(&manifest_directory) {
+        println!(
+            "cargo::warning={} errors generated while building translation file, \
+            run cntp-i18n generate manually to see them",
+            errors.errors.len()
+        );
+        for error in errors.errors {
+            println!(
+                "cargo::warning={}",
+                match error {
+                    GenerationError::String(string) => string,
+                    GenerationError::VisitorError(error) => error.error_string(manifest_directory),
+                }
+            );
+        }
+    };
 }
