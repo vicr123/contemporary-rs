@@ -83,7 +83,7 @@ impl VisitorError {
 }
 
 pub enum VisitorErrorType {
-    ExtraneousPluralArgument {
+    BadPluralArgumentCount {
         id: String,
         expected_count: usize,
         actual_count: usize,
@@ -93,7 +93,7 @@ pub enum VisitorErrorType {
 impl VisitorErrorType {
     pub fn error_string(&self) -> String {
         match self {
-            VisitorErrorType::ExtraneousPluralArgument {
+            VisitorErrorType::BadPluralArgumentCount {
                 id,
                 expected_count,
                 actual_count,
@@ -151,7 +151,7 @@ impl<'ast> Visit<'ast> for TrMacroVisitor {
                     if category_count != string_count {
                         self.errors.push(VisitorError {
                             span: mac.tokens.span(),
-                            error_type: VisitorErrorType::ExtraneousPluralArgument {
+                            error_type: VisitorErrorType::BadPluralArgumentCount {
                                 id: id.clone(),
                                 expected_count: category_count,
                                 actual_count: string_count,

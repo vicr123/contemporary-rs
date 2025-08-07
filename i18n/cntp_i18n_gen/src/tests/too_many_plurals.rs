@@ -8,7 +8,7 @@ fn too_many_plurals() {
     assert_eq!(visitor.errors.len(), 1);
     let error = &visitor.errors[0];
     match &error.error_type {
-        VisitorErrorType::ExtraneousPluralArgument {
+        VisitorErrorType::BadPluralArgumentCount {
             id,
             expected_count,
             actual_count,
