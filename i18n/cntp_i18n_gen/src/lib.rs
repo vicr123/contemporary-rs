@@ -13,6 +13,7 @@ use std::{
 
 use cntp_i18n_core::config::get_i18n_config;
 use cntp_i18n_parse::{tr::TrMacroInput, trn::TrnMacroInput};
+use icu::datetime::fieldsets::builder::DateFields::E;
 use icu::{
     locale::Locale,
     plurals::{PluralCategory, PluralRules},
@@ -52,8 +53,15 @@ struct TrInfo {
     line_no: usize,
 }
 
+struct ExpectedString {
+    id: String,
+    file: PathBuf,
+    span: Span,
+}
+
 struct TrMacroVisitor {
     pub strings: HashMap<String, TrInfo>,
+    pub expected_strings: Vec<ExpectedString>,
     pub plural_rules: PluralRules,
     pub current_path: Rc<RefCell<PathBuf>>,
     pub errors: Vec<VisitorError>,
@@ -63,9 +71,25 @@ impl TrMacroVisitor {
     pub fn new(plural_rules: PluralRules, path: Rc<RefCell<PathBuf>>) -> Self {
         Self {
             strings: HashMap::new(),
+            expected_strings: Default::default(),
             plural_rules,
             current_path: path,
             errors: Default::default(),
+        }
+    }
+
+    pub fn finish(&mut self) {
+        // Check that all expected strings have been found
+        for expected in self.expected_strings.iter() {
+            if !self.strings.contains_key(expected.id.as_str()) {
+                self.errors.push(VisitorError {
+                    span: expected.span,
+                    file: expected.file.clone(),
+                    error_type: VisitorErrorType::MissingDefinition {
+                        id: expected.id.clone(),
+                    },
+                });
+            }
         }
     }
 
@@ -94,6 +118,9 @@ pub enum VisitorErrorType {
         last_seen_file: PathBuf,
         last_seen_line: usize,
     },
+    MissingDefinition {
+        id: String,
+    },
 }
 
 impl VisitorErrorType {
@@ -116,6 +143,7 @@ impl VisitorErrorType {
                     last_seen_file.file_name().unwrap().to_str().unwrap(),
                 )
             }
+            VisitorErrorType::MissingDefinition { id } => format!("Missing definition for {id}"),
         }
     }
 }
@@ -165,6 +193,12 @@ impl<'ast> Visit<'ast> for TrMacroVisitor {
                                 },
                             });
                         }
+                    } else {
+                        self.expected_strings.push(ExpectedString {
+                            id: contents.translation_id.value(),
+                            file: self.current_path.borrow().clone(),
+                            span: mac.tokens.span(),
+                        })
                     }
 
                     for variable in contents.variables {
@@ -178,7 +212,14 @@ impl<'ast> Visit<'ast> for TrMacroVisitor {
                     let string_count = contents.default_strings.len();
                     let id = contents.translation_id.value();
 
-                    if category_count != string_count {
+                    // If we're reusing an existing translation, don't process this instance
+                    if string_count == 0 {
+                        self.expected_strings.push(ExpectedString {
+                            id,
+                            file: self.current_path.borrow().clone(),
+                            span: mac.tokens.span(),
+                        })
+                    } else if category_count != string_count {
                         self.errors.push(VisitorError {
                             span: mac.tokens.span(),
                             file: self.current_path.borrow().clone(),
@@ -332,6 +373,7 @@ pub fn generate(manifest_directory: &Path) -> GenerationResult {
         visitor.visit_file(&syntax);
     }
 
+    visitor.finish();
     visitor.print_errors();
     errors_encountered.push_visitor_errors(visitor.errors);
 

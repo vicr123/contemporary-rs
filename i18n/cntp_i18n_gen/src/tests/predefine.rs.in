@@ -1,0 +1,8 @@
+pub fn main() {
+    println!(tr!("HELLO_WORLD", "Hello World!"));
+    println!(tr!("HELLO_WORLD"));
+    println!(trn!("HELLO_WORLD_PLURAL", "There are {{count}} world", "There are {{count}} worlds"));
+    println!(trn!("HELLO_WORLD_PLURAL"));
+    println!(tr!("THIS_STRING_IS_NOT_DEFINED"));
+    println!(trn!("THIS_PLURAL_STRING_IS_NOT_DEFINED"));
+}

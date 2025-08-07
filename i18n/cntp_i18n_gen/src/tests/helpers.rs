@@ -1,8 +1,7 @@
 use crate::TrMacroVisitor;
-use icu::locale::{Locale, locale};
+use icu::locale::Locale;
 use icu::plurals::PluralRules;
 use std::cell::RefCell;
-use std::collections::HashMap;
 use std::path::PathBuf;
 use std::rc::Rc;
 use syn::parse_file;
@@ -23,6 +22,7 @@ pub fn visit_string(string: &str, locale: &str) -> TrMacroVisitor {
     );
 
     visitor.visit_file(&syntax);
+    visitor.finish();
 
     visitor
 }
