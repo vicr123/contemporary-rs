@@ -522,8 +522,7 @@ pub fn generate(manifest_directory: &Path) -> GenerationResult {
 pub fn generate_default(manifest_directory: &Path) {
     if let GenerationResult::ErrorsEncountered(errors) = generate(&manifest_directory) {
         println!(
-            "cargo::warning={} errors generated while building translation file, \
-            run cntp-i18n generate manually to see them",
+            "cargo::warning={} error(s) generated while building translation file.",
             errors.errors.len()
         );
         for error in errors.errors {
