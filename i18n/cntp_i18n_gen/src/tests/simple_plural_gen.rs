@@ -10,6 +10,7 @@ fn simple_plural_gen() {
         .strings
         .get("HELLO_WORLD")
         .expect("HELLO_WORLD not found in parsed strings");
+    assert_eq!(hello_world.line_no, 2);
     match &hello_world.string {
         TrString::Single(_) => {
             panic!("HELLO_WORLD is singular")

@@ -1,0 +1,9 @@
+pub fn main() {
+    println!(
+        tr!(
+            "HELLO_WORLD",
+            "Hello World!",
+            #description = "\"Hello World\" is a simple greeting phrase commonly used as the first output in programming tutorials and examples."
+        )
+    );
+}
