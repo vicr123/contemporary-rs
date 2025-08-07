@@ -1,0 +1,6 @@
+pub fn main() {
+    println!(tr!("HELLO_WORLD", "Hello World!"));
+    println!(tr!("HELLO_WORLD", "Second Hello World!"));
+    println!(trn!("HELLO_WORLD_PLURAL", "There are {{count}} world", "There are {{count}} worlds"));
+    println!(trn!("HELLO_WORLD_PLURAL", "{{count}} world exists", "{{count}} worlds exist"));
+}

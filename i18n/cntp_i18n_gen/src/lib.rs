@@ -82,11 +82,17 @@ impl VisitorError {
     }
 }
 
+#[derive(Debug, Clone)]
 pub enum VisitorErrorType {
     BadPluralArgumentCount {
         id: String,
         expected_count: usize,
         actual_count: usize,
+    },
+    DuplicateDefinition {
+        id: String,
+        last_seen_file: PathBuf,
+        last_seen_line: usize,
     },
 }
 
@@ -100,13 +106,25 @@ impl VisitorErrorType {
             } => format!(
                 "expected category count {expected_count} but received actual string count {actual_count} for {id}",
             ),
+            VisitorErrorType::DuplicateDefinition {
+                id,
+                last_seen_file,
+                last_seen_line,
+            } => {
+                format!(
+                    "Duplicate definition for {id}. Last seen in {}:{last_seen_line}",
+                    last_seen_file.file_name().unwrap().to_str().unwrap(),
+                )
+            }
         }
     }
 }
 
+#[derive(Debug, Clone)]
 pub struct VisitorError {
-    span: Span,
-    error_type: VisitorErrorType,
+    pub span: Span,
+    pub file: PathBuf,
+    pub error_type: VisitorErrorType,
 }
 
 impl<'ast> Visit<'ast> for TrMacroVisitor {
@@ -115,7 +133,7 @@ impl<'ast> Visit<'ast> for TrMacroVisitor {
             "tr" => {
                 if let Ok(contents) = syn::parse2::<TrMacroInput>(mac.tokens.clone()) {
                     if let Some(default_string) = contents.default_string {
-                        self.strings.insert(
+                        let replaced = self.strings.insert(
                             contents.translation_id.value(),
                             TrInfo {
                                 string: TrString::Single(default_string.value()),
@@ -135,6 +153,18 @@ impl<'ast> Visit<'ast> for TrMacroVisitor {
                                 line_no: mac.tokens.span().start().line,
                             },
                         );
+
+                        if let Some(replaced) = replaced {
+                            self.errors.push(VisitorError {
+                                span: mac.tokens.span(),
+                                file: self.current_path.borrow().clone(),
+                                error_type: VisitorErrorType::DuplicateDefinition {
+                                    id: contents.translation_id.value(),
+                                    last_seen_file: replaced.file,
+                                    last_seen_line: replaced.line_no,
+                                },
+                            });
+                        }
                     }
 
                     for variable in contents.variables {
@@ -151,6 +181,7 @@ impl<'ast> Visit<'ast> for TrMacroVisitor {
                     if category_count != string_count {
                         self.errors.push(VisitorError {
                             span: mac.tokens.span(),
+                            file: self.current_path.borrow().clone(),
                             error_type: VisitorErrorType::BadPluralArgumentCount {
                                 id: id.clone(),
                                 expected_count: category_count,
@@ -165,7 +196,7 @@ impl<'ast> Visit<'ast> for TrMacroVisitor {
                             .map(|(category, lit_str)| (category, lit_str.value()))
                             .collect();
 
-                        self.strings.insert(
+                        let replaced = self.strings.insert(
                             id,
                             TrInfo {
                                 string: TrString::Plural(forms),
@@ -185,6 +216,18 @@ impl<'ast> Visit<'ast> for TrMacroVisitor {
                                 line_no: mac.tokens.span().start().line,
                             },
                         );
+
+                        if let Some(replaced) = replaced {
+                            self.errors.push(VisitorError {
+                                span: mac.tokens.span(),
+                                file: self.current_path.borrow().clone(),
+                                error_type: VisitorErrorType::DuplicateDefinition {
+                                    id: contents.translation_id.value(),
+                                    last_seen_file: replaced.file,
+                                    last_seen_line: replaced.line_no,
+                                },
+                            });
+                        }
                     }
 
                     for variable in contents.variables {
@@ -213,10 +256,33 @@ impl<'ast> Visit<'ast> for TrMacroVisitor {
     }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone)]
+pub struct GenerationErrorHandler {
+    pub errors: Vec<GenerationError>,
+}
+
+impl GenerationErrorHandler {
+    pub fn push_string(&mut self, string: String) {
+        error!("{}", string);
+        self.errors.push(GenerationError::String(string));
+    }
+
+    pub fn push_visitor_errors(&mut self, errors: Vec<VisitorError>) {
+        self.errors
+            .extend(errors.into_iter().map(GenerationError::VisitorError));
+    }
+}
+
+#[derive(Debug, Clone)]
 pub enum GenerationResult {
     Successful,
-    ErrorsEncountered(usize),
+    ErrorsEncountered(GenerationErrorHandler),
+}
+
+#[derive(Debug, Clone)]
+pub enum GenerationError {
+    String(String),
+    VisitorError(VisitorError),
 }
 
 pub fn generate(manifest_directory: &Path) -> GenerationResult {
@@ -237,7 +303,9 @@ pub fn generate(manifest_directory: &Path) -> GenerationResult {
 
     let mut visitor = TrMacroVisitor::new(plural_rules, current_file.clone());
 
-    let mut errors_encountered: usize = 0;
+    let mut errors_encountered = GenerationErrorHandler {
+        errors: Default::default(),
+    };
 
     for entry in WalkDir::new(manifest_directory.join("src"))
         .follow_links(true)
@@ -248,16 +316,16 @@ pub fn generate(manifest_directory: &Path) -> GenerationResult {
         debug!("reading {:?}", entry.path());
 
         let Ok(contents) = fs::read_to_string(entry.path()) else {
-            error!("failed to read source file {:?}", entry.path());
-            errors_encountered += 1;
+            errors_encountered
+                .push_string(format!("failed to read source file {:?}", entry.path()));
             continue;
         };
 
         *current_file.borrow_mut() = entry.path().to_path_buf();
 
         let Ok(syntax) = parse_file(&contents) else {
-            error!("failed to parse source file {:?}", entry.path());
-            errors_encountered += 1;
+            errors_encountered
+                .push_string(format!("failed to parse source file {:?}", entry.path()));
             continue;
         };
 
@@ -265,13 +333,7 @@ pub fn generate(manifest_directory: &Path) -> GenerationResult {
     }
 
     visitor.print_errors();
-
-    if errors_encountered > 0 || !visitor.errors.is_empty() {
-        error!(
-            "{} errors encountered, generated translation catalog will be incomplete",
-            errors_encountered
-        )
-    }
+    errors_encountered.push_visitor_errors(visitor.errors);
 
     info!(
         "scan complete, found {} unique string(s)",
@@ -391,7 +453,14 @@ pub fn generate(manifest_directory: &Path) -> GenerationResult {
         exit(1);
     }
 
-    if errors_encountered > 0 {
+    if !errors_encountered.errors.is_empty() {
+        error!(
+            "{} error(s) encountered, generated translation catalog will be incomplete",
+            errors_encountered.errors.len()
+        )
+    }
+
+    if !errors_encountered.errors.is_empty() {
         GenerationResult::ErrorsEncountered(errors_encountered)
     } else {
         GenerationResult::Successful
