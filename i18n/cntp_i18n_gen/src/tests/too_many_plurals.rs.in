@@ -1,0 +1,10 @@
+pub fn main() {
+    println!(
+        trn!(
+            "HELLO_WORLD",
+            "There are {{count}} world",
+            "There are {{count}} worlds",
+            "This argument is extraneous because the language is set to English which only has two plural forms"
+        )
+    );
+}

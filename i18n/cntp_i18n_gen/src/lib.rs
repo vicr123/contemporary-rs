@@ -1,3 +1,5 @@
+mod tests;
+
 use std::{
     cell::RefCell,
     collections::HashMap,
@@ -16,6 +18,7 @@ use icu::{
     plurals::{PluralCategory, PluralRules},
 };
 use itertools::Itertools;
+use proc_macro2::Span;
 use serde_json::json;
 use syn::{Expr, Lit, Macro, Token, parse_file, spanned::Spanned, visit::Visit};
 use syn::{parse::Parse, punctuated::Punctuated};
@@ -53,6 +56,57 @@ struct TrMacroVisitor {
     pub strings: HashMap<String, TrInfo>,
     pub plural_rules: PluralRules,
     pub current_path: Rc<RefCell<PathBuf>>,
+    pub errors: Vec<VisitorError>,
+}
+
+impl TrMacroVisitor {
+    pub fn new(plural_rules: PluralRules, path: Rc<RefCell<PathBuf>>) -> Self {
+        Self {
+            strings: HashMap::new(),
+            plural_rules,
+            current_path: path,
+            errors: Default::default(),
+        }
+    }
+
+    pub fn print_errors(&self) {
+        for error in self.errors.iter() {
+            error.print_error();
+        }
+    }
+}
+
+impl VisitorError {
+    pub fn print_error(&self) {
+        error!("{}", self.error_type.error_string())
+    }
+}
+
+pub enum VisitorErrorType {
+    ExtraneousPluralArgument {
+        id: String,
+        expected_count: usize,
+        actual_count: usize,
+    },
+}
+
+impl VisitorErrorType {
+    pub fn error_string(&self) -> String {
+        match self {
+            VisitorErrorType::ExtraneousPluralArgument {
+                id,
+                expected_count,
+                actual_count,
+            } => format!(
+                "expected category count {expected_count} but received actual string count {actual_count} for {id}",
+            ),
+        }
+    }
+}
+
+pub struct VisitorError {
+    span: Span,
+    error_type: VisitorErrorType,
 }
 
 impl<'ast> Visit<'ast> for TrMacroVisitor {
@@ -95,10 +149,14 @@ impl<'ast> Visit<'ast> for TrMacroVisitor {
                     let id = contents.translation_id.value();
 
                     if category_count != string_count {
-                        error!(
-                            "expected category count {} but recieved actual string count {} for {}",
-                            category_count, string_count, id,
-                        )
+                        self.errors.push(VisitorError {
+                            span: mac.tokens.span(),
+                            error_type: VisitorErrorType::ExtraneousPluralArgument {
+                                id: id.clone(),
+                                expected_count: category_count,
+                                actual_count: string_count,
+                            },
+                        });
                     } else {
                         let forms = self
                             .plural_rules
@@ -177,11 +235,7 @@ pub fn generate(manifest_directory: &Path) -> GenerationResult {
 
     let current_file = Rc::new(RefCell::new(PathBuf::new()));
 
-    let mut visitor = TrMacroVisitor {
-        strings: HashMap::new(),
-        current_path: current_file.clone(),
-        plural_rules,
-    };
+    let mut visitor = TrMacroVisitor::new(plural_rules, current_file.clone());
 
     let mut errors_encountered: usize = 0;
 
@@ -210,7 +264,9 @@ pub fn generate(manifest_directory: &Path) -> GenerationResult {
         visitor.visit_file(&syntax);
     }
 
-    if errors_encountered > 0 {
+    visitor.print_errors();
+
+    if errors_encountered > 0 || !visitor.errors.is_empty() {
         error!(
             "{} errors encountered, generated translation catalog will be incomplete",
             errors_encountered

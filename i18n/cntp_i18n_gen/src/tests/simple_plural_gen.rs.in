@@ -1,0 +1,3 @@
+pub fn main() {
+    println!(trn!("HELLO_WORLD", "There are {{count}} world", "There are {{count}} worlds"));
+}
