@@ -121,7 +121,7 @@
   },
   "JOBS_MENU_TITLE": {
     "context": "jobs_menu.rs",
-    "definedIn": "src/jobs/jobs_menu.rs:56",
+    "definedIn": "src/jobs/jobs_menu.rs:47",
     "plural": false,
     "description": null
   },

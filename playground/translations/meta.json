@@ -7,13 +7,13 @@
   },
   "BUTTONS_CHECKABLE_BUTTON": {
     "context": "buttons.rs",
-    "definedIn": "src/components/buttons.rs:81",
+    "definedIn": "src/components/buttons.rs:84",
     "plural": false,
     "description": null
   },
   "BUTTONS_COUNT_TEXT": {
     "context": "buttons.rs",
-    "definedIn": "src/components/buttons.rs:89",
+    "definedIn": "src/components/buttons.rs:92",
     "plural": true,
     "description": null
   },
@@ -25,31 +25,31 @@
   },
   "BUTTONS_DISABLED_BUTTON": {
     "context": "buttons.rs",
-    "definedIn": "src/components/buttons.rs:76",
+    "definedIn": "src/components/buttons.rs:79",
     "plural": false,
     "description": null
   },
   "BUTTONS_FLAT_BUTTON": {
     "context": "buttons.rs",
-    "definedIn": "src/components/buttons.rs:110",
+    "definedIn": "src/components/buttons.rs:113",
     "plural": false,
     "description": null
   },
   "BUTTONS_FLAT_CHECKABLE_BUTTON": {
     "context": "buttons.rs",
-    "definedIn": "src/components/buttons.rs:116",
+    "definedIn": "src/components/buttons.rs:119",
     "plural": false,
     "description": null
   },
   "BUTTONS_FLAT_DISABLED_BUTTON": {
     "context": "buttons.rs",
-    "definedIn": "src/components/buttons.rs:113",
+    "definedIn": "src/components/buttons.rs:116",
     "plural": false,
     "description": null
   },
   "BUTTONS_FLAT_TITLE": {
     "context": "buttons.rs",
-    "definedIn": "src/components/buttons.rs:101",
+    "definedIn": "src/components/buttons.rs:104",
     "plural": false,
     "description": null
   },

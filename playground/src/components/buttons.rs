@@ -63,7 +63,10 @@ impl Render for Buttons {
                                             "BUTTONS_DEFAULT_BUTTON",
                                             "Default Button"
                                         )).on_click(cx.listener(|this, event: &ClickEvent, _, cx| {
-                                            if event.down.modifiers.shift {
+                                            if match event {
+                                                ClickEvent::Mouse(mouse_event) => mouse_event.down.modifiers.shift,
+                                                ClickEvent::Keyboard(_) => false
+                                            } {
                                                 this.buttons_click_count = 0
                                             } else {
                                                 this.buttons_click_count += 1;

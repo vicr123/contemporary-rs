@@ -2,9 +2,9 @@ use crate::styling::theme::Theme;
 use gpui::MouseButton::Left;
 use gpui::prelude::FluentBuilder;
 use gpui::{
-    App, AvailableSpace, BorderStyle, Bounds, Corners, Div, Element, ElementId, GlobalElementId,
-    InspectorElementId, InteractiveElement, IntoElement, LayoutId, ParentElement, Pixels,
-    Refineable, RenderOnce, SharedString, Stateful, StatefulInteractiveElement, Style,
+    App, AvailableSpace, BorderStyle, Bounds, ClickEvent, Corners, Div, Element, ElementId,
+    GlobalElementId, InspectorElementId, InteractiveElement, IntoElement, LayoutId, ParentElement,
+    Pixels, Refineable, RenderOnce, SharedString, Stateful, StatefulInteractiveElement, Style,
     StyleRefinement, Styled, Window, div, px, quad, size, transparent_black, white,
 };
 use std::panic::Location;
@@ -103,7 +103,9 @@ impl RenderOnce for Checkbox {
             )
             .when_some(self.label, |div, label| div.child(label))
             .on_click(move |event, window, cx| {
-                if event.down.button != Left {
+                if let ClickEvent::Mouse(mouse_event) = event
+                    && mouse_event.down.button == Left
+                {
                     return;
                 }
 

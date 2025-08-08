@@ -21,21 +21,12 @@ impl RenderOnce for JobsMenu {
         let theme = cx.global::<Theme>();
         let job_manager = cx.global::<JobManager>();
 
-        let list_state = ListState::new(
-            job_manager.job_len(cx),
-            ListAlignment::Top,
-            px(0.),
-            |index, window, cx| {
-                let job_manager = cx.global::<JobManager>();
-                let job = job_manager.job(index, cx).unwrap();
-                job.read(cx).borrow().element()
-            },
-        );
+        let list_state = ListState::new(job_manager.job_len(cx), ListAlignment::Top, px(0.));
 
         scrim("jobs-menu")
             .visible(job_manager.is_job_menu_open)
             .on_click(move |_, window, cx| {
-                let job_manager = cx.update_global::<JobManager, ()>(|manager, cx| {
+                cx.update_global::<JobManager, ()>(|manager, cx| {
                     manager.set_job_menu_open(false, cx);
                 });
             })
@@ -54,7 +45,16 @@ impl RenderOnce for JobsMenu {
                         .max_h(window.viewport_size().height)
                         .left(window.viewport_size().width - px(300.))
                         .child(grandstand("jobs-grandstand").text(tr!("JOBS_MENU_TITLE", "Jobs")))
-                        .child(list(list_state).p(px(10.)).flex_grow().w_full()),
+                        .child(
+                            list(list_state, |index, _, cx| {
+                                let job_manager = cx.global::<JobManager>();
+                                let job = job_manager.job(index, cx).unwrap();
+                                job.read(cx).borrow().element()
+                            })
+                            .p(px(10.))
+                            .flex_grow()
+                            .w_full(),
+                        ),
                 )
             })
     }
