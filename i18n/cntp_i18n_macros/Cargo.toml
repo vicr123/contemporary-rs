@@ -16,3 +16,4 @@ cntp_i18n_core = { path = "../cntp_i18n_core" }
 cntp_i18n_parse = { path = "../cntp_i18n_parse" }
 proc-macro2 = "1"
 rustc-hash = { workspace = true }
+regex = "1"

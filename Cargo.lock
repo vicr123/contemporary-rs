@@ -1078,6 +1078,7 @@ dependencies = [
  "once_cell",
  "proc-macro2",
  "quote",
+ "regex",
  "rustc-hash 2.1.1",
  "syn 2.0.104",
 ]

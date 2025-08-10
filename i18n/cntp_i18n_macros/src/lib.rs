@@ -1,6 +1,7 @@
 use proc_macro::TokenStream;
 
 mod config;
+mod preprocessor;
 mod tr;
 mod tr_load;
 
