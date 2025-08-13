@@ -5,7 +5,7 @@ use crate::platform_support::platform_settings::PlatformSettings;
 use crate::platform_support::setup_platform;
 use crate::styling::theme::Theme;
 use cntp_i18n::{I18N_MANAGER, i18n_manager, tr, tr_load};
-use gpui::{Action, App, AppContext, Global, KeyBinding, Menu, MenuItem, actions};
+use gpui::{Action, App, AppContext, Global, KeyBinding, Menu, MenuItem, SystemMenuType, actions};
 use schemars::JsonSchema;
 use serde::Deserialize;
 use std::collections::HashMap;
@@ -94,12 +94,9 @@ pub fn setup_contemporary(cx: &mut App, mut application: Contemporary) {
         application_menu_items.push(MenuItem::separator());
     }
     application_menu_items.append(&mut vec![
-        MenuItem::Submenu(Menu {
-            name: tr!("APPLE_APP_MENU_SERVICES", "Services",
+        MenuItem::os_submenu(tr!("APPLE_APP_MENU_SERVICES", "Services",
                     #description = "Please use the string that macOS uses for the Services action in the application menu."
-                ).into(),
-            items: vec![],
-        }),
+                ), SystemMenuType::Services),
         MenuItem::separator(),
         MenuItem::action(
             tr!("APPLE_APP_MENU_HIDE_SELF", "Hide {{application}}", application = application.details.generatable.application_name

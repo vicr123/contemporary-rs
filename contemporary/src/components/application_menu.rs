@@ -337,6 +337,9 @@ impl RenderOnce for MenuList {
                         })
                         .into_any_element()
                 }
+                OwnedMenuItem::SystemMenu(_) => {
+                    div().into_any_element()
+                }
             })
         })
     }
