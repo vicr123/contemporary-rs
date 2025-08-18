@@ -8,7 +8,7 @@ pub mod icon_tool;
 pub mod jobs;
 pub mod lerp;
 pub mod macros;
-mod platform_support;
+pub mod platform_support;
 pub mod setup;
 pub mod styling;
 pub mod surface;
