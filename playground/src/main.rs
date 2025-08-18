@@ -33,7 +33,8 @@ fn mane() {
         I18N_MANAGER.write().unwrap().load_source(tr_load!());
         let bounds = Bounds::centered(None, size(px(800.0), px(600.0)), cx);
 
-        let default_window_options = contemporary_window_options(cx);
+        let default_window_options =
+            contemporary_window_options(cx, "Contemporary Playground".into());
         register_actions(cx);
         cx.open_window(
             WindowOptions {

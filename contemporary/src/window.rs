@@ -4,8 +4,8 @@ use gpui::prelude::FluentBuilder;
 use gpui::{
     AnyElement, App, Bounds, CursorStyle, Decorations, Div, Hitbox, HitboxBehavior,
     InteractiveElement, IntoElement, MouseButton, ParentElement, Pixels, Point, RenderOnce,
-    ResizeEdge, Size, Styled, Tiling, TitlebarOptions, Window, WindowBounds, WindowDecorations,
-    WindowOptions, canvas, div, point, px, size, transparent_black,
+    ResizeEdge, SharedString, Size, Styled, Tiling, TitlebarOptions, Window, WindowBounds,
+    WindowDecorations, WindowOptions, canvas, div, point, px, size, transparent_black,
 };
 
 struct ResizeHitbox {
@@ -252,12 +252,12 @@ fn resize_edge(
     Some(edge)
 }
 
-pub fn contemporary_window_options(cx: &mut App) -> WindowOptions {
+pub fn contemporary_window_options(cx: &mut App, window_title: SharedString) -> WindowOptions {
     let bounds = Bounds::centered(None, size(px(500.), px(500.0)), cx);
     WindowOptions {
         window_bounds: Some(WindowBounds::Windowed(bounds)),
         titlebar: Some(TitlebarOptions {
-            title: Some("Contemporary Playground".into()),
+            title: Some(window_title),
             appears_transparent: true,
             traffic_light_position: Some(point(px(10.0), px(10.0))),
         }),
