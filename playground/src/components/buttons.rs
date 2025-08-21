@@ -9,6 +9,7 @@ use gpui::{
     App, AppContext, ClickEvent, Context, Entity, IntoElement, ParentElement, Render, Styled,
     Window, div, px,
 };
+use tracing::info;
 
 pub struct Buttons {
     buttons_click_count: u8,
@@ -63,6 +64,7 @@ impl Render for Buttons {
                                             "BUTTONS_DEFAULT_BUTTON",
                                             "Default Button"
                                         )).on_click(cx.listener(|this, event: &ClickEvent, _, cx| {
+                                            info!("Default button was clicked");
                                             if match event {
                                                 ClickEvent::Mouse(mouse_event) => mouse_event.down.modifiers.shift,
                                                 ClickEvent::Keyboard(_) => false

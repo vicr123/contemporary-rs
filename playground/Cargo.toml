@@ -12,6 +12,7 @@ cntp_icon_tool_macros = { path = "../icon_tool/cntp_icon_tool_macros" }
 smol = "2"
 smol-macros = "0.1"
 chrono = { workspace = true }
+tracing = { workspace = true }
 
 
 [build-dependencies]

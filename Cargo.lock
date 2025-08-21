@@ -1317,6 +1317,8 @@ dependencies = [
  "serde",
  "serde_json",
  "smol",
+ "tracing",
+ "tracing-subscriber",
  "unicode-segmentation",
  "url",
  "windows 0.61.3",
@@ -4597,6 +4599,7 @@ dependencies = [
  "indexmap",
  "smol",
  "smol-macros",
+ "tracing",
 ]
 
 [[package]]

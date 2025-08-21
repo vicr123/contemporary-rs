@@ -12,5 +12,6 @@ pub mod platform_support;
 pub mod setup;
 pub mod styling;
 pub mod surface;
+mod tracing;
 pub mod transition;
 pub mod window;
