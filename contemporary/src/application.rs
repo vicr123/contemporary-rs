@@ -1,16 +1,16 @@
-use std::{
-    collections::HashMap,
-    sync::{Arc, Mutex},
-};
-
 use crate::assets::global_manager::ASSET_MANAGER;
 use crate::assets::icon_theme_asset_source::IconThemeAssetSource;
 use crate::assets::manager::Manager;
 use crate::assets::window_controls_asset_source::WindowControlsAssetSource;
 use cntp_config::LocalisedString;
 use cntp_i18n::tr;
+use directories::ProjectDirs;
 use gpui::{Application, Global, SharedString};
 use indexmap::IndexMap;
+use std::{
+    collections::HashMap,
+    sync::{Arc, Mutex},
+};
 
 #[derive(Hash, Eq, Clone, PartialEq, Debug)]
 pub enum ApplicationLink {
@@ -47,6 +47,8 @@ pub struct GeneratableDetails {
     pub application_name: LocalisedString,
     pub application_generic_name: LocalisedString,
     pub desktop_entry: &'static str,
+    pub application_machine_name: Option<&'static str>,
+    pub organization_name: Option<&'static str>,
 }
 
 pub struct Details {
@@ -56,6 +58,18 @@ pub struct Details {
     pub copyright_year: &'static str,
     pub license: License,
     pub links: IndexMap<ApplicationLink, &'static str>,
+}
+
+impl Details {
+    pub fn standard_dirs(&self) -> Option<ProjectDirs> {
+        ProjectDirs::from(
+            "",
+            self.generatable.organization_name.unwrap_or(""),
+            self.generatable
+                .application_machine_name
+                .unwrap_or(self.generatable.application_name.default_value().as_str()),
+        )
+    }
 }
 
 impl Global for Details {}

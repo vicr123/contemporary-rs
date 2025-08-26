@@ -17,6 +17,8 @@ pub struct ContemporaryConfigConfigDef {
 pub struct ContemporaryConfigDeploymentDef {
     pub application_name: Option<String>,
     pub application_generic_name: Option<String>,
+    pub application_machine_name: Option<String>,
+    pub organization_name: Option<String>,
     pub desktop_entry: Option<String>,
     pub icon: Option<String>,
     pub contemporary_base_icon: Option<String>,
@@ -38,6 +40,8 @@ pub struct ContemporaryConfigDeploymentDef {
 pub struct ContemporaryConfigDeployment {
     pub(crate) application_name: Option<LocalisedString>,
     pub application_generic_name: Option<LocalisedString>,
+    pub application_machine_name: Option<String>,
+    pub organization_name: Option<String>,
     pub desktop_entry: Option<String>,
     pub icon: Option<String>,
     pub contemporary_base_icon: Option<String>,

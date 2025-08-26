@@ -150,6 +150,12 @@ impl ContemporaryConfig {
                     .application_generic_name
                     .or(deployment.application_generic_name),
             ),
+            application_machine_name: specific_deployment
+                .application_machine_name
+                .or(deployment.application_machine_name),
+            organization_name: specific_deployment
+                .organization_name
+                .or(deployment.organization_name),
             desktop_entry: specific_deployment
                 .desktop_entry
                 .or(deployment.desktop_entry),

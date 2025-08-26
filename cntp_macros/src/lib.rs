@@ -37,12 +37,22 @@ pub fn application_details(_: TokenStream) -> TokenStream {
     let application_name = serde_json::to_string(&deployment.application_name()).unwrap();
     let generic_name = serde_json::to_string(&deployment.application_generic_name).unwrap();
     let desktop_entry = deployment.desktop_entry.unwrap_or("".into());
+    let application_machine_name = match deployment.application_machine_name {
+        None => quote! { None },
+        Some(application_machine_name) => quote! { Some(#application_machine_name) },
+    };
+    let organization_name = match deployment.organization_name {
+        None => quote! { None },
+        Some(org_name) => quote! { Some(#org_name) },
+    };
 
     quote! {
         {
             contemporary::application::GeneratableDetails {
                 application_name: contemporary::macros::from_str(#application_name).unwrap(),
                 application_generic_name: contemporary::macros::from_str(#generic_name).unwrap(),
+                application_machine_name: #application_machine_name,
+                organization_name: #organization_name,
                 desktop_entry: #desktop_entry,
             }
         }

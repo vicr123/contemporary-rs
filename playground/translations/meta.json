@@ -209,6 +209,42 @@
     "plural": false,
     "description": null
   },
+  "DIRECTORIES_CACHE_DIR": {
+    "context": "directories.rs",
+    "definedIn": "src/patterns/directories.rs:62",
+    "plural": false,
+    "description": null
+  },
+  "DIRECTORIES_CONFIG_DIR": {
+    "context": "directories.rs",
+    "definedIn": "src/patterns/directories.rs:67",
+    "plural": false,
+    "description": null
+  },
+  "DIRECTORIES_DATA_DIR": {
+    "context": "directories.rs",
+    "definedIn": "src/patterns/directories.rs:72",
+    "plural": false,
+    "description": null
+  },
+  "DIRECTORIES_DESCRIPTION": {
+    "context": "directories.rs",
+    "definedIn": "src/patterns/directories.rs:58",
+    "plural": false,
+    "description": null
+  },
+  "DIRECTORIES_PREFERENCES_DIR": {
+    "context": "directories.rs",
+    "definedIn": "src/patterns/directories.rs:77",
+    "plural": false,
+    "description": null
+  },
+  "DIRECTORIES_TITLE": {
+    "context": "directories.rs",
+    "definedIn": "src/patterns/directories.rs:35",
+    "plural": false,
+    "description": null
+  },
   "FAILING_JOB_COMPLETE_DESCRIPTION": {
     "context": "jobs.rs",
     "definedIn": "src/patterns/jobs.rs:187",
@@ -517,7 +553,7 @@
   },
   "PATTERNS_TITLE": {
     "context": "root.rs",
-    "definedIn": "src/patterns/root.rs:54",
+    "definedIn": "src/patterns/root.rs:57",
     "plural": false,
     "description": null
   },
