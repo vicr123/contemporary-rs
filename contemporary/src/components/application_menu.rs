@@ -295,22 +295,22 @@ impl RenderOnce for MenuList {
                             if keystrokes.len() == 1 {
                                 let mut parts: Vec<String> = Vec::new();
                                 let keystroke = keystrokes.first().unwrap();
-                                if keystroke.modifiers.control {
+                                if keystroke.display_modifiers.control {
                                     parts.push(tr!("KEY_CONTROL", "Ctrl", #description="Control key, as shown next to menu items").into());
                                 }
-                                if keystroke.modifiers.shift {
+                                if keystroke.display_modifiers.shift {
                                     parts.push(tr!("KEY_SHIFT", "Shift", #description="Shift key, as shown next to menu items").into());
                                 }
-                                if keystroke.modifiers.alt {
+                                if keystroke.display_modifiers.alt {
                                     parts.push(tr!("KEY_ALT", "Alt", #description="Alt key, as shown next to menu items").into());
                                 }
-                                if keystroke.modifiers.platform {
+                                if keystroke.display_modifiers.platform {
                                     parts.push(tr!("KEY_PLATFORM", "Super", #description="Super key, as shown next to menu items").into());
                                 }
-                                if keystroke.modifiers.function {
+                                if keystroke.display_modifiers.function {
                                     parts.push(tr!("KEY_FUNCTION", "Fn", #description="Function key, as shown next to menu items").into());
                                 }
-                                parts.push(keystroke.key.to_uppercase().clone());
+                                parts.push(keystroke.display_key.to_uppercase().clone());
                                 parts.join("+")
                             } else {
                                 String::new()
