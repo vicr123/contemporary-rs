@@ -16,6 +16,7 @@ use std::sync::{Arc, Mutex};
 use tracing::instrument::WithSubscriber;
 use tracing_subscriber::layer::SubscriberExt;
 use tracing_subscriber::util::SubscriberInitExt;
+use tracing_subscriber::{EnvFilter, Layer};
 
 actions!(
     contemporary,
@@ -54,7 +55,9 @@ pub fn setup_contemporary(cx: &mut App, mut application: Contemporary) {
 
     tracing_subscriber::registry()
         .with(ContemporaryLayer::new(tracing_channel_tx))
-        .with(tracing_subscriber::fmt::layer().without_time())
+        .with(tracing_subscriber::fmt::layer().without_time().with_filter(
+            EnvFilter::try_from_default_env().unwrap_or_else(|_| EnvFilter::new("info")),
+        ))
         .init();
 
     bind_text_input_keys(cx);
