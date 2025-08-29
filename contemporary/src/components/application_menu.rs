@@ -295,22 +295,22 @@ impl RenderOnce for MenuList {
                             if keystrokes.len() == 1 {
                                 let mut parts: Vec<String> = Vec::new();
                                 let keystroke = keystrokes.first().unwrap();
-                                if keystroke.display_modifiers.control {
+                                if keystroke.modifiers().control {
                                     parts.push(tr!("KEY_CONTROL", "Ctrl", #description="Control key, as shown next to menu items").into());
                                 }
-                                if keystroke.display_modifiers.shift {
+                                if keystroke.modifiers().shift {
                                     parts.push(tr!("KEY_SHIFT", "Shift", #description="Shift key, as shown next to menu items").into());
                                 }
-                                if keystroke.display_modifiers.alt {
+                                if keystroke.modifiers().alt {
                                     parts.push(tr!("KEY_ALT", "Alt", #description="Alt key, as shown next to menu items").into());
                                 }
-                                if keystroke.display_modifiers.platform {
+                                if keystroke.modifiers().platform {
                                     parts.push(tr!("KEY_PLATFORM", "Super", #description="Super key, as shown next to menu items").into());
                                 }
-                                if keystroke.display_modifiers.function {
+                                if keystroke.modifiers().function {
                                     parts.push(tr!("KEY_FUNCTION", "Fn", #description="Function key, as shown next to menu items").into());
                                 }
-                                parts.push(keystroke.display_key.to_uppercase().clone());
+                                parts.push(keystroke.key().to_uppercase().clone());
                                 parts.join("+")
                             } else {
                                 String::new()
