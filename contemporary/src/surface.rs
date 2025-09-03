@@ -91,7 +91,7 @@ impl RenderOnce for WindowTitle {
             .gap(px(6.))
             .child(if cfg!(target_os = "macos") {
                 // Make space for the window controls
-                div().w(px(80.))
+                div().when(!window.is_fullscreen(), |div| div.w(px(70.)))
             } else {
                 div()
                     .child(
