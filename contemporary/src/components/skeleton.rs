@@ -68,6 +68,31 @@ impl Styled for Skeleton {
     }
 }
 
+/// An extension trait for turning an element into a skeleton
+pub trait SkeletonExt {
+    /// Render this component or element as a skeleton
+    fn into_skeleton(self, id: impl Into<ElementId>) -> Skeleton
+    where
+        Self: Sized + IntoElement,
+    {
+        skeleton(id).child(self.into_element())
+    }
+
+    /// Render this component or element as a skeleton when the condition is true
+    fn into_skeleton_when(self, condition: bool, id: impl Into<ElementId>) -> AnyElement
+    where
+        Self: Sized + IntoElement,
+    {
+        if condition {
+            skeleton(id).child(self.into_element()).into_any_element()
+        } else {
+            self.into_any_element()
+        }
+    }
+}
+
+impl<E> SkeletonExt for E {}
+
 #[derive(IntoElement)]
 pub struct SkeletonRow {
     id: ElementId,

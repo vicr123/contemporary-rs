@@ -637,7 +637,7 @@
   },
   "SKELETONS_TITLE": {
     "context": "skeletons.rs",
-    "definedIn": "src/components/skeletons.rs:31",
+    "definedIn": "src/components/skeletons.rs:54",
     "plural": false,
     "description": null
   },

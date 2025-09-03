@@ -2,18 +2,41 @@ use cntp_i18n::tr;
 use contemporary::components::constrainer::constrainer;
 use contemporary::components::grandstand::grandstand;
 use contemporary::components::layer::layer;
-use contemporary::components::skeleton::{skeleton, skeleton_row};
+use contemporary::components::skeleton::{SkeletonExt, skeleton, skeleton_row};
+use contemporary::components::spinner::spinner;
 use contemporary::components::subtitle::subtitle;
 use contemporary::styling::theme::Theme;
 use gpui::{
-    App, AppContext, Context, Entity, IntoElement, ParentElement, Render, Styled, Window, div, px,
+    App, AppContext, AsyncApp, Context, Entity, IntoElement, ParentElement, Render, Styled, Window,
+    div, px,
 };
+use std::time::Duration;
 
-pub struct Skeletons;
+pub struct Skeletons {
+    skeleton_5_visible: bool,
+}
 
 impl Skeletons {
     pub fn new(cx: &mut App) -> Entity<Self> {
-        cx.new(|_| Skeletons {})
+        let skeletons = cx.new(|_| Skeletons {
+            skeleton_5_visible: false,
+        });
+
+        let skeletons_clone = skeletons.clone();
+        cx.spawn(async move |cx: &mut AsyncApp| {
+            loop {
+                cx.background_executor().timer(Duration::from_secs(1)).await;
+                skeletons_clone
+                    .update(cx, |skeletons, cx| {
+                        skeletons.skeleton_5_visible = !skeletons.skeleton_5_visible;
+                        cx.notify();
+                    })
+                    .unwrap()
+            }
+        })
+        .detach();
+
+        skeletons
     }
 }
 
@@ -65,7 +88,13 @@ impl Render for Skeletons {
                                             .chunk("skeleton")
                                             .chunk("row"),
                                     )
-                                    .child(skeleton("skeleton-4").size(px(100.))),
+                                    .child(skeleton("skeleton-4").size(px(100.)))
+                                    .child(
+                                        spinner().into_skeleton_when(
+                                            self.skeleton_5_visible,
+                                            "skeleton-5",
+                                        ),
+                                    ),
                             ),
                     ),
             )
