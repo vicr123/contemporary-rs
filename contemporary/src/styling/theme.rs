@@ -18,6 +18,7 @@ pub struct Theme {
 
     pub background: Rgba,
     pub foreground: Rgba,
+    pub skeleton: Rgba,
 
     pub system_font_family: String,
     pub system_font_size: Pixels,
@@ -101,6 +102,7 @@ impl Theme {
         self.theme_type = other.theme_type;
         self.background = other.background;
         self.foreground = other.foreground;
+        self.skeleton = other.skeleton;
         self.system_font_family = other.system_font_family;
         self.system_font_size = other.system_font_size;
         self.heading_font_size = other.heading_font_size;
@@ -117,6 +119,7 @@ impl Theme {
         Theme {
             background: self.background.disabled(),
             foreground: self.foreground.disabled(),
+            skeleton: self.skeleton.disabled(),
             button_background: self.button_background.disabled(),
             button_foreground: self.button_foreground.disabled(),
             border_color: self.border_color.disabled(),
@@ -129,6 +132,7 @@ impl Theme {
         Theme {
             background: self.background.hover(),
             foreground: self.foreground.hover(),
+            skeleton: self.skeleton.hover(),
             button_background: self.button_background.hover(),
             button_foreground: self.button_foreground.hover(),
             border_color: self.border_color.hover(),
@@ -141,6 +145,7 @@ impl Theme {
         Theme {
             background: self.background.active(),
             foreground: self.foreground.active(),
+            skeleton: self.skeleton.active(),
             button_background: self.button_background.active(),
             button_foreground: self.button_foreground.active(),
             border_color: self.border_color.active(),

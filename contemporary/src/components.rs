@@ -13,6 +13,7 @@ pub mod pager;
 pub mod popover;
 pub mod progress_bar;
 pub mod scrim;
+pub mod skeleton;
 pub mod slider;
 pub mod spinner;
 pub mod subtitle;

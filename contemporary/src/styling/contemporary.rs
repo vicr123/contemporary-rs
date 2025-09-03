@@ -6,6 +6,7 @@ pub trait ContemporaryTheme {
     const TYPE: ThemeType;
     const BACKGROUND: Rgba;
     const FOREGROUND: Rgba;
+    const SKELETON: Rgba;
     const LAYER: Rgba;
     const BUTTON_BACKGROUND: Rgba;
     const BORDER: Rgba;
@@ -23,6 +24,7 @@ impl ContemporaryTheme for ContemporaryDark {
     const TYPE: ThemeType = ThemeType::Dark;
     const BACKGROUND: Rgba = rgb_tuple(40, 40, 40);
     const FOREGROUND: Rgba = rgb_tuple(255, 255, 255);
+    const SKELETON: Rgba = rgb_tuple(230, 230, 230);
     const BUTTON_BACKGROUND: Rgba = rgb_tuple(0, 50, 150);
     const LAYER: Rgba = rgba_tuple(255, 255, 255, 5. / 255.);
     const BORDER: Rgba = rgba_tuple(255, 255, 255, 0.4);
@@ -37,6 +39,7 @@ impl ContemporaryTheme for ContemporaryLight {
     const TYPE: ThemeType = ThemeType::Light;
     const BACKGROUND: Rgba = rgb_tuple(255, 255, 255);
     const FOREGROUND: Rgba = rgb_tuple(0, 0, 0);
+    const SKELETON: Rgba = rgb_tuple(20, 20, 20);
     const BUTTON_BACKGROUND: Rgba = rgb_tuple(0, 150, 255);
     const LAYER: Rgba = rgba_tuple(0, 0, 0, 10. / 255.);
     const BORDER: Rgba = rgba_tuple(0, 0, 0, 0.4);
@@ -53,6 +56,7 @@ where
         theme_type: T::TYPE,
         background: T::BACKGROUND,
         foreground: T::FOREGROUND,
+        skeleton: T::SKELETON,
         system_font_family: T::SYSTEM_FONT_FAMILY.to_string(),
         system_font_size: T::SYSTEM_FONT_SIZE,
         heading_font_size: T::HEADING_FONT_SIZE,

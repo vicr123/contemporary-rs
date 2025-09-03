@@ -103,7 +103,7 @@
   },
   "COMPONENTS_TITLE": {
     "context": "root.rs",
-    "definedIn": "src/components/root.rs:57",
+    "definedIn": "src/components/root.rs:60",
     "plural": false,
     "description": null
   },
@@ -632,6 +632,12 @@
   "SETTINGS_DESCRIPTION": {
     "context": "main_window.rs",
     "definedIn": "src/main_window.rs:61",
+    "plural": false,
+    "description": null
+  },
+  "SKELETONS_TITLE": {
+    "context": "skeletons.rs",
+    "definedIn": "src/components/skeletons.rs:31",
     "plural": false,
     "description": null
   },
