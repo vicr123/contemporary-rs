@@ -12,10 +12,15 @@ use std::panic::Location;
 use std::rc::Rc;
 
 type ChangeHandler = dyn FnMut(&SliderChangeEvent, &mut Window, &mut App);
+type PressHandler = dyn FnMut(&SliderPressEvent, &mut Window, &mut App);
+type ReleaseHandler = dyn FnMut(&SliderReleaseEvent, &mut Window, &mut App);
 
 pub struct SliderChangeEvent {
     pub new_value: u32,
 }
+
+pub struct SliderPressEvent;
+pub struct SliderReleaseEvent;
 
 struct SliderInteractiveState {
     active_state: Option<SliderInteractiveActiveState>,
@@ -35,6 +40,8 @@ pub struct Slider {
     max_value: u32,
     style_refinement: StyleRefinement,
     on_change: Option<Rc<RefCell<ChangeHandler>>>,
+    on_press: Option<Rc<RefCell<PressHandler>>>,
+    on_release: Option<Rc<RefCell<ReleaseHandler>>>,
     disabled: bool,
 }
 
@@ -45,6 +52,8 @@ pub fn slider(id: impl Into<ElementId>) -> Slider {
         max_value: 100,
         style_refinement: StyleRefinement::default().h(px(28.)),
         on_change: None,
+        on_release: None,
+        on_press: None,
         disabled: false,
     }
 }
@@ -70,6 +79,22 @@ impl Slider {
         on_change: impl FnMut(&SliderChangeEvent, &mut Window, &mut App) + 'static,
     ) -> Self {
         self.on_change = Some(Rc::new(RefCell::new(on_change)));
+        self
+    }
+
+    pub fn on_press(
+        mut self,
+        on_press: impl FnMut(&SliderPressEvent, &mut Window, &mut App) + 'static,
+    ) -> Self {
+        self.on_press = Some(Rc::new(RefCell::new(on_press)));
+        self
+    }
+
+    pub fn on_release(
+        mut self,
+        on_release: impl FnMut(&SliderReleaseEvent, &mut Window, &mut App) + 'static,
+    ) -> Self {
+        self.on_release = Some(Rc::new(RefCell::new(on_release)));
         self
     }
 }
@@ -253,7 +278,9 @@ impl Element for Slider {
             let mouse_down_current_view = window.current_view();
             let mouse_up_current_view = window.current_view();
             let mouse_move_current_view = window.current_view();
+            let mouse_down_handler = self.on_press.as_ref().cloned();
             let mouse_move_on_change_handler = on_change_handler.clone();
+            let mouse_up_handler = self.on_release.as_ref().cloned();
             let current_value = self.value;
             let max_value = self.max_value;
             window.with_optional_element_state(id, |state, cx| {
@@ -273,6 +300,10 @@ impl Element for Slider {
 
                         window.prevent_default();
                         cx.stop_propagation();
+
+                        if let Some(mouse_down_handler) = mouse_down_handler.clone() {
+                            mouse_down_handler.borrow_mut()(&SliderPressEvent, window, cx)
+                        }
 
                         let mut state = mouse_down_state.borrow_mut();
                         state.active_state = Some(SliderInteractiveActiveState {
@@ -320,6 +351,11 @@ impl Element for Slider {
 
                         window.prevent_default();
                         cx.stop_propagation();
+
+                        if let Some(mouse_up_handler) = mouse_up_handler.clone() {
+                            mouse_up_handler.borrow_mut()(&SliderReleaseEvent, window, cx)
+                        }
+
                         state.active_state = None;
                         state.thumb_inset.set_new_target(0.);
                         cx.notify(mouse_up_current_view);
