@@ -8,6 +8,7 @@ pub mod focus_decoration;
 pub mod grandstand;
 pub mod icon;
 pub mod icon_text;
+pub mod interstitial;
 pub mod layer;
 pub mod pager;
 pub mod popover;

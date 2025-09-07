@@ -1,5 +1,6 @@
 use crate::components::buttons::Buttons;
 use crate::components::checkboxes_radio_buttons::CheckboxesRadioButtons;
+use crate::components::interstitials::Interstitials;
 use crate::components::progress_bars::ProgressBars;
 use crate::components::ranges::Ranges;
 use crate::components::skeletons::Skeletons;
@@ -24,6 +25,7 @@ pub struct ComponentsRoot {
     progress_bars: Entity<ProgressBars>,
     ranges: Entity<Ranges>,
     skeletons: Entity<Skeletons>,
+    interstitials: Entity<Interstitials>,
 
     current_page: usize,
 }
@@ -37,6 +39,7 @@ impl ComponentsRoot {
             progress_bars: ProgressBars::new(cx),
             ranges: Ranges::new(cx),
             skeletons: Skeletons::new(cx),
+            interstitials: Interstitials::new(cx),
             current_page: 0,
         })
     }
@@ -64,7 +67,7 @@ impl Render for ComponentsRoot {
                         div().flex_grow().p(px(2.)).child(
                             uniform_list(
                                 "sidebar-items",
-                                6,
+                                7,
                                 cx.processor(|this, range, _, cx| {
                                     let theme = cx.global::<Theme>();
                                     let mut items = Vec::new();
@@ -87,6 +90,9 @@ impl Render for ComponentsRoot {
                                                     3 => tr!("PROGRESS_BARS_TITLE"),
                                                     4 => tr!("RANGES_TITLE"),
                                                     5 => tr!("SKELETONS_TITLE"),
+                                                    6 => {
+                                                        tr!("INTERSTITIALS_TITLE", "Interstitials")
+                                                    }
                                                     _ => format!("Item {item}").into(),
                                                 })
                                                 .when(this.current_page == ix, |div| {
@@ -112,7 +118,8 @@ impl Render for ComponentsRoot {
                     .page(self.text_input.clone().into_any_element())
                     .page(self.progress_bars.clone().into_any_element())
                     .page(self.ranges.clone().into_any_element())
-                    .page(self.skeletons.clone().into_any_element()),
+                    .page(self.skeletons.clone().into_any_element())
+                    .page(self.interstitials.clone().into_any_element()),
             )
     }
 }

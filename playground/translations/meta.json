@@ -103,7 +103,7 @@
   },
   "COMPONENTS_TITLE": {
     "context": "root.rs",
-    "definedIn": "src/components/root.rs:60",
+    "definedIn": "src/components/root.rs:63",
     "plural": false,
     "description": null
   },
@@ -407,6 +407,24 @@
     "plural": false,
     "description": null
   },
+  "INTERSTITIALS_TITLE": {
+    "context": "root.rs",
+    "definedIn": "src/components/root.rs:93",
+    "plural": false,
+    "description": null
+  },
+  "INTERSTITIAL_MESSAGE": {
+    "context": "interstitials.rs",
+    "definedIn": "src/components/interstitials.rs:28",
+    "plural": false,
+    "description": null
+  },
+  "INTERSTITIAL_TITLE": {
+    "context": "interstitials.rs",
+    "definedIn": "src/components/interstitials.rs:25",
+    "plural": false,
+    "description": null
+  },
   "JOBS_DESCRIPTION": {
     "context": "jobs.rs",
     "definedIn": "src/patterns/jobs.rs:61",
@@ -632,6 +650,12 @@
   "SETTINGS_DESCRIPTION": {
     "context": "main_window.rs",
     "definedIn": "src/main_window.rs:61",
+    "plural": false,
+    "description": null
+  },
+  "SIM_CARD_SETTINGS": {
+    "context": "interstitials.rs",
+    "definedIn": "src/components/interstitials.rs:35",
     "plural": false,
     "description": null
   },
