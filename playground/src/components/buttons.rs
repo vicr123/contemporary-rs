@@ -6,6 +6,7 @@ use contemporary::components::grandstand::grandstand;
 use contemporary::components::layer::layer;
 use contemporary::components::subtitle::subtitle;
 use contemporary::styling::theme::Theme;
+use gpui::prelude::FluentBuilder;
 use gpui::{
     App, AppContext, ClickEvent, Context, Entity, IntoElement, ParentElement, Render, Styled,
     Window, div, px,
@@ -108,6 +109,19 @@ impl Render for Buttons {
                                 })).build(),
                                 ContextMenuItem::menu_item().label(tr!("COUNT_ADD_ONE_HUNDRED", "Add 100")).remain_open().on_triggered(cx.listener(|this, _, _, cx| {
                                     this.buttons_click_count += 10;
+                                    cx.notify()
+                                })).build(),
+                                ContextMenuItem::separator().build(),
+                                ContextMenuItem::menu_item().label(tr!("COUNT_SUBTRACT_ONE", "Subtract 1")).when(self.buttons_click_count < 1, |item| item.disabled()).remain_open().on_triggered(cx.listener(|this, _, _, cx| {
+                                    this.buttons_click_count -= 1;
+                                    cx.notify()
+                                })).build(),
+                                ContextMenuItem::menu_item().label(tr!("COUNT_SUBTRACT_TEN", "Subtract 10")).when(self.buttons_click_count < 10, |item| item.disabled()).remain_open().on_triggered(cx.listener(|this, _, _, cx| {
+                                    this.buttons_click_count -= 10;
+                                    cx.notify()
+                                })).build(),
+                                ContextMenuItem::menu_item().label(tr!("COUNT_SUBTRACT_ONE_HUNDRED", "Subtract 100")).when(self.buttons_click_count < 100, |item| item.disabled()).remain_open().on_triggered(cx.listener(|this, _, _, cx| {
+                                    this.buttons_click_count -= 100;
                                     cx.notify()
                                 })).build(),
                                 ContextMenuItem::separator().build(),

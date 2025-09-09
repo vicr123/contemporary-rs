@@ -98,13 +98,18 @@ impl RenderOnce for ContextMenu {
                                                 action,
                                                 icon,
                                                 remain_open,
+                                                disabled,
                                             } => {
                                                 let action = action.clone();
                                                 let remain_open_local_clone = remain_open.clone();
                                                 let context_menu_state_local_clone =
                                                     context_menu_state_3.clone();
+
+                                                let palette = theme.clone().disable_when(*disabled);
+
                                                 david.child(
                                                     div()
+                                                        .text_color(palette.foreground)
                                                         .id(i)
                                                         .p(px(4.))
                                                         .when_some(icon.as_ref(), |div, icon| {
@@ -123,23 +128,25 @@ impl RenderOnce for ContextMenu {
                                                                     .child(label.clone()),
                                                             )
                                                         })
-                                                        .hover(|div| {
-                                                            div.bg(theme.background.hover())
-                                                        })
-                                                        .active(|div| {
-                                                            div.bg(theme.background.active())
-                                                        })
-                                                        .on_click(move |_, window, cx| {
-                                                            action(
-                                                                &ContextMenuActionEvent {},
-                                                                window,
-                                                                cx,
-                                                            );
+                                                        .when(!disabled, |div| {
+                                                            div.hover(|div| {
+                                                                div.bg(palette.background.hover())
+                                                            })
+                                                            .active(|div| {
+                                                                div.bg(palette.background.active())
+                                                            })
+                                                            .on_click(move |_, window, cx| {
+                                                                action(
+                                                                    &ContextMenuActionEvent {},
+                                                                    window,
+                                                                    cx,
+                                                                );
 
-                                                            if !remain_open_local_clone {
-                                                                context_menu_state_local_clone
-                                                                    .write(cx, None);
-                                                            }
+                                                                if !remain_open_local_clone {
+                                                                    context_menu_state_local_clone
+                                                                        .write(cx, None);
+                                                                }
+                                                            })
                                                         }),
                                                 )
                                             }
@@ -165,6 +172,7 @@ pub enum ContextMenuItem {
         icon: Option<String>,
         action: Rc<Box<ContextMenuActionHandler>>,
         remain_open: bool,
+        disabled: bool,
     },
 }
 
@@ -179,6 +187,7 @@ impl ContextMenuItem {
             icon: None,
             action: None,
             remain_open: false,
+            disabled: false,
         }
     }
 }
@@ -202,11 +211,14 @@ impl ContextMenuSeparatorBuilder {
     }
 }
 
+impl FluentBuilder for ContextMenuSeparatorBuilder {}
+
 pub struct ContextMenuMenuItemBuilder {
     label: Option<String>,
     icon: Option<String>,
     action: Option<Box<ContextMenuActionHandler>>,
     remain_open: bool,
+    disabled: bool,
 }
 
 impl ContextMenuMenuItemBuilder {
@@ -233,15 +245,23 @@ impl ContextMenuMenuItemBuilder {
         self
     }
 
+    pub fn disabled(mut self) -> Self {
+        self.disabled = true;
+        self
+    }
+
     pub fn build(self) -> ContextMenuItem {
         ContextMenuItem::MenuItem {
             label: self.label.unwrap_or_default(),
             icon: self.icon,
             action: Rc::new(self.action.unwrap_or_else(|| Box::new(|_, _, _| {}))),
             remain_open: self.remain_open,
+            disabled: self.disabled,
         }
     }
 }
+
+impl FluentBuilder for ContextMenuMenuItemBuilder {}
 
 /// An extension trait for adding a context menu to Elements
 pub trait ContextMenuExt<E> {
