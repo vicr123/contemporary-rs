@@ -20,7 +20,12 @@ pub struct Button {
 
 pub fn button(id: impl Into<ElementId>) -> Button {
     Button {
-        div: div().id(id),
+        div: div()
+            .id(id)
+            .flex()
+            .items_center()
+            .justify_center()
+            .p(px(6.0)),
         flat: false,
         disabled: false,
         checked: false,
@@ -106,10 +111,6 @@ impl RenderOnce for Button {
                 |div| div.bg(background.active()),
                 |div| div.bg(background),
             )
-            .flex()
-            .items_center()
-            .justify_center()
-            .p(px(6.0))
             .text_color(self.button_text_color.unwrap_or(theme.button_foreground))
             .rounded(theme.border_radius)
             .when(!self.disabled, |div| {
