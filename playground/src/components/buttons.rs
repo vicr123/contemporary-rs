@@ -1,6 +1,7 @@
 use cntp_i18n::{tr, trn};
 use contemporary::components::button::button;
 use contemporary::components::constrainer::constrainer;
+use contemporary::components::context_menu::{ContextMenuExt, ContextMenuItem};
 use contemporary::components::grandstand::grandstand;
 use contemporary::components::layer::layer;
 use contemporary::components::subtitle::subtitle;
@@ -74,7 +75,7 @@ impl Render for Buttons {
                                                 this.buttons_click_count += 1;
                                             }
                                             cx.notify()
-                                        }))),
+                                        })))
                                     )
                                     .child(div().flex_grow().child(
                                         button("button-2").disabled().child(tr!(
@@ -90,12 +91,31 @@ impl Render for Buttons {
                                         cx.notify()
                                     })))),
                             )
-                            .child(trn!(
+                            .child(div().child(trn!(
                                 "BUTTONS_COUNT_TEXT",
                                 "You have clicked the default button once (shift-click to reset)",
                                 "You have clicked the default button {{count}} times (shift-click to reset)",
                                 count = self.buttons_click_count as isize
-                            )),
+                            )).with_context_menu(vec![
+                                ContextMenuItem::separator().label(tr!("BUTTONS_COUNT_CONTEXT_MENU_TITLE", "For the counter")).build(),
+                                ContextMenuItem::menu_item().label(tr!("COUNT_ADD_ONE", "Add 1")).remain_open().on_triggered(cx.listener(|this, _, _, cx| {
+                                    this.buttons_click_count += 1;
+                                    cx.notify()
+                                })).build(),
+                                ContextMenuItem::menu_item().label(tr!("COUNT_ADD_TEN", "Add 10")).remain_open().on_triggered(cx.listener(|this, _, _, cx| {
+                                    this.buttons_click_count += 10;
+                                    cx.notify()
+                                })).build(),
+                                ContextMenuItem::menu_item().label(tr!("COUNT_ADD_ONE_HUNDRED", "Add 100")).remain_open().on_triggered(cx.listener(|this, _, _, cx| {
+                                    this.buttons_click_count += 10;
+                                    cx.notify()
+                                })).build(),
+                                ContextMenuItem::separator().build(),
+                                ContextMenuItem::menu_item().label(tr!("COUNT_RESET", "Reset")).icon("view-refresh").on_triggered(cx.listener(|this, _, _, cx| {
+                                    this.buttons_click_count = 0;
+                                    cx.notify()
+                                })).build()
+                            ])),
                     )
                     .child(
                         layer()

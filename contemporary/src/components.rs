@@ -3,6 +3,7 @@ mod base;
 pub mod button;
 pub mod checkbox;
 pub mod constrainer;
+pub mod context_menu;
 pub mod dialog_box;
 pub mod focus_decoration;
 pub mod grandstand;
