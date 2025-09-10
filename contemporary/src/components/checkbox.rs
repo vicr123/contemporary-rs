@@ -104,7 +104,7 @@ impl RenderOnce for Checkbox {
             .when_some(self.label, |div, label| div.child(label))
             .on_click(move |event, window, cx| {
                 if let ClickEvent::Mouse(mouse_event) = event
-                    && mouse_event.down.button == Left
+                    && mouse_event.down.button != Left
                 {
                     return;
                 }
