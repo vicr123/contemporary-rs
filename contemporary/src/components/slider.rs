@@ -209,8 +209,8 @@ impl Element for Slider {
                     y: bounds.origin.y,
                 },
                 size: Size {
-                    width: thumb_size,
-                    height: thumb_size,
+                    width: thumb_size.max(bounds.size.width),
+                    height: thumb_size.max(bounds.size.height),
                 },
             }
             .inset(px(state.thumb_inset.current_value())),
@@ -310,7 +310,9 @@ impl Element for Slider {
                             current_drag_coordinate: event.position.x.into(),
                             start_value: current_value,
                         });
-                        state.thumb_inset.set_new_target(4.);
+                        state
+                            .thumb_inset
+                            .set_new_target(thumb_full_size.width.0 / 8.);
                         cx.notify(mouse_down_current_view);
                     });
                     cx.on_mouse_event(move |event: &MouseMoveEvent, _, window, cx| {

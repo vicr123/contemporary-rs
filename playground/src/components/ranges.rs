@@ -68,6 +68,17 @@ impl Render for Ranges {
                                             .value(self.slider_value)
                                             .disabled(),
                                     )
+                                    .child(
+                                        slider("small-slider")
+                                            .value(self.slider_value)
+                                            .h(px(16.))
+                                            .on_change(cx.listener(
+                                                |this, event: &SliderChangeEvent, &mut _, cx| {
+                                                    this.slider_value = event.new_value;
+                                                    cx.notify()
+                                                },
+                                            )),
+                                    )
                                     .child(tr!(
                                         "SLIDER_VALUE_TEXT",
                                         "Slider value: {{value}}",
