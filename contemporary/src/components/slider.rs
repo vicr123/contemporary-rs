@@ -189,8 +189,8 @@ impl Element for Slider {
             })
             .unwrap_or_default();
 
-        let fill_size =
-            px((thumb_x.0 + thumb_size.0 + drag_delta).clamp(thumb_size.0, bounds.size.width.0));
+        let fill_size = px((thumb_x.0 + thumb_size.0 + drag_delta)
+            .clamp(thumb_size.0.min(bounds.size.width.0), bounds.size.width.0));
 
         if !state.thumb_inset.is_done() {
             window.request_animation_frame();
