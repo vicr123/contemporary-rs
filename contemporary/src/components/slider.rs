@@ -209,8 +209,8 @@ impl Element for Slider {
                     y: bounds.origin.y,
                 },
                 size: Size {
-                    width: thumb_size.max(bounds.size.width),
-                    height: thumb_size.max(bounds.size.height),
+                    width: thumb_size.min(bounds.size.width),
+                    height: thumb_size.min(bounds.size.height),
                 },
             }
             .inset(px(state.thumb_inset.current_value())),
