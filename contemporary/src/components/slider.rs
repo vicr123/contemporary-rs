@@ -201,20 +201,19 @@ impl Element for Slider {
                 width: thumb_size,
                 height: thumb_size,
             },
-            thumb_bounds:
-                Bounds {
-                    origin: Point {
-                        x: bounds.origin.x
-                            + px((thumb_x.0 + drag_delta)
-                                .clamp(0., bounds.size.width.0 - thumb_size.0)),
-                        y: bounds.origin.y,
-                    },
-                    size: Size {
-                        width: thumb_size,
-                        height: thumb_size,
-                    },
-                }
-                .inset(px(state.thumb_inset.current_value())),
+            thumb_bounds: Bounds {
+                origin: Point {
+                    x: bounds.origin.x
+                        + px((thumb_x.0 + drag_delta)
+                            .clamp(0., 0_f32.max(bounds.size.width.0 - thumb_size.0))),
+                    y: bounds.origin.y,
+                },
+                size: Size {
+                    width: thumb_size,
+                    height: thumb_size,
+                },
+            }
+            .inset(px(state.thumb_inset.current_value())),
             fill_bounds: Bounds {
                 origin: bounds.origin,
                 size: Size {
