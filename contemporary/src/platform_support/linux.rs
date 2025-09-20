@@ -1,3 +1,4 @@
+mod cx_platform_linux_extensions;
 mod desktop_environment;
 mod gnome;
 mod kde;

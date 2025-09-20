@@ -5,6 +5,7 @@ use contemporary::components::context_menu::{ContextMenuExt, ContextMenuItem};
 use contemporary::components::grandstand::grandstand;
 use contemporary::components::layer::layer;
 use contemporary::components::subtitle::subtitle;
+use contemporary::platform_support::cx_platform_extensions::CxPlatformExtensions;
 use contemporary::styling::theme::Theme;
 use gpui::prelude::FluentBuilder;
 use gpui::{
@@ -143,15 +144,18 @@ impl Render for Buttons {
                                     .flex()
                                     .gap(px(8.))
                                     .child(
-                                        button("button-1")
+                                        button("button-flat-1")
                                             .flat()
                                             .flex_grow()
-                                            .child(tr!("BUTTONS_FLAT_BUTTON", "Flat Button")),
+                                            .child(tr!("BUTTONS_FLAT_BUTTON", "Flat Button"))
+                                            .on_click(|_, _, cx| {
+                                                cx.beep()
+                                            }),
                                     )
-                                    .child(button("button-2").flat().disabled().flex_grow().child(
+                                    .child(button("button-flat-2").flat().disabled().flex_grow().child(
                                         tr!("BUTTONS_FLAT_DISABLED_BUTTON", "Flat Disabled Button"),
                                     ))
-                                    .child(button("button-3").flat().flex_grow().child(tr!(
+                                    .child(button("button-flat-3").flat().flex_grow().child(tr!(
                                         "BUTTONS_FLAT_CHECKABLE_BUTTON",
                                         "Flat Checkable Button"
                                     )).checked_when(self.flat_checkable_button_checked).on_click(cx.listener(|this, _, _, cx| {

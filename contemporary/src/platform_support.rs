@@ -10,6 +10,8 @@ pub mod windows;
 #[cfg(target_os = "linux")]
 pub mod linux;
 
+pub mod cx_platform_extensions;
+
 pub fn setup_platform(cx: &mut App) {
     #[cfg(target_os = "macos")]
     macos::setup::setup_macos(cx);
