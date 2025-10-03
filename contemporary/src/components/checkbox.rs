@@ -175,12 +175,12 @@ impl Element for CheckboxBox {
         style.refine(&self.style);
         let layout_id = window.request_measured_layout(style, |_, available_space, _, _| {
             let mut dim = match available_space.width {
-                AvailableSpace::Definite(px) => px.0,
+                AvailableSpace::Definite(px) => px.into(),
                 AvailableSpace::MinContent => f32::NAN,
                 AvailableSpace::MaxContent => f32::NAN,
             }
             .min(match available_space.height {
-                AvailableSpace::Definite(px) => px.0,
+                AvailableSpace::Definite(px) => px.into(),
                 AvailableSpace::MinContent => f32::NAN,
                 AvailableSpace::MaxContent => f32::NAN,
             });
@@ -231,7 +231,7 @@ impl Element for CheckboxBox {
         if self.draw_as_radio {
             window.paint_quad(quad(
                 bounds,
-                Corners::all(px(bounds.size.width.0 / 2.)),
+                Corners::all(bounds.size.width / 2.),
                 background,
                 px(1.),
                 foreground,
@@ -241,9 +241,9 @@ impl Element for CheckboxBox {
             if self.check_state == CheckState::On {
                 window.paint_quad(quad(
                     bounds,
-                    Corners::all(px(bounds.size.width.0 / 2.)),
+                    Corners::all(bounds.size.width / 2.),
                     transparent_black(),
-                    px(bounds.size.width.0 / 4.),
+                    bounds.size.width / 4.,
                     foreground,
                     BorderStyle::Solid,
                 ));

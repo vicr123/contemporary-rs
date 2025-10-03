@@ -189,8 +189,12 @@ impl Element for Slider {
             })
             .unwrap_or_default();
 
-        let fill_size = px((thumb_x.0 + thumb_size.0 + drag_delta)
-            .clamp(thumb_size.0.min(bounds.size.width.0), bounds.size.width.0));
+        let fill_size = px(
+            (f32::from(thumb_x) + f32::from(thumb_size) + drag_delta).clamp(
+                f32::from(thumb_size).min(bounds.size.width.into()),
+                bounds.size.width.into(),
+            ),
+        );
 
         if !state.thumb_inset.is_done() {
             window.request_animation_frame();
@@ -204,8 +208,10 @@ impl Element for Slider {
             thumb_bounds: Bounds {
                 origin: Point {
                     x: bounds.origin.x
-                        + px((thumb_x.0 + drag_delta)
-                            .clamp(0., 0_f32.max(bounds.size.width.0 - thumb_size.0))),
+                        + px((f32::from(thumb_x) + drag_delta).clamp(
+                            0.,
+                            0_f32.max(f32::from(bounds.size.width) - f32::from(thumb_size)),
+                        )),
                     y: bounds.origin.y,
                 },
                 size: Size {
@@ -312,7 +318,7 @@ impl Element for Slider {
                         });
                         state
                             .thumb_inset
-                            .set_new_target(thumb_full_size.width.0 / 8.);
+                            .set_new_target(f32::from(thumb_full_size.width) / 8.);
                         cx.notify(mouse_down_current_view);
                     });
                     cx.on_mouse_event(move |event: &MouseMoveEvent, _, window, cx| {
@@ -326,8 +332,9 @@ impl Element for Slider {
                         cx.stop_propagation();
 
                         // Calculate the new value to be set
-                        let pixels_moved = event.position.x.0 - active_state.start_drag_coordinate;
-                        let total_pixels = bounds.size.width.0 - thumb_full_size.width.0;
+                        let pixels_moved =
+                            f32::from(event.position.x) - active_state.start_drag_coordinate;
+                        let total_pixels = f32::from(bounds.size.width - thumb_full_size.width);
                         let percentage_moved = pixels_moved / total_pixels;
                         let new_value = ((max_value as f32 * percentage_moved) as i64
                             + active_state.start_value as i64)

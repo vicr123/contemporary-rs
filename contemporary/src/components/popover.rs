@@ -122,9 +122,9 @@ impl RenderOnce for Popover {
                                         if self.anchor == Anchor::Bottom
                                             || self.anchor == Anchor::Top
                                         {
-                                            window.viewport_size().height.0 - pixels
+                                            f32::from(window.viewport_size().height) - pixels
                                         } else {
-                                            window.viewport_size().width.0 - pixels
+                                            f32::from(window.viewport_size().width) - pixels
                                         }
                                     }
                                 }
