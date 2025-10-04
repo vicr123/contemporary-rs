@@ -11,6 +11,7 @@ use gpui::{
 
 pub struct TextInput {
     text_field: Entity<TextField>,
+    password_text_field: Entity<TextField>,
     borderless_text_field: Entity<TextField>,
     disabled_text_field: Entity<TextField>,
 }
@@ -25,6 +26,12 @@ impl TextInput {
                     "".into(),
                     tr!("TEXT_FIELD_PLACEHOLDER", "Text Field").into(),
                 ),
+                password_text_field: TextField::new(
+                    cx,
+                    "text-field",
+                    "".into(),
+                    tr!("PASSWORD_TEXT_FIELD_PLACEHOLDER", "Password Text Field").into(),
+                ),
                 borderless_text_field: TextField::new(
                     cx,
                     "borderless-text-field",
@@ -38,6 +45,10 @@ impl TextInput {
                     tr!("TEXT_FIELD_DISABLED_PLACEHOLDER", "Disabled Text Field").into(),
                 ),
             };
+            text_input.password_text_field.update(cx, |this, cx| {
+                this.password_field(cx, true);
+                cx.notify();
+            });
             text_input.borderless_text_field.update(cx, |this, cx| {
                 this.borderless(true);
                 cx.notify();
@@ -85,6 +96,7 @@ impl Render for TextInput {
                                     .flex_col()
                                     .gap(px(8.))
                                     .child(self.text_field.clone().into_any_element())
+                                    .child(self.password_text_field.clone().into_any_element())
                                     .child(self.borderless_text_field.clone().into_any_element())
                                     .child(self.disabled_text_field.clone().into_any_element()),
                             ),

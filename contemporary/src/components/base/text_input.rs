@@ -59,6 +59,7 @@ pub struct TextInput {
     last_bounds: Option<Bounds<Pixels>>,
     is_selecting: bool,
     disabled: bool,
+    is_password_field: bool,
 }
 
 impl TextInput {
@@ -78,6 +79,7 @@ impl TextInput {
             last_bounds: None,
             is_selecting: false,
             disabled: false,
+            is_password_field: false,
         })
     }
 
@@ -88,6 +90,15 @@ impl TextInput {
 
     pub fn is_disabled(&self) -> bool {
         self.disabled
+    }
+
+    pub fn password_field(&mut self, password_field: bool) -> &Self {
+        self.is_password_field = password_field;
+        self
+    }
+
+    pub fn is_password_field(&self) -> bool {
+        self.is_password_field
     }
 }
 
@@ -504,7 +515,19 @@ impl Element for TextElement {
                 Hsla::from(theme.foreground.disabled()),
             )
         } else {
-            (content.clone(), style.color)
+            (
+                if input.is_password_field {
+                    let characters = content.as_str().len();
+                    let mut password_text = String::with_capacity(characters);
+                    for _ in 0..characters {
+                        password_text.push('*');
+                    }
+                    SharedString::new(password_text)
+                } else {
+                    content.clone()
+                },
+                style.color,
+            )
         };
 
         let run = TextRun {

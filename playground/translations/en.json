@@ -104,6 +104,7 @@
   "LAYOUT_DIRECTION_RTL": "Right-to-Left",
   "MENU_THEME": "Theme",
   "OPEN_JOB_MENU": "Open Job Menu",
+  "PASSWORD_TEXT_FIELD_PLACEHOLDER": "Password Text Field",
   "PATTERNS_BUTTON": "Patterns",
   "PATTERNS_TITLE": "Patterns",
   "POPOVERS_DESCRIPTION": "Click on a button to open a popover",

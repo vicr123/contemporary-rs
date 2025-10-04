@@ -41,6 +41,14 @@ impl TextField {
         self
     }
 
+    pub fn password_field<C: AppContext>(&self, cx: &mut C, password_field: bool) -> &Self {
+        self.text_input.update(cx, |text_input, cx| {
+            text_input.password_field(password_field);
+            cx.notify();
+        });
+        self
+    }
+
     pub fn borderless(&mut self, borderless: bool) -> &Self {
         self.borderless = borderless;
         self

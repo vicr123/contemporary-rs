@@ -1,7 +1,7 @@
 {
   "BORDERLESS_TEXT_FIELD_PLACEHOLDER": {
     "context": "text_input.rs",
-    "definedIn": "src/components/text_input.rs:32",
+    "definedIn": "src/components/text_input.rs:39",
     "plural": false,
     "description": null
   },
@@ -611,6 +611,12 @@
     "plural": false,
     "description": null
   },
+  "PASSWORD_TEXT_FIELD_PLACEHOLDER": {
+    "context": "text_input.rs",
+    "definedIn": "src/components/text_input.rs:33",
+    "plural": false,
+    "description": null
+  },
   "PATTERNS_BUTTON": {
     "context": "main_surface.rs",
     "definedIn": "src/main_surface.rs:90",
@@ -745,25 +751,25 @@
   },
   "TEXT_FIELDS_TITLE": {
     "context": "text_input.rs",
-    "definedIn": "src/components/text_input.rs:81",
+    "definedIn": "src/components/text_input.rs:92",
     "plural": false,
     "description": null
   },
   "TEXT_FIELD_DISABLED_PLACEHOLDER": {
     "context": "text_input.rs",
-    "definedIn": "src/components/text_input.rs:38",
+    "definedIn": "src/components/text_input.rs:45",
     "plural": false,
     "description": null
   },
   "TEXT_FIELD_PLACEHOLDER": {
     "context": "text_input.rs",
-    "definedIn": "src/components/text_input.rs:26",
+    "definedIn": "src/components/text_input.rs:27",
     "plural": false,
     "description": null
   },
   "TEXT_INPUT_TITLE": {
     "context": "text_input.rs",
-    "definedIn": "src/components/text_input.rs:65",
+    "definedIn": "src/components/text_input.rs:76",
     "plural": false,
     "description": null
   },
