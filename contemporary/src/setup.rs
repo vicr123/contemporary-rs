@@ -55,7 +55,7 @@ pub fn setup_contemporary(cx: &mut App, mut application: Contemporary) {
     cx.set_global(application_log);
 
     tracing_subscriber::registry()
-        .with(ContemporaryLayer::new(tracing_channel_tx))
+        // .with(ContemporaryLayer::new(tracing_channel_tx))
         .with(tracing_subscriber::fmt::layer().without_time().with_filter(
             EnvFilter::try_from_default_env().unwrap_or_else(|_| EnvFilter::new("info")),
         ))
