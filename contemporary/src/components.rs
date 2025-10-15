@@ -1,3 +1,4 @@
+pub mod admonition;
 pub mod application_menu;
 mod base;
 pub mod button;

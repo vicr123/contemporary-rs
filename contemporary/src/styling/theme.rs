@@ -34,6 +34,9 @@ pub struct Theme {
 
     pub focus_decoration: Rgba,
     pub destructive_accent_color: Rgba,
+    pub info_accent_color: Rgba,
+    pub warning_accent_color: Rgba,
+    pub error_accent_color: Rgba,
 }
 
 pub trait VariableColor {
@@ -113,6 +116,9 @@ impl Theme {
         self.border_radius = other.border_radius;
         self.focus_decoration = other.focus_decoration;
         self.destructive_accent_color = other.destructive_accent_color;
+        self.info_accent_color = other.info_accent_color;
+        self.warning_accent_color = other.warning_accent_color;
+        self.error_accent_color = other.error_accent_color;
     }
 
     pub fn disabled(self) -> Self {

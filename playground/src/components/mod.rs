@@ -1,3 +1,4 @@
+mod admonitions;
 mod buttons;
 mod checkboxes_radio_buttons;
 mod interstitials;

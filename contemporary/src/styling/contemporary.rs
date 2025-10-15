@@ -16,6 +16,9 @@ pub trait ContemporaryTheme {
     const BORDER_RADIUS: Pixels;
     const FOCUS_DECORATION: Rgba;
     const DESTRUCTIVE_ACCENT: Rgba;
+    const INFO_ACCENT: Rgba;
+    const WARNING_ACCENT: Rgba;
+    const ERROR_ACCENT: Rgba;
 }
 
 pub struct ContemporaryDark;
@@ -31,6 +34,9 @@ impl ContemporaryTheme for ContemporaryDark {
     const BORDER_RADIUS: Pixels = px(4.0);
     const FOCUS_DECORATION: Rgba = rgb_tuple(20, 125, 200);
     const DESTRUCTIVE_ACCENT: Rgba = rgb_tuple(200, 0, 0);
+    const INFO_ACCENT: Rgba = rgba_tuple(0, 200, 255, 0.1);
+    const WARNING_ACCENT: Rgba = rgba_tuple(255, 200, 0, 0.1);
+    const ERROR_ACCENT: Rgba = rgba_tuple(200, 0, 0, 0.1);
 }
 
 pub struct ContemporaryLight;
@@ -46,6 +52,9 @@ impl ContemporaryTheme for ContemporaryLight {
     const BORDER_RADIUS: Pixels = px(4.0);
     const FOCUS_DECORATION: Rgba = rgb_tuple(20, 125, 200);
     const DESTRUCTIVE_ACCENT: Rgba = rgb_tuple(255, 0, 0);
+    const INFO_ACCENT: Rgba = rgba_tuple(0, 200, 255, 0.2);
+    const WARNING_ACCENT: Rgba = rgba_tuple(255, 200, 0, 0.2);
+    const ERROR_ACCENT: Rgba = rgba_tuple(200, 0, 0, 0.2);
 }
 
 pub fn make_contemporary_base_theme<T>() -> Theme
@@ -67,5 +76,8 @@ where
         layer_background: T::LAYER,
         focus_decoration: T::FOCUS_DECORATION,
         destructive_accent_color: T::DESTRUCTIVE_ACCENT,
+        info_accent_color: T::INFO_ACCENT,
+        warning_accent_color: T::WARNING_ACCENT,
+        error_accent_color: T::ERROR_ACCENT,
     }
 }

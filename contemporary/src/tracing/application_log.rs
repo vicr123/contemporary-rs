@@ -10,7 +10,9 @@ impl ApplicationLog {
     pub fn new(cx: &mut App, receiver: Receiver<ApplicationLogEntry>) -> Self {
         cx.spawn(async move |cx: &mut AsyncApp| {
             loop {
-                let entry = receiver.recv().await.unwrap();
+                let Ok(entry) = receiver.recv().await else {
+                    return;
+                };
                 cx.update_global::<ApplicationLog, ()>(|application_log, _| {
                     application_log.log_entries.push(entry);
                 })

@@ -1,4 +1,46 @@
 {
+  "ADMONITIONS_TITLE": {
+    "context": "admonitions.rs",
+    "definedIn": "src/components/admonitions.rs:31",
+    "plural": false,
+    "description": null
+  },
+  "ADMONITION_ERROR_CONTENT": {
+    "context": "admonitions.rs",
+    "definedIn": "src/components/admonitions.rs:85",
+    "plural": false,
+    "description": null
+  },
+  "ADMONITION_ERROR_TITLE": {
+    "context": "admonitions.rs",
+    "definedIn": "src/components/admonitions.rs:81",
+    "plural": false,
+    "description": null
+  },
+  "ADMONITION_INFO_CONTENT": {
+    "context": "admonitions.rs",
+    "definedIn": "src/components/admonitions.rs:61",
+    "plural": false,
+    "description": null
+  },
+  "ADMONITION_INFO_TITLE": {
+    "context": "admonitions.rs",
+    "definedIn": "src/components/admonitions.rs:57",
+    "plural": false,
+    "description": null
+  },
+  "ADMONITION_WARNING_CONTENT": {
+    "context": "admonitions.rs",
+    "definedIn": "src/components/admonitions.rs:73",
+    "plural": false,
+    "description": null
+  },
+  "ADMONITION_WARNING_TITLE": {
+    "context": "admonitions.rs",
+    "definedIn": "src/components/admonitions.rs:69",
+    "plural": false,
+    "description": null
+  },
   "BORDERLESS_TEXT_FIELD_PLACEHOLDER": {
     "context": "text_input.rs",
     "definedIn": "src/components/text_input.rs:39",
@@ -109,7 +151,7 @@
   },
   "COMPONENTS_TITLE": {
     "context": "root.rs",
-    "definedIn": "src/components/root.rs:63",
+    "definedIn": "src/components/root.rs:66",
     "plural": false,
     "description": null
   },
@@ -457,7 +499,7 @@
   },
   "INTERSTITIALS_TITLE": {
     "context": "root.rs",
-    "definedIn": "src/components/root.rs:94",
+    "definedIn": "src/components/root.rs:98",
     "plural": false,
     "description": null
   },

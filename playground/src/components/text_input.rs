@@ -28,7 +28,7 @@ impl TextInput {
                 ),
                 password_text_field: TextField::new(
                     cx,
-                    "text-field",
+                    "password-text-field",
                     "".into(),
                     tr!("PASSWORD_TEXT_FIELD_PLACEHOLDER", "Password Text Field").into(),
                 ),

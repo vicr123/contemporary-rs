@@ -1,4 +1,11 @@
 {
+  "ADMONITIONS_TITLE": "Admonitions",
+  "ADMONITION_ERROR_CONTENT": "This is an error.",
+  "ADMONITION_ERROR_TITLE": "Error Admonition",
+  "ADMONITION_INFO_CONTENT": "This is a string with information.",
+  "ADMONITION_INFO_TITLE": "Informational Admonition",
+  "ADMONITION_WARNING_CONTENT": "This is a warning.",
+  "ADMONITION_WARNING_TITLE": "Warning Admonition",
   "BORDERLESS_TEXT_FIELD_PLACEHOLDER": "Borderless Text Field",
   "BUTTONS_CHECKABLE_BUTTON": "Checkable Button",
   "BUTTONS_COUNT_CONTEXT_MENU_TITLE": "For the counter",
