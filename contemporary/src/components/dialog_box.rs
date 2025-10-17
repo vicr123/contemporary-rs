@@ -2,21 +2,26 @@ use crate::components::button::{Button, button};
 use crate::components::icon_text::icon_text;
 use crate::components::layer::layer;
 use crate::components::scrim::{Scrim, scrim};
+use crate::components::spinner::spinner;
+use crate::platform_support::platform_settings::PlatformSettings;
 use crate::styling::theme::{Theme, VariableColor};
+use crate::transition::float_transition_element::TransitionExt;
 use cntp_i18n::tr;
 use gpui::prelude::FluentBuilder;
 use gpui::{
-    AnyElement, App, ClickEvent, ElementId, InteractiveElement, IntoElement, ParentElement,
-    RenderOnce, SharedString, Styled, Window, div, px, relative,
+    Animation, AnyElement, App, ClickEvent, ElementId, InteractiveElement, IntoElement,
+    ParentElement, RenderOnce, SharedString, Styled, Window, div, px, relative,
 };
 
 #[derive(IntoElement)]
 pub struct DialogBox {
     scrim: Scrim,
+    id: ElementId,
     title: Option<SharedString>,
     content: AnyElement,
     buttons: Vec<Button>,
     visible: bool,
+    processing: bool,
 }
 
 pub enum StandardButton {
@@ -46,12 +51,15 @@ impl StandardButton {
 }
 
 pub fn dialog_box(id: impl Into<ElementId>) -> DialogBox {
+    let id = id.into();
     DialogBox {
-        scrim: scrim(id),
+        scrim: scrim(id.clone()),
+        id,
         title: None,
         content: div().into_any_element(),
         buttons: vec![],
         visible: false,
+        processing: false,
     }
 }
 
@@ -106,11 +114,17 @@ impl DialogBox {
         self.visible = visible;
         self
     }
+
+    pub fn processing(mut self, processing: bool) -> Self {
+        self.processing = processing;
+        self
+    }
 }
 
 impl RenderOnce for DialogBox {
     fn render(self, _window: &mut Window, cx: &mut App) -> impl IntoElement {
         let theme = cx.global::<Theme>();
+        let platform_settings = cx.global::<PlatformSettings>();
 
         let buttons_layer = self.buttons.into_iter().fold(
             layer().flex().p(px(9.)).gap(px(6.)),
@@ -144,7 +158,32 @@ impl RenderOnce for DialogBox {
                                 )
                             })
                             .child(div().p(px(9.)).child(self.content))
-                            .child(buttons_layer),
+                            .child(buttons_layer)
+                            .child(
+                                div()
+                                    .flex()
+                                    .items_center()
+                                    .justify_center()
+                                    .bg(theme.background)
+                                    .absolute()
+                                    .top(px(0.))
+                                    .left(px(0.))
+                                    .right(px(0.))
+                                    .bottom(px(0.))
+                                    .child(spinner())
+                                    .with_transition(
+                                        self.id,
+                                        if self.processing { 1. } else { 0. },
+                                        Animation::new(platform_settings.animation_duration),
+                                        |div, opacity| {
+                                            div.opacity(opacity).when_else(
+                                                opacity == 0.,
+                                                |div| div.invisible(),
+                                                |div| div.occlude(),
+                                            )
+                                        },
+                                    ),
+                            ),
                     )
                 }),
         )

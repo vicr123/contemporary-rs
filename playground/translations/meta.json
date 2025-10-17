@@ -199,103 +199,103 @@
   },
   "DIALOG_BOXES_DESCRIPTION": {
     "context": "dialog_boxes.rs",
-    "definedIn": "src/patterns/dialog_boxes.rs:61",
+    "definedIn": "src/patterns/dialog_boxes.rs:65",
     "plural": false,
     "description": null
   },
   "DIALOG_BOXES_TITLE": {
     "context": "dialog_boxes.rs",
-    "definedIn": "src/patterns/dialog_boxes.rs:42",
+    "definedIn": "src/patterns/dialog_boxes.rs:46",
     "plural": false,
     "description": null
   },
   "DIALOG_BOX_ERROR": {
     "context": "dialog_boxes.rs",
-    "definedIn": "src/patterns/dialog_boxes.rs:83",
+    "definedIn": "src/patterns/dialog_boxes.rs:87",
     "plural": false,
     "description": null
   },
   "DIALOG_BOX_ERROR_CONTENT": {
     "context": "dialog_boxes.rs",
-    "definedIn": "src/patterns/dialog_boxes.rs:160",
+    "definedIn": "src/patterns/dialog_boxes.rs:174",
     "plural": false,
     "description": null
   },
   "DIALOG_BOX_ERROR_INFO": {
     "context": "dialog_boxes.rs",
-    "definedIn": "src/patterns/dialog_boxes.rs:161",
+    "definedIn": "src/patterns/dialog_boxes.rs:175",
     "plural": false,
     "description": null
   },
   "DIALOG_BOX_ERROR_TITLE": {
     "context": "dialog_boxes.rs",
-    "definedIn": "src/patterns/dialog_boxes.rs:157",
+    "definedIn": "src/patterns/dialog_boxes.rs:171",
     "plural": false,
     "description": null
   },
   "DIALOG_BOX_GOBLIN": {
     "context": "dialog_boxes.rs",
-    "definedIn": "src/patterns/dialog_boxes.rs:74",
+    "definedIn": "src/patterns/dialog_boxes.rs:78",
     "plural": false,
     "description": null
   },
   "DIALOG_BOX_GOBLIN_CONTENT": {
     "context": "dialog_boxes.rs",
-    "definedIn": "src/patterns/dialog_boxes.rs:108",
+    "definedIn": "src/patterns/dialog_boxes.rs:112",
     "plural": false,
     "description": null
   },
   "DIALOG_BOX_GOBLIN_REFUSE": {
     "context": "dialog_boxes.rs",
-    "definedIn": "src/patterns/dialog_boxes.rs:116",
+    "definedIn": "src/patterns/dialog_boxes.rs:120",
     "plural": false,
     "description": null
   },
   "DIALOG_BOX_GOBLIN_SWEAR_FEALTY": {
     "context": "dialog_boxes.rs",
-    "definedIn": "src/patterns/dialog_boxes.rs:123",
+    "definedIn": "src/patterns/dialog_boxes.rs:127",
     "plural": false,
     "description": null
   },
   "DIALOG_BOX_INFORMATIONAL": {
     "context": "dialog_boxes.rs",
-    "definedIn": "src/patterns/dialog_boxes.rs:65",
+    "definedIn": "src/patterns/dialog_boxes.rs:69",
     "plural": false,
     "description": null
   },
   "DIALOG_BOX_INFORMATIONAL_CONTENT": {
     "context": "dialog_boxes.rs",
-    "definedIn": "src/patterns/dialog_boxes.rs:95",
+    "definedIn": "src/patterns/dialog_boxes.rs:99",
     "plural": false,
     "description": null
   },
   "DIALOG_BOX_INFORMATIONAL_TITLE": {
     "context": "dialog_boxes.rs",
-    "definedIn": "src/patterns/dialog_boxes.rs:92",
+    "definedIn": "src/patterns/dialog_boxes.rs:96",
     "plural": false,
     "description": null
   },
   "DIALOG_BOX_NUCLEAR_REACTOR": {
     "context": "dialog_boxes.rs",
-    "definedIn": "src/patterns/dialog_boxes.rs:79",
+    "definedIn": "src/patterns/dialog_boxes.rs:83",
     "plural": false,
     "description": null
   },
   "DIALOG_BOX_NUCLEAR_REACTOR_CONTENT": {
     "context": "dialog_boxes.rs",
-    "definedIn": "src/patterns/dialog_boxes.rs:133",
+    "definedIn": "src/patterns/dialog_boxes.rs:137",
     "plural": false,
     "description": null
   },
   "DIALOG_BOX_NUCLEAR_REACTOR_INFORMATIONAL": {
     "context": "dialog_boxes.rs",
-    "definedIn": "src/patterns/dialog_boxes.rs:142",
+    "definedIn": "src/patterns/dialog_boxes.rs:146",
     "plural": false,
     "description": null
   },
   "DIALOG_BOX_NUCLEAR_REACTOR_TITLE": {
     "context": "dialog_boxes.rs",
-    "definedIn": "src/patterns/dialog_boxes.rs:131",
+    "definedIn": "src/patterns/dialog_boxes.rs:135",
     "plural": false,
     "description": null
   },

@@ -7,13 +7,16 @@ use contemporary::components::layer::layer;
 use contemporary::components::subtitle::subtitle;
 use contemporary::styling::theme::Theme;
 use gpui::{
-    App, AppContext, Context, Entity, IntoElement, ParentElement, Render, Styled, Window, div, px,
+    App, AppContext, AsyncApp, Context, Entity, IntoElement, ParentElement, Render, Styled,
+    WeakEntity, Window, div, px,
 };
+use std::time::Duration;
 
 pub struct DialogBoxes {
     informational_dialog_open: bool,
     goblin_dialog_box_open: bool,
     nuclear_reactor_dialog_box_open: bool,
+    nuclear_reactor_dialog_box_processing: bool,
     error_dialog_box_open: bool,
 }
 
@@ -23,6 +26,7 @@ impl DialogBoxes {
             informational_dialog_open: false,
             goblin_dialog_box_open: false,
             nuclear_reactor_dialog_box_open: false,
+            nuclear_reactor_dialog_box_processing: false,
             error_dialog_box_open: false,
         })
     }
@@ -148,9 +152,19 @@ Only proceed if you are an expert user and fully understand the risks involved. 
                     cx.notify()
                 }))
                 .button(StandardButton::Ok.button().destructive().on_click(cx.listener(|this, _, _, cx| {
-                    this.nuclear_reactor_dialog_box_open = false;
-                    cx.notify()
+                    this.nuclear_reactor_dialog_box_processing = true;
+                    cx.notify();
+
+                    cx.spawn(async move |weak_this: WeakEntity<Self>, cx: &mut AsyncApp| {
+                        cx.background_executor().timer(Duration::from_secs(3)).await;
+                        weak_this.update(cx, |this, cx| {
+                            this.nuclear_reactor_dialog_box_processing = false;
+                            this.nuclear_reactor_dialog_box_open = false;
+                            cx.notify();
+                        }).unwrap();
+                    }).detach();
                 })))
+                .processing(self.nuclear_reactor_dialog_box_processing)
             )
             .child(dialog_box("error-dialog-box").visible(self.error_dialog_box_open)
                 .title(
