@@ -1,10 +1,11 @@
-use crate::components::icon_text::icon_text;
-use crate::components::layer::layer;
-use crate::styling::theme::{Theme, VariableColor};
+mod context_menu_popup;
+
+use crate::components::context_menu::context_menu_popup::ContextMenuPopup;
+use crate::styling::theme::VariableColor;
 use gpui::prelude::FluentBuilder;
 use gpui::{
     App, InteractiveElement, IntoElement, KeyBinding, MouseButton, ParentElement, Pixels, Point,
-    RenderOnce, StatefulInteractiveElement, Styled, Window, actions, anchored, deferred, div, px,
+    RenderOnce, StatefulInteractiveElement, Styled, Window, actions, deferred, div,
 };
 use std::rc::Rc;
 
@@ -23,23 +24,9 @@ impl RenderOnce for ContextMenu {
     fn render(self, window: &mut Window, cx: &mut App) -> impl IntoElement {
         let context_menu_state = window.use_state(cx, |_, _| None);
         let context_menu_state_2 = context_menu_state.clone();
-        let context_menu_state_3 = context_menu_state.clone();
-        let context_menu_state_4 = context_menu_state.clone();
-
-        let context_menu_open = context_menu_state.read(cx);
-        if context_menu_open.is_some() {
-            cx.on_action(move |_: &Escape, cx| {
-                context_menu_state_4.write(cx, None);
-            })
-        }
 
         // Reborrow
         let context_menu_open = context_menu_state.read(cx);
-
-        let window_size = window.viewport_size();
-        let inset = window.client_inset().unwrap_or_else(|| px(0.));
-
-        let theme = cx.global::<Theme>();
 
         div()
             .id("__context_menu_handler")
@@ -58,105 +45,18 @@ impl RenderOnce for ContextMenu {
                     }),
                 );
             })
-            .when_some(context_menu_open.as_ref(), move |david, context_menu| {
-                david.child(deferred(
-                    anchored().position(Point::new(px(0.), px(0.))).child(
-                        div()
-                            .top_0()
-                            .left_0()
-                            .w(window_size.width - inset - inset)
-                            .h(window_size.height - inset - inset)
-                            .m(inset)
-                            .occlude()
-                            .on_any_mouse_down(move |_, _, cx| {
-                                context_menu_state_2.write(cx, None);
-                            })
-                            .child(
-                                anchored().position(context_menu.open_position).child(
-                                    self.items.iter().enumerate().fold(
-                                        div()
-                                            .border_color(theme.border_color)
-                                            .border(px(1.))
-                                            .bg(theme.background)
-                                            .rounded(theme.border_radius)
-                                            .min_w(px(100.))
-                                            .occlude()
-                                            .flex()
-                                            .flex_col(),
-                                        move |david, (i, item)| match item {
-                                            ContextMenuItem::Separator => {
-                                                david.child(div().h(px(1.)).bg(theme.border_color))
-                                            }
-                                            ContextMenuItem::Group(title) => david.child(
-                                                layer()
-                                                    .p(px(4.))
-                                                    .text_center()
-                                                    .child(title.clone()),
-                                            ),
-                                            ContextMenuItem::MenuItem {
-                                                label,
-                                                action,
-                                                icon,
-                                                remain_open,
-                                                disabled,
-                                            } => {
-                                                let action = action.clone();
-                                                let remain_open_local_clone = remain_open.clone();
-                                                let context_menu_state_local_clone =
-                                                    context_menu_state_3.clone();
-
-                                                let palette = theme.clone().disable_when(*disabled);
-
-                                                david.child(
-                                                    div()
-                                                        .text_color(palette.foreground)
-                                                        .id(i)
-                                                        .p(px(4.))
-                                                        .when_some(icon.as_ref(), |div, icon| {
-                                                            div.child(icon_text(
-                                                                icon.clone().into(),
-                                                                label.clone().into(),
-                                                            ))
-                                                        })
-                                                        .when_none(icon, |david| {
-                                                            david.child(
-                                                                div()
-                                                                    .flex()
-                                                                    .items_center()
-                                                                    .gap(px(6.))
-                                                                    .child(div().size(px(16.)))
-                                                                    .child(label.clone()),
-                                                            )
-                                                        })
-                                                        .when(!disabled, |div| {
-                                                            div.hover(|div| {
-                                                                div.bg(palette.background.hover())
-                                                            })
-                                                            .active(|div| {
-                                                                div.bg(palette.background.active())
-                                                            })
-                                                            .on_click(move |_, window, cx| {
-                                                                action(
-                                                                    &ContextMenuActionEvent {},
-                                                                    window,
-                                                                    cx,
-                                                                );
-
-                                                                if !remain_open_local_clone {
-                                                                    context_menu_state_local_clone
-                                                                        .write(cx, None);
-                                                                }
-                                                            })
-                                                        }),
-                                                )
-                                            }
-                                        },
-                                    ),
-                                ),
-                            ),
-                    ),
-                ))
-            })
+            .child(deferred(
+                // Context Menu Popup
+                ContextMenuPopup {
+                    items: self.items,
+                    open_position: context_menu_open
+                        .as_ref()
+                        .map(|context_menu| context_menu.open_position),
+                    request_close_listener: Rc::new(Box::new(move |_, _, cx| {
+                        context_menu_state_2.write(cx, None);
+                    })),
+                },
+            ))
     }
 }
 
