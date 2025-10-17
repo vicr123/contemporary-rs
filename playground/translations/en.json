@@ -107,6 +107,7 @@
   "JOB_MENU_TITLE": "Job Menu",
   "JOB_NORMAL_START": "Start Normal Job",
   "JOB_TRANSIENT_START": "Start Transient Job",
+  "JOINED_BUTTON": "Button with menu",
   "LAYOUT_DIRECTION_LTR": "Left-to-Right",
   "LAYOUT_DIRECTION_RTL": "Right-to-Left",
   "MENU_THEME": "Theme",

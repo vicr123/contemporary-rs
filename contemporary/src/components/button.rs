@@ -1,10 +1,13 @@
+use crate::components::context_menu::context_menu_popup::ContextMenuPopup;
+use crate::components::context_menu::{ContextMenuItem, OpenContextMenu};
 use crate::styling::theme::{Theme, VariableColor, variable_transparent};
 use gpui::prelude::FluentBuilder;
 use gpui::{
     AnyElement, App, ClickEvent, Div, ElementId, InteractiveElement, IntoElement, ParentElement,
-    RenderOnce, Rgba, Stateful, StatefulInteractiveElement, StyleRefinement, Styled, Window, div,
-    px,
+    RenderOnce, Rgba, Stateful, StatefulInteractiveElement, StyleRefinement, Styled, Window,
+    deferred, div, px,
 };
+use std::rc::Rc;
 
 #[derive(IntoElement)]
 pub struct Button {
@@ -16,6 +19,10 @@ pub struct Button {
 
     button_color: Option<Rgba>,
     button_text_color: Option<Rgba>,
+
+    menu_items: Option<Vec<ContextMenuItem>>,
+
+    on_click: Option<Rc<Box<dyn Fn(&ClickEvent, &mut Window, &mut App)>>>,
 }
 
 pub fn button(id: impl Into<ElementId>) -> Button {
@@ -32,6 +39,8 @@ pub fn button(id: impl Into<ElementId>) -> Button {
         destructive: false,
         button_color: None,
         button_text_color: None,
+        menu_items: None,
+        on_click: None,
     }
 }
 
@@ -71,12 +80,12 @@ impl Button {
     }
 
     pub fn on_click(mut self, fun: impl Fn(&ClickEvent, &mut Window, &mut App) + 'static) -> Self {
-        let disabled = self.disabled;
-        self.div = self.div.on_click(move |event, window, cx| {
-            if !disabled {
-                fun(event, window, cx)
-            }
-        });
+        self.on_click = Some(Rc::new(Box::new(fun)));
+        self
+    }
+
+    pub fn with_menu(mut self, menu_items: Vec<ContextMenuItem>) -> Self {
+        self.menu_items = Some(menu_items);
         self
     }
 }
@@ -94,7 +103,12 @@ impl InteractiveElement for Button {
 }
 
 impl RenderOnce for Button {
-    fn render(self, _window: &mut Window, cx: &mut App) -> impl IntoElement {
+    fn render(self, window: &mut Window, cx: &mut App) -> impl IntoElement {
+        let context_menu_state = window.use_state(cx, |_, _| None);
+        let context_menu_state_2 = context_menu_state.clone();
+
+        let context_menu_open = context_menu_state.read(cx);
+
         let theme = cx.global::<Theme>().clone().disable_when(self.disabled);
 
         let background = if self.flat {
@@ -118,6 +132,45 @@ impl RenderOnce for Button {
                     div.hover(|div| div.bg(background.hover()))
                 })
                 .active(|div| div.bg(background.active()))
+            })
+            .when(
+                self.on_click.is_some() || self.menu_items.is_some(),
+                |div| {
+                    let on_click_handler = self.on_click;
+                    let have_menu_items = self.menu_items.is_some();
+
+                    div.on_click(move |event, window, cx| {
+                        let disabled = self.disabled;
+                        if disabled {
+                            return;
+                        }
+
+                        if have_menu_items {
+                            context_menu_state.write(
+                                cx,
+                                Some(OpenContextMenu {
+                                    open_position: event.position(),
+                                }),
+                            );
+                        } else if let Some(on_click_handler) = &on_click_handler {
+                            on_click_handler(event, window, cx)
+                        }
+                    })
+                },
+            )
+            .when_some(self.menu_items, |david, items| {
+                david.child(deferred(
+                    // Context Menu Popup
+                    ContextMenuPopup {
+                        items,
+                        open_position: context_menu_open
+                            .as_ref()
+                            .map(|context_menu| context_menu.open_position),
+                        request_close_listener: Rc::new(Box::new(move |_, _, cx| {
+                            context_menu_state_2.write(cx, None);
+                        })),
+                    },
+                ))
             })
     }
 }

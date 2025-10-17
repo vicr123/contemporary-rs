@@ -1,4 +1,4 @@
-mod context_menu_popup;
+pub(crate) mod context_menu_popup;
 
 use crate::components::context_menu::context_menu_popup::ContextMenuPopup;
 use crate::styling::theme::VariableColor;
@@ -17,7 +17,7 @@ pub struct ContextMenu {
 }
 
 pub struct OpenContextMenu {
-    open_position: Point<Pixels>,
+    pub(crate) open_position: Point<Pixels>,
 }
 
 impl RenderOnce for ContextMenu {
@@ -25,7 +25,6 @@ impl RenderOnce for ContextMenu {
         let context_menu_state = window.use_state(cx, |_, _| None);
         let context_menu_state_2 = context_menu_state.clone();
 
-        // Reborrow
         let context_menu_open = context_menu_state.read(cx);
 
         div()
@@ -64,6 +63,7 @@ pub struct ContextMenuActionEvent {}
 pub type ContextMenuActionHandler =
     dyn Fn(&ContextMenuActionEvent, &mut Window, &mut App) + 'static;
 
+#[derive(Clone)]
 pub enum ContextMenuItem {
     Separator,
     Group(String),
