@@ -1,6 +1,6 @@
 use crate::styling::rgb::{rgb_tuple, rgba_tuple};
 use crate::styling::theme::{Theme, ThemeType};
-use gpui::{Pixels, Rgba, px};
+use gpui::{px, Pixels, Rgba};
 
 pub trait ContemporaryTheme {
     const TYPE: ThemeType;
@@ -29,7 +29,7 @@ impl ContemporaryTheme for ContemporaryDark {
     const FOREGROUND: Rgba = rgb_tuple(255, 255, 255);
     const SKELETON: Rgba = rgb_tuple(230, 230, 230);
     const BUTTON_BACKGROUND: Rgba = rgb_tuple(0, 50, 150);
-    const LAYER: Rgba = rgba_tuple(255, 255, 255, 5. / 255.);
+    const LAYER: Rgba = rgba_tuple(255, 255, 255, 0.08);
     const BORDER: Rgba = rgba_tuple(255, 255, 255, 0.4);
     const BORDER_RADIUS: Pixels = px(4.0);
     const FOCUS_DECORATION: Rgba = rgb_tuple(20, 125, 200);
@@ -47,7 +47,7 @@ impl ContemporaryTheme for ContemporaryLight {
     const FOREGROUND: Rgba = rgb_tuple(0, 0, 0);
     const SKELETON: Rgba = rgb_tuple(20, 20, 20);
     const BUTTON_BACKGROUND: Rgba = rgb_tuple(0, 150, 255);
-    const LAYER: Rgba = rgba_tuple(0, 0, 0, 10. / 255.);
+    const LAYER: Rgba = rgba_tuple(0, 0, 0, 0.1);
     const BORDER: Rgba = rgba_tuple(0, 0, 0, 0.4);
     const BORDER_RADIUS: Pixels = px(4.0);
     const FOCUS_DECORATION: Rgba = rgb_tuple(20, 125, 200);
