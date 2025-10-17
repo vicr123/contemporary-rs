@@ -1,5 +1,5 @@
 use cntp_i18n::{tr, trn};
-use contemporary::components::button::button;
+use contemporary::components::button::{ButtonMenuOpenPolicy, button};
 use contemporary::components::constrainer::constrainer;
 use contemporary::components::context_menu::{ContextMenuExt, ContextMenuItem};
 use contemporary::components::grandstand::grandstand;
@@ -191,21 +191,34 @@ impl Render for Buttons {
                                     .with_context_menu(context_menu_items.clone()),
                             )
                             .child(
-                                div().flex().child(
-                                    div()
-                                        .flex()
-                                        .bg(theme.button_background)
-                                        .gap(px(2.))
-                                        .child(
-                                            button("joined-button")
-                                                .child(tr!("JOINED_BUTTON", "Button with menu")),
-                                        )
-                                        .child(
-                                            button("joined-button-menu")
-                                                .child(icon("arrow-down".into()))
-                                                .with_menu(context_menu_items),
-                                        ),
-                                ),
+                                div()
+                                    .flex()
+                                    .gap(px(8.))
+                                    .child(
+                                        div()
+                                            .flex()
+                                            .bg(theme.button_background)
+                                            .gap(px(2.))
+                                            .child(
+                                                button("joined-button").child(tr!(
+                                                    "JOINED_BUTTON",
+                                                    "Button with menu"
+                                                )),
+                                            )
+                                            .child(
+                                                button("joined-button-menu")
+                                                    .child(icon("arrow-down".into()))
+                                                    .with_menu(context_menu_items.clone()),
+                                            ),
+                                    )
+                                    .child(
+                                        button("right-click-button")
+                                            .child(tr!("RIGHT_CLICK_BUTTON", "Right click menu"))
+                                            .with_menu(context_menu_items)
+                                            .with_menu_open_policy(
+                                                ButtonMenuOpenPolicy::RightClick,
+                                            ),
+                                    ),
                             ),
                     )
                     .child(

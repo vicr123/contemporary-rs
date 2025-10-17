@@ -79,25 +79,25 @@
   },
   "BUTTONS_FLAT_BUTTON": {
     "context": "buttons.rs",
-    "definedIn": "src/components/buttons.rs:226",
+    "definedIn": "src/components/buttons.rs:239",
     "plural": false,
     "description": null
   },
   "BUTTONS_FLAT_CHECKABLE_BUTTON": {
     "context": "buttons.rs",
-    "definedIn": "src/components/buttons.rs:244",
+    "definedIn": "src/components/buttons.rs:257",
     "plural": false,
     "description": null
   },
   "BUTTONS_FLAT_DISABLED_BUTTON": {
     "context": "buttons.rs",
-    "definedIn": "src/components/buttons.rs:235",
+    "definedIn": "src/components/buttons.rs:248",
     "plural": false,
     "description": null
   },
   "BUTTONS_FLAT_TITLE": {
     "context": "buttons.rs",
-    "definedIn": "src/components/buttons.rs:217",
+    "definedIn": "src/components/buttons.rs:230",
     "plural": false,
     "description": null
   },
@@ -631,7 +631,7 @@
   },
   "JOINED_BUTTON": {
     "context": "buttons.rs",
-    "definedIn": "src/components/buttons.rs:201",
+    "definedIn": "src/components/buttons.rs:204",
     "plural": false,
     "description": null
   },
@@ -740,6 +740,12 @@
   "RANGES_TITLE": {
     "context": "ranges.rs",
     "definedIn": "src/components/ranges.rs:33",
+    "plural": false,
+    "description": null
+  },
+  "RIGHT_CLICK_BUTTON": {
+    "context": "buttons.rs",
+    "definedIn": "src/components/buttons.rs:216",
     "plural": false,
     "description": null
   },

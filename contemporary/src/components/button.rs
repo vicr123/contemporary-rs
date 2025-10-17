@@ -3,9 +3,9 @@ use crate::components::context_menu::{ContextMenuItem, OpenContextMenu};
 use crate::styling::theme::{Theme, VariableColor, variable_transparent};
 use gpui::prelude::FluentBuilder;
 use gpui::{
-    AnyElement, App, ClickEvent, Div, ElementId, InteractiveElement, IntoElement, ParentElement,
-    RenderOnce, Rgba, Stateful, StatefulInteractiveElement, StyleRefinement, Styled, Window,
-    deferred, div, px,
+    AnyElement, App, ClickEvent, Div, ElementId, InteractiveElement, IntoElement, MouseButton,
+    ParentElement, RenderOnce, Rgba, Stateful, StatefulInteractiveElement, StyleRefinement, Styled,
+    Window, canvas, deferred, div, px,
 };
 use std::rc::Rc;
 
@@ -21,18 +21,30 @@ pub struct Button {
     button_text_color: Option<Rgba>,
 
     menu_items: Option<Vec<ContextMenuItem>>,
+    menu_open_policy: ButtonMenuOpenPolicy,
 
     on_click: Option<Rc<Box<dyn Fn(&ClickEvent, &mut Window, &mut App)>>>,
+    id: ElementId,
+}
+
+#[derive(Default, Copy, Clone)]
+pub enum ButtonMenuOpenPolicy {
+    #[default]
+    AnyClick,
+    StandardClick,
+    RightClick,
 }
 
 pub fn button(id: impl Into<ElementId>) -> Button {
+    let id = id.into();
     Button {
         div: div()
-            .id(id)
+            .id(id.clone())
             .flex()
             .items_center()
             .justify_center()
             .p(px(6.0)),
+        id,
         flat: false,
         disabled: false,
         checked: false,
@@ -40,6 +52,7 @@ pub fn button(id: impl Into<ElementId>) -> Button {
         button_color: None,
         button_text_color: None,
         menu_items: None,
+        menu_open_policy: ButtonMenuOpenPolicy::AnyClick,
         on_click: None,
     }
 }
@@ -88,6 +101,11 @@ impl Button {
         self.menu_items = Some(menu_items);
         self
     }
+
+    pub fn with_menu_open_policy(mut self, policy: ButtonMenuOpenPolicy) -> Self {
+        self.menu_open_policy = policy;
+        self
+    }
 }
 
 impl ParentElement for Button {
@@ -104,8 +122,19 @@ impl InteractiveElement for Button {
 
 impl RenderOnce for Button {
     fn render(self, window: &mut Window, cx: &mut App) -> impl IntoElement {
-        let context_menu_state = window.use_state(cx, |_, _| None);
+        let id = Box::new(self.id);
+        let context_menu_state = window.use_keyed_state(
+            ElementId::NamedChild(id.clone(), "context_menu_state".into()),
+            cx,
+            |_, _| None,
+        );
+        let last_bounds = window.use_keyed_state(
+            ElementId::NamedChild(id.clone(), "last_bounds".into()),
+            cx,
+            |_, _| None,
+        );
         let context_menu_state_2 = context_menu_state.clone();
+        let last_bounds_2 = last_bounds.clone();
 
         let context_menu_open = context_menu_state.read(cx);
 
@@ -120,8 +149,18 @@ impl RenderOnce for Button {
         };
 
         self.div
+            .child(
+                canvas(
+                    move |bounds, _, cx| {
+                        last_bounds_2.write(cx, Some(bounds));
+                    },
+                    |_, _, _, _| (),
+                )
+                .absolute()
+                .size_full(),
+            )
             .when_else(
-                self.checked,
+                self.checked || context_menu_open.is_some(),
                 |div| div.bg(background.active()),
                 |div| div.bg(background),
             )
@@ -136,24 +175,59 @@ impl RenderOnce for Button {
             .when(
                 self.on_click.is_some() || self.menu_items.is_some(),
                 |div| {
+                    let disabled = self.disabled;
                     let on_click_handler = self.on_click;
                     let have_menu_items = self.menu_items.is_some();
+                    let menu_open_policy = self.menu_open_policy;
+
+                    let context_menu_state_2 = context_menu_state_2.clone();
+                    let last_bounds_2 = last_bounds.clone();
 
                     div.on_click(move |event, window, cx| {
-                        let disabled = self.disabled;
                         if disabled {
                             return;
                         }
 
-                        if have_menu_items {
+                        if have_menu_items
+                            && match menu_open_policy {
+                                ButtonMenuOpenPolicy::AnyClick => true,
+                                ButtonMenuOpenPolicy::StandardClick => event.standard_click(),
+                                ButtonMenuOpenPolicy::RightClick => event.is_right_click(),
+                            }
+                        {
                             context_menu_state.write(
                                 cx,
                                 Some(OpenContextMenu {
-                                    open_position: event.position(),
+                                    open_position: last_bounds
+                                        .read(cx)
+                                        .map(|bounds| bounds.bottom_left())
+                                        .unwrap_or_else(|| event.position()),
                                 }),
                             );
                         } else if let Some(on_click_handler) = &on_click_handler {
                             on_click_handler(event, window, cx)
+                        }
+                    })
+                    .on_mouse_down(MouseButton::Right, move |event, _, cx| {
+                        if disabled {
+                            return;
+                        }
+
+                        if have_menu_items
+                            && matches!(
+                                menu_open_policy,
+                                ButtonMenuOpenPolicy::RightClick | ButtonMenuOpenPolicy::AnyClick
+                            )
+                        {
+                            context_menu_state_2.write(
+                                cx,
+                                Some(OpenContextMenu {
+                                    open_position: last_bounds_2
+                                        .read(cx)
+                                        .map(|bounds| bounds.bottom_left())
+                                        .unwrap_or(event.position),
+                                }),
+                            );
                         }
                     })
                 },
