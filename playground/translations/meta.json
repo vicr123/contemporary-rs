@@ -113,27 +113,33 @@
     "plural": false,
     "description": null
   },
+  "CHECKBOXES_INDETERMINATE": {
+    "context": "checkboxes_radio_buttons.rs",
+    "definedIn": "src/components/checkboxes_radio_buttons.rs:91",
+    "plural": false,
+    "description": null
+  },
   "CHECKBOXES_OFF": {
     "context": "checkboxes_radio_buttons.rs",
-    "definedIn": "src/components/checkboxes_radio_buttons.rs:67",
+    "definedIn": "src/components/checkboxes_radio_buttons.rs:69",
     "plural": false,
     "description": null
   },
   "CHECKBOXES_ON": {
     "context": "checkboxes_radio_buttons.rs",
-    "definedIn": "src/components/checkboxes_radio_buttons.rs:78",
+    "definedIn": "src/components/checkboxes_radio_buttons.rs:80",
     "plural": false,
     "description": null
   },
   "CHECKBOXES_RADIO_BUTTONS_TITLE": {
     "context": "checkboxes_radio_buttons.rs",
-    "definedIn": "src/components/checkboxes_radio_buttons.rs:41",
+    "definedIn": "src/components/checkboxes_radio_buttons.rs:43",
     "plural": false,
     "description": null
   },
   "CHECKBOXES_TITLE": {
     "context": "checkboxes_radio_buttons.rs",
-    "definedIn": "src/components/checkboxes_radio_buttons.rs:59",
+    "definedIn": "src/components/checkboxes_radio_buttons.rs:61",
     "plural": false,
     "description": null
   },
@@ -733,7 +739,7 @@
   },
   "RADIO_BUTTONS_TITLE": {
     "context": "checkboxes_radio_buttons.rs",
-    "definedIn": "src/components/checkboxes_radio_buttons.rs:94",
+    "definedIn": "src/components/checkboxes_radio_buttons.rs:108",
     "plural": false,
     "description": null
   },

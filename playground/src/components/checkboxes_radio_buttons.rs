@@ -13,6 +13,7 @@ use gpui::{
 pub struct CheckboxesRadioButtons {
     default_off_checkbox: CheckState,
     default_on_checkbox: CheckState,
+    default_indeterminate_checkbox: CheckState,
     default_radio: u8,
 }
 
@@ -21,6 +22,7 @@ impl CheckboxesRadioButtons {
         cx.new(|_| CheckboxesRadioButtons {
             default_off_checkbox: CheckState::Off,
             default_on_checkbox: CheckState::On,
+            default_indeterminate_checkbox: CheckState::Indeterminate,
             default_radio: 1,
         })
     }
@@ -79,6 +81,18 @@ impl Render for CheckboxesRadioButtons {
                                             .on_checked_changed(cx.listener(
                                                 |this, event: &CheckedChangeEvent, _, cx| {
                                                     this.default_on_checkbox = event.check_state;
+                                                    cx.notify()
+                                                },
+                                            )),
+                                    )
+                                    .child(
+                                        checkbox("default-indeterminate-checkbox")
+                                            .check_state(self.default_indeterminate_checkbox)
+                                            .label(tr!("CHECKBOXES_INDETERMINATE", "Indeterminate"))
+                                            .on_checked_changed(cx.listener(
+                                                |this, event: &CheckedChangeEvent, _, cx| {
+                                                    this.default_indeterminate_checkbox =
+                                                        event.check_state;
                                                     cx.notify()
                                                 },
                                             )),

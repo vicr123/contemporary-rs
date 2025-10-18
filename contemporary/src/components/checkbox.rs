@@ -4,8 +4,9 @@ use gpui::prelude::FluentBuilder;
 use gpui::{
     App, AvailableSpace, BorderStyle, Bounds, ClickEvent, Corners, Div, Element, ElementId,
     GlobalElementId, InspectorElementId, InteractiveElement, IntoElement, LayoutId, ParentElement,
-    Pixels, Refineable, RenderOnce, SharedString, Stateful, StatefulInteractiveElement, Style,
-    StyleRefinement, Styled, Window, div, px, quad, size, transparent_black, white,
+    PathBuilder, Pixels, Refineable, RenderOnce, SharedString, Stateful,
+    StatefulInteractiveElement, Style, StyleRefinement, Styled, Window, div, point, px, quad, size,
+    transparent_black, white,
 };
 use std::panic::Location;
 
@@ -213,7 +214,7 @@ impl Element for CheckboxBox {
         _request_layout: &mut Self::RequestLayoutState,
         _prepaint: &mut Self::PrepaintState,
         window: &mut Window,
-        _cx: &mut App,
+        cx: &mut App,
     ) {
         let background = self
             .style
@@ -227,6 +228,7 @@ impl Element for CheckboxBox {
             .clone()
             .and_then(|text| text.color)
             .unwrap_or(white());
+        let theme = cx.global::<Theme>();
 
         if self.draw_as_radio {
             window.paint_quad(quad(
@@ -269,6 +271,28 @@ impl Element for CheckboxBox {
                     foreground,
                     BorderStyle::Solid,
                 ));
+
+                let check_bounds = bounds.inset(px(3.));
+                let mut check_path = PathBuilder::stroke(px(2.));
+                check_path.move_to(point(check_bounds.left(), check_bounds.center().y));
+                check_path.line_to(point(check_bounds.center().x, check_bounds.bottom()));
+                check_path.line_to(check_bounds.top_right());
+                window.paint_path(check_path.build().unwrap(), theme.background);
+            } else if self.check_state == CheckState::Indeterminate {
+                window.paint_quad(quad(
+                    bounds,
+                    corners.to_pixels(window.rem_size()),
+                    foreground,
+                    px(1.),
+                    foreground,
+                    BorderStyle::Solid,
+                ));
+
+                let check_bounds = bounds.inset(px(3.));
+                let mut check_path = PathBuilder::stroke(px(2.));
+                check_path.move_to(point(check_bounds.left(), check_bounds.center().y));
+                check_path.line_to(point(check_bounds.right(), check_bounds.center().y));
+                window.paint_path(check_path.build().unwrap(), theme.background);
             }
         }
     }
