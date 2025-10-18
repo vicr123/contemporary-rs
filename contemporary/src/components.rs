@@ -1,4 +1,5 @@
 pub mod admonition;
+pub mod anchorer;
 pub mod application_menu;
 mod base;
 pub mod button;
@@ -6,6 +7,7 @@ pub mod checkbox;
 pub mod constrainer;
 pub mod context_menu;
 pub mod dialog_box;
+pub mod flyout;
 pub mod focus_decoration;
 pub mod grandstand;
 pub mod icon;
