@@ -13,12 +13,14 @@ use gpui::{
 
 pub struct Flyouts {
     bottom_flyout_open: bool,
+    right_flyout_open: bool,
 }
 
 impl Flyouts {
     pub fn new(cx: &mut App) -> Entity<Self> {
         cx.new(|_| Flyouts {
             bottom_flyout_open: false,
+            right_flyout_open: false,
         })
     }
 }
@@ -28,8 +30,13 @@ impl Render for Flyouts {
         let theme = cx.global::<Theme>();
 
         let bottom_flyout_open = self.bottom_flyout_open;
-        let flyout_close_function = cx.listener(|this, _, _, cx| {
+        let right_flyout_open = self.right_flyout_open;
+        let flyout_bottom_close_function = cx.listener(|this, _, _, cx| {
             this.bottom_flyout_open = false;
+            cx.notify()
+        });
+        let flyout_right_close_function = cx.listener(|this, _, _, cx| {
+            this.right_flyout_open = false;
             cx.notify()
         });
 
@@ -83,7 +90,25 @@ impl Render for Flyouts {
                                                             "FLYOUT_CONTENT",
                                                             "This is a flyout."
                                                         ))
-                                                        .on_close(flyout_close_function),
+                                                        .on_close(flyout_bottom_close_function),
+                                                )
+                                            }),
+                                    )
+                                    .child(
+                                        button("right-flyout")
+                                            .child(tr!("FLYOUT_RIGHT", "Right Flyout"))
+                                            .on_click(cx.listener(|this, _, _, cx| {
+                                                this.right_flyout_open = true;
+                                                cx.notify()
+                                            }))
+                                            .with_anchorer(move |david, anchorer| {
+                                                david.child(
+                                                    flyout(anchorer)
+                                                        .visible(right_flyout_open)
+                                                        .anchor_top_right()
+                                                        .p(px(4.))
+                                                        .child(tr!("FLYOUT_CONTENT",))
+                                                        .on_close(flyout_right_close_function),
                                                 )
                                             }),
                                     ),

@@ -361,25 +361,31 @@
   },
   "FLYOUTS_DESCRIPTION": {
     "context": "flyouts.rs",
-    "definedIn": "src/patterns/flyouts.rs:67",
+    "definedIn": "src/patterns/flyouts.rs:74",
     "plural": false,
     "description": null
   },
   "FLYOUTS_TITLE": {
     "context": "flyouts.rs",
-    "definedIn": "src/patterns/flyouts.rs:44",
+    "definedIn": "src/patterns/flyouts.rs:51",
     "plural": false,
     "description": null
   },
   "FLYOUT_BOTTOM": {
     "context": "flyouts.rs",
-    "definedIn": "src/patterns/flyouts.rs:72",
+    "definedIn": "src/patterns/flyouts.rs:79",
     "plural": false,
     "description": null
   },
   "FLYOUT_CONTENT": {
     "context": "flyouts.rs",
-    "definedIn": "src/patterns/flyouts.rs:83",
+    "definedIn": "src/patterns/flyouts.rs:90",
+    "plural": false,
+    "description": null
+  },
+  "FLYOUT_RIGHT": {
+    "context": "flyouts.rs",
+    "definedIn": "src/patterns/flyouts.rs:99",
     "plural": false,
     "description": null
   },

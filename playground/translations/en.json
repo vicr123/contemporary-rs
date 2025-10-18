@@ -66,6 +66,7 @@
   "FLYOUTS_TITLE": "Flyouts",
   "FLYOUT_BOTTOM": "Bottom Flyout",
   "FLYOUT_CONTENT": "This is a flyout.",
+  "FLYOUT_RIGHT": "Right Flyout",
   "HORIZONTAL_SLIDERS_TITLE": "Horizontal Sliders",
   "I18N_DATE_TIME": "Date & Time",
   "I18N_DATE_TIME_ADV_LONG": "Custom (long): {{time}}",

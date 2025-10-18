@@ -1,7 +1,7 @@
 use crate::styling::theme::Theme;
 use gpui::{
     AnyElement, App, Bounds, Div, InteractiveElement, IntoElement, ParentElement, Pixels, Point,
-    RenderOnce, StyleRefinement, Styled, Window, anchored, deferred, div, px,
+    RenderOnce, StyleRefinement, Styled, Window, anchored, deferred, div, point, px,
 };
 use std::rc::Rc;
 
@@ -15,6 +15,15 @@ pub struct Flyout {
     div: Div,
     visible: bool,
     request_close_listener: Option<Rc<Box<FlyoutRequestCloseListener>>>,
+    anchor_position: FlyoutAnchorPoisition,
+    anchor_gap: Pixels,
+}
+
+#[derive(Clone, Copy, PartialEq, Default)]
+pub enum FlyoutAnchorPoisition {
+    #[default]
+    BottomLeft,
+    TopRight,
 }
 
 pub fn flyout(anchorer_bounds: Bounds<Pixels>) -> Flyout {
@@ -23,6 +32,8 @@ pub fn flyout(anchorer_bounds: Bounds<Pixels>) -> Flyout {
         div: div(),
         visible: false,
         request_close_listener: None,
+        anchor_position: FlyoutAnchorPoisition::BottomLeft,
+        anchor_gap: px(2.),
     }
 }
 
@@ -39,6 +50,26 @@ impl Flyout {
         self.request_close_listener = Some(Rc::new(Box::new(close_listener)));
         self
     }
+
+    pub fn anchor_position(mut self, anchor_position: FlyoutAnchorPoisition) -> Self {
+        self.anchor_position = anchor_position;
+        self
+    }
+
+    pub fn anchor_top_right(mut self) -> Self {
+        self.anchor_position = FlyoutAnchorPoisition::TopRight;
+        self
+    }
+
+    pub fn anchor_bottom_left(mut self) -> Self {
+        self.anchor_position = FlyoutAnchorPoisition::BottomLeft;
+        self
+    }
+
+    pub fn anchor_gap(mut self, anchor_gap: Pixels) -> Self {
+        self.anchor_gap = anchor_gap;
+        self
+    }
 }
 
 impl RenderOnce for Flyout {
@@ -53,7 +84,14 @@ impl RenderOnce for Flyout {
         }
 
         let request_close_listener = self.request_close_listener.clone();
-        let open_position = self.anchorer_bounds.bottom_left();
+        let open_position = match self.anchor_position {
+            FlyoutAnchorPoisition::BottomLeft => {
+                self.anchorer_bounds.bottom_left() + point(px(0.), self.anchor_gap)
+            }
+            FlyoutAnchorPoisition::TopRight => {
+                self.anchorer_bounds.top_right() + point(self.anchor_gap, px(0.))
+            }
+        };
 
         deferred(
             anchored().position(Point::new(px(0.), px(0.))).child(
