@@ -1,11 +1,12 @@
 use crate::platform_support::platform_settings::PlatformSettings;
 use crate::styling::theme::Theme;
 use crate::transition::Transition;
+use gpui::prelude::FluentBuilder;
 use gpui::{
     Animation, App, BorderStyle, Bounds, Corners, Element, ElementId, GlobalElementId,
-    InspectorElementId, IntoElement, LayoutId, MouseDownEvent, MouseMoveEvent, MouseUpEvent,
-    Pixels, Point, Refineable, SharedString, Size, Style, StyleRefinement, Styled, Window, px,
-    quad, transparent_white,
+    InspectorElementId, InteractiveElement, IntoElement, LayoutId, MouseDownEvent, MouseMoveEvent,
+    MouseUpEvent, ParentElement, Pixels, Point, Refineable, RenderOnce, SharedString, Size, Style,
+    StyleRefinement, Styled, Window, div, px, quad, transparent_white,
 };
 use std::cell::RefCell;
 use std::panic::Location;
@@ -18,22 +19,21 @@ pub struct SwitchChangeEvent {
 
 type SwitchChangeHandler = dyn Fn(&SwitchChangeEvent, &mut Window, &mut App);
 
+#[derive(IntoElement)]
 pub struct Switch {
     id: ElementId,
-    style_refinement: StyleRefinement,
+    label: Option<SharedString>,
     disabled: bool,
     checked: bool,
-    label: Option<SharedString>,
     on_change: Option<Rc<SwitchChangeHandler>>,
 }
 
 pub fn switch(id: impl Into<ElementId>) -> Switch {
     Switch {
         id: id.into(),
-        style_refinement: StyleRefinement::default().h(px(24.)).w(px(48.)),
+        label: None,
         disabled: false,
         checked: false,
-        label: None,
         on_change: None,
     }
 }
@@ -58,8 +58,34 @@ impl Switch {
     }
 }
 
-impl IntoElement for Switch {
-    type Element = Switch;
+impl RenderOnce for Switch {
+    fn render(self, window: &mut Window, cx: &mut App) -> impl IntoElement {
+        div()
+            .id(self.id)
+            .flex()
+            .items_center()
+            .gap(px(4.))
+            .child(SwitchInner {
+                id: "switch-inner".into(),
+                style_refinement: StyleRefinement::default().h(px(24.)).w(px(48.)),
+                disabled: self.disabled,
+                checked: self.checked,
+                on_change: self.on_change,
+            })
+            .when_some(self.label, |david, label| david.child(label))
+    }
+}
+
+struct SwitchInner {
+    id: ElementId,
+    style_refinement: StyleRefinement,
+    disabled: bool,
+    checked: bool,
+    on_change: Option<Rc<SwitchChangeHandler>>,
+}
+
+impl IntoElement for SwitchInner {
+    type Element = SwitchInner;
 
     fn into_element(self) -> Self::Element {
         self
@@ -91,13 +117,13 @@ pub struct SwitchPrepaintState {
     fill_bounds: Bounds<Pixels>,
 }
 
-impl Styled for Switch {
+impl Styled for SwitchInner {
     fn style(&mut self) -> &mut StyleRefinement {
         &mut self.style_refinement
     }
 }
 
-impl Element for Switch {
+impl Element for SwitchInner {
     type RequestLayoutState = ();
     type PrepaintState = SwitchPrepaintState;
 
