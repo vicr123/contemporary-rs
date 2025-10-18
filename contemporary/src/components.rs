@@ -20,4 +20,5 @@ pub mod skeleton;
 pub mod slider;
 pub mod spinner;
 pub mod subtitle;
+pub mod switch;
 pub mod text_field;

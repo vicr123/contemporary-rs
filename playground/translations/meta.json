@@ -115,31 +115,31 @@
   },
   "CHECKBOXES_INDETERMINATE": {
     "context": "checkboxes_radio_buttons.rs",
-    "definedIn": "src/components/checkboxes_radio_buttons.rs:91",
+    "definedIn": "src/components/checkboxes_radio_buttons.rs:96",
     "plural": false,
     "description": null
   },
   "CHECKBOXES_OFF": {
     "context": "checkboxes_radio_buttons.rs",
-    "definedIn": "src/components/checkboxes_radio_buttons.rs:69",
+    "definedIn": "src/components/checkboxes_radio_buttons.rs:74",
     "plural": false,
     "description": null
   },
   "CHECKBOXES_ON": {
     "context": "checkboxes_radio_buttons.rs",
-    "definedIn": "src/components/checkboxes_radio_buttons.rs:80",
+    "definedIn": "src/components/checkboxes_radio_buttons.rs:85",
     "plural": false,
     "description": null
   },
   "CHECKBOXES_RADIO_BUTTONS_TITLE": {
     "context": "checkboxes_radio_buttons.rs",
-    "definedIn": "src/components/checkboxes_radio_buttons.rs:43",
+    "definedIn": "src/components/checkboxes_radio_buttons.rs:48",
     "plural": false,
     "description": null
   },
   "CHECKBOXES_TITLE": {
     "context": "checkboxes_radio_buttons.rs",
-    "definedIn": "src/components/checkboxes_radio_buttons.rs:61",
+    "definedIn": "src/components/checkboxes_radio_buttons.rs:66",
     "plural": false,
     "description": null
   },
@@ -739,7 +739,7 @@
   },
   "RADIO_BUTTONS_TITLE": {
     "context": "checkboxes_radio_buttons.rs",
-    "definedIn": "src/components/checkboxes_radio_buttons.rs:108",
+    "definedIn": "src/components/checkboxes_radio_buttons.rs:113",
     "plural": false,
     "description": null
   },
@@ -806,6 +806,12 @@
   "STANDARD_JOB_TITLE": {
     "context": "jobs.rs",
     "definedIn": "src/patterns/jobs.rs:68",
+    "plural": false,
+    "description": null
+  },
+  "SWITCHES_TITLE": {
+    "context": "checkboxes_radio_buttons.rs",
+    "definedIn": "src/components/checkboxes_radio_buttons.rs:156",
     "plural": false,
     "description": null
   },

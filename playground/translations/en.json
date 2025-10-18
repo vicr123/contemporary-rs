@@ -137,6 +137,7 @@
   "STANDARD_JOB_COMPLETE_DESCRIPTION": "This job is now complete.",
   "STANDARD_JOB_IN_PROGRESS_DESCRIPTION": "A description of the current task can go here.",
   "STANDARD_JOB_TITLE": "Standard Job",
+  "SWITCHES_TITLE": "Switches",
   "TEXT_FIELDS_TITLE": "Text Fields",
   "TEXT_FIELD_DISABLED_PLACEHOLDER": "Disabled Text Field",
   "TEXT_FIELD_PLACEHOLDER": "Text Field",

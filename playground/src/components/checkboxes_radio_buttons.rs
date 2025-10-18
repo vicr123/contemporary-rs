@@ -4,6 +4,7 @@ use contemporary::components::constrainer::constrainer;
 use contemporary::components::grandstand::grandstand;
 use contemporary::components::layer::layer;
 use contemporary::components::subtitle::subtitle;
+use contemporary::components::switch::{SwitchChangeEvent, switch};
 use contemporary::styling::theme::Theme;
 use gpui::prelude::FluentBuilder;
 use gpui::{
@@ -15,6 +16,8 @@ pub struct CheckboxesRadioButtons {
     default_on_checkbox: CheckState,
     default_indeterminate_checkbox: CheckState,
     default_radio: u8,
+    default_off_switch: bool,
+    default_on_switch: bool,
 }
 
 impl CheckboxesRadioButtons {
@@ -24,6 +27,8 @@ impl CheckboxesRadioButtons {
             default_on_checkbox: CheckState::On,
             default_indeterminate_checkbox: CheckState::Indeterminate,
             default_radio: 1,
+            default_off_switch: false,
+            default_on_switch: true,
         })
     }
 }
@@ -137,6 +142,43 @@ impl Render for CheckboxesRadioButtons {
                                                         this.default_radio = 1;
                                                         cx.notify()
                                                     }
+                                                },
+                                            )),
+                                    ),
+                            ),
+                    )
+                    .child(
+                        layer()
+                            .flex()
+                            .flex_col()
+                            .p(px(8.))
+                            .w_full()
+                            .child(subtitle(tr!("SWITCHES_TITLE", "Switches")))
+                            .child(
+                                div()
+                                    .flex()
+                                    .gap(px(8.))
+                                    .child(
+                                        switch("default-off-switch")
+                                            .when(self.default_off_switch, |switch| {
+                                                switch.checked()
+                                            })
+                                            .label(tr!("CHECKBOXES_OFF"))
+                                            .on_change(cx.listener(
+                                                |this, event: &SwitchChangeEvent, _, cx| {
+                                                    this.default_off_switch = event.checked;
+                                                    cx.notify()
+                                                },
+                                            )),
+                                    )
+                                    .child(
+                                        switch("default-on-checkbox")
+                                            .when(self.default_on_switch, |switch| switch.checked())
+                                            .label(tr!("CHECKBOXES_ON"))
+                                            .on_change(cx.listener(
+                                                |this, event: &SwitchChangeEvent, _, cx| {
+                                                    this.default_on_switch = event.checked;
+                                                    cx.notify()
                                                 },
                                             )),
                                     ),
