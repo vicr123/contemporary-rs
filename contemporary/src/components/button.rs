@@ -3,9 +3,9 @@ use crate::components::context_menu::{ContextMenuItem, OpenContextMenu};
 use crate::styling::theme::{Theme, VariableColor, variable_transparent};
 use gpui::prelude::FluentBuilder;
 use gpui::{
-    AnyElement, App, ClickEvent, Div, ElementId, InteractiveElement, IntoElement, MouseButton,
-    ParentElement, RenderOnce, Rgba, Stateful, StatefulInteractiveElement, StyleRefinement, Styled,
-    Window, canvas, deferred, div, px,
+    AnyElement, App, ClickEvent, Div, ElementId, Focusable, InteractiveElement, IntoElement,
+    MouseButton, ParentElement, RenderOnce, Rgba, Stateful, StatefulInteractiveElement,
+    StyleRefinement, Styled, Window, canvas, deferred, div, px,
 };
 use std::rc::Rc;
 
@@ -123,6 +123,11 @@ impl InteractiveElement for Button {
 impl RenderOnce for Button {
     fn render(self, window: &mut Window, cx: &mut App) -> impl IntoElement {
         let id = Box::new(self.id);
+        let focus_handle = window.use_keyed_state(
+            ElementId::NamedChild(id.clone(), "focus_handle".into()),
+            cx,
+            |_, cx| cx.focus_handle(),
+        );
         let context_menu_state = window.use_keyed_state(
             ElementId::NamedChild(id.clone(), "context_menu_state".into()),
             cx,
@@ -136,6 +141,7 @@ impl RenderOnce for Button {
         let context_menu_state_2 = context_menu_state.clone();
         let last_bounds_2 = last_bounds.clone();
 
+        let focus_handle = focus_handle.read(cx);
         let context_menu_open = context_menu_state.read(cx);
 
         let theme = cx.global::<Theme>().clone().disable_when(self.disabled);
@@ -149,6 +155,7 @@ impl RenderOnce for Button {
         };
 
         self.div
+            .track_focus(focus_handle)
             .child(
                 canvas(
                     move |bounds, _, cx| {
