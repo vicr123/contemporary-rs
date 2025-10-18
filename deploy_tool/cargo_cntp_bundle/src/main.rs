@@ -1,6 +1,7 @@
 use clap::Parser;
 use clap_cargo::style::CLAP_STYLING;
 use clap_verbosity_flag::InfoLevel;
+use clap_verbosity_flag::tracing::Level;
 use cntp_bundle_lib::tool_setup::{DeploymentType, setup_tool};
 use current_platform::CURRENT_PLATFORM;
 use std::collections::HashMap;
@@ -52,7 +53,13 @@ fn main() {
     tracing_subscriber::fmt()
         .with_target(false)
         .without_time()
-        .with_max_level(args.verbosity)
+        .with_max_level(args.verbosity.tracing_level().or_else(|| {
+            if std::env::var("RUNNER_DEBUG").is_ok_and(|runner_debug| runner_debug == "1") {
+                Some(Level::DEBUG)
+            } else {
+                None
+            }
+        }))
         .init();
 
     let setup_data = setup_tool(args.profile, args.target, "bundle");

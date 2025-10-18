@@ -5,7 +5,7 @@ use clap_verbosity_flag::InfoLevel;
 use cntp_bundle_lib::tool_setup::{DeploymentType, setup_tool};
 use std::path::Path;
 use std::process::exit;
-use tracing::{error, info};
+use tracing::{Level, error, info};
 
 #[cfg(target_os = "linux")]
 use cntp_bundle_lib::linux::deploy_linux;
@@ -52,7 +52,13 @@ fn main() {
     tracing_subscriber::fmt()
         .with_target(false)
         .without_time()
-        .with_max_level(args.verbosity)
+        .with_max_level(args.verbosity.tracing_level().or_else(|| {
+            if std::env::var("RUNNER_DEBUG").is_ok_and(|runner_debug| runner_debug == "1") {
+                Some(Level::DEBUG)
+            } else {
+                None
+            }
+        }))
         .init();
 
     let setup_data = setup_tool(args.profile, args.target, "bundle");
