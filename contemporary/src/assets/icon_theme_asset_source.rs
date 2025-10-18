@@ -86,40 +86,50 @@ impl ManagerSource for IconThemeAssetSource {
             .unwrap_or(16.);
 
         let icon_name = &url.path()[1..];
+        let parts = icon_name.split("-").collect::<Vec<_>>();
 
-        #[cfg(target_os = "linux")]
-        {
-            let Some(file) = lookup(icon_name)
-                .with_cache()
-                .with_theme(url.host_str().unwrap())
-                .with_size(size as u16)
-                .find()
-            else {
-                return Ok(None);
+        for i in (1..parts.len() + 1).rev() {
+            let icon_name = parts[0..i].join("-");
+
+            let icon_file = {
+                #[cfg(target_os = "linux")]
+                {
+                    if let Some(file) = lookup(&icon_name)
+                        .with_cache()
+                        .with_theme(url.host_str().unwrap())
+                        .with_size(size as u16)
+                        .find()
+                        && let Ok(contents) = std::fs::read(file)
+                    {
+                        Ok(Some(Cow::Owned(contents)))
+                    } else {
+                        Ok(None)
+                    };
+                }
+
+                #[cfg(not(target_os = "linux"))]
+                {
+                    let icons = BundledContemporaryIcons::sizes(&icon_name);
+                    if icons.is_empty() {
+                        Ok(None)
+                    } else {
+                        let preferred_icon = icons
+                            .iter()
+                            .filter(|icon| icon.size as f32 <= size)
+                            .max_by_key(|icon| icon.size)
+                            .unwrap_or_else(|| icons.iter().min_by_key(|icon| icon.size).unwrap());
+
+                        BundledContemporaryIcons::load_icon(preferred_icon)
+                    }
+                }
             };
 
-            let Ok(contents) = std::fs::read(file) else {
-                return Ok(None);
-            };
-
-            return Ok(Some(Cow::Owned(contents)));
-        }
-
-        #[cfg(not(target_os = "linux"))]
-        {
-            let icons = BundledContemporaryIcons::sizes(icon_name);
-            if icons.is_empty() {
-                return Ok(None);
+            if let Ok(Some(_)) = &icon_file {
+                return icon_file;
             }
-
-            let preferred_icon = icons
-                .iter()
-                .filter(|icon| icon.size as f32 <= size)
-                .max_by_key(|icon| icon.size)
-                .unwrap_or_else(|| icons.iter().min_by_key(|icon| icon.size).unwrap());
-
-            BundledContemporaryIcons::load_icon(preferred_icon)
         }
+
+        Ok(None)
     }
 
     fn list(&self, _path: &str) -> gpui::Result<Vec<SharedString>> {
