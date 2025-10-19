@@ -1,9 +1,13 @@
 use crate::assets::global_manager::ManagerSource;
-#[cfg(target_os = "linux")]
-use freedesktop_icons::lookup;
 use gpui::SharedString;
 use std::borrow::Cow;
 use url::Url;
+
+#[cfg(target_os = "linux")]
+use freedesktop_icons::lookup;
+
+#[cfg(not(target_os = "linux"))]
+use rust_embed::RustEmbed;
 
 pub struct IconThemeAssetSource;
 
