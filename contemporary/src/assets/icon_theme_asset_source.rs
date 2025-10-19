@@ -2,7 +2,6 @@ use crate::assets::global_manager::ManagerSource;
 #[cfg(target_os = "linux")]
 use freedesktop_icons::lookup;
 use gpui::SharedString;
-use rust_embed::RustEmbed;
 use std::borrow::Cow;
 use url::Url;
 
@@ -99,12 +98,12 @@ impl ManagerSource for IconThemeAssetSource {
                         .with_theme(url.host_str().unwrap())
                         .with_size(size as u16)
                         .find()
-                        && let Ok(contents) = std::fs::read(file)
+                        && let Ok(contents) = std::fs::read(&file)
                     {
                         Ok(Some(Cow::Owned(contents)))
                     } else {
                         Ok(None)
-                    };
+                    }
                 }
 
                 #[cfg(not(target_os = "linux"))]
