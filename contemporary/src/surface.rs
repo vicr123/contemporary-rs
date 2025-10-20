@@ -4,8 +4,8 @@ use crate::jobs::job_button::JobButton;
 use crate::styling::theme::Theme;
 use gpui::prelude::FluentBuilder;
 use gpui::{
-    AnyElement, App, AppContext, Context, Entity, InteractiveElement, IntoElement, MouseButton,
-    ParentElement, Render, RenderOnce, Styled, Window, WindowControlArea, div, img, px, rgb, svg,
+    div, img, px, rgb, svg, AnyElement, App, AppContext,
+    Context, Entity, InteractiveElement, IntoElement, MouseButton, ParentElement, Render, RenderOnce, Styled, Window, WindowControlArea,
 };
 
 #[derive(IntoElement)]
@@ -96,6 +96,7 @@ impl RenderOnce for WindowTitle {
                 div()
                     .child(
                         button("window-menu")
+                            .not_focusable()
                             .flat()
                             .w(px(40.))
                             .h(px(40.))

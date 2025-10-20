@@ -1,11 +1,11 @@
 use crate::components::context_menu::context_menu_popup::ContextMenuPopup;
 use crate::components::context_menu::{ContextMenuItem, OpenContextMenu};
-use crate::styling::theme::{Theme, VariableColor, variable_transparent};
+use crate::styling::theme::{variable_transparent, Theme, VariableColor};
 use gpui::prelude::FluentBuilder;
 use gpui::{
-    AnyElement, App, ClickEvent, Div, ElementId, Focusable, InteractiveElement, IntoElement,
-    MouseButton, ParentElement, RenderOnce, Rgba, Stateful, StatefulInteractiveElement,
-    StyleRefinement, Styled, Window, canvas, deferred, div, px,
+    canvas, deferred, div, px, AnyElement, App, ClickEvent, Div,
+    ElementId, Focusable, InteractiveElement, IntoElement, MouseButton, ParentElement,
+    RenderOnce, Rgba, Stateful, StatefulInteractiveElement, StyleRefinement, Styled, Window,
 };
 use std::rc::Rc;
 
@@ -16,6 +16,7 @@ pub struct Button {
     disabled: bool,
     checked: bool,
     destructive: bool,
+    focusable: bool,
 
     button_color: Option<Rgba>,
     button_text_color: Option<Rgba>,
@@ -49,6 +50,7 @@ pub fn button(id: impl Into<ElementId>) -> Button {
         disabled: false,
         checked: false,
         destructive: false,
+        focusable: true,
         button_color: None,
         button_text_color: None,
         menu_items: None,
@@ -106,6 +108,11 @@ impl Button {
         self.menu_open_policy = policy;
         self
     }
+
+    pub fn not_focusable(mut self) -> Self {
+        self.focusable = false;
+        self
+    }
 }
 
 impl ParentElement for Button {
@@ -155,7 +162,7 @@ impl RenderOnce for Button {
         };
 
         self.div
-            .track_focus(focus_handle)
+            .when(self.focusable, |david| david.track_focus(focus_handle))
             .child(
                 canvas(
                     move |bounds, _, cx| {
