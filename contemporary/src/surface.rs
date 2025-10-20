@@ -102,14 +102,16 @@ impl RenderOnce for WindowTitle {
                             .h(px(40.))
                             .child(img("contemporary-icon:/application").w(px(24.)).h(px(24.)))
                             .when_some(self.application_menu, |this, application_menu| {
-                                this.child(application_menu.clone())
-                                    .on_click(move |_, _, cx| {
+                                this.child(application_menu.clone()).on_click(
+                                    move |_, window, cx| {
+                                        let focus_handle = window.focused(cx);
                                         application_menu.update(cx, |this, cx| {
                                             println!("Opening application menu");
-                                            this.set_open(true);
+                                            this.open(focus_handle);
                                             cx.notify();
                                         })
-                                    })
+                                    },
+                                )
                             }),
                     )
                     .occlude()

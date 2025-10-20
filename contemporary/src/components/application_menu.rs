@@ -8,14 +8,15 @@ use crate::styling::theme::{Theme, VariableColor};
 use cntp_i18n::{i18n_manager, tr};
 use gpui::prelude::FluentBuilder;
 use gpui::{
-    App, AppContext, ClickEvent, Context, Entity, InteractiveElement, IntoElement, Menu, MenuItem,
-    OwnedMenu, OwnedMenuItem, ParentElement, Render, RenderOnce, SharedString, Styled, Window, div,
-    img, px,
+    div, img, px, App, AppContext, ClickEvent, Context, Entity,
+    FocusHandle, InteractiveElement, IntoElement, Menu, MenuItem, OwnedMenu, OwnedMenuItem, ParentElement,
+    Render, RenderOnce, SharedString, Styled, Window,
 };
 use std::rc::Rc;
 
 pub struct ApplicationMenu {
     is_open: bool,
+    focus_handle: Option<FocusHandle>,
     root_menu: Rc<OwnedMenu>,
     menu_stack: Vec<Rc<OwnedMenu>>,
 }
@@ -25,16 +26,23 @@ impl ApplicationMenu {
         let root_menu = Rc::new(menu.owned());
         cx.new(|cx| ApplicationMenu {
             is_open: false,
+            focus_handle: None,
             root_menu,
             menu_stack: vec![],
         })
     }
 
-    pub fn set_open(&mut self, is_open: bool) {
-        self.is_open = is_open;
-        if !is_open {
-            self.menu_stack.clear();
-        }
+    pub fn open(&mut self, focus_handle: Option<FocusHandle>) {
+        self.is_open = true;
+        self.focus_handle = focus_handle;
+    }
+
+    pub fn close(&mut self, window: &mut Window) {
+        self.is_open = false;
+        if let Some(focus_handle) = self.focus_handle.as_ref() {
+            focus_handle.focus(window);
+        };
+        self.menu_stack.clear();
     }
 }
 
@@ -52,8 +60,8 @@ impl Render for ApplicationMenu {
         div().child(
             scrim("application-menu")
                 .visible(self.is_open)
-                .on_click(cx.listener(|this, _, _, cx| {
-                    this.set_open(false);
+                .on_click(cx.listener(|this, _, window, cx| {
+                    this.close(window);
                     cx.notify();
                 }))
                 .child(
@@ -96,15 +104,16 @@ impl Render for ApplicationMenu {
                             menu_list(
                                 self.menu_stack
                                     .last()
-                                    .map(|menu| menu.clone())
+                                    .cloned()
                                     .unwrap_or(self.root_menu.clone()),
+                                self.focus_handle.clone(),
                             )
                             .on_menu_click(cx.listener(|this, event: &SubmenuClickEvent, _, cx| {
                                 this.menu_stack.push(event.menu.clone());
                                 cx.notify();
                             }))
-                            .on_menu_should_close(cx.listener(|this, _, _, cx| {
-                                this.set_open(false);
+                            .on_menu_should_close(cx.listener(|this, _, window, cx| {
+                                this.close(window);
                                 cx.notify();
                             })),
                         )
@@ -214,13 +223,15 @@ struct MenuList {
     menu: Rc<OwnedMenu>,
     menu_click_listeners: Vec<SubmenuClickListener>,
     menu_should_close_listeners: Vec<MenuShouldCloseListener>,
+    focus_handle: Option<FocusHandle>,
 }
 
-fn menu_list(menu: Rc<OwnedMenu>) -> MenuList {
+fn menu_list(menu: Rc<OwnedMenu>, focus_handle: Option<FocusHandle>) -> MenuList {
     MenuList {
         menu,
         menu_click_listeners: vec![],
         menu_should_close_listeners: vec![],
+        focus_handle,
     }
 }
 
@@ -286,6 +297,7 @@ impl RenderOnce for MenuList {
                 } => {
                     let button_id: SharedString = format!("menu-item-{name}").into();
                     let menu_should_close_listeners = menu_should_close_listeners.clone();
+                    let focus_handle = self.focus_handle.clone();
 
                     let keybind = window
                         .bindings_for_action(action.as_ref())
@@ -329,7 +341,14 @@ impl RenderOnce for MenuList {
                                 .child(div().text_color(theme.foreground.disabled()).child(keybind)))
                         .flat()
                         .on_click(move |event, window, cx| {
-                            window.dispatch_action(action.boxed_clone(), cx);
+                            if let Some(focus_handle) = focus_handle.as_ref() {
+                                focus_handle.focus(window);
+                            };
+
+                            let action = action.boxed_clone();
+                            window.on_next_frame(|window, cx| {
+                                window.dispatch_action(action, cx);
+                            });
 
                             for listener in menu_should_close_listeners.iter() {
                                 listener(&event, window, cx);
