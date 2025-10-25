@@ -1,8 +1,8 @@
 use std::rc::Rc;
 
 use gpui::{
-    App, ClickEvent, Div, ElementId, IntoElement, ParentElement, RenderOnce, SharedString,
-    StyleRefinement, Styled, Window, div, prelude::FluentBuilder, px,
+    AnyElement, App, ClickEvent, Div, ElementId, IntoElement, ParentElement, RenderOnce,
+    SharedString, StyleRefinement, Styled, Window, div, prelude::FluentBuilder, px,
 };
 
 use crate::components::button::button;
@@ -18,6 +18,7 @@ pub struct Grandstand {
     on_back_click: ClickHandler,
     text: SharedString,
     div: Div,
+    button_div: Div,
 }
 
 pub fn grandstand(id: impl Into<ElementId>) -> Grandstand {
@@ -26,6 +27,7 @@ pub fn grandstand(id: impl Into<ElementId>) -> Grandstand {
         on_back_click: None,
         text: "".into(),
         div: div(),
+        button_div: div().flex(),
     }
 }
 
@@ -50,14 +52,21 @@ impl Styled for Grandstand {
     }
 }
 
+impl ParentElement for Grandstand {
+    fn extend(&mut self, elements: impl IntoIterator<Item = AnyElement>) {
+        self.button_div.extend(elements);
+    }
+}
+
 impl RenderOnce for Grandstand {
     fn render(self, _window: &mut Window, cx: &mut App) -> impl IntoElement {
         let theme = cx.global::<Theme>();
 
         layer().child(
-            self.div.flex().flex_row().child(div().h(px(20.0))).child(
+            self.div.flex().flex_row().child(
                 div()
                     .flex()
+                    .flex_grow()
                     .justify_center()
                     .gap(px(4.))
                     .when_some(self.on_back_click, move |div, on_click| {
@@ -66,19 +75,21 @@ impl RenderOnce for Grandstand {
                                 .flat()
                                 .child(icon("go-previous".into()))
                                 .on_click(move |ev, window, cx| {
-                                    (on_click)(ev, window, cx);
+                                    on_click(ev, window, cx);
                                 }),
                         )
                     })
                     .child(
                         div()
                             .flex()
+                            .flex_grow()
                             .items_center()
                             .text_size(theme.heading_font_size)
                             .child(self.text)
                             .pt(px(2.))
                             .m(px(4.)),
-                    ),
+                    )
+                    .child(self.button_div),
             ),
         )
     }
