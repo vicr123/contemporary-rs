@@ -7,8 +7,12 @@ use crate::platform_support::setup_platform;
 use crate::styling::theme::Theme;
 use crate::tracing::application_log::ApplicationLog;
 use crate::tracing::layer::ContemporaryLayer;
+use crate::window::window_globals::WindowGlobals;
 use cntp_i18n::{I18N_MANAGER, i18n_manager, tr, tr_load};
-use gpui::{Action, App, AppContext, Global, KeyBinding, Menu, MenuItem, SystemMenuType, actions};
+use gpui::{
+    Action, App, AppContext, BorrowAppContext, Global, KeyBinding, Menu, MenuItem, SystemMenuType,
+    actions,
+};
 use schemars::JsonSchema;
 use serde::Deserialize;
 use std::collections::HashMap;
@@ -236,6 +240,7 @@ pub fn setup_contemporary(cx: &mut App, mut application: Contemporary) {
         versions: Arc::new(Mutex::new(HashMap::new())),
     });
     cx.set_global(JobManager::new());
+    cx.set_global(WindowGlobals::new());
 
     setup_platform(cx);
 }

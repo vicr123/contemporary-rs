@@ -16,6 +16,7 @@ pub mod layer;
 pub mod pager;
 pub mod popover;
 pub mod progress_bar;
+mod raised;
 pub mod scrim;
 pub mod skeleton;
 pub mod slider;

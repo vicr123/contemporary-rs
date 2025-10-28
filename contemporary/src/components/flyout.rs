@@ -1,7 +1,8 @@
+use crate::components::raised::raised;
 use crate::styling::theme::Theme;
 use gpui::{
     AnyElement, App, Bounds, Div, InteractiveElement, IntoElement, ParentElement, Pixels, Point,
-    RenderOnce, StyleRefinement, Styled, Window, anchored, deferred, div, point, px,
+    RenderOnce, StyleRefinement, Styled, Window, anchored, div, point, px,
 };
 use std::rc::Rc;
 
@@ -93,7 +94,7 @@ impl RenderOnce for Flyout {
             }
         };
 
-        deferred(
+        raised(
             anchored().position(Point::new(px(0.), px(0.))).child(
                 div()
                     .top_0()

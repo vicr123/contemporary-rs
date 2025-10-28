@@ -1,11 +1,12 @@
 pub(crate) mod context_menu_popup;
 
 use crate::components::context_menu::context_menu_popup::ContextMenuPopup;
+use crate::components::raised::raised;
 use crate::styling::theme::VariableColor;
 use gpui::prelude::FluentBuilder;
 use gpui::{
     App, InteractiveElement, IntoElement, KeyBinding, MouseButton, ParentElement, Pixels, Point,
-    RenderOnce, StatefulInteractiveElement, Styled, Window, actions, deferred, div,
+    RenderOnce, StatefulInteractiveElement, Styled, Window, actions, div,
 };
 use std::rc::Rc;
 
@@ -44,7 +45,7 @@ impl RenderOnce for ContextMenu {
                     }),
                 );
             })
-            .child(deferred(
+            .child(raised(
                 // Context Menu Popup
                 ContextMenuPopup {
                     items: self.items,

@@ -1,5 +1,9 @@
+mod raised_draw;
+pub(crate) mod window_globals;
+
 use crate::platform_support::platform_settings::PlatformSettings;
 use crate::styling::theme::Theme;
+use crate::window::raised_draw::RaisedDraw;
 use gpui::prelude::FluentBuilder;
 use gpui::{
     AnyElement, App, Bounds, CursorStyle, Decorations, Div, Hitbox, HitboxBehavior,
@@ -208,6 +212,7 @@ impl RenderOnce for ContemporaryWindow {
                     .rounded(theme.border_radius)
                     .overflow_hidden(),
             )
+            .child(RaisedDraw)
     }
 }
 
