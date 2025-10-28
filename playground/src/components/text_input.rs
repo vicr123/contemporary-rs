@@ -3,7 +3,7 @@ use contemporary::components::constrainer::constrainer;
 use contemporary::components::grandstand::grandstand;
 use contemporary::components::layer::layer;
 use contemporary::components::subtitle::subtitle;
-use contemporary::components::text_field::TextField;
+use contemporary::components::text_field::{MaskMode, TextField};
 use contemporary::styling::theme::Theme;
 use gpui::{
     App, AppContext, Context, Entity, IntoElement, ParentElement, Render, Styled, Window, div, px,
@@ -20,43 +20,46 @@ impl TextInput {
     pub fn new(cx: &mut App) -> Entity<Self> {
         cx.new(|cx| {
             let text_input = TextInput {
-                text_field: TextField::new(
-                    cx,
-                    "text-field",
-                    "".into(),
-                    tr!("TEXT_FIELD_PLACEHOLDER", "Text Field").into(),
-                ),
-                password_text_field: TextField::new(
-                    cx,
-                    "password-text-field",
-                    "".into(),
-                    tr!("PASSWORD_TEXT_FIELD_PLACEHOLDER", "Password Text Field").into(),
-                ),
-                borderless_text_field: TextField::new(
-                    cx,
-                    "borderless-text-field",
-                    "".into(),
-                    tr!("BORDERLESS_TEXT_FIELD_PLACEHOLDER", "Borderless Text Field").into(),
-                ),
-                disabled_text_field: TextField::new(
-                    cx,
-                    "disabled-text-field",
-                    "".into(),
-                    tr!("TEXT_FIELD_DISABLED_PLACEHOLDER", "Disabled Text Field").into(),
-                ),
+                text_field: cx.new(|cx| {
+                    let mut text_field = TextField::new("text-field", cx);
+                    text_field.set_placeholder(
+                        tr!("TEXT_FIELD_PLACEHOLDER", "Text Field")
+                            .to_string()
+                            .as_str(),
+                    );
+                    text_field
+                }),
+                password_text_field: cx.new(|cx| {
+                    let mut text_field = TextField::new("password-text-field", cx);
+                    text_field.set_mask_mode(MaskMode::password_mask());
+                    text_field.set_placeholder(
+                        tr!("PASSWORD_TEXT_FIELD_PLACEHOLDER", "Password Text Field")
+                            .to_string()
+                            .as_str(),
+                    );
+                    text_field
+                }),
+                borderless_text_field: cx.new(|cx| {
+                    let mut text_field = TextField::new("borderless-text-field", cx);
+                    text_field.set_has_border(false);
+                    text_field.set_placeholder(
+                        tr!("BORDERLESS_TEXT_FIELD_PLACEHOLDER", "Borderless Text Field")
+                            .to_string()
+                            .as_str(),
+                    );
+                    text_field
+                }),
+                disabled_text_field: cx.new(|cx| {
+                    let mut text_field = TextField::new("disabled-text-field", cx);
+                    // TODO: Set as disabled
+                    text_field.set_placeholder(
+                        tr!("TEXT_FIELD_DISABLED_PLACEHOLDER", "Disabled Text Field")
+                            .to_string()
+                            .as_str(),
+                    );
+                    text_field
+                }),
             };
-            text_input.password_text_field.update(cx, |this, cx| {
-                this.password_field(cx, true);
-                cx.notify();
-            });
-            text_input.borderless_text_field.update(cx, |this, cx| {
-                this.borderless(true);
-                cx.notify();
-            });
-            text_input.disabled_text_field.update(cx, |this, cx| {
-                this.disabled(cx, true);
-                cx.notify();
-            });
             text_input
         })
     }

@@ -18,18 +18,25 @@ pub struct I18n {
 impl I18n {
     pub fn new(cx: &mut App) -> Entity<Self> {
         cx.new(|cx| I18n {
-            i18n_language: TextField::new(
-                cx,
-                "i18n-preferred-language",
-                i18n_manager!().locale.messages.first().unwrap().into(),
-                tr!("I18N_LANGUAGE_CODE", "Enter a language code?").into(),
-            ),
-            quote_strings_text_field: TextField::new(
-                cx,
-                "quote-strings-text",
-                "".into(),
-                tr!("QUOTE_STRINGS_PLACEHOLDER", "What's your favourite song?").into(),
-            ),
+            i18n_language: cx.new(|cx| {
+                let mut text_field = TextField::new("i18n-preferred-language", cx);
+                text_field.set_text(i18n_manager!().locale.messages.first().unwrap().as_str());
+                text_field.set_placeholder(
+                    tr!("I18N_LANGUAGE_CODE", "Enter a language code")
+                        .to_string()
+                        .as_str(),
+                );
+                text_field
+            }),
+            quote_strings_text_field: cx.new(|cx| {
+                let mut text_field = TextField::new("quote-strings-text", cx);
+                text_field.set_placeholder(
+                    tr!("QUOTE_STRINGS_PLACEHOLDER", "What's your favourite song?")
+                        .to_string()
+                        .as_str(),
+                );
+                text_field
+            }),
         })
     }
 }
@@ -37,8 +44,8 @@ impl I18n {
 impl Render for I18n {
     fn render(&mut self, _window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
         let theme = cx.global::<Theme>();
-        let requested_locale = self.i18n_language.read(cx).current_text(cx);
-        let quote_strings_text = self.quote_strings_text_field.read(cx).current_text(cx);
+        let requested_locale = self.i18n_language.read(cx).text();
+        let quote_strings_text = self.quote_strings_text_field.read(cx).text();
 
         let locale = Locale::new_from_locale_identifier(requested_locale);
 

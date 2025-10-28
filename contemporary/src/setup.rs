@@ -1,6 +1,6 @@
 use crate::application::{ApplicationLink, Details, Versions};
 use crate::components::context_menu::bind_context_menu_keys;
-use crate::components::text_field::bind_text_input_keys;
+use crate::components::text_field::bind_text_field_keys;
 use crate::jobs::job_manager::JobManager;
 use crate::platform_support::platform_settings::PlatformSettings;
 use crate::platform_support::setup_platform;
@@ -61,7 +61,7 @@ pub fn setup_contemporary(cx: &mut App, mut application: Contemporary) {
         ))
         .init();
 
-    bind_text_input_keys(cx);
+    bind_text_field_keys(cx);
     bind_context_menu_keys(cx);
 
     cx.on_action(quit);

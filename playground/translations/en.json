@@ -74,7 +74,7 @@
   "I18N_DATE_TIME_BASIC_LONG": "YMD (short): {{time}}",
   "I18N_DATE_TIME_BASIC_MEDIUM": "YMD (medium): {{time}}",
   "I18N_DATE_TIME_DESCRIPTION": "Dates are formatted in the following manner in this locale:",
-  "I18N_LANGUAGE_CODE": "Enter a language code?",
+  "I18N_LANGUAGE_CODE": "Enter a language code",
   "I18N_LAYOUT_DIRECTION": "Layout Direction: {{layout_direction}}",
   "I18N_NUMERIC_FORMATS": "Numeric Formats",
   "I18N_NUMERIC_FORMAT_DESCRIPTION": "Numbers are formatted in the following manner in this locale:",

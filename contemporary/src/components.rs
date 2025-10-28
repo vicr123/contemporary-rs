@@ -1,7 +1,6 @@
 pub mod admonition;
 pub mod anchorer;
 pub mod application_menu;
-mod base;
 pub mod button;
 pub mod checkbox;
 pub mod constrainer;
