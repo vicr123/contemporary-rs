@@ -150,7 +150,7 @@ impl RenderOnce for Button {
         let last_bounds_2 = last_bounds.clone();
 
         let focus_handle = focus_handle.read(cx);
-        let context_menu_open = context_menu_state.read(cx);
+        let context_menu_open = context_menu_state.read(cx).clone();
 
         let theme = cx.global::<Theme>().clone().disable_when(self.disabled);
 
@@ -248,7 +248,7 @@ impl RenderOnce for Button {
                 },
             )
             .when_some(self.menu_items, |david, items| {
-                david.child(raised(
+                david.child(raised(move |_, _, cx| {
                     // Context Menu Popup
                     ContextMenuPopup {
                         items,
@@ -258,8 +258,9 @@ impl RenderOnce for Button {
                         request_close_listener: Rc::new(Box::new(move |_, _, cx| {
                             context_menu_state_2.write(cx, None);
                         })),
-                    },
-                ))
+                    }
+                    .into_any_element()
+                }))
             })
     }
 }

@@ -22,6 +22,7 @@ pub struct DialogBox {
     buttons: Vec<Button>,
     visible: bool,
     processing: bool,
+    as_deferred: bool,
 }
 
 pub enum StandardButton {
@@ -60,6 +61,7 @@ pub fn dialog_box(id: impl Into<ElementId>) -> DialogBox {
         buttons: vec![],
         visible: false,
         processing: false,
+        as_deferred: false,
     }
 }
 
@@ -119,6 +121,11 @@ impl DialogBox {
         self.processing = processing;
         self
     }
+
+    pub fn render_as_deferred(mut self, as_deferred: bool) -> Self {
+        self.as_deferred = as_deferred;
+        self
+    }
 }
 
 impl RenderOnce for DialogBox {
@@ -131,62 +138,65 @@ impl RenderOnce for DialogBox {
             move |layer, button| layer.child(button.flex_grow()),
         );
 
-        self.scrim.visible(self.visible).child(
-            div()
-                .flex()
-                .w_full()
-                .h_full()
-                .items_center()
-                .justify_center()
-                .when(self.visible, |david| {
-                    david.child(
-                        div()
-                            .bg(theme.background)
-                            .border_color(theme.border_color)
-                            .border(px(1.))
-                            .rounded(theme.border_radius)
-                            .max_w(relative(0.9))
-                            .flex()
-                            .flex_col()
-                            .occlude()
-                            .when_some(self.title, |david, title| {
-                                david.child(
-                                    layer()
-                                        .p(px(9.))
-                                        .text_size(theme.heading_font_size)
-                                        .child(title),
-                                )
-                            })
-                            .child(div().p(px(9.)).child(self.content))
-                            .child(buttons_layer)
-                            .child(
-                                div()
-                                    .flex()
-                                    .items_center()
-                                    .justify_center()
-                                    .bg(theme.background)
-                                    .absolute()
-                                    .top(px(0.))
-                                    .left(px(0.))
-                                    .right(px(0.))
-                                    .bottom(px(0.))
-                                    .child(spinner())
-                                    .with_transition(
-                                        self.id,
-                                        if self.processing { 1. } else { 0. },
-                                        Animation::new(platform_settings.animation_duration),
-                                        |div, opacity| {
-                                            div.opacity(opacity).when_else(
-                                                opacity == 0.,
-                                                |div| div.invisible(),
-                                                |div| div.occlude(),
-                                            )
-                                        },
-                                    ),
-                            ),
-                    )
-                }),
-        )
+        self.scrim
+            .visible(self.visible)
+            .render_as_deferred(self.as_deferred)
+            .child(
+                div()
+                    .flex()
+                    .w_full()
+                    .h_full()
+                    .items_center()
+                    .justify_center()
+                    .when(self.visible, |david| {
+                        david.child(
+                            div()
+                                .bg(theme.background)
+                                .border_color(theme.border_color)
+                                .border(px(1.))
+                                .rounded(theme.border_radius)
+                                .max_w(relative(0.9))
+                                .flex()
+                                .flex_col()
+                                .occlude()
+                                .when_some(self.title, |david, title| {
+                                    david.child(
+                                        layer()
+                                            .p(px(9.))
+                                            .text_size(theme.heading_font_size)
+                                            .child(title),
+                                    )
+                                })
+                                .child(div().p(px(9.)).child(self.content))
+                                .child(buttons_layer)
+                                .child(
+                                    div()
+                                        .flex()
+                                        .items_center()
+                                        .justify_center()
+                                        .bg(theme.background)
+                                        .absolute()
+                                        .top(px(0.))
+                                        .left(px(0.))
+                                        .right(px(0.))
+                                        .bottom(px(0.))
+                                        .child(spinner())
+                                        .with_transition(
+                                            self.id,
+                                            if self.processing { 1. } else { 0. },
+                                            Animation::new(platform_settings.animation_duration),
+                                            |div, opacity| {
+                                                div.opacity(opacity).when_else(
+                                                    opacity == 0.,
+                                                    |div| div.invisible(),
+                                                    |div| div.occlude(),
+                                                )
+                                            },
+                                        ),
+                                ),
+                        )
+                    }),
+            )
     }
 }
 

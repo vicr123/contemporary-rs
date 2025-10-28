@@ -25,7 +25,7 @@ impl WindowGlobals {
 impl Global for WindowGlobals {}
 
 pub struct WindowGlobal {
-    pub pending_raised_draws: VecDeque<AnyElement>,
+    pub pending_raised_draws: VecDeque<Box<dyn FnOnce((), &mut Window, &mut App) -> AnyElement>>,
 }
 
 impl WindowGlobal {

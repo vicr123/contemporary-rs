@@ -79,31 +79,31 @@
   },
   "DIALOG_CANCEL": {
     "context": "dialog_box.rs",
-    "definedIn": "src/components/dialog_box.rs:42",
+    "definedIn": "src/components/dialog_box.rs:43",
     "plural": false,
     "description": null
   },
   "DIALOG_NO": {
     "context": "dialog_box.rs",
-    "definedIn": "src/components/dialog_box.rs:45",
+    "definedIn": "src/components/dialog_box.rs:46",
     "plural": false,
     "description": null
   },
   "DIALOG_OK": {
     "context": "dialog_box.rs",
-    "definedIn": "src/components/dialog_box.rs:38",
+    "definedIn": "src/components/dialog_box.rs:39",
     "plural": false,
     "description": null
   },
   "DIALOG_SORRY": {
     "context": "dialog_box.rs",
-    "definedIn": "src/components/dialog_box.rs:46",
+    "definedIn": "src/components/dialog_box.rs:47",
     "plural": false,
     "description": null
   },
   "DIALOG_YES": {
     "context": "dialog_box.rs",
-    "definedIn": "src/components/dialog_box.rs:44",
+    "definedIn": "src/components/dialog_box.rs:45",
     "plural": false,
     "description": null
   },

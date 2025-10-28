@@ -15,7 +15,7 @@ impl RenderOnce for RaisedDraw {
         match next_element {
             None => Empty.into_any_element(),
             Some(next_element) => div()
-                .child(next_element)
+                .child(next_element((), window, cx))
                 .child(RaisedDraw)
                 .into_any_element(),
         }

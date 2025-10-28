@@ -18,6 +18,7 @@ pub struct Flyout {
     request_close_listener: Option<Rc<Box<FlyoutRequestCloseListener>>>,
     anchor_position: FlyoutAnchorPoisition,
     anchor_gap: Pixels,
+    as_deferred: bool,
 }
 
 #[derive(Clone, Copy, PartialEq, Default)]
@@ -35,6 +36,7 @@ pub fn flyout(anchorer_bounds: Bounds<Pixels>) -> Flyout {
         request_close_listener: None,
         anchor_position: FlyoutAnchorPoisition::BottomLeft,
         anchor_gap: px(2.),
+        as_deferred: false,
     }
 }
 
@@ -71,15 +73,15 @@ impl Flyout {
         self.anchor_gap = anchor_gap;
         self
     }
+
+    pub fn render_as_deferred(mut self, as_deferred: bool) -> Self {
+        self.as_deferred = as_deferred;
+        self
+    }
 }
 
 impl RenderOnce for Flyout {
     fn render(self, window: &mut Window, cx: &mut App) -> impl IntoElement {
-        let theme = cx.global::<Theme>();
-
-        let window_size = window.viewport_size();
-        let inset = window.client_inset().unwrap_or_else(|| px(0.));
-
         if !self.visible {
             return div().into_any_element();
         }
@@ -94,31 +96,40 @@ impl RenderOnce for Flyout {
             }
         };
 
-        raised(
-            anchored().position(Point::new(px(0.), px(0.))).child(
-                div()
-                    .top_0()
-                    .left_0()
-                    .w(window_size.width - inset - inset)
-                    .h(window_size.height - inset - inset)
-                    .m(inset)
-                    .occlude()
-                    .on_any_mouse_down(move |_, window, cx| {
-                        if let Some(request_close_listener) = request_close_listener.as_ref() {
-                            request_close_listener(&FlyoutRequestCloseEvent, window, cx);
-                        }
-                    })
-                    .child(
-                        anchored().position(open_position).child(
-                            self.div
-                                .bg(theme.background)
-                                .border(px(1.))
-                                .border_color(theme.border_color)
-                                .rounded(theme.border_radius),
+        raised(move |_, window, cx| {
+            let theme = cx.global::<Theme>();
+
+            let window_size = window.viewport_size();
+            let inset = window.client_inset().unwrap_or_else(|| px(0.));
+
+            anchored()
+                .position(Point::new(px(0.), px(0.)))
+                .child(
+                    div()
+                        .top_0()
+                        .left_0()
+                        .w(window_size.width - inset - inset)
+                        .h(window_size.height - inset - inset)
+                        .m(inset)
+                        .occlude()
+                        .on_any_mouse_down(move |_, window, cx| {
+                            if let Some(request_close_listener) = request_close_listener.as_ref() {
+                                request_close_listener(&FlyoutRequestCloseEvent, window, cx);
+                            }
+                        })
+                        .child(
+                            anchored().position(open_position).child(
+                                self.div
+                                    .bg(theme.background)
+                                    .border(px(1.))
+                                    .border_color(theme.border_color)
+                                    .rounded(theme.border_radius),
+                            ),
                         ),
-                    ),
-            ),
-        )
+                )
+                .into_any_element()
+        })
+        .render_as_deferred(self.as_deferred)
         .into_any_element()
     }
 }

@@ -15,8 +15,17 @@ actions!(context_menu, [Escape]);
 #[derive(IntoElement)]
 pub struct ContextMenu {
     items: Vec<ContextMenuItem>,
+    as_deferred: bool,
 }
 
+impl ContextMenu {
+    pub fn render_as_deferred(mut self, as_deferred: bool) -> Self {
+        self.as_deferred = as_deferred;
+        self
+    }
+}
+
+#[derive(Clone)]
 pub struct OpenContextMenu {
     pub(crate) open_position: Point<Pixels>,
 }
@@ -26,7 +35,7 @@ impl RenderOnce for ContextMenu {
         let context_menu_state = window.use_state(cx, |_, _| None);
         let context_menu_state_2 = context_menu_state.clone();
 
-        let context_menu_open = context_menu_state.read(cx);
+        let items = self.items;
 
         div()
             .id("__context_menu_handler")
@@ -45,18 +54,23 @@ impl RenderOnce for ContextMenu {
                     }),
                 );
             })
-            .child(raised(
-                // Context Menu Popup
-                ContextMenuPopup {
-                    items: self.items,
-                    open_position: context_menu_open
-                        .as_ref()
-                        .map(|context_menu| context_menu.open_position),
-                    request_close_listener: Rc::new(Box::new(move |_, _, cx| {
-                        context_menu_state_2.write(cx, None);
-                    })),
-                },
-            ))
+            .child(
+                raised(move |_, _, cx| {
+                    // Context Menu Popup
+                    let context_menu_open = context_menu_state_2.read(cx);
+                    ContextMenuPopup {
+                        items,
+                        open_position: context_menu_open
+                            .as_ref()
+                            .map(|context_menu| context_menu.open_position),
+                        request_close_listener: Rc::new(Box::new(move |_, _, cx| {
+                            context_menu_state_2.write(cx, None);
+                        })),
+                    }
+                    .into_any_element()
+                })
+                .render_as_deferred(self.as_deferred),
+            )
     }
 }
 
@@ -169,6 +183,10 @@ pub trait ContextMenuExt<E> {
     fn with_context_menu(self, items: impl IntoIterator<Item = ContextMenuItem>) -> E
     where
         Self: Sized;
+
+    fn with_deferred_context_menu(self, items: impl IntoIterator<Item = ContextMenuItem>) -> E
+    where
+        Self: Sized;
 }
 
 impl<E> ContextMenuExt<E> for E
@@ -181,6 +199,17 @@ where
     {
         self.child(ContextMenu {
             items: items.into_iter().collect(),
+            as_deferred: false,
+        })
+    }
+
+    fn with_deferred_context_menu(self, items: impl IntoIterator<Item = ContextMenuItem>) -> E
+    where
+        Self: Sized,
+    {
+        self.child(ContextMenu {
+            items: items.into_iter().collect(),
+            as_deferred: true,
         })
     }
 }
