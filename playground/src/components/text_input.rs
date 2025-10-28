@@ -14,6 +14,7 @@ pub struct TextInput {
     password_text_field: Entity<TextField>,
     borderless_text_field: Entity<TextField>,
     disabled_text_field: Entity<TextField>,
+    big_text_field: Entity<TextField>,
 }
 
 impl TextInput {
@@ -54,6 +55,21 @@ impl TextInput {
                     // TODO: Set as disabled
                     text_field.set_placeholder(
                         tr!("TEXT_FIELD_DISABLED_PLACEHOLDER", "Disabled Text Field")
+                            .to_string()
+                            .as_str(),
+                    );
+                    text_field
+                }),
+                big_text_field: cx.new(|cx| {
+                    let mut text_field = TextField::new("text-field", cx);
+                    cx.observe_global::<Theme>(|text_field: &mut TextField, cx| {
+                        let theme = cx.global::<Theme>();
+                        text_field.text_style().font_size = Some(theme.heading_font_size.into());
+                        cx.notify()
+                    })
+                    .detach();
+                    text_field.set_placeholder(
+                        tr!("BIG_TEXT_FIELD_PLACEHOLDER", "Big Text Field")
                             .to_string()
                             .as_str(),
                     );
@@ -101,7 +117,8 @@ impl Render for TextInput {
                                     .child(self.text_field.clone().into_any_element())
                                     .child(self.password_text_field.clone().into_any_element())
                                     .child(self.borderless_text_field.clone().into_any_element())
-                                    .child(self.disabled_text_field.clone().into_any_element()),
+                                    .child(self.disabled_text_field.clone().into_any_element())
+                                    .child(self.big_text_field.clone().into_any_element()),
                             ),
                     ),
             )

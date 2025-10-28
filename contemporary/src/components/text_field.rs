@@ -6,8 +6,8 @@ use gpui::{
     Entity, EntityInputHandler, FocusHandle, GlobalElementId, Hsla, InspectorElementId,
     InteractiveElement, IntoElement, KeyBinding, LayoutId, MouseButton, MouseDownEvent,
     MouseMoveEvent, MouseUpEvent, PaintQuad, ParentElement, Pixels, Point, Render, Rgba,
-    ShapedLine, Style, Styled, TextRun, UTF16Selection, UnderlineStyle, Window, actions, div, fill,
-    point, px, relative, size,
+    ShapedLine, Style, Styled, TextRun, TextStyleRefinement, UTF16Selection, UnderlineStyle,
+    Window, actions, div, fill, point, px, relative, size,
 };
 use std::ops::Range;
 use std::panic::Location;
@@ -99,6 +99,8 @@ pub struct TextField {
     allow_new_lines: bool,
     mask_mode: MaskMode,
 
+    text_style: TextStyleRefinement,
+
     enter_press_listener: Option<Rc<Box<EnterPressListener>>>,
     text_changed_listener: Option<Rc<Box<TextChangedListener>>>,
     paste_rich_listener: Option<Rc<Box<PasteRichListener>>>,
@@ -120,6 +122,7 @@ impl TextField {
             has_border: true,
             allow_new_lines: false,
             mask_mode: MaskMode::Clear,
+            text_style: TextStyleRefinement::default(),
             enter_press_listener: None,
             text_changed_listener: None,
             paste_rich_listener: None,
@@ -415,6 +418,10 @@ impl TextField {
             self.replace_text_in_range(None, "", window, cx)
         }
     }
+
+    pub fn text_style(&mut self) -> &mut TextStyleRefinement {
+        &mut self.text_style
+    }
 }
 
 impl Render for TextField {
@@ -465,7 +472,7 @@ impl Render for TextField {
                         div()
                             .w_full()
                             .p(px(4.))
-                            .child(ChatElement { input: cx.entity() }),
+                            .child(TextFieldElement { input: cx.entity() }),
                     ),
             )
     }
@@ -605,7 +612,7 @@ impl EntityInputHandler for TextField {
     }
 }
 
-pub struct ChatElement {
+pub struct TextFieldElement {
     input: Entity<TextField>,
 }
 
@@ -620,7 +627,7 @@ pub struct PrepaintState {
     selection: Vec<PaintQuad>,
 }
 
-impl IntoElement for ChatElement {
+impl IntoElement for TextFieldElement {
     type Element = Self;
 
     fn into_element(self) -> Self::Element {
@@ -628,7 +635,7 @@ impl IntoElement for ChatElement {
     }
 }
 
-impl Element for ChatElement {
+impl Element for TextFieldElement {
     type RequestLayoutState = RequestLayoutState;
     type PrepaintState = PrepaintState;
 
@@ -673,13 +680,15 @@ impl Element for ChatElement {
             })
             .collect::<Vec<_>>();
 
-        let mut style = Style::default();
-        style.size.width = relative(1.).into();
-        style.size.height = (window.line_height() * lines.len()).into();
-        (
-            window.request_layout(style, [], cx),
-            RequestLayoutState { lines, text_color },
-        )
+        window.with_text_style(Some(input.text_style.clone()), |window| {
+            let mut style = Style::default();
+            style.size.width = relative(1.).into();
+            style.size.height = (window.line_height() * lines.len()).into();
+            (
+                window.request_layout(style, [], cx),
+                RequestLayoutState { lines, text_color },
+            )
+        })
     }
 
     fn prepaint(
@@ -692,138 +701,140 @@ impl Element for ChatElement {
         cx: &mut App,
     ) -> Self::PrepaintState {
         let input = self.input.read(cx);
-        let style = window.text_style();
-        let cursor = input.cursor_offset();
-        let selected_range = input.selected_range.clone();
-        let theme = cx.global::<Theme>();
-        let line_height = window.line_height();
+        window.with_text_style(Some(input.text_style.clone()), |window| {
+            let style = window.text_style();
+            let cursor = input.cursor_offset();
+            let selected_range = input.selected_range.clone();
+            let theme = cx.global::<Theme>();
+            let line_height = window.line_height();
 
-        let lines = request_layout
-            .lines
-            .iter()
-            .map(|text| {
-                let run = TextRun {
-                    len: text.len(),
-                    font: style.font(),
-                    color: request_layout.text_color,
-                    background_color: None,
-                    underline: None,
-                    strikethrough: None,
-                };
-                let runs = if let Some(marked_range) = input.marked_range.as_ref() {
-                    vec![
-                        TextRun {
-                            len: marked_range.start,
-                            ..run.clone()
-                        },
-                        TextRun {
-                            len: marked_range.end - marked_range.start,
-                            underline: Some(UnderlineStyle {
-                                color: Some(run.color),
-                                thickness: px(1.0),
-                                wavy: false,
-                            }),
-                            ..run.clone()
-                        },
-                        TextRun {
-                            len: text.len() - marked_range.end,
-                            ..run.clone()
-                        },
-                    ]
-                    .into_iter()
-                    .filter(|run| run.len > 0)
-                    .collect()
-                } else {
-                    vec![run]
-                };
+            let lines = request_layout
+                .lines
+                .iter()
+                .map(|text| {
+                    let run = TextRun {
+                        len: text.len(),
+                        font: style.font(),
+                        color: request_layout.text_color,
+                        background_color: None,
+                        underline: None,
+                        strikethrough: None,
+                    };
+                    let runs = if let Some(marked_range) = input.marked_range.as_ref() {
+                        vec![
+                            TextRun {
+                                len: marked_range.start,
+                                ..run.clone()
+                            },
+                            TextRun {
+                                len: marked_range.end - marked_range.start,
+                                underline: Some(UnderlineStyle {
+                                    color: Some(run.color),
+                                    thickness: px(1.0),
+                                    wavy: false,
+                                }),
+                                ..run.clone()
+                            },
+                            TextRun {
+                                len: text.len() - marked_range.end,
+                                ..run.clone()
+                            },
+                        ]
+                        .into_iter()
+                        .filter(|run| run.len > 0)
+                        .collect()
+                    } else {
+                        vec![run]
+                    };
 
-                let font_size = style.font_size.to_pixels(window.rem_size());
-                window
-                    .text_system()
-                    .shape_line(text.clone().into(), font_size, &runs, None)
-            })
-            .collect::<Vec<_>>();
+                    let font_size = style.font_size.to_pixels(window.rem_size());
+                    window
+                        .text_system()
+                        .shape_line(text.clone().into(), font_size, &runs, None)
+                })
+                .collect::<Vec<_>>();
 
-        let mut sum = 0;
-        let mut lines_length = Vec::new();
-        for line in lines.iter() {
-            lines_length.push((line, sum));
-            sum += line.text.len() + 1;
-        }
+            let mut sum = 0;
+            let mut lines_length = Vec::new();
+            for line in lines.iter() {
+                lines_length.push((line, sum));
+                sum += line.text.len() + 1;
+            }
 
-        // Find the line that contains the cursor
-        let cursor_pos = lines_length
-            .iter()
-            .enumerate()
-            .skip_while(|(_, (line, sum))| *sum + line.text.len() < cursor)
-            .map(|(i, (line, sum))| (i, line.x_for_index(cursor - sum)))
-            .next();
+            // Find the line that contains the cursor
+            let cursor_pos = lines_length
+                .iter()
+                .enumerate()
+                .skip_while(|(_, (line, sum))| *sum + line.text.len() < cursor)
+                .map(|(i, (line, sum))| (i, line.x_for_index(cursor - sum)))
+                .next();
 
-        let (selection, cursor) = if selected_range.is_empty() {
-            let (cursor_line, cursor_pos) = cursor_pos.unwrap_or((0, px(0.)));
-            (
-                vec![],
-                Some(fill(
-                    Bounds::new(
-                        point(
-                            bounds.left() + cursor_pos,
-                            bounds.top() + cursor_line * line_height,
+            let (selection, cursor) = if selected_range.is_empty() {
+                let (cursor_line, cursor_pos) = cursor_pos.unwrap_or((0, px(0.)));
+                (
+                    vec![],
+                    Some(fill(
+                        Bounds::new(
+                            point(
+                                bounds.left() + cursor_pos,
+                                bounds.top() + cursor_line * line_height,
+                            ),
+                            size(px(1.), line_height),
                         ),
-                        size(px(1.), line_height),
-                    ),
-                    theme.foreground,
-                )),
-            )
-        } else {
-            (
-                lines_length
-                    .iter()
-                    .enumerate()
-                    .filter_map(|(cursor_line, (line, sum))| {
-                        let last_character = *sum + line.text.len();
-                        if selected_range.start > last_character || selected_range.end < *sum {
-                            None
-                        } else {
-                            Some(fill(
-                                Bounds::from_corners(
-                                    point(
-                                        bounds.left()
-                                            + line.x_for_index(
-                                                selected_range
-                                                    .start
-                                                    .checked_sub(*sum)
-                                                    .unwrap_or_default(),
-                                            ),
-                                        bounds.top() + cursor_line * line_height,
+                        theme.foreground,
+                    )),
+                )
+            } else {
+                (
+                    lines_length
+                        .iter()
+                        .enumerate()
+                        .filter_map(|(cursor_line, (line, sum))| {
+                            let last_character = *sum + line.text.len();
+                            if selected_range.start > last_character || selected_range.end < *sum {
+                                None
+                            } else {
+                                Some(fill(
+                                    Bounds::from_corners(
+                                        point(
+                                            bounds.left()
+                                                + line.x_for_index(
+                                                    selected_range
+                                                        .start
+                                                        .checked_sub(*sum)
+                                                        .unwrap_or_default(),
+                                                ),
+                                            bounds.top() + cursor_line * line_height,
+                                        ),
+                                        point(
+                                            bounds.left()
+                                                + line.x_for_index(
+                                                    selected_range
+                                                        .end
+                                                        .checked_sub(*sum)
+                                                        .unwrap_or(last_character),
+                                                ),
+                                            bounds.top() + (cursor_line + 1) * line_height,
+                                        ),
                                     ),
-                                    point(
-                                        bounds.left()
-                                            + line.x_for_index(
-                                                selected_range
-                                                    .end
-                                                    .checked_sub(*sum)
-                                                    .unwrap_or(last_character),
-                                            ),
-                                        bounds.top() + (cursor_line + 1) * line_height,
-                                    ),
-                                ),
-                                Rgba {
-                                    a: 0.5,
-                                    ..theme.button_background
-                                },
-                            ))
-                        }
-                    })
-                    .collect(),
-                None,
-            )
-        };
+                                    Rgba {
+                                        a: 0.5,
+                                        ..theme.button_background
+                                    },
+                                ))
+                            }
+                        })
+                        .collect(),
+                    None,
+                )
+            };
 
-        PrepaintState {
-            lines,
-            cursor,
-            selection,
-        }
+            PrepaintState {
+                lines,
+                cursor,
+                selection,
+            }
+        })
     }
 
     fn paint(
