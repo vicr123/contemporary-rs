@@ -107,6 +107,24 @@
     "plural": false,
     "description": null
   },
+  "EDIT_COPY": {
+    "context": "text_field.rs",
+    "definedIn": "src/components/text_field.rs:488",
+    "plural": false,
+    "description": null
+  },
+  "EDIT_CUT": {
+    "context": "text_field.rs",
+    "definedIn": "src/components/text_field.rs:483",
+    "plural": false,
+    "description": null
+  },
+  "EDIT_PASTE": {
+    "context": "text_field.rs",
+    "definedIn": "src/components/text_field.rs:493",
+    "plural": false,
+    "description": null
+  },
   "HELP_FILE_BUG": {
     "context": "application.rs",
     "definedIn": "src/application.rs:29",

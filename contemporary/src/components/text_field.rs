@@ -1,5 +1,7 @@
+use crate::components::context_menu::{ContextMenuExt, ContextMenuItem};
 use crate::components::focus_decoration::focus_decoration;
 use crate::styling::theme::{Theme, VariableColor};
+use cntp_i18n::tr;
 use gpui::prelude::FluentBuilder;
 use gpui::{
     App, AppContext, Bounds, ClipboardItem, Context, Element, ElementId, ElementInputHandler,
@@ -475,6 +477,23 @@ impl Render for TextField {
                             .child(TextFieldElement { input: cx.entity() }),
                     ),
             )
+            .with_context_menu(vec![
+                ContextMenuItem::menu_item()
+                    .icon("edit-cut")
+                    .label(tr!("EDIT_CUT", "Cut"))
+                    .on_triggered(cx.listener(|this, _, window, cx| this.cut(&Cut, window, cx)))
+                    .build(),
+                ContextMenuItem::menu_item()
+                    .icon("edit-copy")
+                    .label(tr!("EDIT_COPY", "Copy"))
+                    .on_triggered(cx.listener(|this, _, window, cx| this.copy(&Copy, window, cx)))
+                    .build(),
+                ContextMenuItem::menu_item()
+                    .icon("edit-paste")
+                    .label(tr!("EDIT_PASTE", "Paste"))
+                    .on_triggered(cx.listener(|this, _, window, cx| this.paste(&Paste, window, cx)))
+                    .build(),
+            ])
     }
 }
 
