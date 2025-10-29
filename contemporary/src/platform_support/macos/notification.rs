@@ -2,7 +2,7 @@ use crate::notification::{Notification, PostedNotification};
 use gpui::{App, Global};
 use objc2::rc::Retained;
 use objc2::runtime::{NSObject, NSObjectProtocol, ProtocolObject};
-use objc2::{MainThreadMarker, MainThreadOnly, define_class, msg_send, msg_send_id};
+use objc2::{define_class, msg_send, msg_send_id, MainThreadMarker, MainThreadOnly};
 use objc2_foundation::{
     NSBundle, NSString, NSUserNotification, NSUserNotificationCenter,
     NSUserNotificationCenterDelegate,
@@ -30,6 +30,10 @@ impl PostedNotification for MacPostedNotification {
                     .removeDeliveredNotification(ns_notification);
             }
         }
+    }
+
+    fn replace(&mut self, _: Notification, _: &mut App) {
+        // TODO
     }
 }
 

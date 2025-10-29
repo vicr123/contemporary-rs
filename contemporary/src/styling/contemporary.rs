@@ -10,7 +10,7 @@ pub trait ContemporaryTheme {
     const LAYER: Rgba;
     const BUTTON_BACKGROUND: Rgba;
     const BORDER: Rgba;
-    const SYSTEM_FONT_FAMILY: &'static str = "Commissioner Thin";
+    const SYSTEM_FONT_FAMILY: &'static str = "Sofia Sans";
     const SYSTEM_FONT_SIZE: Pixels = px(14.0);
     const HEADING_FONT_SIZE: Pixels = px(16.0);
     const BORDER_RADIUS: Pixels;

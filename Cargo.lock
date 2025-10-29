@@ -1380,6 +1380,7 @@ dependencies = [
  "tracing-subscriber",
  "unicode-segmentation",
  "url",
+ "uuid",
  "windows 0.61.3",
 ]
 
