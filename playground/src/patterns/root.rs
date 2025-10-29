@@ -3,6 +3,7 @@ use crate::patterns::directories::Directories;
 use crate::patterns::flyouts::Flyouts;
 use crate::patterns::i18n::I18n;
 use crate::patterns::jobs::Jobs;
+use crate::patterns::notifications::Notifications;
 use crate::patterns::popovers::Popovers;
 use cntp_i18n::tr;
 use contemporary::components::grandstand::grandstand;
@@ -24,6 +25,7 @@ pub struct PatternsRoot {
     jobs: Entity<Jobs>,
     directories: Entity<Directories>,
     flyouts: Entity<Flyouts>,
+    notifications: Entity<Notifications>,
 
     current_page: usize,
 }
@@ -37,6 +39,7 @@ impl PatternsRoot {
             jobs: Jobs::new(cx),
             directories: Directories::new(cx),
             flyouts: Flyouts::new(cx),
+            notifications: Notifications::new(cx),
             current_page: 0,
         })
     }
@@ -64,7 +67,7 @@ impl Render for PatternsRoot {
                         div().flex_grow().p(px(2.)).child(
                             uniform_list(
                                 "sidebar-items",
-                                6,
+                                7,
                                 cx.processor(|this, range, _, cx| {
                                     let theme = cx.global::<Theme>();
                                     let mut items = Vec::new();
@@ -87,6 +90,7 @@ impl Render for PatternsRoot {
                                                     3 => tr!("FLYOUTS_TITLE"),
                                                     4 => tr!("JOBS_TITLE"),
                                                     5 => tr!("DIRECTORIES_TITLE"),
+                                                    6 => tr!("NOTIFICATIONS_TITLE"),
                                                     _ => format!("Item {item}").into(),
                                                 })
                                                 .when(this.current_page == ix, |div| {
@@ -112,7 +116,8 @@ impl Render for PatternsRoot {
                     .page(self.popovers.clone().into_any_element())
                     .page(self.flyouts.clone().into_any_element())
                     .page(self.jobs.clone().into_any_element())
-                    .page(self.directories.clone().into_any_element()),
+                    .page(self.directories.clone().into_any_element())
+                    .page(self.notifications.clone().into_any_element()),
             )
     }
 }

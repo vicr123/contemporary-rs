@@ -695,6 +695,36 @@
     "plural": false,
     "description": null
   },
+  "NOTIFICATIONS_BODY": {
+    "context": "notifications.rs",
+    "definedIn": "src/patterns/notifications.rs:32",
+    "plural": false,
+    "description": null
+  },
+  "NOTIFICATIONS_DESCRIPTION": {
+    "context": "notifications.rs",
+    "definedIn": "src/patterns/notifications.rs:77",
+    "plural": false,
+    "description": null
+  },
+  "NOTIFICATIONS_SUMMARY": {
+    "context": "notifications.rs",
+    "definedIn": "src/patterns/notifications.rs:27",
+    "plural": false,
+    "description": null
+  },
+  "NOTIFICATIONS_TITLE": {
+    "context": "notifications.rs",
+    "definedIn": "src/patterns/notifications.rs:54",
+    "plural": false,
+    "description": null
+  },
+  "NOTIFICATION_SEND": {
+    "context": "notifications.rs",
+    "definedIn": "src/patterns/notifications.rs:88",
+    "plural": false,
+    "description": null
+  },
   "OPEN_JOB_MENU": {
     "context": "jobs.rs",
     "definedIn": "src/patterns/jobs.rs:358",
@@ -715,7 +745,7 @@
   },
   "PATTERNS_TITLE": {
     "context": "root.rs",
-    "definedIn": "src/patterns/root.rs:60",
+    "definedIn": "src/patterns/root.rs:63",
     "plural": false,
     "description": null
   },
