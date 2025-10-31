@@ -39,6 +39,6 @@ impl RenderOnce for Constrainer {
             .items_center()
             .w_full()
             .overflow_y_scroll()
-            .child(self.div.max_w(px(600.)))
+            .child(self.div.max_w(px(600.)).w_full())
     }
 }
