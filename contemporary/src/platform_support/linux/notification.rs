@@ -107,6 +107,18 @@ fn contemporary_notification_to_ashpd_notification(
                 .button(Button::new(action.text.as_str(), uuid.to_string().as_str()));
         }
 
+        if let Some(default_action) = notification.default_action {
+            let uuid = Uuid::new_v4();
+            let on_triggered = default_action.clone();
+            linux_notification_global.action_handlers.insert(
+                uuid,
+                Box::new(move |_, cx| {
+                    on_triggered.clone()(&NotificationActionEvent, cx);
+                }),
+            );
+            ashpd_notification = ashpd_notification.default_action(Some(uuid.to_string().as_str()));
+        }
+
         ashpd_notification
     })
 }
