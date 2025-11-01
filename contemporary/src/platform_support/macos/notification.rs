@@ -5,11 +5,13 @@ use async_channel::Sender;
 use gpui::{App, AsyncApp, BorrowAppContext, Global};
 use objc2::rc::Retained;
 use objc2::runtime::{NSObject, NSObjectProtocol, ProtocolObject};
-use objc2::{DefinedClass, MainThreadMarker, MainThreadOnly, define_class, msg_send, msg_send_id};
+use objc2::{
+    DefinedClass, MainThreadMarker, MainThreadOnly, Message, define_class, msg_send, msg_send_id,
+};
 use objc2_foundation::{
-    NSArray, NSBundle, NSString, NSUserNotification, NSUserNotificationAction,
-    NSUserNotificationCenter, NSUserNotificationCenterDelegate, NSUserNotificationDefaultSoundName,
-    ns_string,
+    NSArray, NSBundle, NSDictionary, NSMutableDictionary, NSObjectNSKeyValueCoding, NSString,
+    NSUserNotification, NSUserNotificationAction, NSUserNotificationCenter,
+    NSUserNotificationCenterDelegate, NSUserNotificationDefaultSoundName, ns_string,
 };
 use std::collections::HashMap;
 use uuid::Uuid;
@@ -72,6 +74,7 @@ pub fn post_notification(notification: Notification, cx: &mut App) -> Box<dyn Po
                 return Box::new(MacPostedNotification::Failed);
             }
 
+            let user_info = NSMutableDictionary::new();
             let ns_notification = NSUserNotification::new();
             ns_notification.setTitle(
                 notification
@@ -110,6 +113,24 @@ pub fn post_notification(notification: Notification, cx: &mut App) -> Box<dyn Po
             ns_notification
                 .setAdditionalActions(Some(&NSArray::from_retained_slice(actions.as_slice())));
 
+            if let Some(default_action) = notification.default_action {
+                let uuid = Uuid::new_v4();
+                let on_triggered = default_action.clone();
+                apple_notification_global.action_handlers.insert(
+                    uuid,
+                    Box::new(move |cx| {
+                        on_triggered.clone()(&NotificationActionEvent, cx);
+                    }),
+                );
+
+                let uuid = NSString::from_str(uuid.to_string().as_str());
+                user_info.setObject_forKey(
+                    uuid.as_ref(),
+                    ProtocolObject::from_ref(ns_string!("default_action_uuid")),
+                );
+            }
+
+            ns_notification.setUserInfo(Some(&user_info));
             NSUserNotificationCenter::defaultUserNotificationCenter()
                 .deliverNotification(&ns_notification);
 
@@ -151,6 +172,23 @@ define_class!(
         ) {
             // TODO: Actions
             match notification.activationType() {
+                NSUserNotificationActivationTypeContentsClicked => {
+                    let Some(user_info) = notification.userInfo() else {
+                        return;
+                    };
+
+                    let Some(default_action_uuid) = user_info.valueForKey(ns_string!("default_action_uuid")) else {
+                        return;
+                    };
+
+                    let Ok(default_action_uuid) = default_action_uuid.downcast::<NSString>() else {
+                        return;
+                    };
+
+                    if let Ok(trigger_uuid) = Uuid::try_parse(default_action_uuid.to_string().as_str()) {
+                        _ = smol::block_on(self.ivars().tx.send(NotificationActionActivation::Trigger(trigger_uuid)));
+                    }
+                }
                 NSUserNotificationActivationTypeActionButtonClicked => {
                     let activated = notification.additionalActivationAction().unwrap();
                     if let Ok(trigger_uuid) = Uuid::try_parse(activated.identifier().unwrap().to_string().as_str()) {

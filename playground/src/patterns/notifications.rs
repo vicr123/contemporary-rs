@@ -7,13 +7,15 @@ use contemporary::components::icon::icon;
 use contemporary::components::icon_text::icon_text;
 use contemporary::components::layer::layer;
 use contemporary::components::subtitle::subtitle;
+use contemporary::components::switch::{SwitchChangeEvent, switch};
 use contemporary::components::text_field::TextField;
 use contemporary::notification::{Notification, PostedNotification};
 use contemporary::styling::theme::Theme;
 use gpui::prelude::FluentBuilder;
 use gpui::{
-    App, AppContext, ClickEvent, Context, Entity, InteractiveElement, IntoElement, ListAlignment,
-    ListSizingBehavior, ListState, ParentElement, Render, Styled, Window, div, list, px,
+    AnyElement, App, AppContext, ClickEvent, Context, Entity, InteractiveElement, IntoElement,
+    ListAlignment, ListSizingBehavior, ListState, ParentElement, Render, Styled, Window, div, list,
+    px,
 };
 use std::rc::Rc;
 
@@ -25,20 +27,22 @@ pub struct Notifications {
     metadata: Vec<Entity<NotificationMetadata>>,
     list_state: ListState,
     pending_actions: Vec<Entity<TextField>>,
+
+    has_default_action: bool,
+    has_reply_action: bool,
 }
 
+#[derive(Default)]
 struct NotificationMetadata {
     dismissed: bool,
-    triggered_action: Option<String>,
+    triggered_action: Option<NotificationTriggeredAction>,
 }
 
-impl Default for NotificationMetadata {
-    fn default() -> Self {
-        NotificationMetadata {
-            dismissed: false,
-            triggered_action: None,
-        }
-    }
+#[derive(Clone)]
+enum NotificationTriggeredAction {
+    ActionName(String),
+    DefaultAction,
+    Reply(String),
 }
 
 impl Notifications {
@@ -60,6 +64,8 @@ impl Notifications {
             metadata: Vec::new(),
             list_state: ListState::new(0, ListAlignment::Top, px(200.)),
             pending_actions: Vec::new(),
+            has_default_action: false,
+            has_reply_action: false,
         })
     }
 
@@ -93,7 +99,19 @@ impl Notifications {
             let action_text_2 = action_text.clone();
             notification = notification.on_action(&action_text_2, move |_, cx| {
                 let action_text = action_text.clone();
-                let _ = meta_weak.update(cx, |meta, cx| meta.triggered_action = Some(action_text));
+                let _ = meta_weak.update(cx, |meta, cx| {
+                    meta.triggered_action =
+                        Some(NotificationTriggeredAction::ActionName(action_text))
+                });
+            })
+        }
+
+        if self.has_default_action {
+            let meta_weak = meta_weak.clone();
+            notification = notification.on_default_action(move |_, cx| {
+                let _ = meta_weak.update(cx, |meta, cx| {
+                    meta.triggered_action = Some(NotificationTriggeredAction::DefaultAction)
+                });
             })
         }
 
@@ -103,6 +121,71 @@ impl Notifications {
         self.metadata.push(meta);
         self.list_state.reset(self.posted_notifications.len());
         cx.notify();
+    }
+
+    fn render_posted_notification(
+        &mut self,
+        i: usize,
+        window: &mut Window,
+        cx: &mut Context<Self>,
+    ) -> AnyElement {
+        let notification: &Rc<Box<dyn PostedNotification>> = &self.posted_notifications[i];
+        let metadata: &Entity<NotificationMetadata> = &self.metadata[i];
+        let notification = notification.clone();
+        let metadata = metadata.read(cx);
+
+        div()
+            .id(i)
+            .py(px(2.))
+            .child(
+                layer()
+                    .flex()
+                    .w_full()
+                    .p(px(4.))
+                    .gap(px(4.))
+                    .items_center()
+                    .child(
+                        div()
+                            .flex()
+                            .flex_col()
+                            .flex_grow()
+                            .child(subtitle(
+                                notification.summary().unwrap_or_default().to_string(),
+                            ))
+                            .child(notification.body().unwrap_or_default().to_string()),
+                    )
+                    .when_some(
+                        metadata.triggered_action.clone(),
+                        |david, action| match action {
+                            NotificationTriggeredAction::ActionName(action_name) => {
+                                david.child(tr!(
+                                    "NOTIFICATION_ACTION_TRIGGERED",
+                                    "Triggered with {{action}}",
+                                    action:Quote = action_name
+                                ))
+                            }
+                            NotificationTriggeredAction::DefaultAction => david.child(tr!(
+                                "NOTIFICATION_DEFAULT_ACTION_TRIGGERED",
+                                "Triggered default action",
+                            )),
+                            NotificationTriggeredAction::Reply(reply) => david.child(tr!(
+                                "NOTIFICATION_REPLY_ACTION_TRIGGERED",
+                                "Replied with {{reply}}",
+                                reply:Quote = reply
+                            )),
+                        },
+                    )
+                    .child(
+                        button("dismiss-button")
+                            .destructive()
+                            .child(icon("edit-delete".into()))
+                            .when(metadata.dismissed, |button| button.disabled())
+                            .on_click(move |_, _, cx| {
+                                notification.dismiss(cx);
+                            }),
+                    ),
+            )
+            .into_any_element()
     }
 }
 
@@ -175,6 +258,48 @@ impl Render for Notifications {
                                         },
                                     ))
                                     .child(
+                                        div()
+                                            .flex()
+                                            .child(tr!(
+                                                "NOTIFICATION_DEFAULT_ACTION_PROMPT",
+                                                "Enable Default Action"
+                                            ))
+                                            .child(div().flex_grow())
+                                            .child(
+                                                switch("default-action-switch")
+                                                    .when(self.has_default_action, |david| {
+                                                        david.checked()
+                                                    })
+                                                    .on_change(cx.listener(
+                                                        |this, event: &SwitchChangeEvent, _, cx| {
+                                                            this.has_default_action = event.checked;
+                                                            cx.notify();
+                                                        },
+                                                    )),
+                                            ),
+                                    )
+                                    .child(
+                                        div()
+                                            .flex()
+                                            .child(tr!(
+                                                "NOTIFICATION_REPLY_ACTION_PROMPT",
+                                                "Enable Reply Action"
+                                            ))
+                                            .child(div().flex_grow())
+                                            .child(
+                                                switch("reply-action-switch")
+                                                    .when(self.has_reply_action, |david| {
+                                                        david.checked()
+                                                    })
+                                                    .on_change(cx.listener(
+                                                        |this, event: &SwitchChangeEvent, _, cx| {
+                                                            this.has_reply_action = event.checked;
+                                                            cx.notify();
+                                                        },
+                                                    )),
+                                            ),
+                                    )
+                                    .child(
                                         button("add-action-button")
                                             .child(icon_text(
                                                 "list-add".into(),
@@ -220,70 +345,7 @@ impl Render for Notifications {
                                     .child(
                                         list(
                                             self.list_state.clone(),
-                                            cx.processor(|this, i, _, cx| {
-                                                let notification: &Rc<Box<dyn PostedNotification>> =
-                                                    &this.posted_notifications[i];
-                                                let metadata: &Entity<NotificationMetadata> =
-                                                    &this.metadata[i];
-                                                let notification = notification.clone();
-                                                let metadata = metadata.read(cx);
-
-                                                div()
-                                                    .id(i)
-                                                    .py(px(2.))
-                                                    .child(
-                                                        layer()
-                                                            .flex()
-                                                            .w_full()
-                                                            .p(px(4.))
-                                                            .gap(px(4.))
-                                                            .items_center()
-                                                            .child(
-                                                                div()
-                                                                    .flex()
-                                                                    .flex_col()
-                                                                    .flex_grow()
-                                                                    .child(subtitle(
-                                                                        notification
-                                                                            .summary()
-                                                                            .unwrap_or_default()
-                                                                            .to_string(),
-                                                                    ))
-                                                                    .child(
-                                                                        notification
-                                                                            .body()
-                                                                            .unwrap_or_default()
-                                                                            .to_string(),
-                                                                    ),
-                                                            )
-                                                            .when_some(
-                                                                metadata.triggered_action.clone(),
-                                                                |david, action| {
-                                                                    david.child(tr!(
-                                                                        "NOTIFICATION_ACTION_\
-                                                                         TRIGGERED",
-                                                                        "Triggered with {{action}}",
-                                                                        action:Quote = action
-                                                                    ))
-                                                                },
-                                                            )
-                                                            .child(
-                                                                button("dismiss-button")
-                                                                    .destructive()
-                                                                    .child(icon(
-                                                                        "edit-delete".into(),
-                                                                    ))
-                                                                    .when(
-                                                                        metadata.dismissed,
-                                                                        |button| button.disabled(),
-                                                                    )
-                                                                    .on_click(move |_, _, cx| {
-                                                                        notification.dismiss(cx);
-                                                                    }),
-                                                            ),
-                                                    )
-                                                    .into_any_element()
-                                            }),
+                                            cx.processor(Self::render_posted_notification),
                                         )
                                         .with_sizing_behavior(ListSizingBehavior::Infer),
                                     ),

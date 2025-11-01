@@ -697,43 +697,67 @@
   },
   "NOTIFICATIONS_BODY": {
     "context": "notifications.rs",
-    "definedIn": "src/patterns/notifications.rs:55",
+    "definedIn": "src/patterns/notifications.rs:59",
     "plural": false,
     "description": null
   },
   "NOTIFICATIONS_DESCRIPTION": {
     "context": "notifications.rs",
-    "definedIn": "src/patterns/notifications.rs:147",
+    "definedIn": "src/patterns/notifications.rs:230",
     "plural": false,
     "description": null
   },
   "NOTIFICATIONS_SUMMARY": {
     "context": "notifications.rs",
-    "definedIn": "src/patterns/notifications.rs:50",
+    "definedIn": "src/patterns/notifications.rs:54",
     "plural": false,
     "description": null
   },
   "NOTIFICATIONS_TITLE": {
     "context": "notifications.rs",
-    "definedIn": "src/patterns/notifications.rs:124",
+    "definedIn": "src/patterns/notifications.rs:207",
     "plural": false,
     "description": null
   },
   "NOTIFICATION_ACTION_TRIGGERED": {
     "context": "notifications.rs",
-    "definedIn": "src/patterns/notifications.rs:263",
+    "definedIn": "src/patterns/notifications.rs:162",
     "plural": false,
     "description": null
   },
   "NOTIFICATION_ADD_ACTION": {
     "context": "notifications.rs",
-    "definedIn": "src/patterns/notifications.rs:181",
+    "definedIn": "src/patterns/notifications.rs:306",
+    "plural": false,
+    "description": null
+  },
+  "NOTIFICATION_DEFAULT_ACTION_PROMPT": {
+    "context": "notifications.rs",
+    "definedIn": "src/patterns/notifications.rs:264",
+    "plural": false,
+    "description": null
+  },
+  "NOTIFICATION_DEFAULT_ACTION_TRIGGERED": {
+    "context": "notifications.rs",
+    "definedIn": "src/patterns/notifications.rs:168",
+    "plural": false,
+    "description": null
+  },
+  "NOTIFICATION_REPLY_ACTION_PROMPT": {
+    "context": "notifications.rs",
+    "definedIn": "src/patterns/notifications.rs:285",
+    "plural": false,
+    "description": null
+  },
+  "NOTIFICATION_REPLY_ACTION_TRIGGERED": {
+    "context": "notifications.rs",
+    "definedIn": "src/patterns/notifications.rs:172",
     "plural": false,
     "description": null
   },
   "NOTIFICATION_SEND": {
     "context": "notifications.rs",
-    "definedIn": "src/patterns/notifications.rs:194",
+    "definedIn": "src/patterns/notifications.rs:319",
     "plural": false,
     "description": null
   },
@@ -805,13 +829,13 @@
   },
   "POSTED_NOTIFICATIONS_DESCRIPTION": {
     "context": "notifications.rs",
-    "definedIn": "src/patterns/notifications.rs:217",
+    "definedIn": "src/patterns/notifications.rs:342",
     "plural": false,
     "description": null
   },
   "POSTED_NOTIFICATIONS_TITLE": {
     "context": "notifications.rs",
-    "definedIn": "src/patterns/notifications.rs:208",
+    "definedIn": "src/patterns/notifications.rs:333",
     "plural": false,
     "description": null
   },
