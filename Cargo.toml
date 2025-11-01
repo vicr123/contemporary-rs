@@ -16,7 +16,7 @@ members = [
     "deploy_tool/cargo_cntp_bundle",
     "deploy_tool/cntp_bundle_lib",
     "deploy_tool/cargo_cntp_deploy",
-    "cntp_macros", "cntp_notifications",
+    "cntp_macros",
 ]
 
 [workspace.dependencies]
