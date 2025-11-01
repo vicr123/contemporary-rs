@@ -1,4 +1,4 @@
-use cntp_i18n::tr;
+use cntp_i18n::{Quote, tr};
 use contemporary::application::Details;
 use contemporary::components::button::button;
 use contemporary::components::constrainer::constrainer;
@@ -12,7 +12,7 @@ use contemporary::notification::{Notification, PostedNotification};
 use contemporary::styling::theme::Theme;
 use gpui::prelude::FluentBuilder;
 use gpui::{
-    App, AppContext, Context, Entity, InteractiveElement, IntoElement, ListAlignment,
+    App, AppContext, ClickEvent, Context, Entity, InteractiveElement, IntoElement, ListAlignment,
     ListSizingBehavior, ListState, ParentElement, Render, Styled, Window, div, list, px,
 };
 use std::rc::Rc;
@@ -24,15 +24,20 @@ pub struct Notifications {
     posted_notifications: Vec<Rc<Box<dyn PostedNotification>>>,
     metadata: Vec<Entity<NotificationMetadata>>,
     list_state: ListState,
+    pending_actions: Vec<Entity<TextField>>,
 }
 
 struct NotificationMetadata {
     dismissed: bool,
+    triggered_action: Option<String>,
 }
 
 impl Default for NotificationMetadata {
     fn default() -> Self {
-        NotificationMetadata { dismissed: false }
+        NotificationMetadata {
+            dismissed: false,
+            triggered_action: None,
+        }
     }
 }
 
@@ -54,7 +59,50 @@ impl Notifications {
             posted_notifications: Vec::new(),
             metadata: Vec::new(),
             list_state: ListState::new(0, ListAlignment::Top, px(200.)),
+            pending_actions: Vec::new(),
         })
+    }
+
+    fn trigger_notification(
+        &mut self,
+        _: &ClickEvent,
+        window: &mut Window,
+        cx: &mut Context<Self>,
+    ) {
+        let meta = cx.new(|_| NotificationMetadata::default());
+        let meta_clone = meta.clone();
+        let meta_weak = meta.downgrade();
+
+        let summary = self.summary_field.read(cx).text();
+        let body = self.body_field.read(cx).text();
+
+        let mut notification =
+            Notification::new()
+                .summary(summary)
+                .body(body)
+                .on_dismiss(move |_, cx| {
+                    meta_clone.update(cx, |meta, cx| {
+                        meta.dismissed = true;
+                        cx.notify()
+                    })
+                });
+
+        for action in self.pending_actions.iter() {
+            let meta_weak = meta_weak.clone();
+            let action_text = action.read(cx).text().to_string();
+            let action_text_2 = action_text.clone();
+            notification = notification.on_action(&action_text_2, move |_, cx| {
+                let action_text = action_text.clone();
+                let _ = meta_weak.update(cx, |meta, cx| meta.triggered_action = Some(action_text));
+            })
+        }
+
+        let posted = Rc::new(notification.post(cx));
+
+        self.posted_notifications.push(posted.clone());
+        self.metadata.push(meta);
+        self.list_state.reset(self.posted_notifications.len());
+        cx.notify();
     }
 }
 
@@ -103,6 +151,42 @@ impl Render for Notifications {
                                     ))
                                     .child(self.summary_field.clone())
                                     .child(self.body_field.clone())
+                                    .child(self.pending_actions.iter().enumerate().fold(
+                                        div().flex().flex_col().gap(px(8.)),
+                                        |david, (i, text_field)| {
+                                            david.child(
+                                                div()
+                                                    .id(i)
+                                                    .flex()
+                                                    .gap(px(4.))
+                                                    .child(text_field.clone())
+                                                    .child(
+                                                        button("delete-button")
+                                                            .destructive()
+                                                            .child(icon("list-remove".into()))
+                                                            .on_click(cx.listener(
+                                                                move |this, _, _, cx| {
+                                                                    this.pending_actions.remove(i);
+                                                                    cx.notify();
+                                                                },
+                                                            )),
+                                                    ),
+                                            )
+                                        },
+                                    ))
+                                    .child(
+                                        button("add-action-button")
+                                            .child(icon_text(
+                                                "list-add".into(),
+                                                tr!("NOTIFICATION_ADD_ACTION", "Add Action").into(),
+                                            ))
+                                            .on_click(cx.listener(|this, _, _, cx| {
+                                                this.pending_actions.push(
+                                                    cx.new(|cx| TextField::new("action", cx)),
+                                                );
+                                                cx.notify()
+                                            })),
+                                    )
                                     .child(
                                         button("send-notification-button")
                                             .child(icon_text(
@@ -110,32 +194,7 @@ impl Render for Notifications {
                                                 tr!("NOTIFICATION_SEND", "Post Notification")
                                                     .into(),
                                             ))
-                                            .on_click(cx.listener(|this, _, _, cx| {
-                                                let meta =
-                                                    cx.new(|_| NotificationMetadata::default());
-                                                let meta_clone = meta.clone();
-
-                                                let summary = this.summary_field.read(cx).text();
-                                                let body = this.body_field.read(cx).text();
-                                                let posted = Rc::new(
-                                                    Notification::new()
-                                                        .summary(summary)
-                                                        .body(body)
-                                                        .on_dismiss(move |_, cx| {
-                                                            meta_clone.update(cx, |meta, cx| {
-                                                                meta.dismissed = true;
-                                                                cx.notify()
-                                                            })
-                                                        })
-                                                        .post(cx),
-                                                );
-
-                                                this.posted_notifications.push(posted.clone());
-                                                this.metadata.push(meta);
-                                                this.list_state
-                                                    .reset(this.posted_notifications.len());
-                                                cx.notify();
-                                            })),
+                                            .on_click(cx.listener(Self::trigger_notification)),
                                     ),
                             ),
                     )
@@ -196,6 +255,17 @@ impl Render for Notifications {
                                                                             .unwrap_or_default()
                                                                             .to_string(),
                                                                     ),
+                                                            )
+                                                            .when_some(
+                                                                metadata.triggered_action.clone(),
+                                                                |david, action| {
+                                                                    david.child(tr!(
+                                                                        "NOTIFICATION_ACTION_\
+                                                                         TRIGGERED",
+                                                                        "Triggered with {{action}}",
+                                                                        action:Quote = action
+                                                                    ))
+                                                                },
                                                             )
                                                             .child(
                                                                 button("dismiss-button")

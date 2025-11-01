@@ -1,11 +1,16 @@
-use gpui::{App, Window};
+use gpui::App;
 use std::rc::Rc;
 use std::time::Duration;
-use uuid::Uuid;
 
 pub struct NotificationDismissEvent;
+pub struct NotificationActionEvent;
+pub struct NotificationReplyActionEvent {
+    pub text: String,
+}
 
 type DismissListener = Box<dyn Fn(&NotificationDismissEvent, &mut App)>;
+type ActionListener = Box<dyn Fn(&NotificationActionEvent, &mut App)>;
+type ReplyActionListener = Box<dyn Fn(&NotificationReplyActionEvent, &mut App)>;
 
 #[derive(Clone)]
 pub struct Notification {
@@ -15,7 +20,17 @@ pub struct Notification {
     pub sound: NotificationSound,
     pub timeout: NotificationTimeout,
 
+    pub actions: Vec<NotificationAction>,
+    pub default_action: Option<Rc<ActionListener>>,
+
     pub on_dismiss: Vec<Rc<DismissListener>>,
+    pub on_reply_action: Vec<Rc<ReplyActionListener>>,
+}
+
+#[derive(Clone)]
+pub struct NotificationAction {
+    pub text: String,
+    pub on_triggered: Rc<ActionListener>,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Default)]
@@ -58,7 +73,11 @@ impl Notification {
             sound: NotificationSound::default(),
             timeout: NotificationTimeout::default(),
 
+            default_action: None,
+            actions: Vec::new(),
+
             on_dismiss: Vec::new(),
+            on_reply_action: Vec::new(),
         }
     }
 
@@ -103,6 +122,48 @@ impl Notification {
         listener: impl Fn(&NotificationDismissEvent, &mut App) + 'static,
     ) -> Notification {
         self.on_dismiss.push(Rc::new(Box::new(listener)));
+        self
+    }
+
+    pub fn on_action_default_action<F>(mut self, text: &str, listener: F) -> Notification
+    where
+        F: Fn(&NotificationActionEvent, &mut App) + 'static,
+    {
+        let listener: Rc<Box<dyn Fn(&NotificationActionEvent, &mut App) + 'static>> =
+            Rc::new(Box::new(listener));
+        self.default_action = Some(listener.clone());
+        self.actions.push(NotificationAction {
+            text: text.to_string(),
+            on_triggered: listener,
+        });
+        self
+    }
+
+    pub fn on_default_action(
+        mut self,
+        listener: impl Fn(&NotificationActionEvent, &mut App) + 'static,
+    ) -> Notification {
+        self.default_action = Some(Rc::new(Box::new(listener)));
+        self
+    }
+
+    pub fn on_action(
+        mut self,
+        text: &str,
+        listener: impl Fn(&NotificationActionEvent, &mut App) + 'static,
+    ) -> Notification {
+        self.actions.push(NotificationAction {
+            text: text.to_string(),
+            on_triggered: Rc::new(Box::new(listener)),
+        });
+        self
+    }
+
+    pub fn on_reply_action(
+        mut self,
+        listener: impl Fn(&NotificationReplyActionEvent, &mut App) + 'static,
+    ) -> Notification {
+        self.on_reply_action.push(Rc::new(Box::new(listener)));
         self
     }
 
