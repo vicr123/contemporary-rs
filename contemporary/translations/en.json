@@ -31,5 +31,6 @@
   "MENU_GO_BACK": "Back",
   "MENU_HELP": "Help",
   "MENU_HELP_CONTENTS": "{{application}} Help",
+  "NOTIFICATION_REPLY": "Reply",
   "WINDOW_MENU": "Window"
 }

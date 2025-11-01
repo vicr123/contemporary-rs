@@ -191,6 +191,12 @@
     "plural": false,
     "description": null
   },
+  "NOTIFICATION_REPLY": {
+    "context": "notification.rs",
+    "definedIn": "src/platform_support/linux/notification.rs:175",
+    "plural": false,
+    "description": null
+  },
   "WINDOW_MENU": {
     "context": "setup.rs",
     "definedIn": "src/setup.rs:175",

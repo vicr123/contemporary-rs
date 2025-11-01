@@ -1,7 +1,9 @@
 use crate::notification::{
-    Notification, NotificationActionEvent, NotificationPriority, PostedNotification,
+    Notification, NotificationActionEvent, NotificationPriority, NotificationReplyActionEvent,
+    PostedNotification,
 };
-use ashpd::desktop::notification::{Button, NotificationProxy, Priority};
+use ashpd::desktop::notification::{Button, ButtonPurpose, Category, NotificationProxy, Priority};
+use cntp_i18n::tr;
 use gpui::{App, AsyncApp, BorrowAppContext, Global};
 use smol::stream::StreamExt;
 use std::collections::HashMap;
@@ -39,10 +41,24 @@ impl PostedNotification for LinuxPostedNotification {
     fn replace(&self, notification: Notification, cx: &mut App) {
         let id_clone = self.id.clone();
 
-        let ashpd_notification = contemporary_notification_to_ashpd_notification(notification, cx);
-
         cx.spawn(async move |cx: &mut AsyncApp| {
             let Ok(notification_portal) = NotificationProxy::new().await else {
+                return;
+            };
+
+            let (supported_categories, supported_button_purpose) = notification_portal
+                .supported_options()
+                .await
+                .unwrap_or_default();
+
+            let Ok(ashpd_notification) = cx.update(|cx| {
+                contemporary_notification_to_ashpd_notification(
+                    notification,
+                    supported_categories,
+                    supported_button_purpose,
+                    cx,
+                )
+            }) else {
                 return;
             };
 
@@ -60,12 +76,26 @@ pub fn post_notification(notification: Notification, cx: &mut App) -> Box<dyn Po
     let body = notification.body.clone();
     let summary = notification.summary.clone();
 
-    let ashpd_notification = contemporary_notification_to_ashpd_notification(notification, cx);
-
     let id_clone = id.clone();
     cx.spawn(async move |cx: &mut AsyncApp| {
         // TODO: If the portal is not available, fall back to org.freedesktop.Notifications
         let Ok(notification_portal) = NotificationProxy::new().await else {
+            return;
+        };
+
+        let (supported_categories, supported_button_purpose) = notification_portal
+            .supported_options()
+            .await
+            .unwrap_or_default();
+
+        let Ok(ashpd_notification) = cx.update(|cx| {
+            contemporary_notification_to_ashpd_notification(
+                notification,
+                supported_categories,
+                supported_button_purpose,
+                cx,
+            )
+        }) else {
             return;
         };
 
@@ -80,6 +110,8 @@ pub fn post_notification(notification: Notification, cx: &mut App) -> Box<dyn Po
 
 fn contemporary_notification_to_ashpd_notification(
     notification: Notification,
+    supported_categories: Vec<Category>,
+    supported_button_purpose: Vec<ButtonPurpose>,
     cx: &mut App,
 ) -> ashpd::desktop::notification::Notification {
     cx.update_global::<LinuxNotificationGlobal, _>(|linux_notification_global, cx| {
@@ -119,6 +151,34 @@ fn contemporary_notification_to_ashpd_notification(
             ashpd_notification = ashpd_notification.default_action(Some(uuid.to_string().as_str()));
         }
 
+        if !notification.on_reply_action.is_empty()
+            && supported_categories.contains(&Category::ImMessage)
+            && supported_button_purpose.contains(&ButtonPurpose::ImReplyWithText)
+        {
+            let uuid = Uuid::new_v4();
+            let on_triggered = notification.on_reply_action.clone();
+            linux_notification_global.action_handlers.insert(
+                uuid,
+                Box::new(move |reply, cx| {
+                    let event = &NotificationReplyActionEvent {
+                        text: reply.unwrap_or_default(),
+                    };
+                    for action in on_triggered.clone() {
+                        action(&event, cx);
+                    }
+                }),
+            );
+            ashpd_notification = ashpd_notification
+                .category(Some(Category::ImMessage))
+                .button(
+                    Button::new(
+                        tr!("NOTIFICATION_REPLY", "Reply").to_string().as_str(),
+                        uuid.to_string().as_str(),
+                    )
+                    .purpose(Some(ButtonPurpose::ImReplyWithText)),
+                );
+        }
+
         ashpd_notification
     })
 }
@@ -155,7 +215,13 @@ pub fn setup_linux_notifications(cx: &mut App) {
                         return;
                     };
 
-                    handler(None, cx);
+                    if let Some(reply_with_text) = action.parameter().get(2)
+                        && let Ok(reply) = reply_with_text.downcast_ref::<String>()
+                    {
+                        handler(Some(reply), cx);
+                    } else {
+                        handler(None, cx);
+                    }
                 })
                 .is_err()
             {
