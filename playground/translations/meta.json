@@ -697,31 +697,31 @@
   },
   "NOTIFICATIONS_BODY": {
     "context": "notifications.rs",
-    "definedIn": "src/patterns/notifications.rs:32",
+    "definedIn": "src/patterns/notifications.rs:50",
     "plural": false,
     "description": null
   },
   "NOTIFICATIONS_DESCRIPTION": {
     "context": "notifications.rs",
-    "definedIn": "src/patterns/notifications.rs:77",
+    "definedIn": "src/patterns/notifications.rs:99",
     "plural": false,
     "description": null
   },
   "NOTIFICATIONS_SUMMARY": {
     "context": "notifications.rs",
-    "definedIn": "src/patterns/notifications.rs:27",
+    "definedIn": "src/patterns/notifications.rs:45",
     "plural": false,
     "description": null
   },
   "NOTIFICATIONS_TITLE": {
     "context": "notifications.rs",
-    "definedIn": "src/patterns/notifications.rs:54",
+    "definedIn": "src/patterns/notifications.rs:76",
     "plural": false,
     "description": null
   },
   "NOTIFICATION_SEND": {
     "context": "notifications.rs",
-    "definedIn": "src/patterns/notifications.rs:88",
+    "definedIn": "src/patterns/notifications.rs:110",
     "plural": false,
     "description": null
   },
@@ -788,6 +788,18 @@
   "POPOVER_TRAILING": {
     "context": "popovers.rs",
     "definedIn": "src/patterns/popovers.rs:77",
+    "plural": false,
+    "description": null
+  },
+  "POSTED_NOTIFICATIONS_DESCRIPTION": {
+    "context": "notifications.rs",
+    "definedIn": "src/patterns/notifications.rs:158",
+    "plural": false,
+    "description": null
+  },
+  "POSTED_NOTIFICATIONS_TITLE": {
+    "context": "notifications.rs",
+    "definedIn": "src/patterns/notifications.rs:149",
     "plural": false,
     "description": null
   },

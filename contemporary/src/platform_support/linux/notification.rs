@@ -5,10 +5,20 @@ use uuid::Uuid;
 
 struct LinuxPostedNotification {
     id: String,
+    summary: Option<String>,
+    body: Option<String>,
 }
 
 impl PostedNotification for LinuxPostedNotification {
-    fn remove(&mut self, cx: &mut App) {
+    fn summary(&self) -> Option<&str> {
+        self.summary.as_deref()
+    }
+
+    fn body(&self) -> Option<&str> {
+        self.body.as_deref()
+    }
+
+    fn dismiss(&self, cx: &mut App) {
         let id_clone = self.id.clone();
         cx.spawn(async move |cx: &mut AsyncApp| {
             let Ok(notification_portal) = NotificationProxy::new().await else {
@@ -22,7 +32,7 @@ impl PostedNotification for LinuxPostedNotification {
         .detach();
     }
 
-    fn replace(&mut self, notification: Notification, cx: &mut App) {
+    fn replace(&self, notification: Notification, cx: &mut App) {
         let id_clone = self.id.clone();
         cx.spawn(async move |cx: &mut AsyncApp| {
             let Ok(notification_portal) = NotificationProxy::new().await else {

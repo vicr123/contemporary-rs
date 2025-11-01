@@ -1,22 +1,38 @@
-use crate::notification::{Notification, PostedNotification};
+use crate::notification::{Notification, NotificationSound, PostedNotification};
 use gpui::{App, Global};
 use objc2::rc::Retained;
 use objc2::runtime::{NSObject, NSObjectProtocol, ProtocolObject};
-use objc2::{define_class, msg_send, msg_send_id, MainThreadMarker, MainThreadOnly};
+use objc2::{MainThreadMarker, MainThreadOnly, define_class, msg_send, msg_send_id};
 use objc2_foundation::{
     NSBundle, NSString, NSUserNotification, NSUserNotificationCenter,
-    NSUserNotificationCenterDelegate,
+    NSUserNotificationCenterDelegate, NSUserNotificationDefaultSoundName,
 };
 
 enum MacPostedNotification {
     Failed,
     Posted {
         ns_notification: Retained<NSUserNotification>,
+        summary: Option<String>,
+        body: Option<String>,
     },
 }
 
 impl PostedNotification for MacPostedNotification {
-    fn remove(&mut self, cx: &mut App) {
+    fn summary(&self) -> Option<&str> {
+        match self {
+            MacPostedNotification::Failed => None,
+            MacPostedNotification::Posted { summary, .. } => summary.as_deref(),
+        }
+    }
+
+    fn body(&self) -> Option<&str> {
+        match self {
+            MacPostedNotification::Failed => None,
+            MacPostedNotification::Posted { body, .. } => body.as_deref(),
+        }
+    }
+
+    fn dismiss(&self, cx: &mut App) {
         unsafe {
             let bundle = NSBundle::mainBundle();
             if bundle.bundleIdentifier().is_none() {
@@ -25,14 +41,17 @@ impl PostedNotification for MacPostedNotification {
                 return;
             }
 
-            if let MacPostedNotification::Posted { ns_notification } = &self {
+            if let MacPostedNotification::Posted {
+                ns_notification, ..
+            } = &self
+            {
                 NSUserNotificationCenter::defaultUserNotificationCenter()
                     .removeDeliveredNotification(ns_notification);
             }
         }
     }
 
-    fn replace(&mut self, _: Notification, _: &mut App) {
+    fn replace(&self, _: Notification, _: &mut App) {
         // TODO
     }
 }
@@ -50,20 +69,30 @@ pub fn post_notification(notification: Notification, _: &mut App) -> Box<dyn Pos
         ns_notification.setTitle(
             notification
                 .summary
+                .clone()
                 .map(|summary| NSString::from_str(summary.as_str()))
                 .as_deref(),
         );
         ns_notification.setInformativeText(
             notification
                 .body
+                .clone()
                 .map(|summary| NSString::from_str(summary.as_str()))
                 .as_deref(),
         );
+        ns_notification.setSoundName(match notification.sound {
+            NotificationSound::Default => Some(NSUserNotificationDefaultSoundName),
+            NotificationSound::Silent => None,
+        });
 
         NSUserNotificationCenter::defaultUserNotificationCenter()
             .deliverNotification(&ns_notification);
 
-        Box::new(MacPostedNotification::Posted { ns_notification })
+        Box::new(MacPostedNotification::Posted {
+            ns_notification,
+            summary: notification.summary,
+            body: notification.body,
+        })
     }
 }
 
@@ -81,6 +110,15 @@ define_class!(
             notification: &NSUserNotification,
         ) -> bool {
             true
+        }
+
+        #[unsafe(method(userNotificationCenter:didActivateNotification:))]
+        unsafe fn __user_notification_center_did_activate_notification(
+            &self,
+            center: &NSUserNotificationCenter,
+            notification: &NSUserNotification,
+        ) {
+            // TODO: Actions
         }
     }
 

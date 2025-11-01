@@ -1214,6 +1214,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "cntp_notifications"
+version = "0.1.0"
+
+[[package]]
 name = "cocoa"
 version = "0.25.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"

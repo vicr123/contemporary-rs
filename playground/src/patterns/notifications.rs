@@ -3,19 +3,37 @@ use contemporary::application::Details;
 use contemporary::components::button::button;
 use contemporary::components::constrainer::constrainer;
 use contemporary::components::grandstand::grandstand;
+use contemporary::components::icon::icon;
 use contemporary::components::icon_text::icon_text;
 use contemporary::components::layer::layer;
 use contemporary::components::subtitle::subtitle;
 use contemporary::components::text_field::TextField;
-use contemporary::notification::Notification;
+use contemporary::notification::{Notification, PostedNotification};
 use contemporary::styling::theme::Theme;
+use gpui::prelude::FluentBuilder;
 use gpui::{
-    App, AppContext, Context, Entity, IntoElement, ParentElement, Render, Styled, Window, div, px,
+    App, AppContext, Context, Entity, InteractiveElement, IntoElement, ListAlignment,
+    ListSizingBehavior, ListState, ParentElement, Render, Styled, Window, div, list, px,
 };
+use std::rc::Rc;
 
 pub struct Notifications {
     summary_field: Entity<TextField>,
     body_field: Entity<TextField>,
+
+    posted_notifications: Vec<Rc<Box<dyn PostedNotification>>>,
+    metadata: Vec<Entity<NotificationMetadata>>,
+    list_state: ListState,
+}
+
+struct NotificationMetadata {
+    dismissed: bool,
+}
+
+impl Default for NotificationMetadata {
+    fn default() -> Self {
+        NotificationMetadata { dismissed: false }
+    }
 }
 
 impl Notifications {
@@ -32,6 +50,10 @@ impl Notifications {
                 text_field.set_placeholder(tr!("NOTIFICATIONS_BODY", "Body").to_string().as_str());
                 text_field
             }),
+
+            posted_notifications: Vec::new(),
+            metadata: Vec::new(),
+            list_state: ListState::new(0, ListAlignment::Top, px(200.)),
         })
     }
 }
@@ -85,18 +107,115 @@ impl Render for Notifications {
                                         button("send-notification-button")
                                             .child(icon_text(
                                                 "mail-send".into(),
-                                                tr!("NOTIFICATION_SEND", "Send Notification")
+                                                tr!("NOTIFICATION_SEND", "Post Notification")
                                                     .into(),
                                             ))
                                             .on_click(cx.listener(|this, _, _, cx| {
-                                                // TODO
+                                                let meta =
+                                                    cx.new(|_| NotificationMetadata::default());
+                                                let meta_clone = meta.clone();
+
                                                 let summary = this.summary_field.read(cx).text();
                                                 let body = this.body_field.read(cx).text();
-                                                Notification::new()
-                                                    .summary(summary)
-                                                    .body(body)
-                                                    .post(cx);
+                                                let posted = Rc::new(
+                                                    Notification::new()
+                                                        .summary(summary)
+                                                        .body(body)
+                                                        .on_dismiss(move |_, cx| {
+                                                            meta_clone.update(cx, |meta, cx| {
+                                                                meta.dismissed = true;
+                                                                cx.notify()
+                                                            })
+                                                        })
+                                                        .post(cx),
+                                                );
+
+                                                this.posted_notifications.push(posted.clone());
+                                                this.metadata.push(meta);
+                                                this.list_state
+                                                    .reset(this.posted_notifications.len());
+                                                cx.notify();
                                             })),
+                                    ),
+                            ),
+                    )
+                    .child(
+                        layer()
+                            .flex()
+                            .flex_col()
+                            .p(px(8.))
+                            .w_full()
+                            .child(subtitle(tr!(
+                                "POSTED_NOTIFICATIONS_TITLE",
+                                "Posted Notifications"
+                            )))
+                            .child(
+                                div()
+                                    .flex()
+                                    .flex_col()
+                                    .gap(px(8.))
+                                    .child(tr!(
+                                        "POSTED_NOTIFICATIONS_DESCRIPTION",
+                                        "Notifications that you have posted will appear below."
+                                    ))
+                                    .child(
+                                        list(
+                                            self.list_state.clone(),
+                                            cx.processor(|this, i, _, cx| {
+                                                let notification: &Rc<Box<dyn PostedNotification>> =
+                                                    &this.posted_notifications[i];
+                                                let metadata: &Entity<NotificationMetadata> =
+                                                    &this.metadata[i];
+                                                let notification = notification.clone();
+                                                let metadata = metadata.read(cx);
+
+                                                div()
+                                                    .id(i)
+                                                    .py(px(2.))
+                                                    .child(
+                                                        layer()
+                                                            .flex()
+                                                            .w_full()
+                                                            .p(px(4.))
+                                                            .gap(px(4.))
+                                                            .items_center()
+                                                            .child(
+                                                                div()
+                                                                    .flex()
+                                                                    .flex_col()
+                                                                    .flex_grow()
+                                                                    .child(subtitle(
+                                                                        notification
+                                                                            .summary()
+                                                                            .unwrap_or_default()
+                                                                            .to_string(),
+                                                                    ))
+                                                                    .child(
+                                                                        notification
+                                                                            .body()
+                                                                            .unwrap_or_default()
+                                                                            .to_string(),
+                                                                    ),
+                                                            )
+                                                            .child(
+                                                                button("dismiss-button")
+                                                                    .destructive()
+                                                                    .child(icon(
+                                                                        "edit-delete".into(),
+                                                                    ))
+                                                                    .when(
+                                                                        metadata.dismissed,
+                                                                        |button| button.disabled(),
+                                                                    )
+                                                                    .on_click(move |_, _, cx| {
+                                                                        notification.dismiss(cx);
+                                                                    }),
+                                                            ),
+                                                    )
+                                                    .into_any_element()
+                                            }),
+                                        )
+                                        .with_sizing_behavior(ListSizingBehavior::Infer),
                                     ),
                             ),
                     ),
