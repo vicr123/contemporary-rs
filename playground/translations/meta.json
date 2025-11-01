@@ -703,7 +703,7 @@
   },
   "NOTIFICATIONS_DESCRIPTION": {
     "context": "notifications.rs",
-    "definedIn": "src/patterns/notifications.rs:230",
+    "definedIn": "src/patterns/notifications.rs:243",
     "plural": false,
     "description": null
   },
@@ -715,49 +715,49 @@
   },
   "NOTIFICATIONS_TITLE": {
     "context": "notifications.rs",
-    "definedIn": "src/patterns/notifications.rs:207",
+    "definedIn": "src/patterns/notifications.rs:220",
     "plural": false,
     "description": null
   },
   "NOTIFICATION_ACTION_TRIGGERED": {
     "context": "notifications.rs",
-    "definedIn": "src/patterns/notifications.rs:162",
+    "definedIn": "src/patterns/notifications.rs:175",
     "plural": false,
     "description": null
   },
   "NOTIFICATION_ADD_ACTION": {
     "context": "notifications.rs",
-    "definedIn": "src/patterns/notifications.rs:306",
+    "definedIn": "src/patterns/notifications.rs:319",
     "plural": false,
     "description": null
   },
   "NOTIFICATION_DEFAULT_ACTION_PROMPT": {
     "context": "notifications.rs",
-    "definedIn": "src/patterns/notifications.rs:264",
+    "definedIn": "src/patterns/notifications.rs:277",
     "plural": false,
     "description": null
   },
   "NOTIFICATION_DEFAULT_ACTION_TRIGGERED": {
     "context": "notifications.rs",
-    "definedIn": "src/patterns/notifications.rs:168",
+    "definedIn": "src/patterns/notifications.rs:181",
     "plural": false,
     "description": null
   },
   "NOTIFICATION_REPLY_ACTION_PROMPT": {
     "context": "notifications.rs",
-    "definedIn": "src/patterns/notifications.rs:285",
+    "definedIn": "src/patterns/notifications.rs:298",
     "plural": false,
     "description": null
   },
   "NOTIFICATION_REPLY_ACTION_TRIGGERED": {
     "context": "notifications.rs",
-    "definedIn": "src/patterns/notifications.rs:172",
+    "definedIn": "src/patterns/notifications.rs:185",
     "plural": false,
     "description": null
   },
   "NOTIFICATION_SEND": {
     "context": "notifications.rs",
-    "definedIn": "src/patterns/notifications.rs:319",
+    "definedIn": "src/patterns/notifications.rs:332",
     "plural": false,
     "description": null
   },
@@ -829,13 +829,13 @@
   },
   "POSTED_NOTIFICATIONS_DESCRIPTION": {
     "context": "notifications.rs",
-    "definedIn": "src/patterns/notifications.rs:342",
+    "definedIn": "src/patterns/notifications.rs:355",
     "plural": false,
     "description": null
   },
   "POSTED_NOTIFICATIONS_TITLE": {
     "context": "notifications.rs",
-    "definedIn": "src/patterns/notifications.rs:333",
+    "definedIn": "src/patterns/notifications.rs:346",
     "plural": false,
     "description": null
   },

@@ -1,5 +1,6 @@
 use crate::notification::{
-    Notification, NotificationActionEvent, NotificationSound, PostedNotification,
+    Notification, NotificationActionEvent, NotificationReplyActionEvent, NotificationSound,
+    PostedNotification,
 };
 use async_channel::Sender;
 use gpui::{App, AsyncApp, BorrowAppContext, Global};
@@ -10,8 +11,9 @@ use objc2::{
 };
 use objc2_foundation::{
     NSArray, NSBundle, NSDictionary, NSMutableDictionary, NSObjectNSKeyValueCoding, NSString,
-    NSUserNotification, NSUserNotificationAction, NSUserNotificationCenter,
-    NSUserNotificationCenterDelegate, NSUserNotificationDefaultSoundName, ns_string,
+    NSUserNotification, NSUserNotificationAction, NSUserNotificationActivationType,
+    NSUserNotificationCenter, NSUserNotificationCenterDelegate, NSUserNotificationDefaultSoundName,
+    ns_string,
 };
 use std::collections::HashMap;
 use uuid::Uuid;
@@ -101,7 +103,7 @@ pub fn post_notification(notification: Notification, cx: &mut App) -> Box<dyn Po
                 let on_triggered = action.on_triggered.clone();
                 apple_notification_global.action_handlers.insert(
                     uuid,
-                    Box::new(move |cx| {
+                    Box::new(move |_, cx| {
                         on_triggered.clone()(&NotificationActionEvent, cx);
                     }),
                 );
@@ -118,7 +120,7 @@ pub fn post_notification(notification: Notification, cx: &mut App) -> Box<dyn Po
                 let on_triggered = default_action.clone();
                 apple_notification_global.action_handlers.insert(
                     uuid,
-                    Box::new(move |cx| {
+                    Box::new(move |_, cx| {
                         on_triggered.clone()(&NotificationActionEvent, cx);
                     }),
                 );
@@ -128,6 +130,36 @@ pub fn post_notification(notification: Notification, cx: &mut App) -> Box<dyn Po
                     uuid.as_ref(),
                     ProtocolObject::from_ref(ns_string!("default_action_uuid")),
                 );
+                ns_notification.setHasActionButton(true);
+            } else {
+                ns_notification.setHasActionButton(false);
+            }
+
+            if !notification.on_reply_action.is_empty() {
+                let uuid = Uuid::new_v4();
+                let on_triggered = notification.on_reply_action.clone();
+                apple_notification_global.action_handlers.insert(
+                    uuid,
+                    Box::new(move |reply, cx| {
+                        let event = &NotificationReplyActionEvent {
+                            text: reply.unwrap_or_default(),
+                        };
+
+                        for action in on_triggered.clone() {
+                            action(&event, cx);
+                        }
+                    }),
+                );
+
+                let uuid = NSString::from_str(uuid.to_string().as_str());
+                user_info.setObject_forKey(
+                    uuid.as_ref(),
+                    ProtocolObject::from_ref(ns_string!("reply_action_uuid")),
+                );
+
+                ns_notification.setHasReplyButton(true);
+            } else {
+                ns_notification.setHasReplyButton(false);
             }
 
             ns_notification.setUserInfo(Some(&user_info));
@@ -170,9 +202,8 @@ define_class!(
             center: &NSUserNotificationCenter,
             notification: &NSUserNotification,
         ) {
-            // TODO: Actions
             match notification.activationType() {
-                NSUserNotificationActivationTypeContentsClicked => {
+                NSUserNotificationActivationType::ContentsClicked | NSUserNotificationActivationType::ActionButtonClicked => {
                     let Some(user_info) = notification.userInfo() else {
                         return;
                     };
@@ -189,10 +220,32 @@ define_class!(
                         _ = smol::block_on(self.ivars().tx.send(NotificationActionActivation::Trigger(trigger_uuid)));
                     }
                 }
-                NSUserNotificationActivationTypeActionButtonClicked => {
+                NSUserNotificationActivationType::AdditionalActionClicked => {
                     let activated = notification.additionalActivationAction().unwrap();
                     if let Ok(trigger_uuid) = Uuid::try_parse(activated.identifier().unwrap().to_string().as_str()) {
                         _ = smol::block_on(self.ivars().tx.send(NotificationActionActivation::Trigger(trigger_uuid)));
+                    }
+                }
+                NSUserNotificationActivationType::Replied => {
+                    let Some(reply) = notification.response() else {
+                        return;
+                    };
+                    let reply = reply.string().to_string();
+
+                    let Some(user_info) = notification.userInfo() else {
+                        return;
+                    };
+
+                    let Some(reply_action_uuid) = user_info.valueForKey(ns_string!("reply_action_uuid")) else {
+                        return;
+                    };
+
+                    let Ok(reply_action_uuid) = reply_action_uuid.downcast::<NSString>() else {
+                        return;
+                    };
+
+                    if let Ok(trigger_uuid) = Uuid::try_parse(reply_action_uuid.to_string().as_str()) {
+                        _ = smol::block_on(self.ivars().tx.send(NotificationActionActivation::TriggerReply(trigger_uuid, reply)));
                     }
                 }
                 _ => {}
@@ -207,6 +260,7 @@ define_class!(
 
 enum NotificationActionActivation {
     Trigger(Uuid),
+    TriggerReply(Uuid, String),
 }
 
 impl AppNotificationDelegate {
@@ -219,7 +273,7 @@ impl AppNotificationDelegate {
 
 struct AppleNotificationGlobal {
     globalable_item: Retained<AppNotificationDelegate>,
-    action_handlers: HashMap<Uuid, Box<dyn Fn(&mut App) + 'static>>,
+    action_handlers: HashMap<Uuid, Box<dyn Fn(Option<String>, &mut App) + 'static>>,
 }
 
 impl Global for AppleNotificationGlobal {}
@@ -261,7 +315,14 @@ pub fn setup_apple_notifications(cx: &mut App) {
                             if let Some(handler) =
                                 apple_notification_global.action_handlers.get(&uuid)
                             {
-                                handler(cx)
+                                handler(None, cx)
+                            }
+                        }
+                        NotificationActionActivation::TriggerReply(uuid, reply) => {
+                            if let Some(handler) =
+                                apple_notification_global.action_handlers.get(&uuid)
+                            {
+                                handler(Some(reply), cx)
                             }
                         }
                     }

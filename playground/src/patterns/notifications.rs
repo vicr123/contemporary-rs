@@ -101,7 +101,8 @@ impl Notifications {
                 let action_text = action_text.clone();
                 let _ = meta_weak.update(cx, |meta, cx| {
                     meta.triggered_action =
-                        Some(NotificationTriggeredAction::ActionName(action_text))
+                        Some(NotificationTriggeredAction::ActionName(action_text));
+                    cx.notify();
                 });
             })
         }
@@ -110,7 +111,19 @@ impl Notifications {
             let meta_weak = meta_weak.clone();
             notification = notification.on_default_action(move |_, cx| {
                 let _ = meta_weak.update(cx, |meta, cx| {
-                    meta.triggered_action = Some(NotificationTriggeredAction::DefaultAction)
+                    meta.triggered_action = Some(NotificationTriggeredAction::DefaultAction);
+                    cx.notify();
+                });
+            })
+        }
+
+        if self.has_reply_action {
+            let meta_weak = meta_weak.clone();
+            notification = notification.on_reply_action(move |event, cx| {
+                let _ = meta_weak.update(cx, |meta, cx| {
+                    meta.triggered_action =
+                        Some(NotificationTriggeredAction::Reply(event.text.clone()));
+                    cx.notify();
                 });
             })
         }
