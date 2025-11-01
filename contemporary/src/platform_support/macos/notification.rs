@@ -67,111 +67,111 @@ impl PostedNotification for MacPostedNotification {
 }
 
 pub fn post_notification(notification: Notification, cx: &mut App) -> Box<dyn PostedNotification> {
-    cx.update_global::<AppleNotificationGlobal, _>(|apple_notification_global, cx| {
-        unsafe {
-            let bundle = NSBundle::mainBundle();
-            if bundle.bundleIdentifier().is_none() {
-                // We don't have a bundle so the notifications won't work.
-                // Fail silently.
-                return Box::new(MacPostedNotification::Failed);
-            }
-
-            let user_info = NSMutableDictionary::new();
-            let ns_notification = NSUserNotification::new();
-            ns_notification.setTitle(
-                notification
-                    .summary
-                    .clone()
-                    .map(|summary| NSString::from_str(summary.as_str()))
-                    .as_deref(),
-            );
-            ns_notification.setInformativeText(
-                notification
-                    .body
-                    .clone()
-                    .map(|summary| NSString::from_str(summary.as_str()))
-                    .as_deref(),
-            );
-            ns_notification.setSoundName(match notification.sound {
-                NotificationSound::Default => Some(NSUserNotificationDefaultSoundName),
-                NotificationSound::Silent => None,
-            });
-
-            let mut actions = Vec::new();
-            for action in notification.actions {
-                let uuid = Uuid::new_v4();
-                let on_triggered = action.on_triggered.clone();
-                apple_notification_global.action_handlers.insert(
-                    uuid,
-                    Box::new(move |_, cx| {
-                        on_triggered.clone()(&NotificationActionEvent, cx);
-                    }),
-                );
-                actions.push(NSUserNotificationAction::actionWithIdentifier_title(
-                    Some(&NSString::from_str(uuid.to_string().as_str())),
-                    Some(&NSString::from_str(action.text.as_str())),
-                ));
-            }
-            ns_notification
-                .setAdditionalActions(Some(&NSArray::from_retained_slice(actions.as_slice())));
-
-            if let Some(default_action) = notification.default_action {
-                let uuid = Uuid::new_v4();
-                let on_triggered = default_action.clone();
-                apple_notification_global.action_handlers.insert(
-                    uuid,
-                    Box::new(move |_, cx| {
-                        on_triggered.clone()(&NotificationActionEvent, cx);
-                    }),
-                );
-
-                let uuid = NSString::from_str(uuid.to_string().as_str());
-                user_info.setObject_forKey(
-                    uuid.as_ref(),
-                    ProtocolObject::from_ref(ns_string!("default_action_uuid")),
-                );
-                ns_notification.setHasActionButton(true);
-            } else {
-                ns_notification.setHasActionButton(false);
-            }
-
-            if !notification.on_reply_action.is_empty() {
-                let uuid = Uuid::new_v4();
-                let on_triggered = notification.on_reply_action.clone();
-                apple_notification_global.action_handlers.insert(
-                    uuid,
-                    Box::new(move |reply, cx| {
-                        let event = &NotificationReplyActionEvent {
-                            text: reply.unwrap_or_default(),
-                        };
-
-                        for action in on_triggered.clone() {
-                            action(&event, cx);
-                        }
-                    }),
-                );
-
-                let uuid = NSString::from_str(uuid.to_string().as_str());
-                user_info.setObject_forKey(
-                    uuid.as_ref(),
-                    ProtocolObject::from_ref(ns_string!("reply_action_uuid")),
-                );
-
-                ns_notification.setHasReplyButton(true);
-            } else {
-                ns_notification.setHasReplyButton(false);
-            }
-
-            ns_notification.setUserInfo(Some(&user_info));
-            NSUserNotificationCenter::defaultUserNotificationCenter()
-                .deliverNotification(&ns_notification);
-
-            Box::new(MacPostedNotification::Posted {
-                ns_notification,
-                summary: notification.summary,
-                body: notification.body,
-            })
+    unsafe {
+        let bundle = NSBundle::mainBundle();
+        if bundle.bundleIdentifier().is_none() {
+            // We don't have a bundle so the notifications won't work.
+            // Fail silently.
+            return Box::new(MacPostedNotification::Failed);
         }
+    }
+
+    cx.update_global::<AppleNotificationGlobal, _>(|apple_notification_global, cx| unsafe {
+        let user_info = NSMutableDictionary::new();
+        let ns_notification = NSUserNotification::new();
+        ns_notification.setTitle(
+            notification
+                .summary
+                .clone()
+                .map(|summary| NSString::from_str(summary.as_str()))
+                .as_deref(),
+        );
+        ns_notification.setInformativeText(
+            notification
+                .body
+                .clone()
+                .map(|summary| NSString::from_str(summary.as_str()))
+                .as_deref(),
+        );
+        ns_notification.setSoundName(match notification.sound {
+            NotificationSound::Default => Some(NSUserNotificationDefaultSoundName),
+            NotificationSound::Silent => None,
+        });
+
+        let mut actions = Vec::new();
+        for action in notification.actions {
+            let uuid = Uuid::new_v4();
+            let on_triggered = action.on_triggered.clone();
+            apple_notification_global.action_handlers.insert(
+                uuid,
+                Box::new(move |_, cx| {
+                    on_triggered.clone()(&NotificationActionEvent, cx);
+                }),
+            );
+            actions.push(NSUserNotificationAction::actionWithIdentifier_title(
+                Some(&NSString::from_str(uuid.to_string().as_str())),
+                Some(&NSString::from_str(action.text.as_str())),
+            ));
+        }
+        ns_notification
+            .setAdditionalActions(Some(&NSArray::from_retained_slice(actions.as_slice())));
+
+        if let Some(default_action) = notification.default_action {
+            let uuid = Uuid::new_v4();
+            let on_triggered = default_action.clone();
+            apple_notification_global.action_handlers.insert(
+                uuid,
+                Box::new(move |_, cx| {
+                    on_triggered.clone()(&NotificationActionEvent, cx);
+                }),
+            );
+
+            let uuid = NSString::from_str(uuid.to_string().as_str());
+            user_info.setObject_forKey(
+                uuid.as_ref(),
+                ProtocolObject::from_ref(ns_string!("default_action_uuid")),
+            );
+            ns_notification.setHasActionButton(true);
+        } else {
+            ns_notification.setHasActionButton(false);
+        }
+
+        if !notification.on_reply_action.is_empty() {
+            let uuid = Uuid::new_v4();
+            let on_triggered = notification.on_reply_action.clone();
+            apple_notification_global.action_handlers.insert(
+                uuid,
+                Box::new(move |reply, cx| {
+                    let event = &NotificationReplyActionEvent {
+                        text: reply.unwrap_or_default(),
+                    };
+
+                    for action in on_triggered.clone() {
+                        action(&event, cx);
+                    }
+                }),
+            );
+
+            let uuid = NSString::from_str(uuid.to_string().as_str());
+            user_info.setObject_forKey(
+                uuid.as_ref(),
+                ProtocolObject::from_ref(ns_string!("reply_action_uuid")),
+            );
+
+            ns_notification.setHasReplyButton(true);
+        } else {
+            ns_notification.setHasReplyButton(false);
+        }
+
+        ns_notification.setUserInfo(Some(&user_info));
+        NSUserNotificationCenter::defaultUserNotificationCenter()
+            .deliverNotification(&ns_notification);
+
+        Box::new(MacPostedNotification::Posted {
+            ns_notification,
+            summary: notification.summary,
+            body: notification.body,
+        })
     })
 }
 
