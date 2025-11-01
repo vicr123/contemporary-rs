@@ -126,6 +126,7 @@
   "NOTIFICATION_ADD_ACTION": "Add Action",
   "NOTIFICATION_DEFAULT_ACTION_PROMPT": "Enable Default Action",
   "NOTIFICATION_DEFAULT_ACTION_TRIGGERED": "Triggered default action",
+  "NOTIFICATION_MUTED_PROMPT": "Notify Silently",
   "NOTIFICATION_REPLY_ACTION_PROMPT": "Enable Reply Action",
   "NOTIFICATION_REPLY_ACTION_TRIGGERED": "Replied with {{reply}}",
   "NOTIFICATION_SEND": "Post Notification",

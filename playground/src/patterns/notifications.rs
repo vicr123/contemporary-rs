@@ -9,7 +9,7 @@ use contemporary::components::layer::layer;
 use contemporary::components::subtitle::subtitle;
 use contemporary::components::switch::{SwitchChangeEvent, switch};
 use contemporary::components::text_field::TextField;
-use contemporary::notification::{Notification, PostedNotification};
+use contemporary::notification::{Notification, NotificationSound, PostedNotification};
 use contemporary::styling::theme::Theme;
 use gpui::prelude::FluentBuilder;
 use gpui::{
@@ -30,6 +30,7 @@ pub struct Notifications {
 
     has_default_action: bool,
     has_reply_action: bool,
+    is_muted: bool,
 }
 
 #[derive(Default)]
@@ -66,6 +67,7 @@ impl Notifications {
             pending_actions: Vec::new(),
             has_default_action: false,
             has_reply_action: false,
+            is_muted: false,
         })
     }
 
@@ -82,16 +84,20 @@ impl Notifications {
         let summary = self.summary_field.read(cx).text();
         let body = self.body_field.read(cx).text();
 
-        let mut notification =
-            Notification::new()
-                .summary(summary)
-                .body(body)
-                .on_dismiss(move |_, cx| {
-                    meta_clone.update(cx, |meta, cx| {
-                        meta.dismissed = true;
-                        cx.notify()
-                    })
-                });
+        let mut notification = Notification::new()
+            .summary(summary)
+            .body(body)
+            .sound(if self.is_muted {
+                NotificationSound::Silent
+            } else {
+                NotificationSound::Default
+            })
+            .on_dismiss(move |_, cx| {
+                meta_clone.update(cx, |meta, cx| {
+                    meta.dismissed = true;
+                    cx.notify()
+                })
+            });
 
         for action in self.pending_actions.iter() {
             let meta_weak = meta_weak.clone();
@@ -271,6 +277,19 @@ impl Render for Notifications {
                                         },
                                     ))
                                     .child(
+                                        button("add-action-button")
+                                            .child(icon_text(
+                                                "list-add".into(),
+                                                tr!("NOTIFICATION_ADD_ACTION", "Add Action").into(),
+                                            ))
+                                            .on_click(cx.listener(|this, _, _, cx| {
+                                                this.pending_actions.push(
+                                                    cx.new(|cx| TextField::new("action", cx)),
+                                                );
+                                                cx.notify()
+                                            })),
+                                    )
+                                    .child(
                                         div()
                                             .flex()
                                             .child(tr!(
@@ -313,17 +332,23 @@ impl Render for Notifications {
                                             ),
                                     )
                                     .child(
-                                        button("add-action-button")
-                                            .child(icon_text(
-                                                "list-add".into(),
-                                                tr!("NOTIFICATION_ADD_ACTION", "Add Action").into(),
+                                        div()
+                                            .flex()
+                                            .child(tr!(
+                                                "NOTIFICATION_MUTED_PROMPT",
+                                                "Notify Silently"
                                             ))
-                                            .on_click(cx.listener(|this, _, _, cx| {
-                                                this.pending_actions.push(
-                                                    cx.new(|cx| TextField::new("action", cx)),
-                                                );
-                                                cx.notify()
-                                            })),
+                                            .child(div().flex_grow())
+                                            .child(
+                                                switch("muted-action-switch")
+                                                    .when(self.is_muted, |david| david.checked())
+                                                    .on_change(cx.listener(
+                                                        |this, event: &SwitchChangeEvent, _, cx| {
+                                                            this.is_muted = event.checked;
+                                                            cx.notify();
+                                                        },
+                                                    )),
+                                            ),
                                     )
                                     .child(
                                         button("send-notification-button")
