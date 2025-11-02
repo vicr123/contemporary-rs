@@ -30,6 +30,7 @@ pub fn create_macos_theme(theme_type: ThemeType) -> Theme {
         theme_type,
         system_font_family: ".AppleSystemUIFont".to_string(),
         system_font_size: px(13.),
+        monospaced_font_family: "SF Mono".to_string(),
 
         ..base_theme
     }
