@@ -1,4 +1,4 @@
-use crate::styling::theme::Theme;
+use crate::styling::theme::ThemeStorage;
 use gpui::{
     Animation, AnimationExt, App, Div, ElementId, InteractiveElement, IntoElement, ParentElement,
     RenderOnce, Stateful, StyleRefinement, Styled, Window, div, px, relative,
@@ -40,7 +40,7 @@ impl ProgressBar {
 
 impl RenderOnce for ProgressBar {
     fn render(self, _: &mut Window, cx: &mut App) -> impl IntoElement {
-        let theme = cx.global::<Theme>();
+        let theme = cx.theme();
 
         self.div
             .rounded(theme.border_radius)
@@ -69,7 +69,7 @@ impl Styled for ProgressBar {
 
 impl RenderOnce for IndeterminateProgressBar {
     fn render(self, _: &mut Window, cx: &mut App) -> impl IntoElement {
-        let theme = cx.global::<Theme>();
+        let theme = cx.theme();
 
         self.div
             .rounded(theme.border_radius)

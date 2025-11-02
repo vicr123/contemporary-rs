@@ -1,6 +1,6 @@
 use crate::components::raised::raised;
 use crate::platform_support::platform_settings::PlatformSettings;
-use crate::styling::theme::Theme;
+use crate::styling::theme::ThemeStorage;
 use crate::transition::float_transition_element::TransitionExt;
 use gpui::prelude::FluentBuilder;
 use gpui::{
@@ -51,7 +51,7 @@ impl RenderOnce for Scrim {
         let child_div = self.child_div;
         let visible = self.visible;
         raised(move |_, window, cx| {
-            let theme = cx.global::<Theme>();
+            let theme = cx.theme();
             let platform_settings = cx.global::<PlatformSettings>();
             let window_size = window.viewport_size();
             let inset = window.client_inset().unwrap_or_else(|| px(0.));

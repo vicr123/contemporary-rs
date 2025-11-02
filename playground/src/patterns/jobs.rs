@@ -7,7 +7,7 @@ use contemporary::components::subtitle::subtitle;
 use contemporary::jobs::job::JobStatus;
 use contemporary::jobs::job_manager::{JobManager, Jobling};
 use contemporary::jobs::standard_job::StandardJob;
-use contemporary::styling::theme::Theme;
+use contemporary::styling::theme::ThemeStorage;
 use gpui::{
     App, AppContext, AsyncApp, BorrowAppContext, Context, Entity, IntoElement, ParentElement,
     Render, Styled, Window, div, px,
@@ -26,7 +26,7 @@ impl Jobs {
 
 impl Render for Jobs {
     fn render(&mut self, _window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
-        let theme = cx.global::<Theme>();
+        let theme = cx.theme();
         div()
             .bg(theme.background)
             .w_full()

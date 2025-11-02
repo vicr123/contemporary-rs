@@ -1,6 +1,6 @@
 use crate::components::scrim::{Scrim, scrim};
 use crate::platform_support::platform_settings::PlatformSettings;
-use crate::styling::theme::Theme;
+use crate::styling::theme::ThemeStorage;
 use crate::transition::float_transition_element::TransitionExt;
 use gpui::prelude::FluentBuilder;
 use gpui::{
@@ -85,7 +85,7 @@ impl Popover {
 
 impl RenderOnce for Popover {
     fn render(self, window: &mut Window, cx: &mut App) -> impl IntoElement {
-        let theme = cx.global::<Theme>();
+        let theme = cx.theme();
         let platform_settings = cx.global::<PlatformSettings>();
 
         self.scrim.visible(self.visible).child(

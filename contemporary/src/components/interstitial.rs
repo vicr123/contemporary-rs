@@ -1,5 +1,5 @@
 use crate::components::icon::icon;
-use crate::styling::theme::{Theme, VariableColor};
+use crate::styling::theme::{ThemeStorage, VariableColor};
 use gpui::prelude::FluentBuilder;
 use gpui::{
     AnyElement, App, Div, IntoElement, ParentElement, Refineable, RenderOnce, SharedString,
@@ -49,7 +49,7 @@ impl Interstitial {
 
 impl RenderOnce for Interstitial {
     fn render(self, _: &mut Window, cx: &mut App) -> impl IntoElement {
-        let theme = cx.global::<Theme>();
+        let theme = cx.theme();
 
         let mut david = div()
             .flex()

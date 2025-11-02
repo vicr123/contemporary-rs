@@ -1,4 +1,4 @@
-use crate::styling::theme::Theme;
+use crate::styling::theme::ThemeStorage;
 use gpui::prelude::FluentBuilder;
 use gpui::{
     Animation, AnimationExt, AnyElement, App, Div, ElementId, InteractiveElement, IntoElement,
@@ -35,7 +35,7 @@ impl ParentElement for Skeleton {
 
 impl RenderOnce for Skeleton {
     fn render(self, _: &mut Window, cx: &mut App) -> impl IntoElement {
-        let theme = cx.global::<Theme>();
+        let theme = cx.theme();
         let mut david = div().bg(theme.skeleton).rounded(theme.border_radius).child(
             self.inner
                 .when(!self.extended, |david| david.child("DEFAULT"))

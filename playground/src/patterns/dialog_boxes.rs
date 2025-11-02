@@ -5,7 +5,7 @@ use contemporary::components::dialog_box::{StandardButton, dialog_box};
 use contemporary::components::grandstand::grandstand;
 use contemporary::components::layer::layer;
 use contemporary::components::subtitle::subtitle;
-use contemporary::styling::theme::Theme;
+use contemporary::styling::theme::ThemeStorage;
 use gpui::{
     App, AppContext, AsyncApp, Context, Entity, IntoElement, ParentElement, Render, Styled,
     WeakEntity, Window, div, px,
@@ -34,7 +34,7 @@ impl DialogBoxes {
 
 impl Render for DialogBoxes {
     fn render(&mut self, _window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
-        let theme = cx.global::<Theme>();
+        let theme = cx.theme();
         div()
             .bg(theme.background)
             .w_full()

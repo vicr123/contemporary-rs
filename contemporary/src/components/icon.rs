@@ -1,4 +1,4 @@
-use crate::styling::theme::Theme;
+use crate::styling::theme::ThemeStorage;
 use gpui::{
     App, IntoElement, ParentElement, RenderOnce, Rgba, SharedString, Styled, Window, div, px, svg,
 };
@@ -35,7 +35,7 @@ impl RenderOnce for Icon {
         div().size(px(self.size)).child(
             svg()
                 .text_color(self.foreground.unwrap_or_else(|| {
-                    let theme = cx.global::<Theme>();
+                    let theme = cx.theme();
                     theme.foreground
                 }))
                 .path(format!(

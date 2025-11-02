@@ -7,7 +7,7 @@ use contemporary::components::icon::icon;
 use contemporary::components::layer::layer;
 use contemporary::components::subtitle::subtitle;
 use contemporary::platform_support::cx_platform_extensions::CxPlatformExtensions;
-use contemporary::styling::theme::Theme;
+use contemporary::styling::theme::{Theme, ThemeStorage};
 use gpui::prelude::FluentBuilder;
 use gpui::{
     App, AppContext, ClickEvent, Context, Entity, IntoElement, ParentElement, Render, Styled,
@@ -33,7 +33,7 @@ impl Buttons {
 
 impl Render for Buttons {
     fn render(&mut self, _window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
-        let theme = cx.global::<Theme>();
+        let theme = cx.theme();
 
         let context_menu_items = vec![
             ContextMenuItem::separator()

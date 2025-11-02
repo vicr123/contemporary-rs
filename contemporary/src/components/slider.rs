@@ -1,5 +1,5 @@
 use crate::platform_support::platform_settings::PlatformSettings;
-use crate::styling::theme::Theme;
+use crate::styling::theme::ThemeStorage;
 use crate::transition::Transition;
 use gpui::{
     Animation, App, BorderStyle, Bounds, Corners, Element, ElementId, GlobalElementId,
@@ -240,7 +240,7 @@ impl Element for Slider {
         window: &mut Window,
         cx: &mut App,
     ) {
-        let theme = cx.global::<Theme>().clone().disable_when(self.disabled);
+        let theme = cx.theme().clone().disable_when(self.disabled);
 
         window.paint_quad(quad(
             bounds,

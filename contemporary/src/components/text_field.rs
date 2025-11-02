@@ -1,6 +1,6 @@
 use crate::components::context_menu::{ContextMenuExt, ContextMenuItem};
 use crate::components::focus_decoration::focus_decoration;
-use crate::styling::theme::{Theme, VariableColor};
+use crate::styling::theme::{ThemeStorage, VariableColor};
 use cntp_i18n::tr;
 use gpui::prelude::FluentBuilder;
 use gpui::{
@@ -428,7 +428,7 @@ impl TextField {
 
 impl Render for TextField {
     fn render(&mut self, window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
-        let theme = cx.global::<Theme>();
+        let theme = cx.theme();
         div()
             .id(self.id.clone())
             .track_focus(&self.focus_handle)
@@ -676,7 +676,7 @@ impl Element for TextFieldElement {
         let input = self.input.read(cx);
         let content = input.text.clone();
         let style = window.text_style();
-        let theme = cx.global::<Theme>();
+        let theme = cx.theme();
         let mask_mode = &input.mask_mode;
 
         let (display_text, text_color) = if content.is_empty() {
@@ -724,7 +724,7 @@ impl Element for TextFieldElement {
             let style = window.text_style();
             let cursor = input.cursor_offset();
             let selected_range = input.selected_range.clone();
-            let theme = cx.global::<Theme>();
+            let theme = cx.theme();
             let line_height = window.line_height();
 
             let lines = request_layout

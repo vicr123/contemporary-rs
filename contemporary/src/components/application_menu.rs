@@ -4,13 +4,13 @@ use crate::components::icon::icon;
 use crate::components::icon_text::icon_text;
 use crate::components::scrim::scrim;
 use crate::setup::{About, OpenLink};
-use crate::styling::theme::{Theme, VariableColor};
+use crate::styling::theme::{ThemeStorage, VariableColor};
 use cntp_i18n::{i18n_manager, tr};
 use gpui::prelude::FluentBuilder;
 use gpui::{
-    div, img, px, App, AppContext, ClickEvent, Context, Entity,
-    FocusHandle, InteractiveElement, IntoElement, Menu, MenuItem, OwnedMenu, OwnedMenuItem, ParentElement,
-    Render, RenderOnce, SharedString, Styled, Window,
+    App, AppContext, ClickEvent, Context, Entity, FocusHandle, InteractiveElement, IntoElement,
+    Menu, MenuItem, OwnedMenu, OwnedMenuItem, ParentElement, Render, RenderOnce, SharedString,
+    Styled, Window, div, img, px,
 };
 use std::rc::Rc;
 
@@ -52,7 +52,7 @@ impl Render for ApplicationMenu {
             return div();
         }
 
-        let theme = cx.global::<Theme>();
+        let theme = cx.theme();
         let details = cx.global::<Details>();
 
         let locale = &i18n_manager!().locale;
@@ -255,7 +255,7 @@ impl MenuList {
 
 impl RenderOnce for MenuList {
     fn render(self, window: &mut Window, cx: &mut App) -> impl IntoElement {
-        let theme = cx.global::<Theme>();
+        let theme = cx.theme();
 
         let submenu_click_listeners = Rc::new(self.menu_click_listeners);
         let menu_should_close_listeners = Rc::new(self.menu_should_close_listeners);

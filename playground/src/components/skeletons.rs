@@ -5,7 +5,7 @@ use contemporary::components::layer::layer;
 use contemporary::components::skeleton::{SkeletonExt, skeleton, skeleton_row};
 use contemporary::components::spinner::spinner;
 use contemporary::components::subtitle::subtitle;
-use contemporary::styling::theme::Theme;
+use contemporary::styling::theme::ThemeStorage;
 use gpui::{
     App, AppContext, AsyncApp, Context, Entity, IntoElement, ParentElement, Render, Styled, Window,
     div, px,
@@ -42,7 +42,7 @@ impl Skeletons {
 
 impl Render for Skeletons {
     fn render(&mut self, _window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
-        let theme = cx.global::<Theme>();
+        let theme = cx.theme();
         div()
             .bg(theme.background)
             .w_full()

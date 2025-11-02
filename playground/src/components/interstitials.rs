@@ -2,7 +2,7 @@ use cntp_i18n::tr;
 use contemporary::components::button::button;
 use contemporary::components::icon_text::icon_text;
 use contemporary::components::interstitial::interstitial;
-use contemporary::styling::theme::Theme;
+use contemporary::styling::theme::ThemeStorage;
 use gpui::{App, AppContext, Context, Entity, IntoElement, ParentElement, Render, Styled, Window};
 
 pub struct Interstitials {}
@@ -15,7 +15,7 @@ impl Interstitials {
 
 impl Render for Interstitials {
     fn render(&mut self, window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
-        let theme = cx.global::<Theme>();
+        let theme = cx.theme();
 
         interstitial()
             .w_full()

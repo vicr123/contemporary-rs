@@ -4,7 +4,7 @@ use crate::components::layer::layer;
 use crate::components::scrim::{Scrim, scrim};
 use crate::components::spinner::spinner;
 use crate::platform_support::platform_settings::PlatformSettings;
-use crate::styling::theme::{Theme, VariableColor};
+use crate::styling::theme::{ThemeStorage, VariableColor};
 use crate::transition::float_transition_element::TransitionExt;
 use cntp_i18n::tr;
 use gpui::prelude::FluentBuilder;
@@ -130,7 +130,7 @@ impl DialogBox {
 
 impl RenderOnce for DialogBox {
     fn render(self, _window: &mut Window, cx: &mut App) -> impl IntoElement {
-        let theme = cx.global::<Theme>();
+        let theme = cx.theme();
         let platform_settings = cx.global::<PlatformSettings>();
 
         let buttons_layer = self.buttons.into_iter().fold(
@@ -208,7 +208,7 @@ struct DialogBoxContent {
 
 impl RenderOnce for DialogBoxContent {
     fn render(self, _window: &mut Window, cx: &mut App) -> impl IntoElement {
-        let theme = cx.global::<Theme>();
+        let theme = cx.theme();
 
         div()
             .flex()

@@ -1,7 +1,7 @@
 use crate::components::context_menu::{ContextMenuActionEvent, ContextMenuItem, Escape};
 use crate::components::icon_text::icon_text;
 use crate::components::layer::layer;
-use crate::styling::theme::{Theme, VariableColor};
+use crate::styling::theme::{ThemeStorage, VariableColor};
 use gpui::prelude::FluentBuilder;
 use gpui::{
     App, InteractiveElement, IntoElement, ParentElement, Pixels, Point, RenderOnce,
@@ -25,7 +25,7 @@ impl RenderOnce for ContextMenuPopup {
         let window_size = window.viewport_size();
         let inset = window.client_inset().unwrap_or_else(|| px(0.));
 
-        let theme = cx.global::<Theme>();
+        let theme = cx.theme();
 
         let Some(open_position) = self.open_position else {
             return div().into_any_element();

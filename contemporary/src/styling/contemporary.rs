@@ -1,6 +1,6 @@
 use crate::styling::rgb::{rgb_tuple, rgba_tuple};
 use crate::styling::theme::{Theme, ThemeType};
-use gpui::{px, Pixels, Rgba};
+use gpui::{Pixels, Rgba, px};
 
 pub trait ContemporaryTheme {
     const TYPE: ThemeType;
@@ -13,6 +13,7 @@ pub trait ContemporaryTheme {
     const SYSTEM_FONT_FAMILY: &'static str = "Sofia Sans";
     const SYSTEM_FONT_SIZE: Pixels = px(14.0);
     const HEADING_FONT_SIZE: Pixels = px(16.0);
+    const MONOSPACED_FONT_FAMILY: &'static str = "JetBrains Mono";
     const BORDER_RADIUS: Pixels;
     const FOCUS_DECORATION: Rgba;
     const DESTRUCTIVE_ACCENT: Rgba;
@@ -69,6 +70,7 @@ where
         system_font_family: T::SYSTEM_FONT_FAMILY.to_string(),
         system_font_size: T::SYSTEM_FONT_SIZE,
         heading_font_size: T::HEADING_FONT_SIZE,
+        monospaced_font_family: T::MONOSPACED_FONT_FAMILY.to_string(),
         button_background: T::BUTTON_BACKGROUND,
         button_foreground: T::FOREGROUND,
         border_color: T::BORDER,

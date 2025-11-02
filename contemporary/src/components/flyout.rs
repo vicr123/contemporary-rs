@@ -1,5 +1,5 @@
 use crate::components::raised::raised;
-use crate::styling::theme::Theme;
+use crate::styling::theme::ThemeStorage;
 use gpui::{
     AnyElement, App, Bounds, Div, InteractiveElement, IntoElement, ParentElement, Pixels, Point,
     RenderOnce, StyleRefinement, Styled, Window, anchored, div, point, px,
@@ -97,7 +97,7 @@ impl RenderOnce for Flyout {
         };
 
         raised(move |_, window, cx| {
-            let theme = cx.global::<Theme>();
+            let theme = cx.theme();
 
             let window_size = window.viewport_size();
             let inset = window.client_inset().unwrap_or_else(|| px(0.));

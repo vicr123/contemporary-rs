@@ -6,7 +6,7 @@ use contemporary::components::icon_text::icon_text;
 use contemporary::components::layer::layer;
 use contemporary::components::popover::popover;
 use contemporary::components::subtitle::subtitle;
-use contemporary::styling::theme::Theme;
+use contemporary::styling::theme::ThemeStorage;
 use gpui::prelude::FluentBuilder;
 use gpui::{
     App, AppContext, Context, Entity, IntoElement, ParentElement, Render, Styled, Window, div, px,
@@ -28,7 +28,7 @@ impl Popovers {
 
 impl Render for Popovers {
     fn render(&mut self, _window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
-        let theme = cx.global::<Theme>();
+        let theme = cx.theme();
         div()
             .bg(theme.background)
             .w_full()

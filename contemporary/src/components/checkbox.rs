@@ -1,4 +1,4 @@
-use crate::styling::theme::Theme;
+use crate::styling::theme::ThemeStorage;
 use gpui::MouseButton::Left;
 use gpui::prelude::FluentBuilder;
 use gpui::{
@@ -89,7 +89,7 @@ impl Checkbox {
 
 impl RenderOnce for Checkbox {
     fn render(self, _: &mut Window, cx: &mut App) -> impl IntoElement {
-        let theme = cx.global::<Theme>();
+        let theme = cx.theme();
         let checked_changed_handlers = self.checked_changed_handlers;
 
         self.div
@@ -228,7 +228,7 @@ impl Element for CheckboxBox {
             .clone()
             .and_then(|text| text.color)
             .unwrap_or(white());
-        let theme = cx.global::<Theme>();
+        let theme = cx.theme();
 
         if self.draw_as_radio {
             window.paint_quad(quad(

@@ -1,6 +1,6 @@
 use crate::hsv::Hsva;
 use crate::lerp::Lerpable;
-use crate::styling::theme::Theme;
+use crate::styling::theme::ThemeStorage;
 use gpui::{
     Animation, AnimationExt, App, Div, IntoElement, RenderOnce, StyleRefinement, Styled, Window,
     div, pulsating_between, px,
@@ -18,7 +18,7 @@ pub fn focus_decoration() -> FocusDecoration {
 
 impl RenderOnce for FocusDecoration {
     fn render(self, window: &mut Window, cx: &mut App) -> impl IntoElement {
-        let theme = cx.global::<Theme>();
+        let theme = cx.theme();
 
         let p1 = theme.focus_decoration;
         let p2: Hsva = theme.focus_decoration.into();

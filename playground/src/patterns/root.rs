@@ -11,7 +11,7 @@ use contemporary::components::layer::layer;
 use contemporary::components::pager::lift_animation::LiftAnimation;
 use contemporary::components::pager::pager;
 use contemporary::components::pager::pager_animation::PagerAnimationDirection;
-use contemporary::styling::theme::Theme;
+use contemporary::styling::theme::ThemeStorage;
 use gpui::prelude::FluentBuilder;
 use gpui::{
     App, AppContext, Context, Entity, InteractiveElement, IntoElement, ParentElement, Render,
@@ -69,7 +69,7 @@ impl Render for PatternsRoot {
                                 "sidebar-items",
                                 7,
                                 cx.processor(|this, range, _, cx| {
-                                    let theme = cx.global::<Theme>();
+                                    let theme = cx.theme();
                                     let mut items = Vec::new();
                                     for ix in range {
                                         let item = ix + 1;

@@ -2,7 +2,7 @@ mod raised_draw;
 pub(crate) mod window_globals;
 
 use crate::platform_support::platform_settings::PlatformSettings;
-use crate::styling::theme::Theme;
+use crate::styling::theme::ThemeStorage;
 use crate::window::raised_draw::RaisedDraw;
 use gpui::prelude::FluentBuilder;
 use gpui::{
@@ -34,7 +34,7 @@ impl ParentElement for ContemporaryWindow {
 
 impl RenderOnce for ContemporaryWindow {
     fn render(self, window: &mut Window, cx: &mut App) -> impl IntoElement {
-        let theme = cx.global::<Theme>();
+        let theme = cx.theme();
         let platform_settings = cx.global::<PlatformSettings>();
         let decorations = window.window_decorations();
 

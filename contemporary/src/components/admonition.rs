@@ -1,8 +1,8 @@
 use crate::components::subtitle::subtitle;
-use crate::styling::theme::Theme;
+use crate::styling::theme::ThemeStorage;
 use gpui::{
     AnyElement, App, Div, IntoElement, ParentElement, RenderOnce, StyleRefinement, Styled, Window,
-    div, px, rgba,
+    div, px,
 };
 
 pub enum AdmonitionSeverity {
@@ -41,7 +41,7 @@ impl Admonition {
 
 impl RenderOnce for Admonition {
     fn render(self, window: &mut Window, cx: &mut App) -> impl IntoElement {
-        let theme = cx.global::<Theme>();
+        let theme = cx.theme();
 
         div()
             .p(px(4.))

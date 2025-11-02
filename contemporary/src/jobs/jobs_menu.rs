@@ -1,7 +1,7 @@
 use crate::components::grandstand::grandstand;
 use crate::components::scrim::scrim;
 use crate::jobs::job_manager::JobManager;
-use crate::styling::theme::Theme;
+use crate::styling::theme::ThemeStorage;
 use cntp_i18n::tr;
 use gpui::prelude::FluentBuilder;
 use gpui::{
@@ -18,7 +18,7 @@ pub fn jobs_menu() -> JobsMenu {
 
 impl RenderOnce for JobsMenu {
     fn render(self, window: &mut Window, cx: &mut App) -> impl IntoElement {
-        let theme = cx.global::<Theme>();
+        let theme = cx.theme();
         let job_manager = cx.global::<JobManager>();
 
         let list_state = ListState::new(job_manager.job_len(cx), ListAlignment::Top, px(0.));

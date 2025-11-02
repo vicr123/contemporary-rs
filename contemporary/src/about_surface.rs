@@ -5,7 +5,7 @@ use crate::components::grandstand::{Grandstand, grandstand};
 use crate::components::icon_text::icon_text;
 use crate::components::layer::layer;
 use crate::components::subtitle::subtitle;
-use crate::styling::theme::Theme;
+use crate::styling::theme::ThemeStorage;
 use crate::surface::surface;
 use cntp_i18n::{Variable, i18n_manager, tr};
 use gpui::{
@@ -18,7 +18,7 @@ struct AboutSurfaceButtons;
 
 impl RenderOnce for AboutSurfaceButtons {
     fn render(self, _window: &mut Window, cx: &mut App) -> impl IntoElement {
-        let theme = cx.global::<Theme>();
+        let theme = cx.theme();
         let details = cx.global::<Details>();
 
         div()

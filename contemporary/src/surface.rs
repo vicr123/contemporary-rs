@@ -1,11 +1,11 @@
 use crate::components::application_menu::ApplicationMenu;
 use crate::components::button::button;
 use crate::jobs::job_button::JobButton;
-use crate::styling::theme::Theme;
+use crate::styling::theme::{Theme, ThemeStorage};
 use gpui::prelude::FluentBuilder;
 use gpui::{
-    div, img, px, rgb, svg, AnyElement, App, AppContext,
-    Context, Entity, InteractiveElement, IntoElement, MouseButton, ParentElement, Render, RenderOnce, Styled, Window, WindowControlArea,
+    AnyElement, App, AppContext, Context, Entity, InteractiveElement, IntoElement, MouseButton,
+    ParentElement, Render, RenderOnce, Styled, Window, WindowControlArea, div, img, px, rgb, svg,
 };
 
 #[derive(IntoElement)]
@@ -42,7 +42,7 @@ impl Surface {
 
 impl RenderOnce for Surface {
     fn render(self, _window: &mut Window, cx: &mut App) -> impl IntoElement {
-        let theme = cx.global::<Theme>();
+        let theme = cx.theme();
 
         div()
             .absolute()
@@ -78,7 +78,7 @@ impl RenderOnce for WindowTitle {
     fn render(self, window: &mut Window, cx: &mut App) -> impl IntoElement {
         let job_button = JobButton::use_job_button(window, cx);
 
-        let theme = cx.global::<Theme>();
+        let theme = cx.theme();
 
         div()
             .id("contemporary-window-title")

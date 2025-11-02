@@ -7,7 +7,7 @@ use contemporary::components::application_menu::ApplicationMenu;
 use contemporary::components::button::button;
 use contemporary::components::pager::pager;
 use contemporary::components::pager::slide_horizontal_animation::SlideHorizontalAnimation;
-use contemporary::styling::theme::Theme;
+use contemporary::styling::theme::ThemeStorage;
 use contemporary::surface::surface;
 use gpui::{
     App, AppContext, Context, Entity, InteractiveElement, IntoElement, Menu, MenuItem,
@@ -64,7 +64,7 @@ impl MainSurface {
 
 impl Render for MainSurface {
     fn render(&mut self, window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
-        let theme = cx.global::<Theme>();
+        let theme = cx.theme();
 
         surface()
             .actions(

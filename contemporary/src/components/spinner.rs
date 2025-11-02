@@ -1,5 +1,5 @@
 use crate::easing::ease_in_out_cubic;
-use crate::styling::theme::Theme;
+use crate::styling::theme::ThemeStorage;
 use gpui::{
     App, Bounds, Element, ElementId, GlobalElementId, InspectorElementId, IntoElement, LayoutId,
     Path, PathBuilder, Pixels, Point, Refineable, Size, Style, StyleRefinement, Styled, Window,
@@ -192,7 +192,7 @@ impl Element for Spinner {
         window: &mut Window,
         cx: &mut App,
     ) {
-        let theme = cx.global::<Theme>();
+        let theme = cx.theme();
         window.paint_path(prepaint.arc_path.clone(), theme.foreground);
     }
 }

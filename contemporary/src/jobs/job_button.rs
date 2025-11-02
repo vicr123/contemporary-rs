@@ -2,7 +2,7 @@ use crate::components::button::button;
 use crate::easing::ease_out_cubic;
 use crate::jobs::job_manager::{JobButtonState, JobManager};
 use crate::jobs::jobs_menu::jobs_menu;
-use crate::styling::theme::Theme;
+use crate::styling::theme::ThemeStorage;
 use gpui::prelude::FluentBuilder;
 use gpui::{
     App, BorderStyle, BorrowAppContext, Bounds, Context, Corner, Corners, Entity, IntoElement,
@@ -141,7 +141,7 @@ impl Render for JobButton {
                                     }
                                 },
                                 move |bounds, prepaint_state, window, cx| {
-                                    let theme = cx.global::<Theme>();
+                                    let theme = cx.theme();
                                     window.paint_quad(quad(
                                         prepaint_state.progress_bounds,
                                         Corners::all(

@@ -1,7 +1,7 @@
 use crate::components::context_menu::context_menu_popup::ContextMenuPopup;
 use crate::components::context_menu::{ContextMenuItem, OpenContextMenu};
 use crate::components::raised::raised;
-use crate::styling::theme::{Theme, VariableColor, variable_transparent};
+use crate::styling::theme::{ThemeStorage, VariableColor, variable_transparent};
 use gpui::prelude::FluentBuilder;
 use gpui::{
     AnyElement, App, ClickEvent, Div, ElementId, Focusable, InteractiveElement, IntoElement,
@@ -152,7 +152,7 @@ impl RenderOnce for Button {
         let focus_handle = focus_handle.read(cx);
         let context_menu_open = context_menu_state.read(cx).clone();
 
-        let theme = cx.global::<Theme>().clone().disable_when(self.disabled);
+        let theme = cx.theme().clone().disable_when(self.disabled);
 
         let background = if self.flat {
             variable_transparent()

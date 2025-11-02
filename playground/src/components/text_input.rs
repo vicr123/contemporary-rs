@@ -4,7 +4,7 @@ use contemporary::components::grandstand::grandstand;
 use contemporary::components::layer::layer;
 use contemporary::components::subtitle::subtitle;
 use contemporary::components::text_field::{MaskMode, TextField};
-use contemporary::styling::theme::Theme;
+use contemporary::styling::theme::{Theme, ThemeStorage};
 use gpui::{
     App, AppContext, Context, Entity, IntoElement, ParentElement, Render, Styled, Window, div, px,
 };
@@ -63,7 +63,7 @@ impl TextInput {
                 big_text_field: cx.new(|cx| {
                     let mut text_field = TextField::new("text-field", cx);
                     cx.observe_global::<Theme>(|text_field: &mut TextField, cx| {
-                        let theme = cx.global::<Theme>();
+                        let theme = cx.theme();
                         text_field.text_style().font_size = Some(theme.heading_font_size.into());
                         cx.notify()
                     })
@@ -83,7 +83,7 @@ impl TextInput {
 
 impl Render for TextInput {
     fn render(&mut self, _window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
-        let theme = cx.global::<Theme>();
+        let theme = cx.theme();
         div()
             .bg(theme.background)
             .w_full()

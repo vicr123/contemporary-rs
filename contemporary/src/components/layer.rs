@@ -1,4 +1,4 @@
-use crate::styling::theme::Theme;
+use crate::styling::theme::ThemeStorage;
 use gpui::{
     AnyElement, App, Div, IntoElement, ParentElement, RenderOnce, StyleRefinement, Styled, Window,
     div,
@@ -29,7 +29,7 @@ impl Styled for Layer {
 
 impl RenderOnce for Layer {
     fn render(self, _window: &mut Window, cx: &mut App) -> impl IntoElement {
-        let theme = cx.global::<Theme>();
+        let theme = cx.theme();
 
         self.div
             .bg(theme.layer_background)

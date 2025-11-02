@@ -3,7 +3,7 @@ use crate::styling::contemporary::{
     ContemporaryDark, ContemporaryLight, make_contemporary_base_theme,
 };
 use crate::styling::rgb::rgba_tuple;
-use gpui::{Global, Pixels, Rgba};
+use gpui::{App, Global, Pixels, Rgba};
 
 #[derive(PartialEq, Copy, Clone)]
 pub enum ThemeType {
@@ -23,6 +23,7 @@ pub struct Theme {
     pub system_font_family: String,
     pub system_font_size: Pixels,
     pub heading_font_size: Pixels,
+    pub monospaced_font_family: String,
 
     pub button_background: Rgba,
     pub button_foreground: Rgba,
@@ -198,3 +199,13 @@ impl Default for Theme {
 }
 
 impl Global for Theme {}
+
+pub trait ThemeStorage {
+    fn theme(&self) -> &Theme;
+}
+
+impl ThemeStorage for App {
+    fn theme(&self) -> &Theme {
+        self.global::<Theme>()
+    }
+}

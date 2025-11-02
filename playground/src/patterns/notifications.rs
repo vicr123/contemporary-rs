@@ -10,7 +10,7 @@ use contemporary::components::subtitle::subtitle;
 use contemporary::components::switch::{SwitchChangeEvent, switch};
 use contemporary::components::text_field::TextField;
 use contemporary::notification::{Notification, NotificationSound, PostedNotification};
-use contemporary::styling::theme::Theme;
+use contemporary::styling::theme::ThemeStorage;
 use gpui::prelude::FluentBuilder;
 use gpui::{
     AnyElement, App, AppContext, ClickEvent, Context, Entity, InteractiveElement, IntoElement,
@@ -210,7 +210,7 @@ impl Notifications {
 
 impl Render for Notifications {
     fn render(&mut self, window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
-        let theme = cx.global::<Theme>();
+        let theme = cx.theme();
         let details = cx.global::<Details>();
 
         let directories = details.standard_dirs().unwrap();

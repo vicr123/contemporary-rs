@@ -6,7 +6,7 @@ use contemporary::components::flyout::flyout;
 use contemporary::components::grandstand::grandstand;
 use contemporary::components::layer::layer;
 use contemporary::components::subtitle::subtitle;
-use contemporary::styling::theme::Theme;
+use contemporary::styling::theme::ThemeStorage;
 use gpui::{
     App, AppContext, Context, Entity, IntoElement, ParentElement, Render, Styled, Window, div, px,
 };
@@ -27,7 +27,7 @@ impl Flyouts {
 
 impl Render for Flyouts {
     fn render(&mut self, _window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
-        let theme = cx.global::<Theme>();
+        let theme = cx.theme();
 
         let bottom_flyout_open = self.bottom_flyout_open;
         let right_flyout_open = self.right_flyout_open;

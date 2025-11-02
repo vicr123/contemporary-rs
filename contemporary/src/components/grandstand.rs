@@ -8,7 +8,7 @@ use gpui::{
 use crate::components::button::button;
 use crate::components::icon::icon;
 use crate::components::layer::layer;
-use crate::styling::theme::Theme;
+use crate::styling::theme::ThemeStorage;
 
 type ClickHandler = Option<Rc<dyn Fn(&ClickEvent, &mut Window, &mut App)>>;
 
@@ -60,7 +60,7 @@ impl ParentElement for Grandstand {
 
 impl RenderOnce for Grandstand {
     fn render(self, _window: &mut Window, cx: &mut App) -> impl IntoElement {
-        let theme = cx.global::<Theme>();
+        let theme = cx.theme();
 
         layer().child(
             self.div.flex().flex_row().child(
