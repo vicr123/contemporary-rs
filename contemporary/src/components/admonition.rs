@@ -5,6 +5,7 @@ use gpui::{
     div, px,
 };
 
+#[derive(Copy, Clone, PartialEq)]
 pub enum AdmonitionSeverity {
     Info,
     Warning,

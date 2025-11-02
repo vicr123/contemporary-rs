@@ -5,7 +5,7 @@ use gpui::{
 
 #[derive(IntoElement)]
 pub struct Anchorer {
-    render_fn: Box<dyn FnOnce(Div, Bounds<Pixels>) -> Div>,
+    render_fn: Box<dyn FnOnce(Div, Bounds<Pixels>, &mut Window, &mut App) -> Div>,
 }
 
 impl RenderOnce for Anchorer {
@@ -24,7 +24,7 @@ impl RenderOnce for Anchorer {
                 .size_full(),
             )
             .when_some(*last_bounds_clone.read(cx), |david, last_bounds| {
-                (self.render_fn)(david, last_bounds)
+                (self.render_fn)(david, last_bounds, window, cx)
             })
             .absolute()
             .size_full()
@@ -32,14 +32,20 @@ impl RenderOnce for Anchorer {
 }
 
 pub trait WithAnchorer {
-    fn with_anchorer(self, render: impl FnOnce(Div, Bounds<Pixels>) -> Div + 'static) -> Self;
+    fn with_anchorer(
+        self,
+        render: impl FnOnce(Div, Bounds<Pixels>, &mut Window, &mut App) -> Div + 'static,
+    ) -> Self;
 }
 
 impl<T> WithAnchorer for T
 where
     T: ParentElement + 'static,
 {
-    fn with_anchorer(self, render: impl FnOnce(Div, Bounds<Pixels>) -> Div + 'static) -> Self {
+    fn with_anchorer(
+        self,
+        render: impl FnOnce(Div, Bounds<Pixels>, &mut Window, &mut App) -> Div + 'static,
+    ) -> Self {
         self.child(Anchorer {
             render_fn: Box::new(render),
         })

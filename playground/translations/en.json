@@ -151,6 +151,9 @@
   "RIGHT_CLICK_BUTTON": "Right click menu",
   "SETTINGS": "Settings",
   "SETTINGS_DESCRIPTION": "The Settings surface would ordinarily display now.",
+  "SEVERITY_ERROR": "Error",
+  "SEVERITY_INFO": "Info",
+  "SEVERITY_WARN": "Warning",
   "SIM_CARD_SETTINGS": "SIM Card Settings",
   "SKELETONS_TITLE": "Skeletons",
   "SLIDER_VALUE_TEXT": "Slider value: {{value}}",
@@ -166,6 +169,12 @@
   "THEME_DARK": "Dark",
   "THEME_LIGHT": "Light",
   "THEME_SYSTEM": "System",
+  "TOASTS_DESCRIPTION": "Notifications throw up an alert in-app to let the user know about something that happened in the background.",
+  "TOASTS_TITLE": "Toasts",
+  "TOAST_BODY": "Body",
+  "TOAST_SEND": "Post Toast",
+  "TOAST_SEVERITY": "Severity",
+  "TOAST_TITLE": "Title",
   "TRANSIENT_JOB_IN_PROGRESS_DESCRIPTION": "This job is transient and so will disappear automatically once it is complete.",
   "TRANSIENT_JOB_TITLE": "Transient Job"
 }

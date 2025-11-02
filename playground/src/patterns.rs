@@ -6,3 +6,4 @@ mod jobs;
 mod notifications;
 mod popovers;
 pub mod root;
+mod toasts;

@@ -81,7 +81,7 @@ impl Render for Flyouts {
                                                 this.bottom_flyout_open = true;
                                                 cx.notify()
                                             }))
-                                            .with_anchorer(move |david, anchorer| {
+                                            .with_anchorer(move |david, anchorer, _, _| {
                                                 david.child(
                                                     flyout(anchorer)
                                                         .visible(bottom_flyout_open)
@@ -101,7 +101,7 @@ impl Render for Flyouts {
                                                 this.right_flyout_open = true;
                                                 cx.notify()
                                             }))
-                                            .with_anchorer(move |david, anchorer| {
+                                            .with_anchorer(move |david, anchorer, _, _| {
                                                 david.child(
                                                     flyout(anchorer)
                                                         .visible(right_flyout_open)

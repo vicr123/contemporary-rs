@@ -793,7 +793,7 @@
   },
   "PATTERNS_TITLE": {
     "context": "root.rs",
-    "definedIn": "src/patterns/root.rs:63",
+    "definedIn": "src/patterns/root.rs:66",
     "plural": false,
     "description": null
   },
@@ -893,6 +893,24 @@
     "plural": false,
     "description": null
   },
+  "SEVERITY_ERROR": {
+    "context": "toasts.rs",
+    "definedIn": "src/patterns/toasts.rs:143",
+    "plural": false,
+    "description": null
+  },
+  "SEVERITY_INFO": {
+    "context": "toasts.rs",
+    "definedIn": "src/patterns/toasts.rs:109",
+    "plural": false,
+    "description": null
+  },
+  "SEVERITY_WARN": {
+    "context": "toasts.rs",
+    "definedIn": "src/patterns/toasts.rs:126",
+    "plural": false,
+    "description": null
+  },
   "SIM_CARD_SETTINGS": {
     "context": "interstitials.rs",
     "definedIn": "src/components/interstitials.rs:35",
@@ -980,6 +998,42 @@
   "THEME_SYSTEM": {
     "context": "main.rs",
     "definedIn": "src/main.rs:77",
+    "plural": false,
+    "description": null
+  },
+  "TOASTS_DESCRIPTION": {
+    "context": "toasts.rs",
+    "definedIn": "src/patterns/toasts.rs:94",
+    "plural": false,
+    "description": null
+  },
+  "TOASTS_TITLE": {
+    "context": "toasts.rs",
+    "definedIn": "src/patterns/toasts.rs:71",
+    "plural": false,
+    "description": null
+  },
+  "TOAST_BODY": {
+    "context": "toasts.rs",
+    "definedIn": "src/patterns/toasts.rs:37",
+    "plural": false,
+    "description": null
+  },
+  "TOAST_SEND": {
+    "context": "toasts.rs",
+    "definedIn": "src/patterns/toasts.rs:163",
+    "plural": false,
+    "description": null
+  },
+  "TOAST_SEVERITY": {
+    "context": "toasts.rs",
+    "definedIn": "src/patterns/toasts.rs:105",
+    "plural": false,
+    "description": null
+  },
+  "TOAST_TITLE": {
+    "context": "toasts.rs",
+    "definedIn": "src/patterns/toasts.rs:32",
     "plural": false,
     "description": null
   },

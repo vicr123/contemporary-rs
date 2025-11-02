@@ -1,9 +1,11 @@
 mod raised_draw;
+mod toast_drawer;
 pub(crate) mod window_globals;
 
 use crate::platform_support::platform_settings::PlatformSettings;
 use crate::styling::theme::ThemeStorage;
 use crate::window::raised_draw::RaisedDraw;
+use crate::window::toast_drawer::ToastDrawer;
 use gpui::prelude::FluentBuilder;
 use gpui::{
     AnyElement, App, Bounds, CursorStyle, Decorations, Div, Hitbox, HitboxBehavior,
@@ -34,6 +36,8 @@ impl ParentElement for ContemporaryWindow {
 
 impl RenderOnce for ContemporaryWindow {
     fn render(self, window: &mut Window, cx: &mut App) -> impl IntoElement {
+        let toast_drawer = window.use_state(cx, |window, cx| ToastDrawer::new(window, cx));
+
         let theme = cx.theme();
         let platform_settings = cx.global::<PlatformSettings>();
         let decorations = window.window_decorations();
@@ -212,6 +216,7 @@ impl RenderOnce for ContemporaryWindow {
                     .rounded(theme.border_radius)
                     .overflow_hidden(),
             )
+            .child(toast_drawer)
             .child(RaisedDraw)
     }
 }
