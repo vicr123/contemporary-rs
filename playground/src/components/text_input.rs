@@ -1,4 +1,5 @@
 use cntp_i18n::tr;
+use contemporary::components::button::button;
 use contemporary::components::constrainer::constrainer;
 use contemporary::components::grandstand::grandstand;
 use contemporary::components::layer::layer;
@@ -118,7 +119,37 @@ impl Render for TextInput {
                                     .child(self.password_text_field.clone().into_any_element())
                                     .child(self.borderless_text_field.clone().into_any_element())
                                     .child(self.disabled_text_field.clone().into_any_element())
-                                    .child(self.big_text_field.clone().into_any_element()),
+                                    .child(self.big_text_field.clone().into_any_element())
+                                    .child(
+                                        button("flash-error-button")
+                                            .child(tr!("BUTTON_FLASH_ERROR", "Flash Error"))
+                                            .on_click(cx.listener(|this, _, window, cx| {
+                                                this.text_field.update(cx, |text_field, cx| {
+                                                    text_field.flash_error(window, cx)
+                                                });
+                                                this.password_text_field.update(
+                                                    cx,
+                                                    |text_field, cx| {
+                                                        text_field.flash_error(window, cx)
+                                                    },
+                                                );
+                                                this.borderless_text_field.update(
+                                                    cx,
+                                                    |text_field, cx| {
+                                                        text_field.flash_error(window, cx)
+                                                    },
+                                                );
+                                                this.disabled_text_field.update(
+                                                    cx,
+                                                    |text_field, cx| {
+                                                        text_field.flash_error(window, cx)
+                                                    },
+                                                );
+                                                this.big_text_field.update(cx, |text_field, cx| {
+                                                    text_field.flash_error(window, cx)
+                                                });
+                                            })),
+                                    ),
                             ),
                     ),
             )

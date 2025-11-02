@@ -1,4 +1,5 @@
 use crate::components::context_menu::{ContextMenuExt, ContextMenuItem};
+use crate::components::error_flasher::ErrorFlasher;
 use crate::components::focus_decoration::focus_decoration;
 use crate::styling::theme::{ThemeStorage, VariableColor};
 use cntp_i18n::tr;
@@ -102,6 +103,7 @@ pub struct TextField {
     mask_mode: MaskMode,
 
     text_style: TextStyleRefinement,
+    error_flasher: Entity<ErrorFlasher>,
 
     enter_press_listener: Option<Rc<Box<EnterPressListener>>>,
     text_changed_listener: Option<Rc<Box<TextChangedListener>>>,
@@ -109,7 +111,14 @@ pub struct TextField {
 }
 
 impl TextField {
-    pub fn new(id: impl Into<ElementId>, cx: &mut App) -> Self {
+    pub fn new(id: impl Into<ElementId>, cx: &mut Context<Self>) -> Self {
+        let error_flasher = cx.new(ErrorFlasher::new);
+
+        cx.observe(&error_flasher, |_, _, cx| {
+            cx.notify();
+        })
+        .detach();
+
         Self {
             id: id.into(),
             text: "".into(),
@@ -125,6 +134,7 @@ impl TextField {
             allow_new_lines: false,
             mask_mode: MaskMode::Clear,
             text_style: TextStyleRefinement::default(),
+            error_flasher,
             enter_press_listener: None,
             text_changed_listener: None,
             paste_rich_listener: None,
@@ -424,11 +434,17 @@ impl TextField {
     pub fn text_style(&mut self) -> &mut TextStyleRefinement {
         &mut self.text_style
     }
+
+    pub fn flash_error(&mut self, window: &mut Window, cx: &mut Context<Self>) {
+        self.error_flasher
+            .update(cx, |error_flasher, cx| error_flasher.flash(window, cx))
+    }
 }
 
 impl Render for TextField {
     fn render(&mut self, window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
         let theme = cx.theme();
+        let error_flasher_color = self.error_flasher.read(cx).color();
         div()
             .id(self.id.clone())
             .track_focus(&self.focus_handle)
@@ -470,6 +486,15 @@ impl Render for TextField {
                             .border_color(theme.border_color)
                             .bg(theme.layer_background)
                     })
+                    .child(
+                        div()
+                            .absolute()
+                            .left_0()
+                            .top_0()
+                            .size_full()
+                            .rounded(theme.border_radius)
+                            .bg(error_flasher_color),
+                    )
                     .child(
                         div()
                             .w_full()

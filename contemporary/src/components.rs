@@ -6,6 +6,7 @@ pub mod checkbox;
 pub mod constrainer;
 pub mod context_menu;
 pub mod dialog_box;
+mod error_flasher;
 pub mod flyout;
 pub mod focus_decoration;
 pub mod grandstand;

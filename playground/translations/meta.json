@@ -43,13 +43,13 @@
   },
   "BIG_TEXT_FIELD_PLACEHOLDER": {
     "context": "text_input.rs",
-    "definedIn": "src/components/text_input.rs:72",
+    "definedIn": "src/components/text_input.rs:73",
     "plural": false,
     "description": null
   },
   "BORDERLESS_TEXT_FIELD_PLACEHOLDER": {
     "context": "text_input.rs",
-    "definedIn": "src/components/text_input.rs:47",
+    "definedIn": "src/components/text_input.rs:48",
     "plural": false,
     "description": null
   },
@@ -116,6 +116,12 @@
   "BUTTONS_TITLE": {
     "context": "buttons.rs",
     "definedIn": "src/components/buttons.rs:113",
+    "plural": false,
+    "description": null
+  },
+  "BUTTON_FLASH_ERROR": {
+    "context": "text_input.rs",
+    "definedIn": "src/components/text_input.rs:125",
     "plural": false,
     "description": null
   },
@@ -775,7 +781,7 @@
   },
   "PASSWORD_TEXT_FIELD_PLACEHOLDER": {
     "context": "text_input.rs",
-    "definedIn": "src/components/text_input.rs:37",
+    "definedIn": "src/components/text_input.rs:38",
     "plural": false,
     "description": null
   },
@@ -937,25 +943,25 @@
   },
   "TEXT_FIELDS_TITLE": {
     "context": "text_input.rs",
-    "definedIn": "src/components/text_input.rs:111",
+    "definedIn": "src/components/text_input.rs:112",
     "plural": false,
     "description": null
   },
   "TEXT_FIELD_DISABLED_PLACEHOLDER": {
     "context": "text_input.rs",
-    "definedIn": "src/components/text_input.rs:57",
+    "definedIn": "src/components/text_input.rs:58",
     "plural": false,
     "description": null
   },
   "TEXT_FIELD_PLACEHOLDER": {
     "context": "text_input.rs",
-    "definedIn": "src/components/text_input.rs:27",
+    "definedIn": "src/components/text_input.rs:28",
     "plural": false,
     "description": null
   },
   "TEXT_INPUT_TITLE": {
     "context": "text_input.rs",
-    "definedIn": "src/components/text_input.rs:95",
+    "definedIn": "src/components/text_input.rs:96",
     "plural": false,
     "description": null
   },
