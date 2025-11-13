@@ -15,9 +15,14 @@
   "DIALOG_CANCEL": "Hủy",
   "DIALOG_NO": "Không",
   "DIALOG_OK": "OK",
+  "DIALOG_SORRY": "Xin lỗi",
   "DIALOG_YES": "Có",
+  "EDIT_COPY": "Chép",
+  "EDIT_CUT": "Cắt",
+  "EDIT_PASTE": "Dán",
   "HELP_FILE_BUG": "Báo cáo lỗi",
   "HELP_SOURCE_CODE": "Mã nguồn",
+  "JOBS_MENU_TITLE": "Hoạt động",
   "KEY_ALT": "Alt",
   "KEY_CONTROL": "Ctrl",
   "KEY_FUNCTION": "Fn",
@@ -26,5 +31,6 @@
   "MENU_GO_BACK": "Quay lại",
   "MENU_HELP": "Trợ giúp",
   "MENU_HELP_CONTENTS": "Trợ giúp về {{application}}",
+  "NOTIFICATION_REPLY": "Trả lời",
   "WINDOW_MENU": "Cửa sổ"
 }
