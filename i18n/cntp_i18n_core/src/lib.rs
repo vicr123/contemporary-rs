@@ -60,7 +60,7 @@ impl I18nPluralStringEntry<'_> {
             }
             .into_iter()
             .map(|part| match part {
-                I18nStringPart::Count => I18nStringPart::OwnedStatic(count.to_string().into()),
+                I18nStringPart::Count => I18nStringPart::Static(count.to_string().into()),
                 _ => part.clone(),
             })
             .collect())
@@ -77,9 +77,8 @@ pub enum I18nEntry<'a> {
 
 #[derive(Clone)]
 pub enum I18nStringPart {
-    BorrowedStatic(&'static str),
-    OwnedStatic(Arc<str>),
-    Variable(String),
+    Static(I18nString),
+    Variable(I18nString),
     Count,
 }
 

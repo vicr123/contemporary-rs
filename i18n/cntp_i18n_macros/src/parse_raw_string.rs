@@ -19,12 +19,95 @@ fn match_line_endings(string: &str) -> proc_macro2::TokenStream {
     quote! { #string }
 }
 
+enum StateMachine {
+    Idle(String),
+    OneBrace(String),
+    Variable(String),
+    VariableClosing(String),
+}
+
 pub fn parse_raw_string(string: &str) -> proc_macro2::TokenStream {
-    let normalised = match_line_endings(string);
+    let mut parts = Vec::new();
+    let mut state_machine = StateMachine::Idle(String::default());
+    for char in string.chars() {
+        match state_machine {
+            StateMachine::Idle(string) => {
+                if char == '{' {
+                    state_machine = StateMachine::OneBrace(string);
+                } else {
+                    state_machine = StateMachine::Idle(format!("{string}{char}"));
+                }
+            }
+            StateMachine::OneBrace(string) => {
+                if char == '{' {
+                    let normalised = match_line_endings(string.as_str());
+                    parts.push(quote! {
+                        cntp_i18n::I18nStringPart::Static(cntp_i18n::I18nString::Borrowed(#normalised))
+                    });
+                    state_machine = StateMachine::Variable(String::default());
+                } else {
+                    state_machine = StateMachine::Idle(format!("{string}{{{char}"));
+                }
+            }
+            StateMachine::Variable(string) => {
+                if char == '}' {
+                    state_machine = StateMachine::VariableClosing(string);
+                } else {
+                    state_machine = StateMachine::Variable(format!("{string}{char}"));
+                }
+            }
+            StateMachine::VariableClosing(string) => {
+                if char == '}' {
+                    if string == "count" {
+                        parts.push(quote! {
+                            cntp_i18n::I18nStringPart::Count
+                        });
+                    } else {
+                        let normalised = match_line_endings(string.as_str());
+                        parts.push(quote! {
+                        cntp_i18n::I18nStringPart::Variable(cntp_i18n::I18nString::Borrowed(#normalised))
+                        });
+                    }
+                    state_machine = StateMachine::Idle(String::default());
+                } else {
+                    state_machine = StateMachine::Idle(format!("{string}}}{char}"));
+                }
+            }
+        }
+    }
+
+    match state_machine {
+        StateMachine::Idle(string) => {
+            if !string.is_empty() {
+                let normalised = match_line_endings(string.as_str());
+                parts.push(quote! {
+                    cntp_i18n::I18nStringPart::Static(cntp_i18n::I18nString::Borrowed(#normalised))
+                });
+            }
+        }
+        StateMachine::OneBrace(string) => {
+            let normalised = match_line_endings(format!("{string}{{").as_str());
+            parts.push(quote! {
+                cntp_i18n::I18nStringPart::Static(cntp_i18n::I18nString::Borrowed(#normalised))
+            });
+        }
+        StateMachine::Variable(string) => {
+            let normalised = match_line_endings(format!("{{{{{string}").as_str());
+            parts.push(quote! {
+                cntp_i18n::I18nStringPart::Static(cntp_i18n::I18nString::Borrowed(#normalised))
+            });
+        }
+        StateMachine::VariableClosing(string) => {
+            let normalised = match_line_endings(format!("{{{{{string}}}").as_str());
+            parts.push(quote! {
+                cntp_i18n::I18nStringPart::Static(cntp_i18n::I18nString::Borrowed(#normalised))
+            });
+        }
+    }
 
     quote! {
         {
-            &[cntp_i18n::I18nStringPart::BorrowedStatic(#normalised)]
+            &[#( #parts, )*]
         }
     }
 }
