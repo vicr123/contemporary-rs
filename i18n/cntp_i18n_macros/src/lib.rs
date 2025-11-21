@@ -1,6 +1,7 @@
 use proc_macro::TokenStream;
 
 mod config;
+mod parse_raw_string;
 mod tr;
 mod tr_load;
 

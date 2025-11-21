@@ -7,6 +7,7 @@ pub mod string;
 use anyhow::anyhow;
 use cntp_localesupport::Locale;
 use icu::plurals::{PluralCategory, PluralRules};
+use std::sync::Arc;
 
 use crate::string::I18nString;
 
@@ -18,19 +19,19 @@ pub struct I18nStringEntry {
     pub entry: I18nString,
 }
 
-pub struct I18nPluralStringEntry {
+pub struct I18nPluralStringEntry<'a> {
     pub locale: I18nString,
-    pub zero: Option<I18nString>,
-    pub one: Option<I18nString>,
-    pub two: Option<I18nString>,
-    pub few: Option<I18nString>,
-    pub many: Option<I18nString>,
-    pub other: I18nString,
+    pub zero: Option<&'a [I18nStringPart]>,
+    pub one: Option<&'a [I18nStringPart]>,
+    pub two: Option<&'a [I18nStringPart]>,
+    pub few: Option<&'a [I18nStringPart]>,
+    pub many: Option<&'a [I18nStringPart]>,
+    pub other: &'a [I18nStringPart],
 }
 
-impl I18nPluralStringEntry {
-    pub fn lookup(&self, count: isize) -> I18nString {
-        let lookup_core = || -> anyhow::Result<I18nString> {
+impl I18nPluralStringEntry<'_> {
+    pub fn lookup(&self, count: isize) -> Vec<I18nStringPart> {
+        let lookup_core = || -> anyhow::Result<Vec<I18nStringPart>> {
             let locale = icu::locale::Locale::try_from_str(&self.locale)?;
             let pr = PluralRules::try_new(locale.into(), Default::default())?;
 
@@ -38,47 +39,51 @@ impl I18nPluralStringEntry {
                 PluralCategory::Zero => self
                     .zero
                     .as_ref()
-                    .ok_or(anyhow!("Zero case required but not present"))?
-                    .replace("{{count}}", &count.to_string())
-                    .into(),
+                    .ok_or(anyhow!("Zero case required but not present"))?,
                 PluralCategory::One => self
                     .one
                     .as_ref()
-                    .ok_or(anyhow!("One case required but not present"))?
-                    .replace("{{count}}", &count.to_string())
-                    .into(),
+                    .ok_or(anyhow!("One case required but not present"))?,
                 PluralCategory::Two => self
                     .two
                     .as_ref()
-                    .ok_or(anyhow!("Two case required but not present"))?
-                    .replace("{{count}}", &count.to_string())
-                    .into(),
+                    .ok_or(anyhow!("Two case required but not present"))?,
                 PluralCategory::Few => self
                     .few
                     .as_ref()
-                    .ok_or(anyhow!("Few case required but not present"))?
-                    .replace("{{count}}", &count.to_string())
-                    .into(),
+                    .ok_or(anyhow!("Few case required but not present"))?,
                 PluralCategory::Many => self
                     .many
                     .as_ref()
-                    .ok_or(anyhow!("Many case required but not present"))?
-                    .replace("{{count}}", &count.to_string())
-                    .into(),
-                PluralCategory::Other => self.other.replace("{{count}}", &count.to_string()).into(),
+                    .ok_or(anyhow!("Many case required but not present"))?,
+                PluralCategory::Other => &self.other,
+            }
+            .into_iter()
+            .map(|part| match part {
+                I18nStringPart::Count => I18nStringPart::OwnedStatic(count.to_string().into()),
+                _ => part.clone(),
             })
+            .collect())
         };
 
-        lookup_core().unwrap_or_else(|_| self.other.replace("{{count}}", &count.to_string()).into())
+        lookup_core().unwrap_or_else(|_| self.other.to_vec())
     }
 }
 
-pub enum I18nEntry {
-    Entry(I18nStringEntry),
-    PluralEntry(I18nPluralStringEntry),
+pub enum I18nEntry<'a> {
+    Entry(&'a [I18nStringPart]),
+    PluralEntry(I18nPluralStringEntry<'a>),
 }
 
-impl I18nEntry {
+#[derive(Clone)]
+pub enum I18nStringPart {
+    BorrowedStatic(&'static str),
+    OwnedStatic(Arc<str>),
+    Variable(String),
+    Count,
+}
+
+impl I18nEntry<'_> {
     pub fn is_singular(&self) -> bool {
         match self {
             I18nEntry::Entry(_) => true,

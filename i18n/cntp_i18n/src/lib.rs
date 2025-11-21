@@ -1,3 +1,5 @@
+mod test;
+
 pub use cntp_i18n_macros::{tr, tr_load, tr_noop, trn, trn_noop};
 use cntp_localesupport::modifiers::ModifierVariable;
 use once_cell::sync::Lazy;
@@ -7,7 +9,8 @@ use std::hash::{Hash, Hasher};
 use std::sync::RwLock;
 
 pub use cntp_i18n_core::{
-    I18nEntry, I18nPluralStringEntry, I18nSource, I18nStringEntry, string::I18nString,
+    I18nEntry, I18nPluralStringEntry, I18nSource, I18nStringEntry, I18nStringPart,
+    string::I18nString,
 };
 pub use cntp_localesupport::locale_formattable::LocaleFormattable;
 pub use cntp_localesupport::modifiers::{Date, Quote, StringModifier};
@@ -172,10 +175,11 @@ impl I18nManager {
             };
 
             // TODO: Cache the resolved string
-            let mut resolved = match &entry {
-                I18nEntry::Entry(entry) => entry.entry.clone(),
-                I18nEntry::PluralEntry(entry) => {
-                    let (_, count) = (variables)
+            let mut resolved = I18nString::Owned(
+                match &entry {
+                    I18nEntry::Entry(entry) => entry.to_vec(),
+                    I18nEntry::PluralEntry(entry) => {
+                        let (_, count) = (variables)
                         .into_iter()
                         .find(|(name, _)| *name == "count")
                         .unwrap_or_else(|| {
@@ -185,57 +189,71 @@ impl I18nManager {
                             )
                         });
 
-                    match count {
-                        Variable::Count(count) => entry.lookup(*count),
-                        Variable::String(string) => {
-                            panic!("Count variable ({string}) not of type isize")
+                        match count {
+                            Variable::Count(count) => entry.lookup(*count),
+                            Variable::String(string) => {
+                                panic!("Count variable ({string}) not of type isize")
+                            }
+                            Variable::Modified(_inital, _subsequent) => {
+                                panic!("Cannot modify count variable")
+                            }
                         }
-                        Variable::Modified(_inital, _subsequent) => {
-                            panic!("Cannot modify count variable")
-                        }
-                    }
+                    } // I18nEntry::Entry(entry) => entry.entry.clone(),
+                      // I18nEntry::PluralEntry(entry) => {
+                      //
+                      // }
                 }
-            };
+                .iter()
+                .map(|part| match part {
+                    I18nStringPart::BorrowedStatic(borrowed) => borrowed.to_string(),
+                    I18nStringPart::OwnedStatic(owned) => owned.to_string(),
+                    I18nStringPart::Variable(variable) => variable.to_string(),
+                    I18nStringPart::Count => "{{count}}".to_string(),
+                })
+                .collect::<Vec<_>>()
+                .join("")
+                .into(),
+            );
 
             // If the translation is empty, fall back to the next source
             if resolved.is_empty() {
                 continue;
             }
-
-            // Substitute the variables
-            for (name, substitution) in variables.into_iter() {
-                if *name == "count" {
-                    if entry.is_singular() {
-                        panic!(
-                            "Resolved non-plural string for {key}, but count variable provided \
-                            for substitution",
-                        )
-                    }
-
-                    // Special case the count variable which should be handled in a plural entry
-                    continue;
-                }
-
-                resolved = match substitution {
-                    Variable::Count(count) => {
-                        panic!("Substitution variable ({name}) not of type string (is {count})",)
-                    }
-                    Variable::String(string) => resolved
-                        .replace(format!("{{{{{name}}}}}").as_str(), string.as_str())
-                        .into(),
-                    Variable::Modified(initial, subsequent) => resolved
-                        .replace(
-                            format!("{{{{{name}}}}}").as_str(),
-                            subsequent
-                                .iter()
-                                .fold(initial.transform(locale), |v, modi| {
-                                    modi.0.transform(locale, v, modi.1)
-                                })
-                                .as_str(),
-                        )
-                        .into(),
-                }
-            }
+            //
+            // // Substitute the variables
+            // for (name, substitution) in variables.into_iter() {
+            //     if *name == "count" {
+            //         if entry.is_singular() {
+            //             panic!(
+            //                 "Resolved non-plural string for {key}, but count variable provided \
+            //                 for substitution",
+            //             )
+            //         }
+            //
+            //         // Special case the count variable which should be handled in a plural entry
+            //         continue;
+            //     }
+            //
+            //     resolved = match substitution {
+            //         Variable::Count(count) => {
+            //             panic!("Substitution variable ({name}) not of type string (is {count})",)
+            //         }
+            //         Variable::String(string) => resolved
+            //             .replace(format!("{{{{{name}}}}}").as_str(), string.as_str())
+            //             .into(),
+            //         Variable::Modified(initial, subsequent) => resolved
+            //             .replace(
+            //                 format!("{{{{{name}}}}}").as_str(),
+            //                 subsequent
+            //                     .iter()
+            //                     .fold(initial.transform(locale), |v, modi| {
+            //                         modi.0.transform(locale, v, modi.1)
+            //                     })
+            //                     .as_str(),
+            //             )
+            //             .into(),
+            //     }
+            // }
 
             return resolved;
         }

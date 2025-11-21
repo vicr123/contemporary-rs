@@ -1,4 +1,5 @@
 use crate::config::{CURRENT_CRATE, I18N_CONFIG};
+use crate::parse_raw_string::parse_raw_string;
 use cntp_i18n_core::load;
 use proc_macro::TokenStream;
 use quote::quote;
@@ -10,34 +11,15 @@ macro_rules! extract_plural_rule {
         $items
             .get(stringify!($n))
             .map(|str| {
-                let string = match_line_endings(str);
+                let matched_string = parse_raw_string(str);
                 quote! {
-                    $n: Some(I18nString::Borrowed(#string))
+                    $n: Some(#matched_string)
                 }
             })
             .unwrap_or(quote! {
                 $n: None
             })
     };
-}
-
-fn match_line_endings(string: &str) -> proc_macro2::TokenStream {
-    if true {
-        let windows_string = string.replace("\n", "\r\n");
-        let unix_string = string.replace("\r\n", "\n");
-
-        return quote! {
-            {
-                #[cfg(target_os = "windows")]
-                {#windows_string}
-
-                #[cfg(not(target_os = "windows"))]
-                {#unix_string}
-            }
-        };
-    }
-
-    quote! { #string }
 }
 
 /// Generates an `I18nSource` containing the strings from the translation files located in the
@@ -65,11 +47,9 @@ pub fn tr_load(_body: TokenStream) -> TokenStream {
                     if string.is_empty() {
                         None
                     } else {
-                        let matched_string = match_line_endings(string.as_str());
+                        let matched_string = parse_raw_string(string.as_str());
                         Some(quote! {
-                            #key => I18nEntry::Entry(I18nStringEntry {
-                                entry: I18nString::Borrowed(#matched_string),
-                            })
+                            #key => I18nEntry::Entry(#matched_string)
                         })
                     }
                 }
@@ -92,6 +72,8 @@ pub fn tr_load(_body: TokenStream) -> TokenStream {
                             // .into();
                         };
 
+                        let matched_other = parse_raw_string(other.as_str());
+
                         let zero = extract_plural_rule!(items, zero);
                         let one = extract_plural_rule!(items, one);
                         let two = extract_plural_rule!(items, two);
@@ -106,7 +88,7 @@ pub fn tr_load(_body: TokenStream) -> TokenStream {
                                 #two,
                                 #few,
                                 #many,
-                                other: I18nString::Borrowed(#other)
+                                other: #matched_other
                             })
                         })
                     }
