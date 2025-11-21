@@ -4,12 +4,12 @@ pub mod gpui;
 pub mod load;
 pub mod string;
 
+use crate::string::I18nString;
 use anyhow::anyhow;
 use cntp_localesupport::Locale;
+use cntp_localesupport::locale_formattable::LocaleFormattable;
 use icu::plurals::{PluralCategory, PluralRules};
 use std::sync::Arc;
-
-use crate::string::I18nString;
 
 pub trait I18nSource: Send + Sync {
     fn lookup(&self, locale: &Locale, id: &str, lookup_crate: &str) -> Option<&I18nEntry>;
@@ -30,7 +30,7 @@ pub struct I18nPluralStringEntry<'a> {
 }
 
 impl I18nPluralStringEntry<'_> {
-    pub fn lookup(&self, count: isize) -> Vec<I18nStringPart> {
+    pub fn lookup(&self, count: isize, cntp_locale: &Locale) -> Vec<I18nStringPart> {
         let lookup_core = || -> anyhow::Result<Vec<I18nStringPart>> {
             let locale = icu::locale::Locale::try_from_str(&self.locale)?;
             let pr = PluralRules::try_new(locale.into(), Default::default())?;
@@ -60,7 +60,9 @@ impl I18nPluralStringEntry<'_> {
             }
             .into_iter()
             .map(|part| match part {
-                I18nStringPart::Count => I18nStringPart::Static(count.to_string().into()),
+                I18nStringPart::Count => {
+                    I18nStringPart::Static(count.to_locale_string(&cntp_locale).into())
+                }
                 _ => part.clone(),
             })
             .collect())
