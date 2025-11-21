@@ -1,5 +1,3 @@
-mod test;
-
 pub use cntp_i18n_macros::{tr, tr_load, trn};
 use cntp_localesupport::modifiers::ModifierVariable;
 use once_cell::sync::Lazy;
