@@ -50,6 +50,16 @@ pub fn trn(body: TokenStream) -> TokenStream {
 /// changed to match the compiled platform's line endings. If you wish to disable this behaviour,
 /// set `match_line_endings` to false in your i18n configuration.
 #[proc_macro]
+pub fn tr_noop(_: TokenStream) -> TokenStream {
+    TokenStream::default()
+}
+
+#[proc_macro]
+pub fn trn_noop(_: TokenStream) -> TokenStream {
+    TokenStream::default()
+}
+
+#[proc_macro]
 pub fn tr_load(body: TokenStream) -> TokenStream {
     tr_load::tr_load(body)
 }

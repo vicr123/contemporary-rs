@@ -5,7 +5,7 @@ use std::rc::Rc;
 
 use crate::actions::{DarkTheme, LightTheme, SystemTheme, register_actions};
 use crate::main_window::MainWindow;
-use cntp_i18n::{I18N_MANAGER, tr, tr_load};
+use cntp_i18n::{I18N_MANAGER, tr, tr_load, tr_noop};
 use cntp_icon_tool_macros::application_icon;
 use contemporary::application::new_contemporary_application;
 use contemporary::macros::application_details;
@@ -26,6 +26,10 @@ mod components;
 mod main_surface;
 mod main_window;
 mod patterns;
+
+tr_noop!("THEME_SYSTEM", "System");
+tr_noop!("THEME_LIGHT", "Light");
+tr_noop!("THEME_DARK", "Dark");
 
 fn mane() {
     application_icon!("../dist/baseicon.svg");
@@ -74,9 +78,9 @@ fn mane() {
                             menus: vec![Menu {
                                 name: tr!("MENU_THEME", "Theme").into(),
                                 items: vec![
-                                    MenuItem::action(tr!("THEME_SYSTEM", "System"), SystemTheme),
-                                    MenuItem::action(tr!("THEME_LIGHT", "Light"), LightTheme),
-                                    MenuItem::action(tr!("THEME_DARK", "Dark"), DarkTheme),
+                                    MenuItem::action(tr!("THEME_SYSTEM"), SystemTheme),
+                                    MenuItem::action(tr!("THEME_LIGHT"), LightTheme),
+                                    MenuItem::action(tr!("THEME_DARK"), DarkTheme),
                                 ],
                             }],
                             on_about: Rc::new(move |cx| {
