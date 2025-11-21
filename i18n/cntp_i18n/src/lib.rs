@@ -188,7 +188,7 @@ impl I18nManager {
                             });
 
                         match count {
-                            Variable::Count(count) => entry.lookup(*count),
+                            Variable::Count(count) => entry.lookup(*count, locale),
                             Variable::String(string) => {
                                 panic!("Count variable ({string}) not of type isize")
                             }

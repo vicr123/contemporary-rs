@@ -21,11 +21,13 @@ locale_formattable_integer_impl!(i16);
 locale_formattable_integer_impl!(i32);
 locale_formattable_integer_impl!(i64);
 locale_formattable_integer_impl!(i128);
+locale_formattable_integer_impl!(isize);
 locale_formattable_integer_impl!(u8);
 locale_formattable_integer_impl!(u16);
 locale_formattable_integer_impl!(u32);
 locale_formattable_integer_impl!(u64);
 locale_formattable_integer_impl!(u128);
+locale_formattable_integer_impl!(usize);
 
 macro_rules! locale_formattable_stringable_impl {
     ($typ:ty) => {
