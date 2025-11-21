@@ -177,13 +177,13 @@ impl I18nManager {
                 match &entry {
                     I18nEntry::Entry(entry) => entry.to_vec(),
                     I18nEntry::PluralEntry(entry) => {
-                        let (_, count) = (variables)
+                        let (_, count) = variables
                             .into_iter()
                             .find(|(name, _)| *name == "count")
                             .unwrap_or_else(|| {
                                 panic!(
-                                    "Resolved plural string for {key}, but no count variable provided \
-                                for substitution",
+                                    "Resolved plural string for {key}, but no count variable \
+                                    provided for substitution",
                                 )
                             });
 
@@ -198,35 +198,35 @@ impl I18nManager {
                         }
                     }
                 }
-                    .iter()
-                    .map(|part| match part {
-                        I18nStringPart::Static(borrowed) => borrowed.to_string(),
-                        I18nStringPart::Variable(variable) => {
-                            match variables.into_iter().find(|(name, _)| *name == variable.to_string()) {
-                                None => {
-                                    format!("{{{{{variable}}}}}")
-                                }
-                                Some((_, variable)) => {
-                                    match variable {
-                                        Variable::Modified(initial, subsequent) =>
-                                            subsequent
-                                                .iter()
-                                                .fold(initial.transform(locale), |v, modi| {
-                                                    modi.0.transform(locale, v, modi.1)
-                                                }),
-                                        Variable::String(str) => { str.into() }
-                                        Variable::Count(_) => {
-                                            panic!("Unexpected count variable")
-                                        }
-                                    }
-                                }
+                .iter()
+                .map(|part| match part {
+                    I18nStringPart::Static(borrowed) => borrowed.to_string(),
+                    I18nStringPart::Variable(variable) => {
+                        match variables
+                            .into_iter()
+                            .find(|(name, _)| *name == variable.to_string())
+                        {
+                            None => {
+                                format!("{{{{{variable}}}}}")
                             }
+                            Some((_, variable)) => match variable {
+                                Variable::Modified(initial, subsequent) => subsequent
+                                    .iter()
+                                    .fold(initial.transform(locale), |v, modi| {
+                                        modi.0.transform(locale, v, modi.1)
+                                    }),
+                                Variable::String(str) => str.into(),
+                                Variable::Count(_) => {
+                                    panic!("Unexpected count variable")
+                                }
+                            },
                         }
-                        I18nStringPart::Count => "{{count}}".to_string(),
-                    })
-                    .collect::<Vec<_>>()
-                    .join("")
-                    .into(),
+                    }
+                    I18nStringPart::Count => "{{count}}".to_string(),
+                })
+                .collect::<Vec<_>>()
+                .join("")
+                .into(),
             );
 
             // If the translation is empty, fall back to the next source
