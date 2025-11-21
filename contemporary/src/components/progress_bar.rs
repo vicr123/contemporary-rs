@@ -74,56 +74,62 @@ impl RenderOnce for IndeterminateProgressBar {
         self.div
             .rounded(theme.border_radius)
             .bg(theme.layer_background)
+            .border_color(theme.border_color)
+            .border(px(1.))
             .h(px(28.))
             .w_full()
-            .relative()
             .child(
                 div()
-                    .top_0()
-                    .h_full()
-                    .rounded(theme.border_radius)
-                    .bg(theme.button_background)
-                    .absolute()
-                    .with_animation(
-                        "progress-bar-animation",
-                        Animation::new(Duration::from_secs(5)).repeat(),
-                        |div, delta| {
-                            let delta = delta * 4.;
-                            match delta.floor() {
-                                0. => div
-                                    .left(relative(delta))
-                                    .w(relative(delta.clamp(0., 1. - delta))),
-                                1. => div.left_0().w(relative((delta - 1.).clamp(0., 1.))),
-                                2. => div.left_0().w(relative((delta - 2.).clamp(0., 1.))),
-                                3. => div
-                                    .left(relative(delta - 3.))
-                                    .w(relative(1. - (delta - 3.))),
-                                _ => unreachable!(),
-                            }
-                        },
-                    ),
-            )
-            .child(
-                div()
-                    .left_0()
-                    .top_0()
-                    .h_full()
-                    .rounded(theme.border_radius)
-                    .bg(theme.button_background)
-                    .absolute()
-                    .with_animation(
-                        "progress-bar-animation-2",
-                        Animation::new(Duration::from_secs(5)).repeat(),
-                        |div, delta| {
-                            let delta = delta * 4.;
-                            match delta.floor() {
-                                0. | 1. | 3. => div.invisible(),
-                                2. => div
-                                    .left(relative((delta - 2.) * 2.))
-                                    .w(relative(1. - ((delta - 2.) * 2.))),
-                                _ => unreachable!(),
-                            }
-                        },
+                    .size_full()
+                    .relative()
+                    .child(
+                        div()
+                            .top_0()
+                            .h_full()
+                            .rounded(theme.border_radius)
+                            .bg(theme.button_background)
+                            .absolute()
+                            .with_animation(
+                                "progress-bar-animation",
+                                Animation::new(Duration::from_secs(5)).repeat(),
+                                |div, delta| {
+                                    let delta = delta * 4.;
+                                    match delta.floor() {
+                                        0. => div
+                                            .left(relative(delta))
+                                            .w(relative(delta.clamp(0., 1. - delta))),
+                                        1. => div.left_0().w(relative((delta - 1.).clamp(0., 1.))),
+                                        2. => div.left_0().w(relative((delta - 2.).clamp(0., 1.))),
+                                        3. => div
+                                            .left(relative(delta - 3.))
+                                            .w(relative(1. - (delta - 3.))),
+                                        _ => unreachable!(),
+                                    }
+                                },
+                            ),
+                    )
+                    .child(
+                        div()
+                            .left_0()
+                            .top_0()
+                            .h_full()
+                            .rounded(theme.border_radius)
+                            .bg(theme.button_background)
+                            .absolute()
+                            .with_animation(
+                                "progress-bar-animation-2",
+                                Animation::new(Duration::from_secs(5)).repeat(),
+                                |div, delta| {
+                                    let delta = delta * 4.;
+                                    match delta.floor() {
+                                        0. | 1. | 3. => div.invisible(),
+                                        2. => div
+                                            .left(relative((delta - 2.) * 2.))
+                                            .w(relative(1. - ((delta - 2.) * 2.))),
+                                        _ => unreachable!(),
+                                    }
+                                },
+                            ),
                     ),
             )
     }
