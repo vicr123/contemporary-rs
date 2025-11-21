@@ -205,9 +205,8 @@ impl I18nManager {
                 }
                 .iter()
                 .map(|part| match part {
-                    I18nStringPart::BorrowedStatic(borrowed) => borrowed.to_string(),
-                    I18nStringPart::OwnedStatic(owned) => owned.to_string(),
-                    I18nStringPart::Variable(variable) => variable.to_string(),
+                    I18nStringPart::Static(borrowed) => borrowed.to_string(),
+                    I18nStringPart::Variable(variable) => format!("VAR({})", variable.to_string()),
                     I18nStringPart::Count => "{{count}}".to_string(),
                 })
                 .collect::<Vec<_>>()
