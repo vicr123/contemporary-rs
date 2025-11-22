@@ -14,9 +14,11 @@ pub use cntp_localesupport::modifiers::{Date, Quote, StringModifier};
 pub use cntp_localesupport::{LayoutDirection, Locale};
 pub use phf;
 
+/// The global i18n manager.
 pub static I18N_MANAGER: Lazy<RwLock<I18nManager>> =
     Lazy::new(|| RwLock::new(I18nManager::default()));
 
+/// Gets the global i18n manager.
 #[macro_export]
 macro_rules! i18n_manager {
     () => {
@@ -24,6 +26,10 @@ macro_rules! i18n_manager {
     };
 }
 
+/// Manages the state of the i18n system in the app.
+///
+/// The i18n manager is responsible for keeping
+/// track of all the loaded translation files, as well as the current locale settings.
 pub struct I18nManager {
     sources: Vec<Box<dyn I18nSource>>,
     pub locale: Locale,
@@ -101,10 +107,21 @@ impl Variable<'_> {
 type LookupVariable<'a> = &'a (&'a str, Variable<'a>);
 
 impl I18nManager {
+    /// Load a translation file into the manager.
+    ///
+    /// Example:
+    /// ```rs
+    /// i18n_manager!().load_source(tr_load!());
+    /// ```
     pub fn load_source(&mut self, source: impl I18nSource + 'static) {
         self.sources.push(Box::new(source));
     }
 
+    /// Lookup a translation from the cache, or, if it doesn't exist, from the translation files
+    /// and caches it.
+    ///
+    /// You can use this function directly if you need to, but in most cases you should use the
+    /// `tr!` or `trn!` macro.
     pub fn lookup_cached<'a, T>(
         &self,
         key: &str,
@@ -133,6 +150,10 @@ impl I18nManager {
         })
     }
 
+    /// Lookup a translation from the translation files.
+    ///
+    /// You can use this function directly if you need to, but in most cases you should use the
+    /// `tr!` or `trn!` macro.
     pub fn lookup<'a, T>(
         &self,
         key: &str,

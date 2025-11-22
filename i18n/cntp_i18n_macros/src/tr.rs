@@ -139,7 +139,7 @@ pub fn create_mi_vars(
     }
 }
 
-/// Returns a translated string for the given key.
+/// Returns a translated string for the given key, and marks it for translation.
 ///
 /// Examples:
 /// ```rs
