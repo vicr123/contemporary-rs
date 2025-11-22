@@ -204,7 +204,7 @@ impl I18nManager {
                     I18nStringPart::Variable(variable) => {
                         match variables
                             .into_iter()
-                            .find(|(name, _)| *name == variable.to_string())
+                            .find(|(name, _)| *name == variable.as_ref())
                         {
                             None => {
                                 format!("{{{{{variable}}}}}")
