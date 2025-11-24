@@ -172,7 +172,7 @@ impl I18nManager {
             };
 
             // TODO: Cache the resolved string
-            let mut resolved = match &entry {
+            let resolved = match &entry {
                 I18nEntry::Entry(entry) => entry.entry.clone(),
                 I18nEntry::PluralEntry(entry) => {
                     let (_, count) = (variables)
@@ -202,42 +202,57 @@ impl I18nManager {
                 continue;
             }
 
-            // Substitute the variables
+            if !resolved.contains("{{") {
+                return resolved;
+            }
+
+            let mut matches: Vec<(usize, usize, &Variable)> = Vec::new();
+
             for (name, substitution) in variables.into_iter() {
-                if *name == "count" {
-                    if entry.is_singular() {
-                        panic!(
-                            "Resolved non-plural string for {key}, but count variable provided \
-                            for substitution",
-                        )
-                    }
-
-                    // Special case the count variable which should be handled in a plural entry
-                    continue;
-                }
-
-                resolved = match substitution {
-                    Variable::Count(count) => {
-                        panic!("Substitution variable ({name}) not of type string (is {count})",)
-                    }
-                    Variable::String(string) => resolved
-                        .replace(format!("{{{{{name}}}}}").as_str(), string.as_str())
-                        .into(),
-                    Variable::Modified(initial, subsequent) => resolved
-                        .replace(
-                            format!("{{{{{name}}}}}").as_str(),
-                            subsequent
-                                .iter()
-                                .fold(initial.transform(locale), |v, modi| {
-                                    modi.0.transform(locale, v, modi.1)
-                                })
-                                .as_str(),
-                        )
-                        .into(),
+                let pattern = format!("{{{{{}}}}}", name);
+                for (idx, _) in resolved.match_indices(&pattern) {
+                    matches.push((idx, pattern.len(), substitution));
                 }
             }
 
-            return resolved;
+            if matches.is_empty() {
+                return resolved;
+            }
+
+            matches.sort_by(|a, b| {
+                a.0.cmp(&b.0).then_with(|| b.1.cmp(&a.1))
+            });
+
+            let mut result = String::with_capacity(resolved.len());
+            let mut pos = 0;
+
+            // Substitute the variables
+            for (idx, len, substitution) in matches {
+                if idx < pos {
+                    continue;
+                }
+                result.push_str(&resolved[pos..idx]);
+                match substitution {
+                    Variable::Count(count) => {
+                        panic!("Substitution variable not of type string (is {count})",)
+                    }
+                    Variable::String(string) => result.push_str(&string),
+                    Variable::Modified(initial, subsequent) => {
+                        let s = subsequent
+                            .iter()
+                            .fold(initial.transform(locale), |v, modi| {
+                                modi.0.transform(locale, v, modi.1)
+                            });
+                            result.push_str(&s);
+                    }
+                }
+
+                pos = idx + len;
+            }
+
+            result.push_str(&resolved[pos..]);
+
+            return result.into();
         }
 
         // None of the translation sources we have were able to find a key so just return the key
