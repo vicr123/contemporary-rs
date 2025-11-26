@@ -1,10 +1,9 @@
 use crate::config::{CURRENT_CRATE, I18N_CONFIG};
 use crate::parse_raw_string::parse_raw_string;
+use crate::translation_file_cache::TRANSLATION_FILE_CACHE;
 use cntp_i18n_core::load;
 use proc_macro::TokenStream;
 use quote::quote;
-use std::env;
-use std::path::Path;
 
 macro_rules! extract_plural_rule {
     ($items:ident, $n:ident) => {
@@ -29,18 +28,13 @@ macro_rules! extract_plural_rule {
 /// changed to match the compiled platform's line endings. If you wish to disable this behaviour,
 /// set `match_line_endings` to false in your i18n configuration.
 pub fn tr_load(_body: TokenStream) -> TokenStream {
-    let manifest_dir = env::var("CARGO_MANIFEST_DIR").expect("Failed to get CARGO_MANIFEST_DIR");
-
     let config = &*I18N_CONFIG;
     let default_language = &config.i18n.default_language;
-    let catalog_files = config.i18n.catalog_files(Path::new(&manifest_dir));
 
     let mut language_map = Vec::new();
-    for file in catalog_files {
+    for (language, decoded_file) in TRANSLATION_FILE_CACHE.iter() {
         let mut strings = Vec::new();
 
-        let language = file.file_stem().unwrap().to_str().unwrap();
-        let decoded_file = load::translation(&file).unwrap();
         for (key, entry) in decoded_file {
             if let Some(token_stream) = match entry {
                 load::TranslationEntry::Entry(string) => {
