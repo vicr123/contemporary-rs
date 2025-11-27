@@ -190,6 +190,15 @@ impl Render for Buttons {
                                     ))
                                     .with_context_menu(context_menu_items.clone()),
                             )
+                            .child(tr!(
+                                "CHILD_TEST",
+                                "0: {{zero}}, 1: {{one}}, 2: {{two}}, 3: {{three}}, 4: {{four}}, 5: {{five}}, 6: {{six}}",
+                                zero = "zero",
+                                one = "one",
+                                two = "two",
+                                three = "three",
+                                five:quote = "five"
+                            ))
                             .child(
                                 div()
                                     .flex()

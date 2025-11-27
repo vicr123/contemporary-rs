@@ -15,7 +15,7 @@ macro_rules! extract_plural_rule {
                     .map(|f| f.calculate_string_part($key).to_tokens())
                     .collect::<Vec<_>>();
                 quote! {
-                    $n: Some(vec![#( #matched_string, )*])
+                    $n: Some(&[#( #matched_string, )*])
                 }
             })
             .unwrap_or(quote! {
@@ -49,7 +49,7 @@ pub fn tr_load(_body: TokenStream) -> TokenStream {
                             .map(|f| f.calculate_string_part(key).to_tokens())
                             .collect::<Vec<_>>();
                         Some(quote! {
-                            #key => I18nEntry::Entry(vec![#( #matched_string, )*])
+                            #key => I18nEntry::Entry(&[#( #matched_string, )*])
                         })
                     }
                 }
@@ -91,7 +91,7 @@ pub fn tr_load(_body: TokenStream) -> TokenStream {
                                 #two,
                                 #few,
                                 #many,
-                                other: vec![#( #matched_other, )*]
+                                other: &[#( #matched_other, )*]
                             })
                         })
                     }

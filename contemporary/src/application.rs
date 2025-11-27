@@ -28,7 +28,7 @@ impl ApplicationLink {
         match self {
             ApplicationLink::FileBug => tr!("HELP_FILE_BUG", "File Bug").into(),
             ApplicationLink::SourceCode => tr!("HELP_SOURCE_CODE", "Source Code").into(),
-            ApplicationLink::HelpContents => tr!("HELP").into(),
+            ApplicationLink::HelpContents => tr!("HELP", "Help").into(),
             ApplicationLink::Other { icon: _, text } => text.clone(),
         }
     }
