@@ -1,18 +1,21 @@
 use crate::config::{CURRENT_CRATE, I18N_CONFIG};
-use crate::parse_raw_string::parse_raw_string;
-use crate::translation_file_cache::TRANSLATION_FILE_CACHE;
+use crate::parse_raw_string::{I18nStringPartExtensions, parse_raw_string};
+use crate::translation_file_cache::{ParsedTranslationEntry, TRANSLATION_FILE_CACHE};
 use cntp_i18n_core::load;
 use proc_macro::TokenStream;
 use quote::quote;
 
 macro_rules! extract_plural_rule {
-    ($items:ident, $n:ident) => {
+    ($items:ident, $key:ident, $n:ident) => {
         $items
             .get(stringify!($n))
             .map(|str| {
-                let matched_string = parse_raw_string(str);
+                let matched_string = str
+                    .iter()
+                    .map(|f| f.calculate_string_part($key).to_tokens())
+                    .collect::<Vec<_>>();
                 quote! {
-                    $n: Some(#matched_string)
+                    $n: Some(vec![#( #matched_string, )*])
                 }
             })
             .unwrap_or(quote! {
@@ -37,17 +40,20 @@ pub fn tr_load(_body: TokenStream) -> TokenStream {
 
         for (key, entry) in decoded_file {
             if let Some(token_stream) = match entry {
-                load::TranslationEntry::Entry(string) => {
+                ParsedTranslationEntry::Entry(string) => {
                     if string.is_empty() {
                         None
                     } else {
-                        let matched_string = parse_raw_string(string.as_str());
+                        let matched_string = string
+                            .iter()
+                            .map(|f| f.calculate_string_part(key).to_tokens())
+                            .collect::<Vec<_>>();
                         Some(quote! {
-                            #key => I18nEntry::Entry(#matched_string)
+                            #key => I18nEntry::Entry(vec![#( #matched_string, )*])
                         })
                     }
                 }
-                load::TranslationEntry::PluralEntry(items) => {
+                ParsedTranslationEntry::PluralEntry(items) => {
                     if items.iter().all(|(_key, value)| value.is_empty()) {
                         None
                     } else {
@@ -66,13 +72,16 @@ pub fn tr_load(_body: TokenStream) -> TokenStream {
                             // .into();
                         };
 
-                        let matched_other = parse_raw_string(other.as_str());
+                        let matched_other = other
+                            .iter()
+                            .map(|f| f.calculate_string_part(key).to_tokens())
+                            .collect::<Vec<_>>();
 
-                        let zero = extract_plural_rule!(items, zero);
-                        let one = extract_plural_rule!(items, one);
-                        let two = extract_plural_rule!(items, two);
-                        let few = extract_plural_rule!(items, few);
-                        let many = extract_plural_rule!(items, many);
+                        let zero = extract_plural_rule!(items, key, zero);
+                        let one = extract_plural_rule!(items, key, one);
+                        let two = extract_plural_rule!(items, key, two);
+                        let few = extract_plural_rule!(items, key, few);
+                        let many = extract_plural_rule!(items, key, many);
 
                         Some(quote! {
                             #key => I18nEntry::PluralEntry(I18nPluralStringEntry {
@@ -82,7 +91,7 @@ pub fn tr_load(_body: TokenStream) -> TokenStream {
                                 #two,
                                 #few,
                                 #many,
-                                other: #matched_other
+                                other: vec![#( #matched_other, )*]
                             })
                         })
                     }

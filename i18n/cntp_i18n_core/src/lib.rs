@@ -60,7 +60,7 @@ impl I18nPluralStringEntry<'_> {
             }
             .into_iter()
             .map(|part| match part {
-                I18nStringPart::Count => {
+                I18nStringPart::Count(_) => {
                     I18nStringPart::Static(count.to_locale_string(&cntp_locale).into())
                 }
                 _ => part.clone(),
@@ -80,8 +80,8 @@ pub enum I18nEntry<'a> {
 #[derive(Clone)]
 pub enum I18nStringPart {
     Static(I18nString),
-    Variable(I18nString),
-    Count,
+    Variable(I18nString, usize),
+    Count(usize),
 }
 
 impl I18nEntry<'_> {

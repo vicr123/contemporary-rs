@@ -8,8 +8,22 @@ use crate::{
     parse_raw_string::{I18nFullStringPart, parse_raw_string_2},
 };
 
+// keep TranslationEntry and load::translation as is
+// then we make a new function that takes the outputted translation entries from load::translation
+// and parses them into a new type
+//
+// then we use the output of *that* function as the data we store in the below variable
+// instead of the raw output of
+//
+
+#[derive(Clone)]
+pub enum ParsedTranslationEntry {
+    Entry(Vec<I18nFullStringPart>),
+    PluralEntry(FxHashMap<String, Vec<I18nFullStringPart>>),
+}
+
 pub static TRANSLATION_FILE_CACHE: LazyLock<
-    FxHashMap<String, FxHashMap<String, TranslationEntry>>,
+    FxHashMap<String, FxHashMap<String, ParsedTranslationEntry>>,
 > = LazyLock::new(|| {
     let manifest_dir = env::var("CARGO_MANIFEST_DIR").expect("Failed to get CARGO_MANIFEST_DIR");
 
@@ -22,7 +36,29 @@ pub static TRANSLATION_FILE_CACHE: LazyLock<
             let language = file.file_stem().unwrap().to_str().unwrap().to_string();
             let decoded_file = load::translation(&file).unwrap();
 
-            (language, decoded_file.into_iter().collect())
+            (
+                language,
+                decoded_file
+                    .into_iter()
+                    .map(|(key, entry)| match entry {
+                        TranslationEntry::Entry(entry) => (
+                            key,
+                            ParsedTranslationEntry::Entry(parse_raw_string_2(&entry)),
+                        ),
+                        TranslationEntry::PluralEntry(hash_map) => (
+                            key,
+                            ParsedTranslationEntry::PluralEntry(
+                                hash_map
+                                    .into_iter()
+                                    .map(|(plural_group, string)| {
+                                        (plural_group, parse_raw_string_2(&string))
+                                    })
+                                    .collect(),
+                            ),
+                        ),
+                    })
+                    .collect(),
+            )
         })
         .collect()
 });
@@ -33,10 +69,11 @@ pub static VARIABLE_LIST: LazyLock<FxHashMap<String, Vec<String>>> = LazyLock::n
         |mut foldit, (_language, strings)| {
             for (key, entry) in strings.iter() {
                 let variables = match entry {
-                    TranslationEntry::Entry(string) => parse_raw_string_2(string),
-                    TranslationEntry::PluralEntry(hash_map) => hash_map
+                    ParsedTranslationEntry::Entry(string) => string.clone(),
+                    ParsedTranslationEntry::PluralEntry(hash_map) => hash_map
                         .iter()
-                        .flat_map(|(_, string)| parse_raw_string_2(string))
+                        .flat_map(|(_, string)| string)
+                        .cloned()
                         .collect::<Vec<_>>(),
                 }
                 .iter()
