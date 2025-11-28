@@ -1,4 +1,3 @@
-use crate::TrString;
 use crate::tests::helpers::visit_string;
 
 #[test]

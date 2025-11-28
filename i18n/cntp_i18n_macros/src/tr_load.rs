@@ -1,7 +1,6 @@
 use crate::config::{CURRENT_CRATE, I18N_CONFIG};
-use crate::parse_raw_string::{I18nStringPartExtensions, parse_raw_string};
+use crate::parse_raw_string::I18nStringPartExtensions;
 use crate::translation_file_cache::{ParsedTranslationEntry, TRANSLATION_FILE_CACHE};
-use cntp_i18n_core::load;
 use proc_macro::TokenStream;
 use quote::quote;
 

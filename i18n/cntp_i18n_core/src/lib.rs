@@ -9,10 +9,10 @@ use anyhow::anyhow;
 use cntp_localesupport::Locale;
 use cntp_localesupport::locale_formattable::LocaleFormattable;
 use icu::plurals::{PluralCategory, PluralRules};
-use std::sync::Arc;
 
 pub trait I18nSource: Send + Sync {
-    fn lookup(&self, locale: &Locale, id: &str, lookup_crate: &str) -> Option<&I18nEntry>;
+    fn lookup(&'_ self, locale: &Locale, id: &str, lookup_crate: &str)
+    -> Option<&'_ I18nEntry<'_>>;
 }
 
 pub struct I18nStringEntry {

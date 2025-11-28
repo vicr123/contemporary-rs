@@ -5,7 +5,7 @@ use rustc_hash::{FxHashMap, FxHashSet};
 
 use crate::{
     config::I18N_CONFIG,
-    parse_raw_string::{I18nFullStringPart, parse_raw_string_2},
+    parse_raw_string::{I18nFullStringPart, parse_raw_string},
 };
 
 // keep TranslationEntry and load::translation as is
@@ -41,17 +41,16 @@ pub static TRANSLATION_FILE_CACHE: LazyLock<
                 decoded_file
                     .into_iter()
                     .map(|(key, entry)| match entry {
-                        TranslationEntry::Entry(entry) => (
-                            key,
-                            ParsedTranslationEntry::Entry(parse_raw_string_2(&entry)),
-                        ),
+                        TranslationEntry::Entry(entry) => {
+                            (key, ParsedTranslationEntry::Entry(parse_raw_string(&entry)))
+                        }
                         TranslationEntry::PluralEntry(hash_map) => (
                             key,
                             ParsedTranslationEntry::PluralEntry(
                                 hash_map
                                     .into_iter()
                                     .map(|(plural_group, string)| {
-                                        (plural_group, parse_raw_string_2(&string))
+                                        (plural_group, parse_raw_string(&string))
                                     })
                                     .collect(),
                             ),
