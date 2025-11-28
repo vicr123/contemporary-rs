@@ -1,8 +1,10 @@
 use proc_macro::TokenStream;
 
 mod config;
+mod parse_raw_string;
 mod tr;
 mod tr_load;
+mod translation_file_cache;
 
 /// Returns a translated string for the given key, and marks it for translation.
 ///

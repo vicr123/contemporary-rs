@@ -7,7 +7,8 @@ use std::hash::{Hash, Hasher};
 use std::sync::RwLock;
 
 pub use cntp_i18n_core::{
-    I18nEntry, I18nPluralStringEntry, I18nSource, I18nStringEntry, string::I18nString,
+    I18nEntry, I18nPluralStringEntry, I18nSource, I18nStringEntry, I18nStringPart,
+    string::I18nString,
 };
 pub use cntp_localesupport::locale_formattable::LocaleFormattable;
 pub use cntp_localesupport::modifiers::{Date, Quote, StringModifier};
@@ -117,25 +118,23 @@ impl I18nManager {
         self.sources.push(Box::new(source));
     }
 
-    /// Lookup a translation from the cache, or, if it doesn't exist, from the translation files
+    /// Lookup a translation from the cache, or, if it doesn't exist, from the translation files,
     /// and caches it.
     ///
-    /// You can use this function directly if you need to, but in most cases you should use the
-    /// `tr!` or `trn!` macro.
-    pub fn lookup_cached<'a, T>(
+    /// While it is technically possible to use this function directly, it is not recommended.
+    /// Consider using the `tr!` or `trn!` macros instead, and, if functionality is missing from
+    /// the macros, file an issue.
+    pub fn lookup_cached<'a>(
         &self,
         key: &str,
-        variables: &'a T,
+        variables: &'a [Option<LookupVariable<'a>>],
         lookup_crate: &str,
         hash: u64,
         locale_override: Option<&Locale>,
-    ) -> I18nString
-    where
-        &'a T: IntoIterator<Item = LookupVariable<'a>>,
-    {
+    ) -> I18nString {
         let mut state = FxHasher::default();
         hash.hash(&mut state);
-        for variable in variables.into_iter() {
+        for variable in variables.into_iter().flatten() {
             variable.1.hash_value(&mut state);
         }
         if let Some(locale) = locale_override {
@@ -152,18 +151,16 @@ impl I18nManager {
 
     /// Lookup a translation from the translation files.
     ///
-    /// You can use this function directly if you need to, but in most cases you should use the
-    /// `tr!` or `trn!` macro.
-    pub fn lookup<'a, T>(
+    /// While it is technically possible to use this function directly, it is not recommended.
+    /// Consider using the `tr!` or `trn!` macros instead, and, if functionality is missing from
+    /// the macros, file an issue.
+    pub fn lookup<'a>(
         &self,
         key: &str,
-        variables: &'a T,
+        variables: &'a [Option<LookupVariable<'a>>],
         lookup_crate: &str,
         locale_override: Option<&Locale>,
-    ) -> I18nString
-    where
-        &'a T: IntoIterator<Item = LookupVariable<'a>>,
-    {
+    ) -> I18nString {
         let locale = locale_override.unwrap_or(&self.locale);
 
         for source in &self.sources {
@@ -172,69 +169,78 @@ impl I18nManager {
             };
 
             // TODO: Cache the resolved string
-            let mut resolved = match &entry {
-                I18nEntry::Entry(entry) => entry.entry.clone(),
-                I18nEntry::PluralEntry(entry) => {
-                    let (_, count) = (variables)
-                        .into_iter()
-                        .find(|(name, _)| *name == "count")
-                        .unwrap_or_else(|| {
-                            panic!(
-                                "Resolved plural string for {key}, but no count variable provided \
-                                for substitution",
-                            )
-                        });
+            let resolved = I18nString::Owned(
+                match &entry {
+                    I18nEntry::Entry(entry) => entry.to_vec(),
+                    I18nEntry::PluralEntry(entry) => {
+                        let (_, count) = variables
+                            .into_iter()
+                            .find(|variable| match variable {
+                                Some((name, _)) => *name == "count",
+                                None => false,
+                            })
+                            .map(Option::as_deref)
+                            .flatten()
+                            .unwrap_or_else(|| {
+                                panic!(
+                                    "Resolved plural string for {key}, but no count variable \
+                                    provided for substitution",
+                                )
+                            });
 
-                    match count {
-                        Variable::Count(count) => entry.lookup(*count),
-                        Variable::String(string) => {
-                            panic!("Count variable ({string}) not of type isize")
-                        }
-                        Variable::Modified(_inital, _subsequent) => {
-                            panic!("Cannot modify count variable")
+                        match count {
+                            Variable::Count(count) => entry.lookup(*count, locale),
+                            Variable::String(string) => {
+                                panic!("Count variable ({string}) not of type isize")
+                            }
+                            Variable::Modified(_inital, _subsequent) => {
+                                panic!("Cannot modify count variable")
+                            }
                         }
                     }
                 }
-            };
+                .iter()
+                .map(|part| match part {
+                    I18nStringPart::Static(borrowed) => borrowed.to_string(),
+                    I18nStringPart::Variable(variable, idx) => {
+                        let substituted_variable = variables
+                            .get(*idx)
+                            .map(Option::as_deref)
+                            .flatten()
+                            .filter(|(name, _)| *name == variable.as_ref())
+                            .or_else(|| {
+                                // Fallback for if idx is out of bounds or doesn't match the variable name
+                                variables
+                                    .into_iter()
+                                    .map(Option::as_deref)
+                                    .flatten()
+                                    .find(|(name, _)| *name == variable.as_ref())
+                            })
+                            .map(|(_, variable)| variable);
+
+                        match substituted_variable {
+                            Some(Variable::Modified(initial, subsequent)) => subsequent
+                                .iter()
+                                .fold(initial.transform(locale), |v, modi| {
+                                    modi.0.transform(locale, v, modi.1)
+                                }),
+                            Some(Variable::String(str)) => str.into(),
+                            Some(Variable::Count(_)) => {
+                                panic!("Unexpected count variable")
+                            }
+                            None => format!("{{{{{variable}}}}}"),
+                        }
+                    }
+                    I18nStringPart::Count(_) => "{{count}}".to_string(),
+                })
+                .collect::<Vec<_>>()
+                .join("")
+                .into(),
+            );
 
             // If the translation is empty, fall back to the next source
             if resolved.is_empty() {
                 continue;
-            }
-
-            // Substitute the variables
-            for (name, substitution) in variables.into_iter() {
-                if *name == "count" {
-                    if entry.is_singular() {
-                        panic!(
-                            "Resolved non-plural string for {key}, but count variable provided \
-                            for substitution",
-                        )
-                    }
-
-                    // Special case the count variable which should be handled in a plural entry
-                    continue;
-                }
-
-                resolved = match substitution {
-                    Variable::Count(count) => {
-                        panic!("Substitution variable ({name}) not of type string (is {count})",)
-                    }
-                    Variable::String(string) => resolved
-                        .replace(format!("{{{{{name}}}}}").as_str(), string.as_str())
-                        .into(),
-                    Variable::Modified(initial, subsequent) => resolved
-                        .replace(
-                            format!("{{{{{name}}}}}").as_str(),
-                            subsequent
-                                .iter()
-                                .fold(initial.transform(locale), |v, modi| {
-                                    modi.0.transform(locale, v, modi.1)
-                                })
-                                .as_str(),
-                        )
-                        .into(),
-                }
             }
 
             return resolved;
