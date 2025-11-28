@@ -209,7 +209,6 @@ impl I18nManager {
                             .flatten()
                             .filter(|(name, _)| *name == variable.as_ref())
                             .or_else(|| {
-                                panic!("todo: remove me");
                                 // Fallback for if idx is out of bounds or doesn't match the variable name
                                 variables
                                     .into_iter()

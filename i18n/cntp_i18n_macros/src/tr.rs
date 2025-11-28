@@ -196,13 +196,13 @@ pub fn tr(body: TokenStream) -> TokenStream {
                     // Special handling
                     let expr = &variable.value;
                     quote! {
-                        (
+                        Some(&(
                             "count",
                             {
                                 use cntp_i18n::Variable;
                                 Variable::Count(#expr)
                             }
-                        ),
+                        )),
                     }
                 }
                 None => quote! {
@@ -293,8 +293,21 @@ pub fn trn(body: TokenStream) -> TokenStream {
     let mut bsmi_decls = Vec::new();
     let mut ssmi_decls = Vec::new();
 
-    let mut z = Vec::new();
-    for variable in &input.variables {
+    let mut variables_token = Vec::new();
+    let Some(required_variables) = &VARIABLE_LIST.get(&input.translation_id.value()) else {
+        return Error::new(
+            input.translation_id.span(),
+            format!(
+                "Translation key {} does not have any translations defined",
+                input.translation_id.value()
+            ),
+        )
+        .to_compile_error()
+        .into();
+    };
+
+    // Ensure all passed variables are used
+    for variable in input.variables.iter() {
         let is_used = input.default_strings.iter().any(|default_string| {
             default_string
                 .value()
@@ -312,27 +325,45 @@ pub fn trn(body: TokenStream) -> TokenStream {
             .to_compile_error()
             .into();
         }
+    }
 
-        if variable.name == "count" {
-            // Special handling
-            let var_name = variable.name.to_string();
-            let expr = &variable.value;
-            z.push(quote! {
-                (
-                    #var_name,
-                    {
-                        use cntp_i18n::Variable;
-                        Variable::Count(#expr)
+    for required_variable in *required_variables {
+        variables_token.push(if required_variable == "count" {
+            match input
+                .variables
+                .iter()
+                .find(|v| v.name.to_string() == "count")
+            {
+                Some(variable) => {
+                    // Special handling
+                    let var_name = variable.name.to_string();
+                    let expr = &variable.value;
+                    quote! {
+                        Some(&(
+                            #var_name,
+                            {
+                                use cntp_i18n::Variable;
+                                Variable::Count(#expr)
+                            }
+                        )),
                     }
-                ),
-            });
+                }
+                None => quote! {
+                    None,
+                },
+            }
         } else {
-            z.push(non_count_variable(
-                variable,
-                &mut bsmi_decls,
-                &mut ssmi_decls,
-            ));
-        }
+            match input
+                .variables
+                .iter()
+                .find(|v| v.name.to_string() == *required_variable)
+            {
+                Some(variable) => non_count_variable(variable, &mut bsmi_decls, &mut ssmi_decls),
+                None => quote! {
+                    None,
+                },
+            }
+        })
     }
 
     let locale = input
@@ -353,7 +384,6 @@ pub fn trn(body: TokenStream) -> TokenStream {
 
     let key = input.translation_id.value();
     let current_crate = &*CURRENT_CRATE;
-    let token_length = z.len();
 
     let mut state = rustc_hash::FxHasher::default();
     input.hash(&mut state);
@@ -371,7 +401,7 @@ pub fn trn(body: TokenStream) -> TokenStream {
             let i18n = I18N_MANAGER.read().unwrap();
 
             i18n.lookup_cached(#key, &[
-                #( #z )*
+                #( #variables_token )*
             ], #current_crate, #hash, #locale)
         }
     }

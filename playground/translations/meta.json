@@ -85,25 +85,25 @@
   },
   "BUTTONS_FLAT_BUTTON": {
     "context": "buttons.rs",
-    "definedIn": "src/components/buttons.rs:248",
+    "definedIn": "src/components/buttons.rs:239",
     "plural": false,
     "description": null
   },
   "BUTTONS_FLAT_CHECKABLE_BUTTON": {
     "context": "buttons.rs",
-    "definedIn": "src/components/buttons.rs:266",
+    "definedIn": "src/components/buttons.rs:257",
     "plural": false,
     "description": null
   },
   "BUTTONS_FLAT_DISABLED_BUTTON": {
     "context": "buttons.rs",
-    "definedIn": "src/components/buttons.rs:257",
+    "definedIn": "src/components/buttons.rs:248",
     "plural": false,
     "description": null
   },
   "BUTTONS_FLAT_TITLE": {
     "context": "buttons.rs",
-    "definedIn": "src/components/buttons.rs:239",
+    "definedIn": "src/components/buttons.rs:230",
     "plural": false,
     "description": null
   },
@@ -152,12 +152,6 @@
   "CHECKBOXES_TITLE": {
     "context": "checkboxes_radio_buttons.rs",
     "definedIn": "src/components/checkboxes_radio_buttons.rs:66",
-    "plural": false,
-    "description": null
-  },
-  "CHILD_TEST": {
-    "context": "buttons.rs",
-    "definedIn": "src/components/buttons.rs:194",
     "plural": false,
     "description": null
   },
@@ -685,7 +679,7 @@
   },
   "JOINED_BUTTON": {
     "context": "buttons.rs",
-    "definedIn": "src/components/buttons.rs:213",
+    "definedIn": "src/components/buttons.rs:204",
     "plural": false,
     "description": null
   },
@@ -883,7 +877,7 @@
   },
   "RIGHT_CLICK_BUTTON": {
     "context": "buttons.rs",
-    "definedIn": "src/components/buttons.rs:225",
+    "definedIn": "src/components/buttons.rs:216",
     "plural": false,
     "description": null
   },
