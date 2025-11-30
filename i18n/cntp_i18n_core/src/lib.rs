@@ -1,7 +1,5 @@
-pub mod config;
 #[cfg(feature = "gpui")]
 pub mod gpui;
-pub mod load;
 pub mod string;
 
 use crate::string::I18nString;

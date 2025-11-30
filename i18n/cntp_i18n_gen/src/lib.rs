@@ -12,7 +12,7 @@ use std::{
     rc::Rc,
 };
 
-use cntp_i18n_core::config::get_i18n_config;
+use cntp_i18n_build_core::config::get_i18n_config;
 use cntp_i18n_parse::{tr::TrMacroInput, trn::TrnMacroInput};
 use icu::{
     locale::Locale,

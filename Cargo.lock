@@ -1126,6 +1126,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "cntp_i18n_build_core"
+version = "0.1.0"
+dependencies = [
+ "serde",
+ "serde_json",
+ "toml 0.8.23",
+]
+
+[[package]]
 name = "cntp_i18n_core"
 version = "0.1.0"
 dependencies = [
@@ -1142,6 +1151,7 @@ dependencies = [
 name = "cntp_i18n_gen"
 version = "0.1.0"
 dependencies = [
+ "cntp_i18n_build_core",
  "cntp_i18n_core",
  "cntp_i18n_parse",
  "icu",
@@ -1157,6 +1167,7 @@ dependencies = [
 name = "cntp_i18n_macros"
 version = "0.1.0"
 dependencies = [
+ "cntp_i18n_build_core",
  "cntp_i18n_core",
  "cntp_i18n_parse",
  "once_cell",

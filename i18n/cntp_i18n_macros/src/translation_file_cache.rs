@@ -1,6 +1,6 @@
 use std::{env, path::Path, sync::LazyLock};
 
-use cntp_i18n_core::load::{self, TranslationEntry};
+use cntp_i18n_build_core::load::{self, TranslationEntry};
 use rustc_hash::{FxHashMap, FxHashSet};
 
 use crate::{

@@ -8,6 +8,7 @@ members = [
     "i18n/cntp_i18n_macros",
     "i18n/cntp_i18n_parse",
     "i18n/cntp_i18n_gen",
+    "i18n/cntp_i18n_build_core",
     "localesupport/cntp_localesupport",
     "playground",
     "icon_tool/cntp_icon_tool_core",
