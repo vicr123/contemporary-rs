@@ -218,32 +218,57 @@ impl I18nManager {
                             })
                             .map(|(_, variable)| variable);
 
-                        match substituted_variable {
-                            Some(Variable::Modified(initial, subsequent)) => subsequent
-                                .iter()
-                                .fold(initial.transform(locale), |v, modi| {
-                                    modi.0.transform(locale, v, modi.1)
-                                }),
-                            Some(Variable::String(str)) => str.into(),
-                            Some(Variable::Count(_)) => {
-                                panic!("Unexpected count variable")
-                            }
-                            None => format!("{{{{{variable}}}}}"),
-                        }
-                    }
-                    I18nStringPart::Count(_) => "{{count}}".to_string(),
-                })
-                .collect::<Vec<_>>()
-                .join("")
-                .into(),
-            );
-
-            // If the translation is empty, fall back to the next source
-            if resolved.is_empty() {
-                continue;
+            if !resolved.contains("{{") {
+                return resolved;
             }
 
-            return resolved;
+            let mut matches: Vec<(usize, usize, &Variable)> = Vec::new();
+
+            for (name, substitution) in variables.into_iter() {
+                let pattern = format!("{{{{{}}}}}", name);
+                for (idx, _) in resolved.match_indices(&pattern) {
+                    matches.push((idx, pattern.len(), substitution));
+                }
+            }
+
+            if matches.is_empty() {
+                return resolved;
+            }
+
+            matches.sort_by(|a, b| {
+                a.0.cmp(&b.0).then_with(|| b.1.cmp(&a.1))
+            });
+
+            let mut result = String::with_capacity(resolved.len());
+            let mut pos = 0;
+
+            // Substitute the variables
+            for (idx, len, substitution) in matches {
+                if idx < pos {
+                    continue;
+                }
+                result.push_str(&resolved[pos..idx]);
+                match substitution {
+                    Variable::Count(count) => {
+                        panic!("Substitution variable not of type string (is {count})",)
+                    }
+                    Variable::String(string) => result.push_str(&string),
+                    Variable::Modified(initial, subsequent) => {
+                        let s = subsequent
+                            .iter()
+                            .fold(initial.transform(locale), |v, modi| {
+                                modi.0.transform(locale, v, modi.1)
+                            });
+                            result.push_str(&s);
+                    }
+                }
+
+                pos = idx + len;
+            }
+
+            result.push_str(&resolved[pos..]);
+
+            return result.into();
         }
 
         // None of the translation sources we have were able to find a key so just return the key
