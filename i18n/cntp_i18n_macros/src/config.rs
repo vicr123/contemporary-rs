@@ -1,6 +1,6 @@
 use std::{env, path::PathBuf};
 
-use cntp_i18n_core::config::{Config, get_i18n_config};
+use cntp_i18n_build_core::config::{Config, get_i18n_config};
 use once_cell::sync::Lazy;
 
 // Cache the i18n config using Lazy

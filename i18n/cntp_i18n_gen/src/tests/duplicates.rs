@@ -10,7 +10,7 @@ fn duplicates() {
     match &error.error_type {
         VisitorErrorType::DuplicateDefinition {
             id,
-            last_seen_file,
+            last_seen_file: _,
             last_seen_line,
         } => {
             assert_eq!(id, "HELLO_WORLD");
@@ -22,7 +22,7 @@ fn duplicates() {
     match &error.error_type {
         VisitorErrorType::DuplicateDefinition {
             id,
-            last_seen_file,
+            last_seen_file: _,
             last_seen_line,
         } => {
             assert_eq!(id, "HELLO_WORLD_PLURAL");

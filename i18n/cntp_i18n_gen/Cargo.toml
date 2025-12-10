@@ -6,6 +6,7 @@ edition = "2024"
 [dependencies]
 syn = { workspace = true, features = ["visit", "parsing", "full"] }
 cntp_i18n_core = { path = "../cntp_i18n_core" }
+cntp_i18n_build_core = { path = "../cntp_i18n_build_core" }
 tracing = { workspace = true }
 cntp_i18n_parse = { path = "../cntp_i18n_parse" }
 walkdir = "2"

@@ -125,6 +125,12 @@
     "plural": false,
     "description": null
   },
+  "HELP": {
+    "context": "application.rs",
+    "definedIn": "src/application.rs:31",
+    "plural": false,
+    "description": null
+  },
   "HELP_FILE_BUG": {
     "context": "application.rs",
     "definedIn": "src/application.rs:29",

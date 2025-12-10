@@ -14,5 +14,6 @@ quote = "1"
 once_cell = { workspace = true }
 cntp_i18n_core = { path = "../cntp_i18n_core" }
 cntp_i18n_parse = { path = "../cntp_i18n_parse" }
+cntp_i18n_build_core = { path = "../cntp_i18n_build_core" }
 proc-macro2 = "1"
 rustc-hash = { workspace = true }

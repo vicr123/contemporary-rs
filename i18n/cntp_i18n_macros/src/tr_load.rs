@@ -1,43 +1,26 @@
 use crate::config::{CURRENT_CRATE, I18N_CONFIG};
-use cntp_i18n_core::load;
+use crate::parse_raw_string::I18nStringPartExtensions;
+use crate::translation_file_cache::{ParsedTranslationEntry, TRANSLATION_FILE_CACHE};
 use proc_macro::TokenStream;
 use quote::quote;
-use std::env;
-use std::path::Path;
 
 macro_rules! extract_plural_rule {
-    ($items:ident, $n:ident) => {
+    ($items:ident, $key:ident, $n:ident) => {
         $items
             .get(stringify!($n))
             .map(|str| {
-                let string = match_line_endings(str);
+                let matched_string = str
+                    .iter()
+                    .map(|f| f.calculate_string_part($key).to_tokens())
+                    .collect::<Vec<_>>();
                 quote! {
-                    $n: Some(I18nString::Borrowed(#string))
+                    $n: Some(&[#( #matched_string, )*])
                 }
             })
             .unwrap_or(quote! {
                 $n: None
             })
     };
-}
-
-fn match_line_endings(string: &str) -> proc_macro2::TokenStream {
-    if true {
-        let windows_string = string.replace("\n", "\r\n");
-        let unix_string = string.replace("\r\n", "\n");
-
-        return quote! {
-            {
-                #[cfg(target_os = "windows")]
-                {#windows_string}
-
-                #[cfg(not(target_os = "windows"))]
-                {#unix_string}
-            }
-        };
-    }
-
-    quote! { #string }
 }
 
 /// Generates an `I18nSource` containing the strings from the translation files located in the
@@ -47,33 +30,29 @@ fn match_line_endings(string: &str) -> proc_macro2::TokenStream {
 /// changed to match the compiled platform's line endings. If you wish to disable this behaviour,
 /// set `match_line_endings` to false in your i18n configuration.
 pub fn tr_load(_body: TokenStream) -> TokenStream {
-    let manifest_dir = env::var("CARGO_MANIFEST_DIR").expect("Failed to get CARGO_MANIFEST_DIR");
-
     let config = &*I18N_CONFIG;
     let default_language = &config.i18n.default_language;
-    let catalog_files = config.i18n.catalog_files(Path::new(&manifest_dir));
 
     let mut language_map = Vec::new();
-    for file in catalog_files {
+    for (language, decoded_file) in TRANSLATION_FILE_CACHE.iter() {
         let mut strings = Vec::new();
 
-        let language = file.file_stem().unwrap().to_str().unwrap();
-        let decoded_file = load::translation(&file).unwrap();
         for (key, entry) in decoded_file {
             if let Some(token_stream) = match entry {
-                load::TranslationEntry::Entry(string) => {
+                ParsedTranslationEntry::Entry(string) => {
                     if string.is_empty() {
                         None
                     } else {
-                        let matched_string = match_line_endings(string.as_str());
+                        let matched_string = string
+                            .iter()
+                            .map(|f| f.calculate_string_part(key).to_tokens())
+                            .collect::<Vec<_>>();
                         Some(quote! {
-                            #key => I18nEntry::Entry(I18nStringEntry {
-                                entry: I18nString::Borrowed(#matched_string),
-                            })
+                            #key => I18nEntry::Entry(&[#( #matched_string, )*])
                         })
                     }
                 }
-                load::TranslationEntry::PluralEntry(items) => {
+                ParsedTranslationEntry::PluralEntry(items) => {
                     if items.iter().all(|(_key, value)| value.is_empty()) {
                         None
                     } else {
@@ -81,7 +60,7 @@ pub fn tr_load(_body: TokenStream) -> TokenStream {
                         let Some(other) = other else {
                             panic!(
                                 "Translation key {key} for language {language} has plural entry \
-                            without other",
+                                without other",
                             )
                             // return ParseBuffer::error(format!(
                             //     "Translation key {} has plural entry without other",
@@ -92,11 +71,16 @@ pub fn tr_load(_body: TokenStream) -> TokenStream {
                             // .into();
                         };
 
-                        let zero = extract_plural_rule!(items, zero);
-                        let one = extract_plural_rule!(items, one);
-                        let two = extract_plural_rule!(items, two);
-                        let few = extract_plural_rule!(items, few);
-                        let many = extract_plural_rule!(items, many);
+                        let matched_other = other
+                            .iter()
+                            .map(|f| f.calculate_string_part(key).to_tokens())
+                            .collect::<Vec<_>>();
+
+                        let zero = extract_plural_rule!(items, key, zero);
+                        let one = extract_plural_rule!(items, key, one);
+                        let two = extract_plural_rule!(items, key, two);
+                        let few = extract_plural_rule!(items, key, few);
+                        let many = extract_plural_rule!(items, key, many);
 
                         Some(quote! {
                             #key => I18nEntry::PluralEntry(I18nPluralStringEntry {
@@ -106,7 +90,7 @@ pub fn tr_load(_body: TokenStream) -> TokenStream {
                                 #two,
                                 #few,
                                 #many,
-                                other: I18nString::Borrowed(#other)
+                                other: &[#( #matched_other, )*]
                             })
                         })
                     }
