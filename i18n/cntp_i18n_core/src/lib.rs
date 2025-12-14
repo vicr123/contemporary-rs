@@ -1,3 +1,5 @@
+#![warn(missing_docs)]
+
 #[cfg(feature = "gpui")]
 pub mod gpui;
 pub mod string;

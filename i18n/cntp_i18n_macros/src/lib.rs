@@ -1,3 +1,5 @@
+#![warn(missing_docs)]
+
 use proc_macro::TokenStream;
 
 mod config;

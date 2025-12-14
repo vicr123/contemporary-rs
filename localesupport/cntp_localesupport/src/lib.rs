@@ -1,3 +1,5 @@
+#![warn(missing_docs)]
+
 mod cldr;
 pub mod locale_formattable;
 pub mod modifiers;

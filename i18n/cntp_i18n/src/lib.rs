@@ -1,3 +1,5 @@
+#![warn(missing_docs)]
+
 pub use cntp_i18n_macros::{tr, tr_load, tr_noop, trn, trn_noop};
 use cntp_localesupport::modifiers::ModifierVariable;
 use once_cell::sync::Lazy;
