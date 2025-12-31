@@ -29,6 +29,7 @@ pub struct Popover {
     size: Size,
     anchor: Anchor,
     visible: bool,
+    render_as_deferred: bool,
 }
 
 pub fn popover(id: impl Into<ElementId>) -> Popover {
@@ -38,6 +39,7 @@ pub fn popover(id: impl Into<ElementId>) -> Popover {
         size: Size::Pixels(300.),
         anchor: Anchor::Bottom,
         visible: false,
+        render_as_deferred: false,
     }
 }
 
@@ -81,6 +83,11 @@ impl Popover {
         self.visible = visible;
         self
     }
+
+    pub fn render_as_deferred(mut self, render_as_deferred: bool) -> Self {
+        self.render_as_deferred = render_as_deferred;
+        self
+    }
 }
 
 impl RenderOnce for Popover {
@@ -88,66 +95,70 @@ impl RenderOnce for Popover {
         let theme = cx.theme();
         let platform_settings = cx.global::<PlatformSettings>();
 
-        self.scrim.visible(self.visible).child(
-            div()
-                .flex()
-                .w_full()
-                .h_full()
-                .when(self.anchor == Anchor::Top, |david| {
-                    david.flex_col_reverse().child(div().flex_grow())
-                })
-                .when(self.anchor == Anchor::Bottom, |david| {
-                    david.flex_col().child(div().flex_grow())
-                })
-                .when(self.anchor == Anchor::Leading, |david| {
-                    david.flex_row_reverse().child(div().flex_grow())
-                })
-                .when(self.anchor == Anchor::Trailing, |david| {
-                    david.flex_row().child(div().flex_grow())
-                })
-                .child(
-                    div()
-                        .bg(theme.background)
-                        .rounded(theme.border_radius)
-                        .flex()
-                        .flex_col()
-                        .child(self.content)
-                        .when(self.visible, |div| div.occlude())
-                        .with_transition(
-                            "side-transition",
-                            if self.visible {
-                                match self.size {
-                                    Size::Pixels(length) => length,
-                                    Size::Neg(pixels) => {
-                                        if self.anchor == Anchor::Bottom
-                                            || self.anchor == Anchor::Top
-                                        {
-                                            f32::from(window.viewport_size().height) - pixels
-                                        } else {
-                                            f32::from(window.viewport_size().width) - pixels
+        self.scrim
+            .visible(self.visible)
+            .render_as_deferred(self.render_as_deferred)
+            .child(
+                div()
+                    .flex()
+                    .w_full()
+                    .h_full()
+                    .when(self.anchor == Anchor::Top, |david| {
+                        david.flex_col_reverse().child(div().flex_grow())
+                    })
+                    .when(self.anchor == Anchor::Bottom, |david| {
+                        david.flex_col().child(div().flex_grow())
+                    })
+                    .when(self.anchor == Anchor::Leading, |david| {
+                        david.flex_row_reverse().child(div().flex_grow())
+                    })
+                    .when(self.anchor == Anchor::Trailing, |david| {
+                        david.flex_row().child(div().flex_grow())
+                    })
+                    .child(
+                        div()
+                            .bg(theme.background)
+                            .rounded(theme.border_radius)
+                            .flex()
+                            .flex_col()
+                            .child(self.content)
+                            .when(self.visible, |div| div.occlude())
+                            .with_transition(
+                                "side-transition",
+                                if self.visible {
+                                    match self.size {
+                                        Size::Pixels(length) => length,
+                                        Size::Neg(pixels) => {
+                                            if self.anchor == Anchor::Bottom
+                                                || self.anchor == Anchor::Top
+                                            {
+                                                f32::from(window.viewport_size().height) - pixels
+                                            } else {
+                                                f32::from(window.viewport_size().width) - pixels
+                                            }
                                         }
                                     }
-                                }
-                            } else {
-                                0.
-                            },
-                            Animation::new(platform_settings.animation_duration)
-                                .with_easing(ease_out_quint()),
-                            move |david, value| {
-                                david
-                                    .when(
-                                        self.anchor == Anchor::Bottom || self.anchor == Anchor::Top,
-                                        |div| div.h(px(value)),
-                                    )
-                                    .when(
-                                        self.anchor == Anchor::Leading
-                                            || self.anchor == Anchor::Trailing,
-                                        |div| div.w(px(value)),
-                                    )
-                                    .when(value == 0., |div| div.invisible())
-                            },
-                        ),
-                ),
-        )
+                                } else {
+                                    0.
+                                },
+                                Animation::new(platform_settings.animation_duration)
+                                    .with_easing(ease_out_quint()),
+                                move |david, value| {
+                                    david
+                                        .when(
+                                            self.anchor == Anchor::Bottom
+                                                || self.anchor == Anchor::Top,
+                                            |div| div.h(px(value)),
+                                        )
+                                        .when(
+                                            self.anchor == Anchor::Leading
+                                                || self.anchor == Anchor::Trailing,
+                                            |div| div.w(px(value)),
+                                        )
+                                        .when(value == 0., |div| div.invisible())
+                                },
+                            ),
+                    ),
+            )
     }
 }
