@@ -116,6 +116,18 @@ mod translation_file_cache;
 /// // French output: Event on « 15/01/2024 ».
 /// ```
 ///
+/// The built-in modifiers are special cased and can be used by simply typing their names.
+/// If you have built your own modifiers, you can use them by specifying a Rust path:
+///
+/// ```
+/// // Custom modifier
+/// tr!("SAID", "Text using my modifier: {{phrase}}.", phrase:crate::modifiers::MyModifier = some_text);
+///
+/// // Relative paths are supported
+/// use crate::modifiers;
+/// tr!("SAID", "Text using my modifier: {{phrase}}.", phrase:modifiers::MyModifier = some_text);
+/// ```
+///
 /// # Examples
 ///
 /// ```rust,ignore

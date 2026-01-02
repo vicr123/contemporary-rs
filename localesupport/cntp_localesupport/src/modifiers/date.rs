@@ -1,3 +1,8 @@
+//! Date and time formatting modifier.
+//!
+//! This module provides the [`Date`] modifier for formatting dates and times
+//! according to locale conventions.
+
 use icu::{
     calendar::Iso,
     datetime::{
@@ -17,11 +22,106 @@ use icu::{
 
 use crate::{Locale, modifiers::StringModifier};
 
+/// A string modifier that formats dates and times according to locale conventions.
+///
+/// The `Date` modifier can format various input types (strings, timestamps, `chrono` types)
+/// into locale-appropriate date/time strings.
+///
+/// # Input types
+///
+/// The modifier accepts several input types:
+///
+/// - `&str` - An ISO 8601 date string (e.g., `"2024-01-15T10:30:00"`)
+/// - `i8`, `i16`, `i32`, `i64`, `i128`, `isize` - Unix timestamp in milliseconds
+/// - `f32`, `f64` - Unix timestamp in seconds (converted to milliseconds)
+/// - `chrono::DateTime<T>` - When the `chrono` feature is enabled
+/// - `chrono::NaiveDateTime` - When the `chrono` feature is enabled
+///
+/// # Format Specifiers
+///
+/// ## Simple Field Sets
+///
+/// Use a single string argument to specify which date/time components to include:
+///
+/// | Format    | Components                      | Example Output                  |
+/// |-----------|---------------------------------|---------------------------------|
+/// | `"D"`     | Day                             | "15"                            |
+/// | `"DE"`    | Day, Weekday                    | "Mon 15"                        |
+/// | `"DT"`    | Day, Time                       | "15, 10:30 AM"                  |
+/// | `"DET"`   | Day, Weekday, Time              | "Mon 15, 10:30 AM"              |
+/// | `"E"`     | Weekday                         | "Monday"                        |
+/// | `"ET"`    | Weekday, Time                   | "Monday, 10:30 AM"              |
+/// | `"M"`     | Month                           | "January"                       |
+/// | `"MD"`    | Month, Day                      | "Jan 15"                        |
+/// | `"MDE"`   | Month, Day, Weekday             | "Mon, Jan 15"                   |
+/// | `"MDT"`   | Month, Day, Time                | "Jan 15, 10:30 AM"              |
+/// | `"MDET"`  | Month, Day, Weekday, Time       | "Mon, Jan 15, 10:30 AM"         |
+/// | `"T"`     | Time                            | "10:30 AM"                      |
+/// | `"Y"`     | Year                            | "2024"                          |
+/// | `"YM"`    | Year, Month                     | "January 2024"                  |
+/// | `"YMD"`   | Year, Month, Day                | "Jan 15, 2024" (default)        |
+/// | `"YMDE"`  | Year, Month, Day, Weekday       | "Mon, Jan 15, 2024"             |
+/// | `"YMDT"`  | Year, Month, Day, Time          | "Jan 15, 2024, 10:30 AM"        |
+/// | `"YMDET"` | Year, Month, Day, Weekday, Time | "Mon, Jan 15, 2024, 10:30 AM"   |
+///
+/// ## Length option
+///
+/// Add `length` to control verbosity:
+///
+/// - `length = "short"` - Abbreviated (e.g., "1/15/24")
+/// - `length = "medium"` - Default (e.g., "Jan 15, 2024")
+/// - `length = "long"` - Full names (e.g., "January 15, 2024")
+///
+/// ## Complex field sets
+///
+/// For more control, use named arguments:
+///
+/// - `date` - Date fields: `"D"`, `"MD"`, `"YMD"`, `"DE"`, `"MDE"`, `"YMDE"`, `"E"`, `"M"`, `"YM"`, `"Y"`
+/// - `time` - Time precision: `"hour"`, `"minute"`, `"second"`, `"millisecond"`
+/// - `align` - Column alignment: `"column"`, `"none"`
+/// - `year` - Year style: `"full"`, `"with_era"`, `"auto"`
+/// - `length` - Overall length: `"short"`, `"medium"`, `"long"`
+///
+/// # Examples
+///
+/// ```rust,ignore
+/// // Default format (YMD, medium length)
+/// tr!("EVENT_DATE", "Event on {{date}}.", date:Date = timestamp);
+///
+/// // Short year-month-day
+/// tr!("CREATED", "Created {{date}}.", date:Date("YMD", length="short") = created_at);
+///
+/// // Time only
+/// tr!("ALARM", "Alarm set for {{time}}.", time:Date("T") = alarm_time);
+///
+/// // Full date with weekday
+/// tr!("MEETING", "Meeting on {{date}}.", date:Date("YMDE", length="long") = meeting_date);
+///
+/// // Complex: date and time with custom options
+/// tr!(
+///     "APPOINTMENT",
+///     "Your appointment is {{datetime}}.",
+///     datetime:Date(date="YMD", time="minute", length="medium") = appointment
+/// );
+/// ```
+///
+/// # Locale awareness
+///
+/// Output is automatically formatted according to the user's locale:
+///
+/// - **en-US**: "January 15, 2024"
+/// - **de-DE**: "15. Januar 2024"
+/// - **ja-JP**: "2024年1月15日"
+/// - **ar-SA**: "١٥ يناير ٢٠٢٤"
 pub struct Date;
 
+/// Internal enum for date format length options.
 enum DateLength {
+    /// Abbreviated format (e.g., "1/15/24").
     Short,
+    /// Default format (e.g., "Jan 15, 2024").
     Medium,
+    /// Full format (e.g., "January 15, 2024").
     Long,
 }
 
