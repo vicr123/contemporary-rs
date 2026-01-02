@@ -1,11 +1,69 @@
+//! Efficient string type for internationalization.
+//!
+//! This module provides [`I18nString`], an optimized string type that can be either
+//! a borrowed static string (for compile-time translations) or an owned reference-counted
+//! string (for runtime-constructed translations).
+
 use std::{
     fmt::{Debug, Display},
     ops::Deref,
     sync::Arc,
 };
 
+/// An efficient string type for internationalized text.
+///
+/// `I18nString` is designed for the i18n use case where strings are often static
+/// (embedded at compile time) but sometimes need to be constructed at runtime
+/// (e.g., when substituting variables).
+///
+/// # Variants
+///
+/// - [`Borrowed`](I18nString::Borrowed) - A reference to a static string, zero-cost to clone
+/// - [`Owned`](I18nString::Owned) - A reference-counted string, cheap to clone
+///
+/// # Usage
+///
+/// You typically don't construct `I18nString` directly. Instead, you receive it
+/// from the [`tr!`](cntp_i18n_macros::tr) and [`trn!`](cntp_i18n_macros::trn) macros.
+///
+/// ```rust,ignore
+/// use cntp_i18n::tr;
+///
+/// let greeting: I18nString = tr!("HELLO", "Hello!");
+///
+/// // Use as a string
+/// println!("{}", greeting);
+///
+/// // Get a &str reference
+/// let s: &str = &greeting;
+///
+/// // Convert to String
+/// let owned: String = greeting.into();
+/// ```
+///
+/// # Conversions
+///
+/// `I18nString` implements several conversion traits:
+///
+/// - `From<&'static str>` - Create a borrowed variant
+/// - `From<String>` - Create an owned variant
+/// - `From<Arc<str>>` - Create an owned variant
+/// - `Into<String>` - Convert to an owned `String`
+/// - `Into<Arc<str>>` - Convert to a reference-counted string
+/// - `Deref<Target=str>` - Use as a `&str`
+/// - `AsRef<str>` - Use as a `&str`
+/// - `Display` - Format for display
 pub enum I18nString {
+    /// A borrowed reference to a static string.
+    ///
+    /// This variant is used for translations that are fully static (no variable
+    /// substitution needed).
     Borrowed(&'static str),
+    /// An owned, reference-counted string.
+    ///
+    /// This variant is used for translations that require runtime construction,
+    /// such as those with variable substitution. The `Arc<str>` allows cheap
+    /// cloning without full string copies.
     Owned(Arc<str>),
 }
 
@@ -55,7 +113,12 @@ impl From<&'static str> for I18nString {
     }
 }
 
+/// Error returned when trying to convert an owned `I18nString` to a static `&str`.
+///
+/// This error occurs when calling `TryInto<&'static str>` on an `I18nString::Owned`
+/// variant, since owned strings cannot be converted to static references.
 pub enum I18nToStrError {
+    /// The string was owned, not borrowed, and cannot be converted to `&'static str`.
     NotBorrowed,
 }
 

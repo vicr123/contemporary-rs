@@ -1,3 +1,70 @@
+//! # `cntp-i18n-gen`
+//!
+//! This crate provides build-time code generation for the `cntp_i18n` system.
+//! It scans your Rust source files for `tr!` and `trn!` macro invocations and generates
+//! the corresponding translation catalog files.
+//!
+//! ## Overview
+//!
+//! The generator walks through all `.rs` files in your `src` directory, extracts
+//! translation strings from `tr!` and `trn!` macro calls, and outputs:
+//!
+//! - `<default_language>.json` - The translation catalog for your default language
+//! - `meta.json` - Metadata about each translation string (file location, description, etc.)
+//!
+//! ## Usage in `build.rs`
+//!
+//! The most common way to use this crate is in a build script:
+//!
+//! ```rust,ignore
+//! // build.rs
+//! use std::{env, path::PathBuf};
+//!
+//! fn main() {
+//!     let path: PathBuf = env::var("CARGO_MANIFEST_DIR")
+//!         .expect("CARGO_MANIFEST_DIR is not set")
+//!         .into();
+//!
+//!     cntp_i18n_gen::generate_default(&path);
+//! }
+//! ```
+//!
+//! The [`generate_default`] function is a convenience wrapper that:
+//! - Calls [`generate`] with the provided path
+//! - Emits `cargo::rerun-if-changed=src` to rebuild when source files change
+//! - Prints any errors as cargo warnings
+//!
+//! ## Manual generation
+//!
+//! Alternatively, you can use the `cargo-cntp-i18n` tool to generate translation files
+//! manually instead of integrating with your build script:
+//!
+//! ```bash
+//! cargo cntp-i18n generate
+//! ```
+//!
+//! ## Configuration
+//!
+//! The generator reads configuration from `i18n.toml` in your project root. See the
+//! `cntp_i18n_build_core` crate's documentation for more details.
+//!
+//! ## Error handling
+//!
+//! The generator returns a [`GenerationResult`] that indicates success or failure:
+//!
+//! ```rust,ignore
+//! use cntp_i18n_gen::{generate, GenerationResult};
+//!
+//! match generate(&manifest_path) {
+//!     GenerationResult::Successful => println!("Generation complete"),
+//!     GenerationResult::ErrorsEncountered(handler) => {
+//!         for error in handler.errors {
+//!             eprintln!("Error: {:?}", error);
+//!         }
+//!     }
+//! }
+//! ```
+
 #[cfg(test)]
 mod tests;
 
@@ -307,35 +374,92 @@ impl<'ast> Visit<'ast> for TrMacroVisitor {
     }
 }
 
+/// Collects errors encountered during translation file generation.
+///
+/// This type accumulates errors as generation proceeds, allowing the generator
+/// to continue processing and report all errors at once rather than failing
+/// on the first error.
 #[derive(Debug, Clone)]
 pub struct GenerationErrorHandler {
+    /// The list of errors encountered during generation.
     pub errors: Vec<GenerationError>,
 }
 
 impl GenerationErrorHandler {
+    /// Add a string error message.
+    #[doc(hidden)]
     pub fn push_string(&mut self, string: String) {
         error!("{}", string);
         self.errors.push(GenerationError::String(string));
     }
 
+    /// Add visitor errors from source file parsing.
+    #[doc(hidden)]
     pub fn push_visitor_errors(&mut self, errors: Vec<VisitorError>) {
         self.errors
             .extend(errors.into_iter().map(GenerationError::VisitorError));
     }
 }
 
+/// The result of a translation file generation operation.
+///
+/// This enum indicates whether generation completed successfully or encountered
+/// errors. Even when errors are encountered, partial output may have been written.
 #[derive(Debug, Clone)]
 pub enum GenerationResult {
+    /// Generation completed without errors.
     Successful,
+    /// Generation completed but encountered errors.
+    ///
+    /// The generated translation catalog may be incomplete.
     ErrorsEncountered(GenerationErrorHandler),
 }
 
+/// An error that occurred during translation file generation.
 #[derive(Debug, Clone)]
 pub enum GenerationError {
+    /// A general error message.
     String(String),
+    /// An error from the source file visitor (e.g., duplicate keys, missing definitions).
     VisitorError(VisitorError),
 }
 
+/// Generate translation catalog files from source code.
+///
+/// This function scans all Rust source files in the `src` directory of the given
+/// project, extracts `tr!` and `trn!` macro invocations, and generates the
+/// translation catalog and metadata files.
+///
+/// # Arguments
+///
+/// * `manifest_directory` - Path to the directory containing `Cargo.toml`
+///
+/// # Returns
+///
+/// A [`GenerationResult`] indicating success or failure. On failure, the result
+/// contains details about all errors encountered.
+///
+/// # Generated Files
+///
+/// Files are written to the translation directory (default: `translations/`):
+///
+/// - `<default_language>.json` - Translation catalog with all extracted strings
+/// - `meta.json` - Metadata about each string (location, plural status, etc.)
+///
+/// # Example
+///
+/// ```rust,ignore
+/// use std::path::Path;
+/// use cntp_i18n_gen::{generate, GenerationResult};
+///
+/// let result = generate(Path::new("/path/to/project"));
+/// match result {
+///     GenerationResult::Successful => println!("Done!"),
+///     GenerationResult::ErrorsEncountered(e) => {
+///         eprintln!("{} errors encountered", e.errors.len());
+///     }
+/// }
+/// ```
 pub fn generate(manifest_directory: &Path) -> GenerationResult {
     let config = get_i18n_config(manifest_directory);
 
@@ -519,6 +643,41 @@ pub fn generate(manifest_directory: &Path) -> GenerationResult {
     }
 }
 
+/// Generate translation files with default settings for use in `build.rs`.
+///
+/// This is a convenience wrapper around [`generate`] that:
+///
+/// 1. Emits `cargo::rerun-if-changed=src` so Cargo rebuilds when sources change
+/// 2. Calls [`generate`] with the provided path
+/// 3. Prints any errors as `cargo::warning` messages
+///
+/// # Arguments
+///
+/// * `manifest_directory` - Path to the directory containing `Cargo.toml`
+///
+/// # Example
+///
+/// ```rust,ignore
+/// // build.rs
+/// use std::{env, path::PathBuf};
+///
+/// fn main() {
+///     let path: PathBuf = env::var("CARGO_MANIFEST_DIR")
+///         .expect("CARGO_MANIFEST_DIR is not set")
+///         .into();
+///
+///     cntp_i18n_gen::generate_default(&path);
+///
+///     // Optionally watch the config file too
+///     println!("cargo::rerun-if-changed=i18n.toml");
+/// }
+/// ```
+///
+/// # Panics
+///
+/// This function does not panic on generation errors; instead, it prints warnings
+/// and allows the build to continue. This ensures that syntax errors in `tr!` calls
+/// don't completely block development.
 pub fn generate_default(manifest_directory: &Path) {
     println!("cargo::rerun-if-changed=src");
     if let GenerationResult::ErrorsEncountered(errors) = generate(&manifest_directory) {
