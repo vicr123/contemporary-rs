@@ -343,7 +343,7 @@ pub fn trn(body: TokenStream) -> TokenStream {
                             #var_name,
                             {
                                 use cntp_i18n::Variable;
-                                Variable::Count(#expr)
+                                Variable::Count(#expr as isize)
                             }
                         )),
                     }

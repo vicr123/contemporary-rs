@@ -186,7 +186,7 @@ impl Render for Buttons {
                                         (shift-click to reset)",
                                         "You have clicked the default button {{count}} times \
                                         (shift-click to reset)",
-                                        count = self.buttons_click_count as isize
+                                        count = self.buttons_click_count
                                     ))
                                     .with_context_menu(context_menu_items.clone()),
                             )

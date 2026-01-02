@@ -178,8 +178,7 @@ pub fn tr(body: TokenStream) -> TokenStream {
 /// # Arguments
 ///
 /// The arguments are the same as those for the [`tr!`] macro, with the addition of:
-/// - `count = value` - **Required.** The count value (as an `isize`) determining which
-///                     form to use
+/// - `count = value` - **Required.** The count value determining which form to use
 ///
 /// # The `{{count}}` Placeholder
 ///

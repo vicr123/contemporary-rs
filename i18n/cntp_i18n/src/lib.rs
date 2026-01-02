@@ -93,8 +93,6 @@
 //! );
 //! ```
 //!
-//! The `count` variable is expected to be a [`isize`].
-//!
 //! ## Configuration
 //!
 //! Create an `i18n.toml` file in your project root to customize behavior:
