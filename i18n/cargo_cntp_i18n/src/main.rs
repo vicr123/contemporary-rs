@@ -19,6 +19,8 @@
 //! This command scans your `src` directory for `tr!` and `trn!` macro invocations
 //! and generates the translation catalog files in your `translations` directory.
 //!
+//! The generated files should be committed to version control.
+//!
 //! ## When to Use
 //!
 //! You can use this command as an alternative to integrating `cntp_i18n_gen` into

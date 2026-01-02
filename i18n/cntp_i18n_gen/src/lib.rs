@@ -12,6 +12,8 @@
 //! - `<default_language>.json` - The translation catalog for your default language
 //! - `meta.json` - Metadata about each translation string (file location, description, etc.)
 //!
+//! The generated files should be committed to version control.
+//!
 //! ## Usage in `build.rs`
 //!
 //! The most common way to use this crate is in a build script:

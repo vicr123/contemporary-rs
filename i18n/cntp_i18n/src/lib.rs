@@ -93,7 +93,7 @@
 //! );
 //! ```
 //!
-//! The `count` variable is expected to be a [`usize`].
+//! The `count` variable is expected to be a [`isize`].
 //!
 //! ## Configuration
 //!

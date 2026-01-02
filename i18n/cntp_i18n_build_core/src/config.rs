@@ -86,8 +86,8 @@ pub struct Config {
 pub struct I18n {
     /// The default/source language for translations.
     ///
-    /// This should be an ISO-639 language code, optionally with a region
-    /// (e.g., "en", "en-US", "pt-BR").
+    /// This should be an ISO-639 language code, optionally with a region and script
+    /// (e.g., "en", "en-US", "pt-BR", "sr-Latn-rs", "sr-Cyrl-rs").
     ///
     /// Default: `"en"`
     pub default_language: String,
