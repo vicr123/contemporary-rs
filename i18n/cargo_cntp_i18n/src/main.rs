@@ -1,3 +1,56 @@
+//! # cargo-cntp-i18n
+//!
+//! A Cargo subcommand for managing Contemporary i18n translation files.
+//!
+//! ## Installation
+//!
+//! ```bash
+//! cargo install --git https://github.com/vicr123/contemporary-rs cargo-cntp-i18n
+//! ```
+//!
+//! ## Usage
+//!
+//! Currently, there is only one subcommand:
+//!
+//! ```bash
+//! cargo cntp-i18n generate
+//! ```
+//!
+//! This command scans your `src` directory for `tr!` and `trn!` macro invocations
+//! and generates the translation catalog files in your `translations` directory.
+//!
+//! The generated files should be committed to version control.
+//!
+//! ## When to Use
+//!
+//! You can use this command as an alternative to integrating `cntp_i18n_gen` into
+//! your `build.rs`. This is useful when:
+//!
+//! - You want to manually control when translation files are regenerated
+//! - You're working on translations and want to see changes immediately
+//! - Your build system doesn't support build scripts well
+//!
+//! For most projects, using `cntp_i18n_gen::generate_default()` in `build.rs` is
+//! recommended as it ensures translations are always up to date before the
+//! application is built.
+//!
+//! ## Options
+//!
+//! - `--manifest-path <PATH>` - Path to Cargo.toml (defaults to current directory)
+//! - `-v`, `--verbose` - Increase verbosity (can be repeated for more detail)
+//! - `-q`, `--quiet` - Decrease verbosity
+//!
+//! ## Configuration
+//!
+//! The command reads configuration from `i18n.toml` in your project root. The
+//! defaults are as follows:
+//!
+//! ```toml
+//! [i18n]
+//! default_language = "en"
+//! translation_directory = "translations"
+//! ```
+
 use std::process::exit;
 
 use cargo_metadata::camino::Utf8PathBuf;
