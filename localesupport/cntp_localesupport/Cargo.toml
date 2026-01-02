@@ -13,4 +13,5 @@ locale_config = { workspace = true }
 rust-embed = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
+smallvec = { workspace = true }
 chrono = { workspace = true, optional = true }

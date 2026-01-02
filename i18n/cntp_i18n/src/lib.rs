@@ -410,75 +410,76 @@ impl I18nManager {
                 continue;
             };
 
-            // TODO: Cache the resolved string
-            let resolved = I18nString::Owned(
-                match &entry {
-                    I18nEntry::Entry(entry) => entry.to_vec(),
-                    I18nEntry::PluralEntry(entry) => {
-                        let (_, count) = variables
-                            .into_iter()
-                            .find(|variable| match variable {
-                                Some((name, _)) => *name == "count",
-                                None => false,
-                            })
-                            .map(Option::as_deref)
-                            .flatten()
-                            .unwrap_or_else(|| {
-                                panic!(
-                                    "Resolved plural string for {key}, but no count variable \
-                                    provided for substitution",
-                                )
-                            });
+            let parts: &[I18nStringPart] = match &entry {
+                I18nEntry::Entry(entry) => entry,
+                I18nEntry::PluralEntry(entry) => {
+                    let (_, count) = variables
+                        .into_iter()
+                        .find(|variable| match variable {
+                            Some((name, _)) => *name == "count",
+                            None => false,
+                        })
+                        .map(Option::as_deref)
+                        .flatten()
+                        .unwrap_or_else(|| {
+                            panic!(
+                                "Resolved plural string for {key}, but no count variable \
+                                provided for substitution",
+                            )
+                        });
 
-                        match count {
-                            Variable::Count(count) => entry.lookup(*count, locale),
-                            Variable::String(string) => {
-                                panic!("Count variable ({string}) not of type isize")
-                            }
-                            Variable::Modified(_inital, _subsequent) => {
-                                panic!("Cannot modify count variable")
-                            }
+                    match count {
+                        Variable::Count(count) => {
+                            // Plural entries with count substitution always need allocation
+                            let plural_parts = entry.lookup(*count, locale);
+                            return self.resolve_parts_to_string(&plural_parts, variables, locale);
+                        }
+                        Variable::String(string) => {
+                            panic!("Count variable ({string}) not of type isize")
+                        }
+                        Variable::Modified(_inital, _subsequent) => {
+                            panic!("Cannot modify count variable")
                         }
                     }
                 }
-                .iter()
-                .map(|part| match part {
-                    I18nStringPart::Static(borrowed) => borrowed.to_string(),
-                    I18nStringPart::Variable(variable, idx) => {
-                        let substituted_variable = variables
-                            .get(*idx)
-                            .map(Option::as_deref)
-                            .flatten()
-                            .filter(|(name, _)| *name == variable.as_ref())
-                            .or_else(|| {
-                                // Fallback for if idx is out of bounds or doesn't match the variable name
-                                variables
-                                    .into_iter()
-                                    .map(Option::as_deref)
-                                    .flatten()
-                                    .find(|(name, _)| *name == variable.as_ref())
-                            })
-                            .map(|(_, variable)| variable);
+            };
 
-                        match substituted_variable {
-                            Some(Variable::Modified(initial, subsequent)) => subsequent
-                                .iter()
-                                .fold(initial.transform(locale), |v, modi| {
-                                    modi.0.transform(locale, v, modi.1)
-                                }),
-                            Some(Variable::String(str)) => str.into(),
-                            Some(Variable::Count(_)) => {
-                                panic!("Unexpected count variable")
-                            }
-                            None => format!("{{{{{variable}}}}}"),
-                        }
+            // Fast path: if there's exactly one static part with no variables, return borrowed
+            if parts.len() == 1 {
+                if let I18nStringPart::Static(s) = &parts[0] {
+                    if !s.is_empty() {
+                        return s.clone();
                     }
-                    I18nStringPart::Count(_) => "{{count}}".to_string(),
-                })
-                .collect::<Vec<_>>()
-                .join("")
-                .into(),
-            );
+                }
+            }
+
+            // Check if all parts are static (no variable substitution needed)
+            let all_static = parts.iter().all(|p| matches!(p, I18nStringPart::Static(_)));
+
+            if all_static {
+                if parts.is_empty() {
+                    continue;
+                }
+                let resolved: String = parts
+                    .iter()
+                    .filter_map(|p| {
+                        if let I18nStringPart::Static(s) = p {
+                            Some(s.as_ref())
+                        } else {
+                            None
+                        }
+                    })
+                    .collect();
+
+                if resolved.is_empty() {
+                    continue;
+                }
+
+                return I18nString::Owned(resolved.into());
+            }
+
+            // Slow path: need variable substitution
+            let resolved = self.resolve_parts_to_string(parts, variables, locale);
 
             // If the translation is empty, fall back to the next source
             if resolved.is_empty() {
@@ -490,6 +491,61 @@ impl I18nManager {
 
         // None of the translation sources we have were able to find a key so just return the key
         key.to_string().into()
+    }
+
+    fn resolve_parts_to_string<'a>(
+        &self,
+        parts: &[I18nStringPart],
+        variables: &'a [Option<LookupVariable<'a>>],
+        locale: &Locale,
+    ) -> I18nString {
+        let mut result = String::new();
+
+        for part in parts {
+            match part {
+                I18nStringPart::Static(borrowed) => result.push_str(borrowed),
+                I18nStringPart::Variable(variable, idx) => {
+                    let substituted_variable = variables
+                        .get(*idx)
+                        .map(Option::as_deref)
+                        .flatten()
+                        .filter(|(name, _)| *name == variable.as_ref())
+                        .or_else(|| {
+                            // Fallback for if idx is out of bounds or doesn't match the variable name
+                            variables
+                                .into_iter()
+                                .map(Option::as_deref)
+                                .flatten()
+                                .find(|(name, _)| *name == variable.as_ref())
+                        })
+                        .map(|(_, variable)| variable);
+
+                    match substituted_variable {
+                        Some(Variable::Modified(initial, subsequent)) => {
+                            result.push_str(
+                                &subsequent
+                                    .iter()
+                                    .fold(initial.transform(locale), |v, modi| {
+                                        modi.0.transform(locale, v, modi.1)
+                                    }),
+                            );
+                        }
+                        Some(Variable::String(str)) => result.push_str(str),
+                        Some(Variable::Count(_)) => {
+                            panic!("Unexpected count variable")
+                        }
+                        None => {
+                            result.push_str("{{");
+                            result.push_str(variable);
+                            result.push_str("}}");
+                        }
+                    }
+                }
+                I18nStringPart::Count(_) => result.push_str("{{count}}"),
+            }
+        }
+
+        I18nString::Owned(result.into())
     }
 }
 

@@ -37,3 +37,4 @@ clap-cargo = { version = "0.15", features = ["cargo_metadata"] }
 rustc-hash = "2"
 chrono = "0.4"
 directories = "6"
+smallvec = "1"

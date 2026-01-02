@@ -76,6 +76,8 @@ use icu::decimal::input::Decimal;
 use icu::locale::subtags::{Language, Region};
 use icu::locale::{Direction, Locale as IcuLocale, LocaleDirectionality, locale};
 use locale_config::Locale as LocaleConfigLocale;
+
+use smallvec::SmallVec;
 use std::collections::{HashMap, HashSet};
 use std::fmt::Display;
 use std::hash::Hash;
@@ -175,9 +177,9 @@ pub enum LocaleError {
 }
 
 impl Locale {
-    fn split_language_range(language_range: &str) -> Vec<String> {
-        let mut result = Vec::new();
-        let segments: Vec<&str> = language_range.split('-').collect();
+    fn split_language_range(language_range: &str) -> SmallVec<[String; 4]> {
+        let mut result = SmallVec::new();
+        let segments: SmallVec<[&str; 4]> = language_range.split('-').collect();
 
         for i in (1..=segments.len()).rev() {
             result.push(segments[..i].join("-"));
