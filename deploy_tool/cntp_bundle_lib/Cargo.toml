@@ -2,6 +2,9 @@
 name = "cntp_bundle_lib"
 version = "0.1.0"
 edition = "2024"
+license = "MIT"
+keywords = ["cntp", "deployment"]
+categories = ["command-line-utilities", "development-tools"]
 
 [dependencies]
 tracing = { workspace = true }

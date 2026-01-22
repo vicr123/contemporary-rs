@@ -2,6 +2,9 @@
 name = "cntp_macros"
 version = "0.1.0"
 edition = "2024"
+license = "GPL-3"
+keywords = ["cntp", "gpui"]
+categories = ["development-tools", "gui"]
 
 [lib]
 proc-macro = true

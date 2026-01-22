@@ -2,6 +2,9 @@
 name = "playground"
 version = "0.1.0"
 edition = "2024"
+license = "GPL-3"
+keywords = ["cntp", "gpui"]
+categories = ["development-tools", "gui"]
 
 [dependencies]
 cntp_i18n = { path = "../i18n/cntp_i18n", features = ["gpui", "chrono"] }
