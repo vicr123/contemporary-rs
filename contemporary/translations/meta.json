@@ -1,79 +1,79 @@
 {
   "ABOUT_ARCH": {
     "context": "about_surface.rs",
-    "definedIn": "src/about_surface.rs:172",
+    "definedIn": "src/about_surface.rs:169",
     "plural": false,
     "description": null
   },
   "ABOUT_CONTEMPORARY": {
     "context": "about_surface.rs",
-    "definedIn": "src/about_surface.rs:158",
+    "definedIn": "src/about_surface.rs:155",
     "plural": false,
     "description": null
   },
   "ABOUT_COPYRIGHT": {
     "context": "about_surface.rs",
-    "definedIn": "src/about_surface.rs:183",
+    "definedIn": "src/about_surface.rs:180",
     "plural": false,
     "description": null
   },
   "ABOUT_PLATFORM": {
     "context": "about_surface.rs",
-    "definedIn": "src/about_surface.rs:165",
+    "definedIn": "src/about_surface.rs:162",
     "plural": false,
     "description": null
   },
   "ABOUT_SOFTWARE": {
     "context": "about_surface.rs",
-    "definedIn": "src/about_surface.rs:141",
+    "definedIn": "src/about_surface.rs:138",
     "plural": false,
     "description": null
   },
   "ABOUT_TITLE": {
     "context": "about_surface.rs",
-    "definedIn": "src/about_surface.rs:84",
+    "definedIn": "src/about_surface.rs:81",
     "plural": false,
     "description": null
   },
   "APPLE_APP_MENU_ABOUT": {
     "context": "setup.rs",
-    "definedIn": "src/setup.rs:102",
+    "definedIn": "src/setup.rs:97",
     "plural": false,
     "description": "Please use the string that macOS uses for the About action in the application menu."
   },
   "APPLE_APP_MENU_HIDE_OTHERS": {
     "context": "setup.rs",
-    "definedIn": "src/setup.rs:131",
+    "definedIn": "src/setup.rs:126",
     "plural": false,
     "description": "Please use the string that macOS uses for the Hide Others action in the application menu."
   },
   "APPLE_APP_MENU_HIDE_SELF": {
     "context": "setup.rs",
-    "definedIn": "src/setup.rs:125",
+    "definedIn": "src/setup.rs:120",
     "plural": false,
     "description": "Please use the string that macOS uses for the Hide this application action in the application menu."
   },
   "APPLE_APP_MENU_QUIT": {
     "context": "setup.rs",
-    "definedIn": "src/setup.rs:143",
+    "definedIn": "src/setup.rs:138",
     "plural": false,
     "description": "Please use the string that macOS uses for the Quit action in the application menu."
   },
   "APPLE_APP_MENU_SERVICES": {
     "context": "setup.rs",
-    "definedIn": "src/setup.rs:120",
+    "definedIn": "src/setup.rs:115",
     "plural": false,
     "description": "Please use the string that macOS uses for the Services action in the application menu."
   },
   "APPLE_APP_MENU_SETTINGS": {
     "context": "setup.rs",
-    "definedIn": "src/setup.rs:112",
+    "definedIn": "src/setup.rs:107",
     "plural": false,
     "description": "Please use the string that macOS uses for the Settings action in the application menu. Don't forget the ellipsis at the end."
   },
   "APPLE_APP_MENU_SHOW_ALL": {
     "context": "setup.rs",
-    "definedIn": "src/setup.rs:136",
+    "definedIn": "src/setup.rs:131",
     "plural": false,
     "description": "Please use the string that macOS uses for the Show All action in the application menu."
   },
@@ -187,13 +187,13 @@
   },
   "MENU_HELP": {
     "context": "setup.rs",
-    "definedIn": "src/setup.rs:222",
+    "definedIn": "src/setup.rs:217",
     "plural": false,
     "description": "Please use the string that macOS uses for the Help menu."
   },
   "MENU_HELP_CONTENTS": {
     "context": "setup.rs",
-    "definedIn": "src/setup.rs:192",
+    "definedIn": "src/setup.rs:187",
     "plural": false,
     "description": null
   },
@@ -205,7 +205,7 @@
   },
   "WINDOW_MENU": {
     "context": "setup.rs",
-    "definedIn": "src/setup.rs:175",
+    "definedIn": "src/setup.rs:170",
     "plural": false,
     "description": "Please use the string that macOS uses for the Window menu."
   }

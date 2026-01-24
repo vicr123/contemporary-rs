@@ -89,16 +89,16 @@ impl Element for Spinner {
 
         window.request_animation_frame();
 
-        let start = window.with_element_state(id.unwrap(), |old_state, app| {
-            let instant = old_state.unwrap_or_else(|| Instant::now());
+        let start = window.with_element_state(id.unwrap(), |old_state, _app| {
+            let instant = old_state.unwrap_or_else(Instant::now);
             (instant, instant)
         });
 
         let angle_point = |angle: f32, radius: Pixels| -> Point<Pixels> {
-            return Point::new(
+            Point::new(
                 centered_bounds.center().x + radius * angle.cos(),
                 centered_bounds.center().y + radius * angle.sin(),
-            );
+            )
         };
 
         let bounds_radius = centered_bounds.size.width / 2.;

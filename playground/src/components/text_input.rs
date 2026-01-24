@@ -21,7 +21,8 @@ pub struct TextInput {
 impl TextInput {
     pub fn new(cx: &mut App) -> Entity<Self> {
         cx.new(|cx| {
-            let text_input = TextInput {
+            
+            TextInput {
                 text_field: cx.new(|cx| {
                     let mut text_field = TextField::new("text-field", cx);
                     text_field.set_placeholder(
@@ -76,8 +77,7 @@ impl TextInput {
                     );
                     text_field
                 }),
-            };
-            text_input
+            }
         })
     }
 }

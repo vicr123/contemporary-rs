@@ -368,7 +368,7 @@ impl I18nManager {
     ) -> I18nString {
         let mut state = FxHasher::default();
         hash.hash(&mut state);
-        for variable in variables.into_iter().flatten() {
+        for variable in variables.iter().flatten() {
             variable.1.hash_value(&mut state);
         }
         if let Some(locale) = locale_override {
@@ -414,13 +414,12 @@ impl I18nManager {
                 I18nEntry::Entry(entry) => entry,
                 I18nEntry::PluralEntry(entry) => {
                     let (_, count) = variables
-                        .into_iter()
+                        .iter()
                         .find(|variable| match variable {
                             Some((name, _)) => *name == "count",
                             None => false,
                         })
-                        .map(Option::as_deref)
-                        .flatten()
+                        .and_then(Option::as_deref)
                         .unwrap_or_else(|| {
                             panic!(
                                 "Resolved plural string for {key}, but no count variable \
@@ -445,13 +444,11 @@ impl I18nManager {
             };
 
             // Fast path: if there's exactly one static part with no variables, return borrowed
-            if parts.len() == 1 {
-                if let I18nStringPart::Static(s) = &parts[0] {
-                    if !s.is_empty() {
+            if parts.len() == 1
+                && let I18nStringPart::Static(s) = &parts[0]
+                    && !s.is_empty() {
                         return s.clone();
                     }
-                }
-            }
 
             // Check if all parts are static (no variable substitution needed)
             let all_static = parts.iter().all(|p| matches!(p, I18nStringPart::Static(_)));
@@ -507,15 +504,13 @@ impl I18nManager {
                 I18nStringPart::Variable(variable, idx) => {
                     let substituted_variable = variables
                         .get(*idx)
-                        .map(Option::as_deref)
-                        .flatten()
+                        .and_then(Option::as_deref)
                         .filter(|(name, _)| *name == variable.as_ref())
                         .or_else(|| {
                             // Fallback for if idx is out of bounds or doesn't match the variable name
                             variables
-                                .into_iter()
-                                .map(Option::as_deref)
-                                .flatten()
+                                .iter()
+                                .filter_map(Option::as_deref)
                                 .find(|(name, _)| *name == variable.as_ref())
                         })
                         .map(|(_, variable)| variable);

@@ -1,6 +1,6 @@
 use crate::styling::theme::Theme;
 use crate::styling::theme::ThemeType::System;
-use ashpd::desktop::settings::{APPEARANCE_NAMESPACE, COLOR_SCHEME_KEY, Settings};
+use ashpd::desktop::settings::Settings;
 use gpui::{App, AsyncApp};
 use smol::stream::StreamExt;
 
@@ -18,7 +18,7 @@ pub fn setup_xdg_portal_interface_theme_changed_listener(cx: &mut App) {
         loop {
             _ = color_scheme_changed.next().await;
 
-            _ = cx.update_global::<Theme, ()>(|theme, cx| {
+            _ = cx.update_global::<Theme, ()>(|theme, _cx| {
                 if theme.theme_type == System {
                     theme.set_theme(Theme::default());
                 }

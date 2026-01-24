@@ -26,7 +26,7 @@ impl RenderOnce for Raised {
         if self.as_deferred {
             deferred((self.raised_element)((), window, cx)).into_any_element()
         } else {
-            window.with_global_id("raised".into(), |global_id, window| {
+            window.with_global_id("raised".into(), |_global_id, window| {
                 cx.update_global::<WindowGlobals, _>(|window_globals, cx| {
                     window_globals
                         .globals_for(window, cx)

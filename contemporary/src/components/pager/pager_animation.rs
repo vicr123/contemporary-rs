@@ -13,7 +13,7 @@ pub enum PagerElement {
 }
 
 pub trait PagerAnimation {
-    fn top_element(&self, direction: PagerAnimationDirection) -> PagerElement {
+    fn top_element(&self, _direction: PagerAnimationDirection) -> PagerElement {
         PagerElement::Current
     }
 

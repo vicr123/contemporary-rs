@@ -76,16 +76,16 @@ impl Render for DialogBoxes {
                                 ).child(
                                     button("goblin-dialog-box")
                                         .child(tr!("DIALOG_BOX_GOBLIN", "Oh no! Goblins!"))
-                                        .on_click(cx.listener(|this, _, _, cx| {
+                                        .on_click(cx.listener(|this, _, _, _cx| {
                                             this.goblin_dialog_box_open = true;
                                         }))
                                 ).child(button("nuclear-reactor-dialog-box")
                                     .child(tr!("DIALOG_BOX_NUCLEAR_REACTOR", "Shut down the nuclear reactor!"))
-                                    .on_click(cx.listener(|this, _, _, cx| {
+                                    .on_click(cx.listener(|this, _, _, _cx| {
                                         this.nuclear_reactor_dialog_box_open = true;
                                     }))).child(button("error-dialog-box")
                                     .child(tr!("DIALOG_BOX_ERROR", "An error has occurred"))
-                                    .on_click(cx.listener(|this, _, _, cx| {
+                                    .on_click(cx.listener(|this, _, _, _cx| {
                                         this.error_dialog_box_open = true;
                                     }))),
                             ),
@@ -125,7 +125,7 @@ The Goblin King leans forward, his putrid breath washing over you as he awaits y
                 ).button(
                 button("swear-fealty-button")
                     .child(tr!("DIALOG_BOX_GOBLIN_SWEAR_FEALTY", "Swear Fealty"))
-                    .on_click(cx.listener(|this, _, _, cx| {
+                    .on_click(cx.listener(|this, _, _, _cx| {
                         this.goblin_dialog_box_open = false;
                     }))
             )
@@ -174,7 +174,7 @@ Only proceed if you are an expert user and fully understand the risks involved. 
                     tr!("DIALOG_BOX_ERROR_CONTENT", "The disc in the drive is not rewritable, so it cannot be erased.").into(),
                     tr!("DIALOG_BOX_ERROR_INFO", "If you need to destroy the data on the disc, you should physically break it in half.").into()
                 )
-                .standard_button(StandardButton::Sorry, cx.listener(|this, _, _, cx| {
+                .standard_button(StandardButton::Sorry, cx.listener(|this, _, _, _cx| {
                     this.error_dialog_box_open = false;
                 }))
             )

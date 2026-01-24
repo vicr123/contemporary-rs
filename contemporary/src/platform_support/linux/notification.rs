@@ -26,7 +26,7 @@ impl PostedNotification for LinuxPostedNotification {
 
     fn dismiss(&self, cx: &mut App) {
         let id_clone = self.id.clone();
-        cx.spawn(async move |cx: &mut AsyncApp| {
+        cx.spawn(async move |_cx: &mut AsyncApp| {
             let Ok(notification_portal) = NotificationProxy::new().await else {
                 return;
             };
@@ -114,7 +114,7 @@ fn contemporary_notification_to_ashpd_notification(
     supported_button_purpose: Vec<ButtonPurpose>,
     cx: &mut App,
 ) -> ashpd::desktop::notification::Notification {
-    cx.update_global::<LinuxNotificationGlobal, _>(|linux_notification_global, cx| {
+    cx.update_global::<LinuxNotificationGlobal, _>(|linux_notification_global, _cx| {
         let mut ashpd_notification = ashpd::desktop::notification::Notification::new(
             notification.summary.unwrap_or_default().as_str(),
         )
@@ -164,7 +164,7 @@ fn contemporary_notification_to_ashpd_notification(
                         text: reply.unwrap_or_default(),
                     };
                     for action in on_triggered.clone() {
-                        action(&event, cx);
+                        action(event, cx);
                     }
                 }),
             );

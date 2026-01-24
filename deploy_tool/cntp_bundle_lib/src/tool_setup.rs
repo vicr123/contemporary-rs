@@ -60,7 +60,7 @@ pub fn setup_tool(
         exit(1);
     };
 
-    let Some(bin_target) = root_package.targets.iter().find(|target| target.is_bin()) else {
+    let Some(_bin_target) = root_package.targets.iter().find(|target| target.is_bin()) else {
         error!("The current project is not a binary project.");
         error!("Please rerun this command in the root of a binary project.");
         exit(1);

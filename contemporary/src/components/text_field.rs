@@ -620,8 +620,8 @@ impl EntityInputHandler for TextField {
 
     fn bounds_for_range(
         &mut self,
-        range_utf16: Range<usize>,
-        bounds: Bounds<Pixels>,
+        _range_utf16: Range<usize>,
+        _bounds: Bounds<Pixels>,
         _window: &mut Window,
         _cx: &mut Context<Self>,
     ) -> Option<Bounds<Pixels>> {
@@ -642,7 +642,7 @@ impl EntityInputHandler for TextField {
 
     fn character_index_for_point(
         &mut self,
-        point: gpui::Point<Pixels>,
+        _point: gpui::Point<Pixels>,
         _window: &mut Window,
         _cx: &mut Context<Self>,
     ) -> Option<usize> {
@@ -693,8 +693,8 @@ impl Element for TextFieldElement {
 
     fn request_layout(
         &mut self,
-        id: Option<&GlobalElementId>,
-        inspector_id: Option<&InspectorElementId>,
+        _id: Option<&GlobalElementId>,
+        _inspector_id: Option<&InspectorElementId>,
         window: &mut Window,
         cx: &mut App,
     ) -> (LayoutId, Self::RequestLayoutState) {
@@ -737,8 +737,8 @@ impl Element for TextFieldElement {
 
     fn prepaint(
         &mut self,
-        id: Option<&GlobalElementId>,
-        inspector_id: Option<&InspectorElementId>,
+        _id: Option<&GlobalElementId>,
+        _inspector_id: Option<&InspectorElementId>,
         bounds: Bounds<Pixels>,
         request_layout: &mut Self::RequestLayoutState,
         window: &mut Window,
@@ -883,10 +883,10 @@ impl Element for TextFieldElement {
 
     fn paint(
         &mut self,
-        id: Option<&GlobalElementId>,
-        inspector_id: Option<&InspectorElementId>,
+        _id: Option<&GlobalElementId>,
+        _inspector_id: Option<&InspectorElementId>,
         bounds: Bounds<Pixels>,
-        request_layout: &mut Self::RequestLayoutState,
+        _request_layout: &mut Self::RequestLayoutState,
         prepaint: &mut Self::PrepaintState,
         window: &mut Window,
         cx: &mut App,
@@ -911,11 +911,10 @@ impl Element for TextFieldElement {
             .unwrap();
         }
 
-        if focus_handle.is_focused(window) {
-            if let Some(cursor) = prepaint.cursor.take() {
+        if focus_handle.is_focused(window)
+            && let Some(cursor) = prepaint.cursor.take() {
                 window.paint_quad(cursor);
             }
-        }
 
         self.input.update(cx, |input, _cx| {
             input.last_layout = Some(prepaint.lines.clone());

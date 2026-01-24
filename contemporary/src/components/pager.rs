@@ -62,7 +62,7 @@ impl Styled for Pager {
 }
 
 impl RenderOnce for Pager {
-    fn render(mut self, _window: &mut Window, cx: &mut App) -> impl IntoElement {
+    fn render(self, _window: &mut Window, cx: &mut App) -> impl IntoElement {
         let platform_settings = cx.global::<PlatformSettings>();
         PagerInternal {
             id: self.id,
@@ -165,7 +165,7 @@ impl Element for PagerInternal {
 
             // Set up animations
             if let Some(animation) = &mut self.animation {
-                let animation_direction = self.force_direction.unwrap_or_else(|| {
+                let animation_direction = self.force_direction.unwrap_or({
                     if state.current_page > state.previous_current_page {
                         PagerAnimationDirection::Forward
                     } else {

@@ -157,7 +157,7 @@ impl Element for Slider {
         cx: &mut App,
     ) -> Self::PrepaintState {
         let platform_settings = cx.global::<PlatformSettings>();
-        let state_cell = window.with_optional_element_state(id, |state, cx| {
+        let state_cell = window.with_optional_element_state(id, |state, _cx| {
             let state = state.flatten().unwrap_or_else(|| {
                 Rc::new(RefCell::new(SliderInteractiveState {
                     active_state: None,
@@ -350,7 +350,7 @@ impl Element for Slider {
                         active_state.current_drag_coordinate = event.position.x.into();
                         cx.notify(mouse_move_current_view);
                     });
-                    cx.on_mouse_event(move |event: &MouseUpEvent, _, window, cx| {
+                    cx.on_mouse_event(move |_event: &MouseUpEvent, _, window, cx| {
                         let mut state = mouse_up_state.borrow_mut();
 
                         let Some(_active_state) = &mut state.active_state else {

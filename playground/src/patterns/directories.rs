@@ -18,7 +18,7 @@ impl Directories {
 }
 
 impl Render for Directories {
-    fn render(&mut self, window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
+    fn render(&mut self, _window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
         let theme = cx.theme();
         let details = cx.global::<Details>();
 

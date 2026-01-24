@@ -14,7 +14,6 @@ pub struct ProgressBar {
 #[derive(IntoElement)]
 pub struct IndeterminateProgressBar {
     div: Stateful<Div>,
-    indeterminate: bool,
 }
 
 pub fn progress_bar() -> ProgressBar {
@@ -33,7 +32,6 @@ impl ProgressBar {
     pub fn indeterminate(self, id: impl Into<ElementId>) -> IndeterminateProgressBar {
         IndeterminateProgressBar {
             div: self.div.id(id),
-            indeterminate: true,
         }
     }
 }

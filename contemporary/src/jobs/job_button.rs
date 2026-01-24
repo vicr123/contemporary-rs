@@ -28,7 +28,7 @@ struct JobButtonProgressPrepaintState {
 
 impl JobButton {
     pub fn use_job_button(window: &mut Window, cx: &mut App) -> Entity<Self> {
-        let entity = window.use_state(cx, |window, cx| JobButton {
+        let entity = window.use_state(cx, |_window, _cx| JobButton {
             is_first_update: true,
             old_job_button_state: JobButtonState::Hidden,
             old_job_button_state_since: Instant::now(),
@@ -75,7 +75,7 @@ impl Render for JobButton {
                         .flat()
                         .child(
                             canvas(
-                                move |bounds, window, cx| {
+                                move |bounds, _window, cx| {
                                     let job_manager = cx.global::<JobManager>();
                                     let progress_bounds = Bounds::centered_at(
                                         bounds.center(),
@@ -88,14 +88,14 @@ impl Render for JobButton {
                                     );
 
                                     let angle_point = |angle: f32| -> Point<Pixels> {
-                                        return Point::new(
+                                        Point::new(
                                             progress_bounds.center().x
                                                 + px(8.
                                                     * (angle - std::f32::consts::FRAC_PI_2).cos()),
                                             progress_bounds.center().y
                                                 + px(8.
                                                     * (angle - std::f32::consts::FRAC_PI_2).sin()),
-                                        );
+                                        )
                                     };
 
                                     let arc_length = job_manager.aggregate_progress(cx) * 360.;
@@ -140,7 +140,7 @@ impl Render for JobButton {
                                         },
                                     }
                                 },
-                                move |bounds, prepaint_state, window, cx| {
+                                move |_bounds, prepaint_state, window, cx| {
                                     let theme = cx.theme();
                                     window.paint_quad(quad(
                                         prepaint_state.progress_bounds,

@@ -59,7 +59,7 @@ impl Switch {
 }
 
 impl RenderOnce for Switch {
-    fn render(self, window: &mut Window, cx: &mut App) -> impl IntoElement {
+    fn render(self, _window: &mut Window, _cx: &mut App) -> impl IntoElement {
         div()
             .id(self.id)
             .flex()
@@ -161,7 +161,7 @@ impl Element for SwitchInner {
         cx: &mut App,
     ) -> Self::PrepaintState {
         let platform_settings = cx.global::<PlatformSettings>();
-        let state_cell = window.with_optional_element_state(id, |state, cx| {
+        let state_cell = window.with_optional_element_state(id, |state, _cx| {
             let state = state.flatten().unwrap_or_else(|| {
                 Rc::new(RefCell::new(SwitchInteractiveState {
                     active_state: None,
@@ -329,7 +329,7 @@ impl Element for SwitchInner {
                     active_state.mouse_moved = true;
                     cx.notify(mouse_move_current_view);
                 });
-                cx.on_mouse_event(move |event: &MouseUpEvent, _, window, cx| {
+                cx.on_mouse_event(move |_event: &MouseUpEvent, _, window, cx| {
                     let mut state = mouse_up_state.borrow_mut();
 
                     let Some(active_state) = &mut state.active_state else {

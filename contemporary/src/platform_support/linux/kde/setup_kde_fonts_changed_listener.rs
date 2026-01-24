@@ -15,15 +15,14 @@ pub fn setup_kde_fonts_changed_listener(cx: &mut App) {
 
         loop {
             let setting = setting_changed.next().await;
-            if let Some(setting) = setting {
-                if setting.namespace() == "org.kde.kdeglobals.General" && setting.key() == "font" {
-                    _ = cx.update_global::<Theme, ()>(|theme, cx| {
+            if let Some(setting) = setting
+                && setting.namespace() == "org.kde.kdeglobals.General" && setting.key() == "font" {
+                    _ = cx.update_global::<Theme, ()>(|theme, _cx| {
                         theme.set_theme(Theme::default_of_type(theme.theme_type));
                     });
 
                     _ = cx.refresh();
                 }
-            }
         }
     })
     .detach()

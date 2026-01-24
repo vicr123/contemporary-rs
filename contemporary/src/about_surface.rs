@@ -7,11 +7,8 @@ use crate::components::layer::layer;
 use crate::components::subtitle::subtitle;
 use crate::styling::theme::ThemeStorage;
 use crate::surface::surface;
-use cntp_i18n::{Variable, i18n_manager, tr};
-use gpui::{
-    App, AppContext, ClickEvent, IntoElement, ParentElement, RenderOnce, Styled, Window, div, img,
-    px,
-};
+use cntp_i18n::{i18n_manager, tr};
+use gpui::{App, ClickEvent, IntoElement, ParentElement, RenderOnce, Styled, Window, div, img, px};
 
 #[derive(IntoElement)]
 struct AboutSurfaceButtons;

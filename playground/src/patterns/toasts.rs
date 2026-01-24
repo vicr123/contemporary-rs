@@ -54,11 +54,11 @@ impl Toasts {
 }
 
 impl Render for Toasts {
-    fn render(&mut self, window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
+    fn render(&mut self, _window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
         let theme = cx.theme();
         let details = cx.global::<Details>();
 
-        let directories = details.standard_dirs().unwrap();
+        let _directories = details.standard_dirs().unwrap();
 
         div()
             .bg(theme.background)

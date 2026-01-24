@@ -167,6 +167,7 @@ impl Notification {
         self
     }
 
+    #[allow(unreachable_code)]
     pub fn post(self, cx: &mut App) -> Box<dyn PostedNotification> {
         #[cfg(target_os = "macos")]
         {
@@ -206,11 +207,11 @@ impl PostedNotification for DummyPostedNotification {
         self.body.as_deref()
     }
 
-    fn dismiss(&self, cx: &mut App) {
+    fn dismiss(&self, _cx: &mut App) {
         // noop
     }
 
-    fn replace(&self, notification: Notification, cx: &mut App) {
+    fn replace(&self, _notification: Notification, _cx: &mut App) {
         // noop
     }
 }

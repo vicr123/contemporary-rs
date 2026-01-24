@@ -81,7 +81,7 @@ impl Flyout {
 }
 
 impl RenderOnce for Flyout {
-    fn render(self, window: &mut Window, cx: &mut App) -> impl IntoElement {
+    fn render(self, _window: &mut Window, _cx: &mut App) -> impl IntoElement {
         if !self.visible {
             return div().into_any_element();
         }

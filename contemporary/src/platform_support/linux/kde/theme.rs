@@ -17,8 +17,8 @@ pub fn create_kde_theme(is_dark_mode: bool) -> Theme {
     base_theme.system_font_size = px(10. * 4. / 3.);
 
     let portal_settings = smol::block_on(Settings::new());
-    if let Ok(portal_settings) = portal_settings {
-        if let Ok(font_settings) =
+    if let Ok(portal_settings) = portal_settings
+        && let Ok(font_settings) =
             smol::block_on(portal_settings.read::<String>("org.kde.kdeglobals.General", "font"))
         {
             // This gives us a QFont description, normally ingested by QFont::fromString
@@ -27,13 +27,11 @@ pub fn create_kde_theme(is_dark_mode: bool) -> Theme {
             if let Some(font_family) = font_parts.first() {
                 base_theme.system_font_family = font_family.to_string();
             }
-            if let Some(font_size_pt_str) = font_parts.get(1) {
-                if let Ok(font_size) = font_size_pt_str.parse::<f32>() {
+            if let Some(font_size_pt_str) = font_parts.get(1)
+                && let Ok(font_size) = font_size_pt_str.parse::<f32>() {
                     base_theme.system_font_size = px(font_size * 4. / 3.);
                 }
-            }
         }
-    }
 
     base_theme
 }

@@ -24,6 +24,12 @@ pub enum JobButtonState {
     HaveSuccess,
 }
 
+impl Default for JobManager {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl JobManager {
     pub fn new() -> Self {
         Self {
@@ -64,7 +70,7 @@ impl JobManager {
                 return;
             }
             cx.update_global::<Self, ()>(|this, cx| {
-                let should_track = cx.read_entity(&job_clone, |job_item, cx| {
+                let should_track = cx.read_entity(&job_clone, |job_item, _cx| {
                     // Track the job because it's taking too long
                     job_item.borrow().status() != JobStatus::Completed
                 });
@@ -113,7 +119,7 @@ impl JobManager {
     }
 
     pub fn job(&self, index: usize, cx: &App) -> Option<&JoblingEntity> {
-        self.tracked_jobs(cx).skip(index).next()
+        self.tracked_jobs(cx).nth(index)
     }
 
     pub fn aggregate_progress(&self, cx: &App) -> f32 {

@@ -4,9 +4,9 @@ use crate::components::raised::raised;
 use crate::styling::theme::{ThemeStorage, VariableColor, variable_transparent};
 use gpui::prelude::FluentBuilder;
 use gpui::{
-    AnyElement, App, ClickEvent, Div, ElementId, Focusable, InteractiveElement, IntoElement,
-    MouseButton, ParentElement, RenderOnce, Rgba, Stateful, StatefulInteractiveElement,
-    StyleRefinement, Styled, Window, canvas, div, px,
+    AnyElement, App, ClickEvent, Div, ElementId, InteractiveElement, IntoElement, MouseButton,
+    ParentElement, RenderOnce, Rgba, Stateful, StatefulInteractiveElement, StyleRefinement, Styled,
+    Window, canvas, div, px,
 };
 use std::rc::Rc;
 
@@ -248,7 +248,7 @@ impl RenderOnce for Button {
                 },
             )
             .when_some(self.menu_items, |david, items| {
-                david.child(raised(move |_, _, cx| {
+                david.child(raised(move |_, _, _cx| {
                     // Context Menu Popup
                     ContextMenuPopup {
                         items,

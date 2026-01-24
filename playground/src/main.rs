@@ -9,15 +9,12 @@ use cntp_i18n::{I18N_MANAGER, tr, tr_load, tr_noop};
 use cntp_icon_tool_macros::application_icon;
 use contemporary::application::new_contemporary_application;
 use contemporary::macros::application_details;
-use contemporary::setup::ShowAll;
-use contemporary::styling::theme::ThemeType::{Dark, Light, System};
-use contemporary::styling::theme::{Theme, ThemeType};
 use contemporary::{
     application::{ApplicationLink, Details, License, Versions},
     setup::{Contemporary, ContemporaryMenus, setup_contemporary},
     window::contemporary_window_options,
 };
-use gpui::{App, Bounds, Menu, MenuItem, WindowBounds, WindowOptions, actions, px, size};
+use gpui::{App, Bounds, Menu, MenuItem, WindowBounds, WindowOptions, px, size};
 use indexmap::IndexMap;
 use smol_macros::main;
 

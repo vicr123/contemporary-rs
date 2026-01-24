@@ -1,3 +1,3 @@
 use gpui::App;
 
-pub fn setup_gnome(cx: &mut App) {}
+pub fn setup_gnome(_cx: &mut App) {}

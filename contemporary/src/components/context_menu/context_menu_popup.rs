@@ -78,7 +78,7 @@ impl RenderOnce for ContextMenuPopup {
                                         disabled,
                                     } => {
                                         let action = action.clone();
-                                        let remain_open_local_clone = remain_open.clone();
+                                        let remain_open_local_clone = *remain_open;
                                         let request_close_listener =
                                             request_close_listener_3.clone();
 

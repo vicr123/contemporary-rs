@@ -36,7 +36,7 @@ impl ToastDrawer {
         });
         let weak_this = cx.weak_entity();
         window
-            .observe(&window_globals, cx, move |_, window, cx| {
+            .observe(&window_globals, cx, move |_, window, _cx| {
                 let weak_this = weak_this.clone();
                 window.on_next_frame(move |window, cx| {
                     let _ = weak_this.update(cx, |this, cx| {
@@ -57,7 +57,7 @@ impl ToastDrawer {
     fn next_toast(&mut self, window: &mut Window, cx: &mut Context<Self>) {
         self.current_toast = cx.update_global::<WindowGlobals, _>(|window_globals, cx| {
             let globals = window_globals.globals_for(window, cx);
-            globals.update(cx, |globals, cx| globals.pending_toasts.pop_front())
+            globals.update(cx, |globals, _cx| globals.pending_toasts.pop_front())
         });
         self.toast_displayed_time = Instant::now();
         self.toast_animation_state = ToastAnimationState::In;
@@ -121,7 +121,7 @@ impl ToastDrawer {
 }
 
 impl Render for ToastDrawer {
-    fn render(&mut self, window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
+    fn render(&mut self, _window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
         raised(cx.processor(|this, _, window, cx| {
             let platform_settings = cx.global::<PlatformSettings>();
             let theme = cx.theme();

@@ -1,11 +1,11 @@
 use crate::components::application_menu::ApplicationMenu;
 use crate::components::button::button;
 use crate::jobs::job_button::JobButton;
-use crate::styling::theme::{Theme, ThemeStorage};
+use crate::styling::theme::ThemeStorage;
 use gpui::prelude::FluentBuilder;
 use gpui::{
-    AnyElement, App, AppContext, Context, Entity, InteractiveElement, IntoElement, MouseButton,
-    ParentElement, Render, RenderOnce, Styled, Window, WindowControlArea, div, img, px, rgb, svg,
+    AnyElement, App, Entity, InteractiveElement, IntoElement, MouseButton, ParentElement,
+    RenderOnce, Styled, Window, WindowControlArea, div, img, px, svg,
 };
 
 #[derive(IntoElement)]

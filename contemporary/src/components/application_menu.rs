@@ -24,7 +24,7 @@ pub struct ApplicationMenu {
 impl ApplicationMenu {
     pub fn new(cx: &mut App, menu: Menu) -> Entity<Self> {
         let root_menu = Rc::new(menu.owned());
-        cx.new(|cx| ApplicationMenu {
+        cx.new(|_cx| ApplicationMenu {
             is_open: false,
             focus_handle: None,
             root_menu,
@@ -47,7 +47,7 @@ impl ApplicationMenu {
 }
 
 impl Render for ApplicationMenu {
-    fn render(&mut self, window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
+    fn render(&mut self, _window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
         if !self.is_open {
             return div();
         }
@@ -280,7 +280,7 @@ impl RenderOnce for MenuList {
                                 .child(icon("go-next".into())),
                         )
                         .flat()
-                        .on_click(move |event, window, cx| {
+                        .on_click(move |_event, window, cx| {
                             let submenu_click_event = SubmenuClickEvent {
                                 menu: Rc::new(menu.clone()),
                             };
@@ -351,7 +351,7 @@ impl RenderOnce for MenuList {
                             });
 
                             for listener in menu_should_close_listeners.iter() {
-                                listener(&event, window, cx);
+                                listener(event, window, cx);
                             }
                         })
                         .into_any_element()

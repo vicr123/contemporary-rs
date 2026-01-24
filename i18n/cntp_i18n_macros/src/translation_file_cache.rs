@@ -34,7 +34,7 @@ pub static TRANSLATION_FILE_CACHE: LazyLock<
         .iter()
         .map(|file| {
             let language = file.file_stem().unwrap().to_str().unwrap().to_string();
-            let decoded_file = load::translation(&file).unwrap();
+            let decoded_file = load::translation(file).unwrap();
 
             (
                 language,

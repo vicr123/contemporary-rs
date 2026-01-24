@@ -43,13 +43,13 @@
   },
   "BIG_TEXT_FIELD_PLACEHOLDER": {
     "context": "text_input.rs",
-    "definedIn": "src/components/text_input.rs:73",
+    "definedIn": "src/components/text_input.rs:74",
     "plural": false,
     "description": null
   },
   "BORDERLESS_TEXT_FIELD_PLACEHOLDER": {
     "context": "text_input.rs",
-    "definedIn": "src/components/text_input.rs:48",
+    "definedIn": "src/components/text_input.rs:49",
     "plural": false,
     "description": null
   },
@@ -697,7 +697,7 @@
   },
   "MENU_THEME": {
     "context": "main.rs",
-    "definedIn": "src/main.rs:79",
+    "definedIn": "src/main.rs:76",
     "plural": false,
     "description": null
   },
@@ -781,7 +781,7 @@
   },
   "PASSWORD_TEXT_FIELD_PLACEHOLDER": {
     "context": "text_input.rs",
-    "definedIn": "src/components/text_input.rs:38",
+    "definedIn": "src/components/text_input.rs:39",
     "plural": false,
     "description": null
   },
@@ -967,13 +967,13 @@
   },
   "TEXT_FIELD_DISABLED_PLACEHOLDER": {
     "context": "text_input.rs",
-    "definedIn": "src/components/text_input.rs:58",
+    "definedIn": "src/components/text_input.rs:59",
     "plural": false,
     "description": null
   },
   "TEXT_FIELD_PLACEHOLDER": {
     "context": "text_input.rs",
-    "definedIn": "src/components/text_input.rs:28",
+    "definedIn": "src/components/text_input.rs:29",
     "plural": false,
     "description": null
   },
@@ -985,19 +985,19 @@
   },
   "THEME_DARK": {
     "context": "main.rs",
-    "definedIn": "src/main.rs:32",
+    "definedIn": "src/main.rs:29",
     "plural": false,
     "description": null
   },
   "THEME_LIGHT": {
     "context": "main.rs",
-    "definedIn": "src/main.rs:31",
+    "definedIn": "src/main.rs:28",
     "plural": false,
     "description": null
   },
   "THEME_SYSTEM": {
     "context": "main.rs",
-    "definedIn": "src/main.rs:30",
+    "definedIn": "src/main.rs:27",
     "plural": false,
     "description": null
   },

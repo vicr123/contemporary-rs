@@ -8,6 +8,12 @@ pub struct Toast {
     pub(crate) severity: AdmonitionSeverity,
 }
 
+impl Default for Toast {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl Toast {
     pub fn new() -> Self {
         Self {

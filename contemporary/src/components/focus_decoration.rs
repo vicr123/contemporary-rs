@@ -17,7 +17,7 @@ pub fn focus_decoration() -> FocusDecoration {
 }
 
 impl RenderOnce for FocusDecoration {
-    fn render(self, window: &mut Window, cx: &mut App) -> impl IntoElement {
+    fn render(self, _window: &mut Window, cx: &mut App) -> impl IntoElement {
         let theme = cx.theme();
 
         let p1 = theme.focus_decoration;

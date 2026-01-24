@@ -7,7 +7,7 @@ fn match_line_endings(string: &str) -> proc_macro2::TokenStream {
     let windows_string = string.replace("\n", "\r\n");
     let unix_string = string.replace("\r\n", "\n");
 
-    return quote! {
+    quote! {
         {
             #[cfg(target_os = "windows")]
             {#windows_string}
@@ -15,7 +15,7 @@ fn match_line_endings(string: &str) -> proc_macro2::TokenStream {
             #[cfg(not(target_os = "windows"))]
             {#unix_string}
         }
-    };
+    }
 }
 
 enum StateMachine {

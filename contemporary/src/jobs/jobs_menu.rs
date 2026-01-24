@@ -25,7 +25,7 @@ impl RenderOnce for JobsMenu {
 
         scrim("jobs-menu")
             .visible(job_manager.is_job_menu_open)
-            .on_click(move |_, window, cx| {
+            .on_click(move |_, _window, cx| {
                 cx.update_global::<JobManager, ()>(|manager, cx| {
                     manager.set_job_menu_open(false, cx);
                 });

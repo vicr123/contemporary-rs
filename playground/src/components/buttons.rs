@@ -7,7 +7,7 @@ use contemporary::components::icon::icon;
 use contemporary::components::layer::layer;
 use contemporary::components::subtitle::subtitle;
 use contemporary::platform_support::cx_platform_extensions::CxPlatformExtensions;
-use contemporary::styling::theme::{Theme, ThemeStorage};
+use contemporary::styling::theme::ThemeStorage;
 use gpui::prelude::FluentBuilder;
 use gpui::{
     App, AppContext, ClickEvent, Context, Entity, IntoElement, ParentElement, Render, Styled,

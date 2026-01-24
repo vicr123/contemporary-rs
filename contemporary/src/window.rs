@@ -36,7 +36,7 @@ impl ParentElement for ContemporaryWindow {
 
 impl RenderOnce for ContemporaryWindow {
     fn render(self, window: &mut Window, cx: &mut App) -> impl IntoElement {
-        let toast_drawer = window.use_state(cx, |window, cx| ToastDrawer::new(window, cx));
+        let toast_drawer = window.use_state(cx, ToastDrawer::new);
 
         let theme = cx.theme();
         let platform_settings = cx.global::<PlatformSettings>();

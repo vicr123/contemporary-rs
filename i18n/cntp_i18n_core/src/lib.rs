@@ -218,10 +218,10 @@ impl I18nPluralStringEntry<'_> {
                     .ok_or(anyhow!("Many case required but not present"))?,
                 PluralCategory::Other => &self.other,
             }
-            .into_iter()
+            .iter()
             .map(|part| match part {
                 I18nStringPart::Count(_) => {
-                    I18nStringPart::Static(count.to_locale_string(&cntp_locale).into())
+                    I18nStringPart::Static(count.to_locale_string(cntp_locale).into())
                 }
                 _ => part.clone(),
             })

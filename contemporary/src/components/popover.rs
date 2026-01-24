@@ -50,7 +50,7 @@ impl Popover {
     }
 
     pub fn size(mut self, size: f32) -> Self {
-        self.size = Size::Pixels(size.into());
+        self.size = Size::Pixels(size);
         self
     }
 

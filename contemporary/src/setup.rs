@@ -6,19 +6,14 @@ use crate::platform_support::platform_settings::PlatformSettings;
 use crate::platform_support::setup_platform;
 use crate::styling::theme::Theme;
 use crate::tracing::application_log::ApplicationLog;
-use crate::tracing::layer::ContemporaryLayer;
 use crate::window::window_globals::WindowGlobals;
 use cntp_i18n::{I18N_MANAGER, i18n_manager, tr, tr_load};
-use gpui::{
-    Action, App, AppContext, BorrowAppContext, Global, KeyBinding, Menu, MenuItem, SystemMenuType,
-    actions,
-};
+use gpui::{Action, App, Global, KeyBinding, Menu, MenuItem, SystemMenuType, actions};
 use schemars::JsonSchema;
 use serde::Deserialize;
 use std::collections::HashMap;
 use std::rc::Rc;
 use std::sync::{Arc, Mutex};
-use tracing::instrument::WithSubscriber;
 use tracing_subscriber::layer::SubscriberExt;
 use tracing_subscriber::util::SubscriberInitExt;
 use tracing_subscriber::{EnvFilter, Layer};
@@ -53,7 +48,7 @@ struct Callbacks {
 impl Global for Callbacks {}
 
 pub fn setup_contemporary(cx: &mut App, mut application: Contemporary) {
-    let (tracing_channel_tx, tracing_channel_rx) = async_channel::bounded(5);
+    let (_tracing_channel_tx, tracing_channel_rx) = async_channel::bounded(5);
 
     let application_log = ApplicationLog::new(cx, tracing_channel_rx);
     cx.set_global(application_log);

@@ -166,8 +166,8 @@ pub fn tr(body: TokenStream) -> TokenStream {
 
     // Ensure all passed variables are used
     for variable in input.variables.iter() {
-        if let Some(default_string) = &input.default_string {
-            if !default_string
+        if let Some(default_string) = &input.default_string
+            && !default_string
                 .value()
                 .contains(format!("{{{{{}}}}}", variable.name).as_str())
             {
@@ -182,7 +182,6 @@ pub fn tr(body: TokenStream) -> TokenStream {
                 .to_compile_error()
                 .into();
             }
-        }
     }
 
     for required_variable in *required_variables {
@@ -190,7 +189,7 @@ pub fn tr(body: TokenStream) -> TokenStream {
             match input
                 .variables
                 .iter()
-                .find(|v| v.name.to_string() == "count")
+                .find(|v| v.name == "count")
             {
                 Some(variable) => {
                     // Special handling
@@ -332,7 +331,7 @@ pub fn trn(body: TokenStream) -> TokenStream {
             match input
                 .variables
                 .iter()
-                .find(|v| v.name.to_string() == "count")
+                .find(|v| v.name == "count")
             {
                 Some(variable) => {
                     // Special handling

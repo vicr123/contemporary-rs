@@ -6,7 +6,7 @@ pub struct ErrorFlasher {
 }
 
 impl ErrorFlasher {
-    pub fn new(cx: &mut Context<Self>) -> Self {
+    pub fn new(_cx: &mut Context<Self>) -> Self {
         Self { start: None }
     }
 

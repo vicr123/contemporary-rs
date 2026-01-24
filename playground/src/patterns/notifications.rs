@@ -74,7 +74,7 @@ impl Notifications {
     fn trigger_notification(
         &mut self,
         _: &ClickEvent,
-        window: &mut Window,
+        _window: &mut Window,
         cx: &mut Context<Self>,
     ) {
         let meta = cx.new(|_| NotificationMetadata::default());
@@ -145,7 +145,7 @@ impl Notifications {
     fn render_posted_notification(
         &mut self,
         i: usize,
-        window: &mut Window,
+        _window: &mut Window,
         cx: &mut Context<Self>,
     ) -> AnyElement {
         let notification: &Rc<Box<dyn PostedNotification>> = &self.posted_notifications[i];
@@ -209,11 +209,11 @@ impl Notifications {
 }
 
 impl Render for Notifications {
-    fn render(&mut self, window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
+    fn render(&mut self, _window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
         let theme = cx.theme();
         let details = cx.global::<Details>();
 
-        let directories = details.standard_dirs().unwrap();
+        let _directories = details.standard_dirs().unwrap();
 
         div()
             .bg(theme.background)
