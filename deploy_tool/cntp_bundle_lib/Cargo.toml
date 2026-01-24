@@ -5,11 +5,12 @@ edition = "2024"
 license = "MIT"
 keywords = ["cntp", "deployment"]
 categories = ["command-line-utilities", "development-tools"]
+description = "Support library for packaging applications"
 
 [dependencies]
 tracing = { workspace = true }
-cntp_config = { path = "../../cntp_config" }
-cntp_icon_tool_core = { path = "../../icon_tool/cntp_icon_tool_core" }
+cntp_config = { path = "../../cntp_config", version = "0.1.0" }
+cntp_icon_tool_core = { path = "../../icon_tool/cntp_icon_tool_core", version = "0.1.0" }
 plist = "1"
 resvg = "0.45"
 tempfile = "3.8"
@@ -18,7 +19,6 @@ current_platform = "0.2.0"
 isahc = { version = "1", features = ["static-ssl"] }
 anyhow = "1"
 regex = "1"
-image = "0.25"
 tiff = "0.10.0"
 
 [target.'cfg(target_os="windows")'.dependencies]

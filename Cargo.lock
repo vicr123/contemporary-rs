@@ -795,12 +795,10 @@ dependencies = [
 name = "cargo-cntp-bundle"
 version = "0.1.0"
 dependencies = [
- "cargo_metadata 0.20.0",
  "clap",
  "clap-cargo",
  "clap-verbosity-flag",
  "cntp_bundle_lib",
- "cntp_config",
  "current_platform",
  "open",
  "tracing",
@@ -815,8 +813,6 @@ dependencies = [
  "clap-cargo",
  "clap-verbosity-flag",
  "cntp_bundle_lib",
- "cntp_config",
- "current_platform",
  "open",
  "tracing",
  "tracing-subscriber",
@@ -1091,7 +1087,6 @@ dependencies = [
  "cntp_config",
  "cntp_icon_tool_core",
  "current_platform",
- "image",
  "isahc",
  "plist",
  "regex",
@@ -1142,9 +1137,6 @@ dependencies = [
  "cntp_localesupport",
  "gpui",
  "icu",
- "serde",
- "serde_json",
- "toml 0.8.23",
 ]
 
 [[package]]

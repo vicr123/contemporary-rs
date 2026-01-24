@@ -5,15 +5,13 @@ edition = "2024"
 license = "MIT"
 keywords = ["i18n", "cntp", "l10n", "translation"]
 categories = ["internationalization", "localization", "value-formatting"]
+description = "Support library for cntp_i18n"
 
 [features]
 gpui = ["dep:gpui"]
 
 [dependencies]
-serde = { workspace = true }
-serde_json = { workspace = true }
 icu = { workspace = true, features = ["compiled_data"] }
-cntp_localesupport = { path = "../../localesupport/cntp_localesupport" }
-toml = "0.8"
+cntp_localesupport = { path = "../../localesupport/cntp_localesupport", version = "0.1.0" }
 anyhow = "1"
 gpui = { workspace = true, optional = true }

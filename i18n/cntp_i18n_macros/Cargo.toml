@@ -5,6 +5,7 @@ edition = "2024"
 license = "MIT"
 keywords = ["i18n", "cntp", "l10n", "translation"]
 categories = ["internationalization", "localization", "value-formatting"]
+description = "Macros for cntp_i18n"
 
 [lib]
 name = "cntp_i18n_macros"
@@ -12,11 +13,11 @@ path = "src/lib.rs"
 proc-macro = true
 
 [dependencies]
-syn = { workspace = true, features = ["extra-traits"]}
+syn = { workspace = true, features = ["extra-traits"] }
 quote = "1"
 once_cell = { workspace = true }
-cntp_i18n_core = { path = "../cntp_i18n_core" }
-cntp_i18n_parse = { path = "../cntp_i18n_parse" }
-cntp_i18n_build_core = { path = "../cntp_i18n_build_core" }
+cntp_i18n_core = { path = "../cntp_i18n_core", version = "0.1.0" }
+cntp_i18n_parse = { path = "../cntp_i18n_parse", version = "0.1.0" }
+cntp_i18n_build_core = { path = "../cntp_i18n_build_core", version = "0.1.0" }
 proc-macro2 = "1"
 rustc-hash = { workspace = true }

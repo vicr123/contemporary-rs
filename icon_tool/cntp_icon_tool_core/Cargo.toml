@@ -5,6 +5,7 @@ edition = "2024"
 license = "MIT"
 keywords = ["cntp", "deployment"]
 categories = ["development-tools"]
+description = "Support library for generating Contempoary application icons"
 
 [dependencies]
 regex = "1"

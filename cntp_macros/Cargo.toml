@@ -10,7 +10,7 @@ categories = ["development-tools", "gui"]
 proc-macro = true
 
 [dependencies]
-cntp_config = { path = "../cntp_config" }
+cntp_config = { path = "../cntp_config", version = "0.1.0" }
 syn = { workspace = true }
 quote = "1"
 serde = { workspace = true }

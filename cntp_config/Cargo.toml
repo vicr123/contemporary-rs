@@ -5,6 +5,7 @@ edition = "2024"
 license = "MIT"
 keywords = ["cntp"]
 categories = ["data-structures"]
+description = "Provides support for reading Contemporary.toml files"
 
 [dependencies]
 serde = { workspace = true }

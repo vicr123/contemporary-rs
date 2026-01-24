@@ -5,6 +5,7 @@ edition = "2024"
 license = "MIT"
 keywords = ["i18n", "cntp", "l10n", "translation"]
 categories = ["internationalization", "localization", "value-formatting"]
+description = "Support library for cntp_i18n"
 
 [dependencies]
 serde = { workspace = true }

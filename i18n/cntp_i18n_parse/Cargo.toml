@@ -5,6 +5,7 @@ edition = "2024"
 license = "MIT"
 keywords = ["i18n", "cntp", "l10n", "translation"]
 categories = ["internationalization", "localization", "value-formatting"]
+description = "Support library for parsing cntp_i18n tr macros"
 
 [dependencies]
 syn = { workspace = true, features = ["extra-traits"] }

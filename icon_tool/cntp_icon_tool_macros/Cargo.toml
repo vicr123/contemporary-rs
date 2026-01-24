@@ -5,6 +5,7 @@ edition = "2024"
 license = "MIT"
 keywords = ["cntp", "deployment"]
 categories = ["development-tools"]
+description = "Provides a macro to generate a Contemporary application icon from base icons"
 
 [lib]
 name = "cntp_icon_tool_macros"
@@ -12,7 +13,7 @@ path = "src/lib.rs"
 proc-macro = true
 
 [dependencies]
-cntp_icon_tool_core = { path = "../cntp_icon_tool_core" }
-cntp_config = { path = "../../cntp_config" }
+cntp_icon_tool_core = { path = "../cntp_icon_tool_core", version = "0.1.0" }
+cntp_config = { path = "../../cntp_config", version = "0.1.0" }
 syn = { workspace = true }
 quote = "1"
