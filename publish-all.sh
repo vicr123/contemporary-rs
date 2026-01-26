@@ -2,7 +2,11 @@
 
 function publish_crate() {
     pushd $1
+    echo "##### $1 #####"
     cargo publish
+    echo "##############"
+    echo
+    echo
     popd
 }
 
