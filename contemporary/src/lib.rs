@@ -9,6 +9,7 @@ pub mod jobs;
 pub mod lerp;
 pub mod macros;
 pub mod notification;
+pub mod permissions;
 pub mod platform_support;
 pub mod setup;
 pub mod styling;
