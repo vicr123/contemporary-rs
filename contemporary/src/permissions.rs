@@ -1,10 +1,12 @@
 pub struct Permissions {}
 
+#[derive(Copy, Clone, PartialEq)]
 pub enum PermissionType {
     Microphone,
     Camera,
 }
 
+#[derive(Copy, Clone, PartialEq)]
 pub enum GrantStatus {
     Granted,
     Denied,
