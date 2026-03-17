@@ -170,27 +170,23 @@ pub fn tr(body: TokenStream) -> TokenStream {
             && !default_string
                 .value()
                 .contains(format!("{{{{{}}}}}", variable.name).as_str())
-            {
-                return Error::new(
-                    variable.name.span(),
-                    format!(
-                        "Unused translation variable {} specified when rendering key {}",
-                        variable.name,
-                        input.translation_id.value()
-                    ),
-                )
-                .to_compile_error()
-                .into();
-            }
+        {
+            return Error::new(
+                variable.name.span(),
+                format!(
+                    "Unused translation variable {} specified when rendering key {}",
+                    variable.name,
+                    input.translation_id.value()
+                ),
+            )
+            .to_compile_error()
+            .into();
+        }
     }
 
     for required_variable in *required_variables {
         variables_token.push(if required_variable == "count" {
-            match input
-                .variables
-                .iter()
-                .find(|v| v.name == "count")
-            {
+            match input.variables.iter().find(|v| v.name == "count") {
                 Some(variable) => {
                     // Special handling
                     let expr = &variable.value;
@@ -239,7 +235,22 @@ pub fn tr(body: TokenStream) -> TokenStream {
         });
 
     let key = input.translation_id.value();
-    let current_crate = &*CURRENT_CRATE;
+    let current_crate = input
+        .context
+        .iter()
+        .find(|x| x.name == "crate")
+        .map(|x| {
+            let value = &x.value;
+            quote! {
+                Some(#value)
+            }
+        })
+        .unwrap_or_else(|| {
+            let crate_name = &*CURRENT_CRATE;
+            quote! {
+                #crate_name
+            }
+        });
 
     let mut state = rustc_hash::FxHasher::default();
     input.hash(&mut state);
@@ -328,11 +339,7 @@ pub fn trn(body: TokenStream) -> TokenStream {
 
     for required_variable in *required_variables {
         variables_token.push(if required_variable == "count" {
-            match input
-                .variables
-                .iter()
-                .find(|v| v.name == "count")
-            {
+            match input.variables.iter().find(|v| v.name == "count") {
                 Some(variable) => {
                     // Special handling
                     let var_name = variable.name.to_string();
@@ -382,7 +389,22 @@ pub fn trn(body: TokenStream) -> TokenStream {
         });
 
     let key = input.translation_id.value();
-    let current_crate = &*CURRENT_CRATE;
+    let current_crate = input
+        .context
+        .iter()
+        .find(|x| x.name == "crate")
+        .map(|x| {
+            let value = &x.value;
+            quote! {
+                Some(#value)
+            }
+        })
+        .unwrap_or_else(|| {
+            let crate_name = &*CURRENT_CRATE;
+            quote! {
+                #crate_name
+            }
+        });
 
     let mut state = rustc_hash::FxHasher::default();
     input.hash(&mut state);
