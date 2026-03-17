@@ -124,7 +124,7 @@
 
 #![warn(missing_docs)]
 
-pub use cntp_i18n_macros::{tr, tr_load, tr_noop, trn, trn_noop};
+pub use cntp_i18n_macros::{tr, tr_load, tr_noop, trf, trn, trn_noop};
 use cntp_localesupport::modifiers::ModifierVariable;
 use once_cell::sync::Lazy;
 use quick_cache::sync::Cache;
@@ -132,6 +132,7 @@ use rustc_hash::FxHasher;
 use std::hash::{Hash, Hasher};
 use std::sync::RwLock;
 
+use crate::hardcoded_i18n_source::HardcodedI18nSource;
 pub use cntp_i18n_core::{
     I18nEntry, I18nPluralStringEntry, I18nSource, I18nStringEntry, I18nStringPart,
     string::I18nString,
@@ -140,6 +141,8 @@ pub use cntp_localesupport::locale_formattable::LocaleFormattable;
 pub use cntp_localesupport::modifiers::{Date, Quote, StringModifier};
 pub use cntp_localesupport::{LayoutDirection, Locale};
 pub use phf;
+
+mod hardcoded_i18n_source;
 
 /// The global i18n manager instance.
 ///
@@ -446,9 +449,10 @@ impl I18nManager {
             // Fast path: if there's exactly one static part with no variables, return borrowed
             if parts.len() == 1
                 && let I18nStringPart::Static(s) = &parts[0]
-                    && !s.is_empty() {
-                        return s.clone();
-                    }
+                && !s.is_empty()
+            {
+                return s.clone();
+            }
 
             // Check if all parts are static (no variable substitution needed)
             let all_static = parts.iter().all(|p| matches!(p, I18nStringPart::Static(_)));
@@ -547,7 +551,7 @@ impl I18nManager {
 impl Default for I18nManager {
     fn default() -> Self {
         I18nManager {
-            sources: vec![],
+            sources: vec![Box::new(HardcodedI18nSource)],
             locale: Locale::current(),
             cache: Cache::new(500),
         }

@@ -1,5 +1,5 @@
 use chrono::{DateTime, Local};
-use cntp_i18n::{LayoutDirection, Locale, LocaleFormattable, i18n_manager, tr};
+use cntp_i18n::{LayoutDirection, Locale, LocaleFormattable, i18n_manager, tr, trf};
 use contemporary::components::constrainer::constrainer;
 use contemporary::components::grandstand::grandstand;
 use contemporary::components::layer::layer;
@@ -207,6 +207,7 @@ impl Render for I18n {
                                         time:date(date="MD", length="long", time="microsecond")=local_time,
                                         #locale=&locale
                                     ))
+                                    .child(trf!(date(date="MD", length="long", time="microsecond"), quote, local_time))
                             ),
                     ),
             )

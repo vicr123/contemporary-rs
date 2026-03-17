@@ -1,3 +1,5 @@
+use crate::{config::CURRENT_CRATE, translation_file_cache::VARIABLE_LIST};
+use cntp_i18n_parse::trf::TrfMacroInput;
 use cntp_i18n_parse::{
     MaybeFormattedNamedArg, MaybeNamedFormatterArg, tr::TrMacroInput, trn::TrnMacroInput,
 };
@@ -5,8 +7,6 @@ use proc_macro::TokenStream;
 use quote::quote;
 use std::hash::{Hash, Hasher};
 use syn::{Error, Ident, Path, parse_macro_input, punctuated::Punctuated, token::Comma};
-
-use crate::{config::CURRENT_CRATE, translation_file_cache::VARIABLE_LIST};
 
 pub fn resolve_modifier(path: Path) -> proc_macro2::TokenStream {
     if let Some(ident) = path.get_ident() {
@@ -425,6 +425,38 @@ pub fn trn(body: TokenStream) -> TokenStream {
                 #( #variables_token )*
             ], #current_crate, #hash, #locale)
         }
+    }
+    .into()
+}
+
+pub fn trf(body: TokenStream) -> TokenStream {
+    let input = parse_macro_input!(body as TrfMacroInput);
+
+    let formatters = input.formatters.iter().map(|f| {
+        let name = &f.name;
+        let args = f.args.iter().map(|a| {
+            let value = &a.value;
+            match &a.name {
+                None => {
+                    quote! {
+                        #value
+                    }
+                }
+                Some(name) => {
+                    quote! {
+                        #name=#value
+                    }
+                }
+            }
+        });
+        quote! {
+            #name(#( #args ),*)
+        }
+    });
+    let variable = input.variable;
+
+    quote! {
+        cntp_i18n::tr!("TR_F", "{{variable}}", variable:#(#formatters):* = #variable)
     }
     .into()
 }

@@ -251,6 +251,11 @@ pub fn trn(body: TokenStream) -> TokenStream {
     tr::trn(body)
 }
 
+#[proc_macro]
+pub fn trf(body: TokenStream) -> TokenStream {
+    tr::trf(body)
+}
+
 /// Marks a string for translation extraction without performing a lookup.
 ///
 /// This macro has the same syntax as [`tr!`] but does not perform any translation

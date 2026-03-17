@@ -1,4 +1,4 @@
-use std::{env, path::Path, sync::LazyLock};
+use std::{env, iter, path::Path, sync::LazyLock};
 
 use cntp_i18n_build_core::load::{self, TranslationEntry};
 use rustc_hash::{FxHashMap, FxHashSet};
@@ -96,5 +96,9 @@ pub static VARIABLE_LIST: LazyLock<FxHashMap<String, Vec<String>>> = LazyLock::n
 
     sets.into_iter()
         .map(|(key, variables)| (key.clone(), variables.iter().cloned().collect::<Vec<_>>()))
+        .chain(iter::once((
+            "TR_F".to_string(),
+            vec!["variable".to_string()],
+        )))
         .collect()
 });

@@ -40,6 +40,7 @@
 //! ```
 
 pub mod tr;
+pub mod trf;
 pub mod trn;
 
 use syn::{
