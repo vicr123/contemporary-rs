@@ -22,6 +22,7 @@ pub struct ContemporaryConfigDeploymentDef {
     pub desktop_entry: Option<String>,
     pub icon: Option<String>,
     pub contemporary_base_icon: Option<String>,
+    pub handled_url_schemes: Option<Vec<String>>,
 
     // Linux only
     pub desktop_entry_categories: Option<Vec<String>>,
@@ -45,6 +46,7 @@ pub struct ContemporaryConfigDeployment {
     pub desktop_entry: Option<String>,
     pub icon: Option<String>,
     pub contemporary_base_icon: Option<String>,
+    pub handled_url_schemes: Option<Vec<String>>,
 
     // Linux only
     pub desktop_entry_categories: Option<Vec<String>>,

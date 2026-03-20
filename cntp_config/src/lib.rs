@@ -165,6 +165,10 @@ impl ContemporaryConfig {
                 .contemporary_base_icon
                 .or(deployment.contemporary_base_icon),
 
+            handled_url_schemes: specific_deployment
+                .handled_url_schemes
+                .or(deployment.handled_url_schemes),
+
             // Linux only
             desktop_entry_categories: specific_deployment
                 .desktop_entry_categories

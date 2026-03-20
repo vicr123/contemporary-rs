@@ -185,6 +185,16 @@ fn generate_desktop_entry(
 
     entry.push_line_invariant("Categories", &(desktop_entry_categories.join(";") + ";"))?;
 
+    let mime_types = deployment
+        .handled_url_schemes
+        .unwrap_or_default()
+        .iter()
+        .map(|scheme| format!("x-scheme-handler/{}", scheme))
+        .collect::<Vec<_>>();
+    if !mime_types.is_empty() {
+        entry.push_line_invariant("MimeType", &(mime_types.join(";") + ";"))?;
+    }
+
     Ok(entry.contents)
 }
 

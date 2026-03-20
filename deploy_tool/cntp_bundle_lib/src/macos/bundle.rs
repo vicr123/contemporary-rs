@@ -150,6 +150,23 @@ pub fn bundle_macos(setup_data: &ToolSetup, executable_path: HashMap<String, Pat
         )),
     );
 
+    let schemes = deployment
+        .handled_url_schemes
+        .unwrap_or_default()
+        .iter()
+        .map(|scheme| {
+            let mut dict = Dictionary::new();
+            dict.insert(
+                "CFBundleURLSchemes".to_string(),
+                Value::Array(vec![Value::String(scheme.clone())]),
+            );
+            Value::Dictionary(dict)
+        })
+        .collect::<Vec<_>>();
+    if !schemes.is_empty() {
+        plist_root.insert("CFBundleURLTypes".to_string(), Value::Array(schemes));
+    }
+
     for (key, value) in &extra_info_plist_attributes {
         plist_root.insert(key.clone(), Value::String(value.default_value()));
     }
