@@ -219,6 +219,7 @@ impl DesktopEntry {
             LocalisedString::Localised(languages) => {
                 self.push_line_invariant(key, &value.default_value())?;
                 for (language, value) in languages {
+                    let language = language.replace("-", "_");
                     writeln!(&mut self.contents, "{key}[{language}]={value}")?;
                 }
             }
