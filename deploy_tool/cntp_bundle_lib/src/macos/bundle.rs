@@ -101,6 +101,14 @@ pub fn bundle_macos(setup_data: &ToolSetup, executable_path: HashMap<String, Pat
 
     let mut plist_root = Dictionary::new();
     plist_root.insert(
+        "CFBundleName".to_string(),
+        Value::String(application_name.default_value()),
+    );
+    plist_root.insert(
+        "CFBundleDisplayName".to_string(),
+        Value::String(application_name.default_value()),
+    );
+    plist_root.insert(
         "CFBundleExecutable".to_string(),
         Value::String(application_name.default_value()),
     );
