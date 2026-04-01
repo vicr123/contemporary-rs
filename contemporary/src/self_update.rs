@@ -317,7 +317,7 @@ pub fn init_self_update(
 
 pub fn self_update_type() -> SelfUpdateType {
     #[cfg(target_os = "linux")]
-    if std::env::var("APPIMAGE").map(PathBuf::from).is_ok() || true {
+    if std::env::var("APPIMAGE").map(PathBuf::from).is_ok() {
         return SelfUpdateType::AppImage;
     }
 

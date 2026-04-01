@@ -105,7 +105,7 @@ fn mane() {
 
         init_self_update(
             Url::from_str("https://binchicken.vicr123.com").unwrap(),
-            "test_repository",
+            "contemporary_playground",
             option_env!("BIN_CHICKEN_UUID"),
             option_env!("BIN_CHICKEN_SIGNATURE_PUBLIC_KEY"),
             cx,
