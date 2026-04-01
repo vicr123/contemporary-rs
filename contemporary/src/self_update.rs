@@ -1,5 +1,7 @@
-pub mod appimage;
 pub mod bin_chicken_client;
+
+#[cfg(target_os = "linux")]
+pub mod appimage;
 
 use crate::application::Details;
 use crate::self_update::bin_chicken_client::BinChickenClient;
@@ -196,7 +198,9 @@ impl SelfUpdate {
             bin_chicken_client.artifact_local_path(update_information.artifact_number);
 
         let update_result = match self_update_type() {
+            #[cfg(target_os = "linux")]
             SelfUpdateType::AppImage => appimage::perform_appimage_self_update(&artifact_path),
+            #[cfg(target_os = "macos")]
             SelfUpdateType::Apple => {
                 // TODO
                 Ok(())
@@ -244,7 +248,9 @@ impl SelfUpdate {
 
 #[derive(PartialEq, Eq, Debug, Clone, Copy)]
 pub enum SelfUpdateType {
+    #[cfg(target_os = "linux")]
     AppImage,
+    #[cfg(target_os = "macos")]
     Apple,
     NotSupported,
 }
@@ -252,7 +258,9 @@ pub enum SelfUpdateType {
 impl SelfUpdateType {
     pub fn supports_in_place_update(&self) -> bool {
         match self {
+            #[cfg(target_os = "linux")]
             SelfUpdateType::AppImage => true,
+            #[cfg(target_os = "macos")]
             SelfUpdateType::Apple => false,
             SelfUpdateType::NotSupported => false,
         }
