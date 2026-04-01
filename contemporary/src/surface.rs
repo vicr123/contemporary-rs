@@ -5,7 +5,7 @@ use crate::styling::theme::ThemeStorage;
 use gpui::prelude::FluentBuilder;
 use gpui::{
     AnyElement, App, Entity, InteractiveElement, IntoElement, MouseButton, ParentElement,
-    RenderOnce, Styled, Window, WindowControlArea, div, img, px, svg,
+    RenderOnce, Styled, Window, WindowControlArea, div, img, px, rgb, svg,
 };
 
 #[derive(IntoElement)]
@@ -78,6 +78,8 @@ impl RenderOnce for WindowTitle {
     fn render(self, window: &mut Window, cx: &mut App) -> impl IntoElement {
         let job_button = JobButton::use_job_button(window, cx);
 
+        let is_update_available = is_update_not_idle(cx);
+
         let theme = cx.theme();
 
         div()
@@ -101,6 +103,17 @@ impl RenderOnce for WindowTitle {
                             .w(px(40.))
                             .h(px(40.))
                             .child(img("contemporary-icon:/application").w(px(24.)).h(px(24.)))
+                            .when(is_update_available, |david| {
+                                david.child(
+                                    div()
+                                        .absolute()
+                                        .rounded(px(4.))
+                                        .size(px(8.))
+                                        .right(px(8.))
+                                        .bottom(px(8.))
+                                        .bg(rgb(0x0064c8)),
+                                )
+                            })
                             .when_some(self.application_menu, |this, application_menu| {
                                 this.child(application_menu.clone()).on_click(
                                     move |_, window, cx| {
@@ -184,4 +197,16 @@ impl RenderOnce for WindowTitle {
                 window.start_window_move()
             })
     }
+}
+
+fn is_update_not_idle(cx: &mut App) -> bool {
+    #[cfg(feature = "self-update")]
+    {
+        return cx
+            .try_global::<crate::self_update::SelfUpdate>()
+            .map(|self_update| self_update.state().is_visible())
+            .unwrap_or(false);
+    }
+
+    false
 }

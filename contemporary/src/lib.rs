@@ -17,3 +17,6 @@ pub mod surface;
 mod tracing;
 pub mod transition;
 pub mod window;
+
+#[cfg(feature = "self-update")]
+pub mod self_update;

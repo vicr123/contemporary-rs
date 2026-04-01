@@ -33,5 +33,18 @@
   "MENU_HELP": "Help",
   "MENU_HELP_CONTENTS": "{{application}} Help",
   "NOTIFICATION_REPLY": "Reply",
+  "UPDATE_NOTIFICATION_ERROR": "Version {{version}} of  {{application}} is available, but it could not be installed due to an error.",
+  "UPDATE_NOTIFICATION_ERROR_NO_VERSION": "An update for {{application}} is available, but it could not be installed due to an error.",
+  "UPDATE_NOTIFICATION_ERROR_TITLE": "Update Failed",
+  "UPDATE_NOTIFICATION_INSTALLING": "An update is being installed...",
+  "UPDATE_NOTIFICATION_INSTALLING_TITLE": "Installing Update",
+  "UPDATE_NOTIFICATION_INSTALL_BUTTON": "Install Update and Restart",
+  "UPDATE_NOTIFICATION_RESTART": "Restart {{application}} to update to version {{version}}.",
+  "UPDATE_NOTIFICATION_RESTART_BUTTON": "Restart",
+  "UPDATE_NOTIFICATION_RESTART_NO_VERSION": "Restart {{application}} to update to the latest version.",
+  "UPDATE_NOTIFICATION_TEXT": "{{application}} version {{version}} is available.",
+  "UPDATE_NOTIFICATION_TEXT_NO_VERSION": "A new version of {{application}} is available.",
+  "UPDATE_NOTIFICATION_TITLE": "Update Available",
+  "UPDATE_NOTIFICATION_TRY_AGAIN_BUTTON": "Try Again",
   "WINDOW_MENU": "Window"
 }

@@ -6,6 +6,10 @@ license = "GPL-3"
 keywords = ["cntp", "gpui"]
 categories = ["development-tools", "gui"]
 
+[features]
+self-update = ["isahc", "minisign-verify", "base64"]
+default = []
+
 [dependencies]
 cntp_i18n = { path = "../i18n/cntp_i18n", features = ["gpui"], version = "0.1.0" }
 cntp_macros = { path = "../cntp_macros", version = "0.1.0" }
@@ -26,6 +30,9 @@ tracing = { workspace = true }
 tracing-subscriber = { workspace = true }
 directories = { workspace = true }
 uuid = { version = "1.18.1", features = ["v4"] }
+isahc = { workspace = true, optional = true }
+minisign-verify = { workspace = true, optional = true }
+base64 = { workspace = true, optional = true }
 
 [target.'cfg(target_os="linux")'.dependencies]
 freedesktop-icons = "0.4.0"

@@ -1,4 +1,8 @@
+#[cfg(feature = "self-update")]
+pub mod update_notification;
+
 use crate::application::{ApplicationLink, Details};
+use crate::components::admonition::admonition;
 use crate::components::button::button;
 use crate::components::icon::icon;
 use crate::components::icon_text::icon_text;
@@ -8,9 +12,9 @@ use crate::styling::theme::{ThemeStorage, VariableColor};
 use cntp_i18n::{i18n_manager, tr};
 use gpui::prelude::FluentBuilder;
 use gpui::{
-    App, AppContext, ClickEvent, Context, Entity, FocusHandle, InteractiveElement, IntoElement,
-    Menu, MenuItem, OwnedMenu, OwnedMenuItem, ParentElement, Render, RenderOnce, SharedString,
-    Styled, Window, div, img, px,
+    App, AppContext, ClickEvent, Context, Div, Entity, FocusHandle, InteractiveElement,
+    IntoElement, Menu, MenuItem, OwnedMenu, OwnedMenuItem, ParentElement, Render, RenderOnce,
+    SharedString, Styled, Window, div, img, px,
 };
 use std::rc::Rc;
 
@@ -52,6 +56,8 @@ impl Render for ApplicationMenu {
             return div();
         }
 
+        let update_notification = update_notification(cx);
+
         let theme = cx.theme();
         let details = cx.global::<Details>();
 
@@ -87,19 +93,27 @@ impl Render for ApplicationMenu {
                                         .resolve_languages_or_default(&locale.messages),
                                 ),
                         )
-                        .when(!self.menu_stack.is_empty(), |div| {
-                            div.child(
-                                button("back-button")
-                                    .child(icon_text(
-                                        "go-previous".into(),
-                                        tr!("MENU_GO_BACK", "Back").into(),
-                                    ))
-                                    .on_click(cx.listener(|this, _, _, cx| {
-                                        this.menu_stack.pop();
-                                        cx.notify();
-                                    })),
-                            )
-                        })
+                        .when_else(
+                            self.menu_stack.is_empty(),
+                            |david| {
+                                david.when_some(update_notification, |div, update_notification| {
+                                    div.child(update_notification)
+                                })
+                            },
+                            |div| {
+                                div.child(
+                                    button("back-button")
+                                        .child(icon_text(
+                                            "go-previous".into(),
+                                            tr!("MENU_GO_BACK", "Back").into(),
+                                        ))
+                                        .on_click(cx.listener(|this, _, _, cx| {
+                                            this.menu_stack.pop();
+                                            cx.notify();
+                                        })),
+                                )
+                            },
+                        )
                         .child(
                             menu_list(
                                 self.menu_stack
@@ -209,6 +223,24 @@ impl Render for ApplicationMenu {
                 ),
         )
     }
+}
+
+fn update_notification(cx: &mut App) -> Option<Div> {
+    #[cfg(feature = "self-update")]
+    {
+        return cx
+            .try_global::<crate::self_update::SelfUpdate>()
+            .map(|self_update| self_update.state())
+            .and_then(|state| {
+                if state.is_visible() {
+                    Some(div().child(update_notification::UpdateNotification))
+                } else {
+                    None
+                }
+            });
+    }
+
+    None
 }
 
 #[derive(Clone)]

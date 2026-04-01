@@ -1,22 +1,25 @@
 // On Windows do NOT show a console window when opening the app
 #![cfg_attr(all(not(test), target_os = "windows"), windows_subsystem = "windows")]
 
-use std::rc::Rc;
-
 use crate::actions::{DarkTheme, LightTheme, SystemTheme, register_actions};
 use crate::main_window::MainWindow;
 use cntp_i18n::{I18N_MANAGER, tr, tr_load, tr_noop};
 use cntp_icon_tool_macros::application_icon;
 use contemporary::application::new_contemporary_application;
 use contemporary::macros::application_details;
+use contemporary::self_update::init_self_update;
 use contemporary::{
     application::{ApplicationLink, Details, License, Versions},
     setup::{Contemporary, ContemporaryMenus, setup_contemporary},
     window::contemporary_window_options,
 };
-use gpui::{App, Bounds, Menu, MenuItem, WindowBounds, WindowOptions, px, size};
+use gpui::http_client::Url;
+use gpui::{App, Bounds, Menu, MenuItem, WeakEntity, WindowBounds, WindowOptions, px, size};
 use indexmap::IndexMap;
 use smol_macros::main;
+use std::cell::RefCell;
+use std::rc::Rc;
+use std::str::FromStr;
 
 mod actions;
 mod components;
@@ -34,6 +37,80 @@ fn mane() {
         I18N_MANAGER.write().unwrap().load_source(tr_load!());
         let bounds = Bounds::centered(None, size(px(800.0), px(600.0)), cx);
 
+        let outer_window: Rc<RefCell<WeakEntity<MainWindow>>> =
+            Rc::new(RefCell::new(WeakEntity::new_invalid()));
+
+        setup_contemporary(
+            cx,
+            Contemporary {
+                details: Details {
+                    generatable: application_details!(),
+                    copyright_holder: "Victor Tran",
+                    copyright_year: "2025",
+                    application_version: "3.0",
+                    license: License::Gpl3OrLater,
+                    links: IndexMap::from([
+                        (
+                            ApplicationLink::HelpContents,
+                            "https://github.com/vicr123/contemporary-rs/",
+                        ),
+                        (
+                            ApplicationLink::FileBug,
+                            "https://github.com/vicr123/contemporary-rs/issues",
+                        ),
+                        (
+                            ApplicationLink::SourceCode,
+                            "https://github.com/vicr123/contemporary-rs",
+                        ),
+                    ]),
+                },
+                menus: ContemporaryMenus {
+                    menus: vec![Menu {
+                        name: tr!("MENU_THEME", "Theme").into(),
+                        items: vec![
+                            MenuItem::action(tr!("THEME_SYSTEM"), SystemTheme),
+                            MenuItem::action(tr!("THEME_LIGHT"), LightTheme),
+                            MenuItem::action(tr!("THEME_DARK"), DarkTheme),
+                        ],
+                    }],
+                    on_about: Rc::new({
+                        let outer_window = outer_window.clone();
+                        move |cx| {
+                            outer_window
+                                .borrow()
+                                .upgrade()
+                                .unwrap()
+                                .update(cx, |window, cx| {
+                                    window.about_surface_open(true);
+                                    cx.notify()
+                                })
+                        }
+                    }),
+                    on_settings: Some(Rc::new({
+                        let outer_window = outer_window.clone();
+                        move |cx| {
+                            outer_window
+                                .borrow()
+                                .upgrade()
+                                .unwrap()
+                                .update(cx, |window, cx| {
+                                    window.settings_surface_open(true);
+                                    cx.notify()
+                                })
+                        }
+                    })),
+                },
+            },
+        );
+
+        init_self_update(
+            Url::from_str("https://binchicken.vicr123.com").unwrap(),
+            "test_repository",
+            option_env!("BIN_CHICKEN_UUID"),
+            option_env!("BIN_CHICKEN_SIGNATURE_PUBLIC_KEY"),
+            cx,
+        );
+
         let default_window_options =
             contemporary_window_options(cx, "Contemporary Playground".into());
         register_actions(cx);
@@ -44,57 +121,7 @@ fn mane() {
             },
             |_, cx| {
                 let window = MainWindow::new(cx);
-                let weak_window = window.downgrade();
-                let weak_window_2 = window.downgrade();
-
-                setup_contemporary(
-                    cx,
-                    Contemporary {
-                        details: Details {
-                            generatable: application_details!(),
-                            copyright_holder: "Victor Tran",
-                            copyright_year: "2025",
-                            application_version: "3.0",
-                            license: License::Gpl3OrLater,
-                            links: IndexMap::from([
-                                (
-                                    ApplicationLink::HelpContents,
-                                    "https://github.com/vicr123/contemporary-rs/",
-                                ),
-                                (
-                                    ApplicationLink::FileBug,
-                                    "https://github.com/vicr123/contemporary-rs/issues",
-                                ),
-                                (
-                                    ApplicationLink::SourceCode,
-                                    "https://github.com/vicr123/contemporary-rs",
-                                ),
-                            ]),
-                        },
-                        menus: ContemporaryMenus {
-                            menus: vec![Menu {
-                                name: tr!("MENU_THEME", "Theme").into(),
-                                items: vec![
-                                    MenuItem::action(tr!("THEME_SYSTEM"), SystemTheme),
-                                    MenuItem::action(tr!("THEME_LIGHT"), LightTheme),
-                                    MenuItem::action(tr!("THEME_DARK"), DarkTheme),
-                                ],
-                            }],
-                            on_about: Rc::new(move |cx| {
-                                weak_window.upgrade().unwrap().update(cx, |window, cx| {
-                                    window.about_surface_open(true);
-                                    cx.notify()
-                                })
-                            }),
-                            on_settings: Some(Rc::new(move |cx| {
-                                weak_window_2.upgrade().unwrap().update(cx, |window, cx| {
-                                    window.settings_surface_open(true);
-                                    cx.notify()
-                                })
-                            })),
-                        },
-                    },
-                );
+                *outer_window.borrow_mut() = window.downgrade();
 
                 let versions = cx.global::<Versions>();
                 versions

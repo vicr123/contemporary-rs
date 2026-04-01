@@ -151,37 +151,37 @@
   },
   "KEY_ALT": {
     "context": "application_menu.rs",
-    "definedIn": "src/components/application_menu.rs:317",
+    "definedIn": "src/components/application_menu.rs:349",
     "plural": false,
     "description": "Alt key, as shown next to menu items"
   },
   "KEY_CONTROL": {
     "context": "application_menu.rs",
-    "definedIn": "src/components/application_menu.rs:311",
+    "definedIn": "src/components/application_menu.rs:343",
     "plural": false,
     "description": "Control key, as shown next to menu items"
   },
   "KEY_FUNCTION": {
     "context": "application_menu.rs",
-    "definedIn": "src/components/application_menu.rs:323",
+    "definedIn": "src/components/application_menu.rs:355",
     "plural": false,
     "description": "Function key, as shown next to menu items"
   },
   "KEY_PLATFORM": {
     "context": "application_menu.rs",
-    "definedIn": "src/components/application_menu.rs:320",
+    "definedIn": "src/components/application_menu.rs:352",
     "plural": false,
     "description": "Super key, as shown next to menu items"
   },
   "KEY_SHIFT": {
     "context": "application_menu.rs",
-    "definedIn": "src/components/application_menu.rs:314",
+    "definedIn": "src/components/application_menu.rs:346",
     "plural": false,
     "description": "Shift key, as shown next to menu items"
   },
   "MENU_GO_BACK": {
     "context": "application_menu.rs",
-    "definedIn": "src/components/application_menu.rs:95",
+    "definedIn": "src/components/application_menu.rs:108",
     "plural": false,
     "description": null
   },
@@ -200,6 +200,84 @@
   "NOTIFICATION_REPLY": {
     "context": "notification.rs",
     "definedIn": "src/platform_support/linux/notification.rs:175",
+    "plural": false,
+    "description": null
+  },
+  "UPDATE_NOTIFICATION_ERROR": {
+    "context": "update_notification.rs",
+    "definedIn": "src/components/application_menu/update_notification.rs:147",
+    "plural": false,
+    "description": null
+  },
+  "UPDATE_NOTIFICATION_ERROR_NO_VERSION": {
+    "context": "update_notification.rs",
+    "definedIn": "src/components/application_menu/update_notification.rs:139",
+    "plural": false,
+    "description": null
+  },
+  "UPDATE_NOTIFICATION_ERROR_TITLE": {
+    "context": "update_notification.rs",
+    "definedIn": "src/components/application_menu/update_notification.rs:130",
+    "plural": false,
+    "description": null
+  },
+  "UPDATE_NOTIFICATION_INSTALLING": {
+    "context": "update_notification.rs",
+    "definedIn": "src/components/application_menu/update_notification.rs:86",
+    "plural": false,
+    "description": null
+  },
+  "UPDATE_NOTIFICATION_INSTALLING_TITLE": {
+    "context": "update_notification.rs",
+    "definedIn": "src/components/application_menu/update_notification.rs:82",
+    "plural": false,
+    "description": null
+  },
+  "UPDATE_NOTIFICATION_INSTALL_BUTTON": {
+    "context": "update_notification.rs",
+    "definedIn": "src/components/application_menu/update_notification.rs:66",
+    "plural": false,
+    "description": null
+  },
+  "UPDATE_NOTIFICATION_RESTART": {
+    "context": "update_notification.rs",
+    "definedIn": "src/components/application_menu/update_notification.rs:109",
+    "plural": false,
+    "description": null
+  },
+  "UPDATE_NOTIFICATION_RESTART_BUTTON": {
+    "context": "update_notification.rs",
+    "definedIn": "src/components/application_menu/update_notification.rs:120",
+    "plural": false,
+    "description": null
+  },
+  "UPDATE_NOTIFICATION_RESTART_NO_VERSION": {
+    "context": "update_notification.rs",
+    "definedIn": "src/components/application_menu/update_notification.rs:102",
+    "plural": false,
+    "description": null
+  },
+  "UPDATE_NOTIFICATION_TEXT": {
+    "context": "update_notification.rs",
+    "definedIn": "src/components/application_menu/update_notification.rs:54",
+    "plural": false,
+    "description": null
+  },
+  "UPDATE_NOTIFICATION_TEXT_NO_VERSION": {
+    "context": "update_notification.rs",
+    "definedIn": "src/components/application_menu/update_notification.rs:47",
+    "plural": false,
+    "description": null
+  },
+  "UPDATE_NOTIFICATION_TITLE": {
+    "context": "update_notification.rs",
+    "definedIn": "src/components/application_menu/update_notification.rs:38",
+    "plural": false,
+    "description": null
+  },
+  "UPDATE_NOTIFICATION_TRY_AGAIN_BUTTON": {
+    "context": "update_notification.rs",
+    "definedIn": "src/components/application_menu/update_notification.rs:159",
     "plural": false,
     "description": null
   },
