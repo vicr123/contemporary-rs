@@ -205,19 +205,19 @@
   },
   "UPDATE_NOTIFICATION_ERROR": {
     "context": "update_notification.rs",
-    "definedIn": "src/components/application_menu/update_notification.rs:147",
+    "definedIn": "src/components/application_menu/update_notification.rs:149",
     "plural": false,
     "description": null
   },
   "UPDATE_NOTIFICATION_ERROR_NO_VERSION": {
     "context": "update_notification.rs",
-    "definedIn": "src/components/application_menu/update_notification.rs:139",
+    "definedIn": "src/components/application_menu/update_notification.rs:141",
     "plural": false,
     "description": null
   },
   "UPDATE_NOTIFICATION_ERROR_TITLE": {
     "context": "update_notification.rs",
-    "definedIn": "src/components/application_menu/update_notification.rs:130",
+    "definedIn": "src/components/application_menu/update_notification.rs:132",
     "plural": false,
     "description": null
   },
@@ -277,7 +277,7 @@
   },
   "UPDATE_NOTIFICATION_TRY_AGAIN_BUTTON": {
     "context": "update_notification.rs",
-    "definedIn": "src/components/application_menu/update_notification.rs:159",
+    "definedIn": "src/components/application_menu/update_notification.rs:161",
     "plural": false,
     "description": null
   },

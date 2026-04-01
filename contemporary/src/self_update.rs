@@ -224,6 +224,23 @@ impl SelfUpdate {
         }
     }
 
+    pub fn restart_application_after_update(&mut self, cx: &mut App) {
+        match &self.state {
+            SelfUpdateState::RestartToUpdate { .. } => {}
+            _ => return,
+        };
+
+        let update_result = match self_update_type() {
+            #[cfg(target_os = "linux")]
+            SelfUpdateType::AppImage => appimage::perform_appimage_self_restart(),
+            _ => Ok(()),
+        };
+
+        if update_result.is_ok() {
+            cx.quit();
+        }
+    }
+
     fn create_bin_chicken_client(&self, cx: &App) -> Option<BinChickenClient> {
         let details = cx.global::<Details>();
         let standard_dirs = details.standard_dirs()?;

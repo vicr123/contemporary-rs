@@ -120,7 +120,9 @@ impl RenderOnce for UpdateNotification {
                                         tr!("UPDATE_NOTIFICATION_RESTART_BUTTON", "Restart").into(),
                                     ))
                                     .on_click(|_, _, cx| {
-                                        cx.restart();
+                                        cx.update_global::<SelfUpdate, _>(|self_update, cx| {
+                                            self_update.restart_application_after_update(cx);
+                                        })
                                     }),
                             ),
                     )
