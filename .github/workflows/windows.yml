@@ -18,8 +18,8 @@ jobs:
         id: build_uuid
         run: |
           $BUILD_UUID = [guid]::NewGuid().ToString()
-          echo "BUILD_UUID=$BUILD_UUID" >> $GITHUB_OUTPUT
-          echo "BIN_CHICKEN_UUID=$BUILD_UUID" >> $GITHUB_ENV
+          echo "BUILD_UUID=$BUILD_UUID" >> $env:GITHUB_OUTPUT
+          echo "BIN_CHICKEN_UUID=$BUILD_UUID" >> $env:GITHUB_ENV
           echo "The UUID for this build is $BUILD_UUID"
       - uses: actions/checkout@v4
         with:
