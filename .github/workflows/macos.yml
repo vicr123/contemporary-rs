@@ -98,7 +98,7 @@ jobs:
       - name: Build Zip
         run: |
           cd target/bundle/x86_64-apple-darwin-aarch64-apple-darwin/release
-          zip -r "~/Contemporary_Playground-macOS.zip" *.app
+          zip -r ~/Contemporary_Playground-macOS.zip *.app
       - uses: actions/upload-artifact@v4
         with:
           name: contemporary-playground-macOS
