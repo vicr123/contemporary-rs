@@ -1,5 +1,8 @@
-use crate::components::application_menu::ApplicationMenu;
+use crate::components::anchorer::WithAnchorer;
+use crate::components::application_menu::{ApplicationMenu, update_notification};
 use crate::components::button::button;
+use crate::components::flyout::flyout;
+use crate::components::icon::icon;
 use crate::jobs::job_button::JobButton;
 use crate::styling::theme::ThemeStorage;
 use gpui::prelude::FluentBuilder;
@@ -79,6 +82,7 @@ impl RenderOnce for WindowTitle {
         let job_button = JobButton::use_job_button(window, cx);
 
         let is_update_available = is_update_not_idle(cx);
+        let update_flyout_open_state = window.use_state(cx, |_, _| false);
 
         let theme = cx.theme();
 
@@ -138,61 +142,102 @@ impl RenderOnce for WindowTitle {
                     .child(self.actions),
             )
             .window_control_area(WindowControlArea::Drag)
-            .child(div().flex().occlude().child(job_button.clone()).when(
-                !cfg!(target_os = "macos"),
-                |david| {
-                    david
-                        .child(
-                            button("window-minimise")
-                                .flat()
-                                .w(px(40.))
-                                .h(px(40.))
+            .child(
+                div()
+                    .flex()
+                    .occlude()
+                    .when(
+                        cfg!(target_os = "macos") && is_update_available,
+                        move |david| {
+                            david
                                 .child(
-                                    svg()
-                                        .w(px(24.))
-                                        .h(px(24.))
-                                        .text_color(theme.foreground)
-                                        .path("window-controls:/min"),
-                                )
-                                .on_click(move |_, window, _| window.minimize_window())
-                                .window_control_area(WindowControlArea::Min),
-                        )
-                        .child(
-                            button("window-maximise")
-                                .flat()
-                                .w(px(40.))
-                                .h(px(40.))
-                                .child(
-                                    svg()
-                                        .w(px(24.))
-                                        .h(px(24.))
-                                        .text_color(theme.foreground)
-                                        .path(if window.is_maximized() {
-                                            "window-controls:/res"
-                                        } else {
-                                            "window-controls:/max"
+                                    button("update-available")
+                                        .flat()
+                                        .w(px(40.))
+                                        .h(px(40.))
+                                        .child(icon("cloud-download".into()).size(24.))
+                                        .on_click({
+                                            let update_flyout_open_state =
+                                                update_flyout_open_state.clone();
+                                            move |_, _, cx| {
+                                                update_flyout_open_state.write(cx, true);
+                                            }
                                         }),
                                 )
-                                .on_click(move |_, window, _| window.zoom_window())
-                                .window_control_area(WindowControlArea::Max),
-                        )
-                        .child(
-                            button("window-close")
-                                .flat()
-                                .w(px(40.))
-                                .h(px(40.))
-                                .child(
-                                    svg()
-                                        .w(px(24.))
-                                        .h(px(24.))
-                                        .text_color(theme.foreground)
-                                        .path("window-controls:/close"),
-                                )
-                                .on_click(move |_, _, cx| cx.quit())
-                                .window_control_area(WindowControlArea::Close),
-                        )
-                },
-            ))
+                                .with_anchorer(move |david, bounds, _, cx| {
+                                    let update_notification = update_notification(cx);
+                                    david.child(
+                                        flyout(bounds)
+                                            .visible(*update_flyout_open_state.read(cx))
+                                            .anchor_bottom_right()
+                                            .w(px(400.))
+                                            .child(
+                                                div()
+                                                    .occlude()
+                                                    .p(px(4.))
+                                                    .child(update_notification.unwrap_or(div())),
+                                            )
+                                            .on_close(move |_, _, cx| {
+                                                update_flyout_open_state.write(cx, false);
+                                            }),
+                                    )
+                                })
+                        },
+                    )
+                    .child(job_button.clone())
+                    .when(!cfg!(target_os = "macos"), |david| {
+                        david
+                            .child(
+                                button("window-minimise")
+                                    .flat()
+                                    .w(px(40.))
+                                    .h(px(40.))
+                                    .child(
+                                        svg()
+                                            .w(px(24.))
+                                            .h(px(24.))
+                                            .text_color(theme.foreground)
+                                            .path("window-controls:/min"),
+                                    )
+                                    .on_click(move |_, window, _| window.minimize_window())
+                                    .window_control_area(WindowControlArea::Min),
+                            )
+                            .child(
+                                button("window-maximise")
+                                    .flat()
+                                    .w(px(40.))
+                                    .h(px(40.))
+                                    .child(
+                                        svg()
+                                            .w(px(24.))
+                                            .h(px(24.))
+                                            .text_color(theme.foreground)
+                                            .path(if window.is_maximized() {
+                                                "window-controls:/res"
+                                            } else {
+                                                "window-controls:/max"
+                                            }),
+                                    )
+                                    .on_click(move |_, window, _| window.zoom_window())
+                                    .window_control_area(WindowControlArea::Max),
+                            )
+                            .child(
+                                button("window-close")
+                                    .flat()
+                                    .w(px(40.))
+                                    .h(px(40.))
+                                    .child(
+                                        svg()
+                                            .w(px(24.))
+                                            .h(px(24.))
+                                            .text_color(theme.foreground)
+                                            .path("window-controls:/close"),
+                                    )
+                                    .on_click(move |_, _, cx| cx.quit())
+                                    .window_control_area(WindowControlArea::Close),
+                            )
+                    }),
+            )
             .on_mouse_down(MouseButton::Left, move |_, window, _| {
                 window.start_window_move()
             })

@@ -225,7 +225,7 @@ impl Render for ApplicationMenu {
     }
 }
 
-fn update_notification(cx: &mut App) -> Option<Div> {
+pub fn update_notification(cx: &mut App) -> Option<Div> {
     #[cfg(feature = "self-update")]
     {
         return cx

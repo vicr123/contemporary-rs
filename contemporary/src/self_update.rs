@@ -3,8 +3,12 @@ pub mod bin_chicken_client;
 #[cfg(target_os = "linux")]
 pub mod appimage;
 
+#[cfg(target_os = "macos")]
+mod macos;
+
 use crate::application::Details;
 use crate::self_update::bin_chicken_client::BinChickenClient;
+use gpui::private::anyhow;
 use gpui::private::anyhow::Error;
 use gpui::{App, AsyncApp, Global};
 use minisign_verify::PublicKey;
@@ -172,6 +176,7 @@ impl SelfUpdate {
 
         let update_information = match &self.state {
             SelfUpdateState::UpdateDownloadedInBackground { new_update } => new_update,
+            SelfUpdateState::UpdateDownloaded { new_update } => new_update,
             SelfUpdateState::InstallStepFailed { new_update, .. } => {
                 // Pause for 2 seconds in Update Installing state because
                 // the install is likely to fail again, and we need to give the user some feedback
@@ -201,9 +206,8 @@ impl SelfUpdate {
             #[cfg(target_os = "linux")]
             SelfUpdateType::AppImage => appimage::perform_appimage_self_update(&artifact_path),
             #[cfg(target_os = "macos")]
-            SelfUpdateType::Apple => {
-                // TODO
-                Ok(())
+            SelfUpdateType::MacApplicationBundle => {
+                macos::perform_macos_self_update(&artifact_path)
             }
             SelfUpdateType::NotSupported => Ok(()),
         };
@@ -268,7 +272,7 @@ pub enum SelfUpdateType {
     #[cfg(target_os = "linux")]
     AppImage,
     #[cfg(target_os = "macos")]
-    Apple,
+    MacApplicationBundle,
     NotSupported,
 }
 
@@ -278,7 +282,7 @@ impl SelfUpdateType {
             #[cfg(target_os = "linux")]
             SelfUpdateType::AppImage => true,
             #[cfg(target_os = "macos")]
-            SelfUpdateType::Apple => false,
+            SelfUpdateType::MacApplicationBundle => false,
             SelfUpdateType::NotSupported => false,
         }
     }
@@ -344,6 +348,11 @@ pub fn self_update_type() -> SelfUpdateType {
     #[cfg(target_os = "linux")]
     if std::env::var("APPIMAGE").map(PathBuf::from).is_ok() {
         return SelfUpdateType::AppImage;
+    }
+
+    #[cfg(target_os = "macos")]
+    if macos::can_macos_self_update() {
+        return SelfUpdateType::MacApplicationBundle;
     }
 
     SelfUpdateType::NotSupported

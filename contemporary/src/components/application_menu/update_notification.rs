@@ -2,7 +2,7 @@ use crate::application::Details;
 use crate::components::admonition::{AdmonitionSeverity, admonition};
 use crate::components::button::button;
 use crate::components::icon_text::icon_text;
-use crate::self_update::{SelfUpdate, SelfUpdateState, VisibleSelfUpdateState};
+use crate::self_update::{SelfUpdate, VisibleSelfUpdateState};
 use cntp_i18n::{i18n_manager, tr};
 use gpui::{
     App, BorrowAppContext, IntoElement, ParentElement, RenderOnce, Styled, Window, div, px,
@@ -114,7 +114,7 @@ impl RenderOnce for UpdateNotification {
                                 }
                             })
                             .child(
-                                button("perform-update")
+                                button("restart-after-update")
                                     .child(icon_text(
                                         "system-reboot".into(),
                                         tr!("UPDATE_NOTIFICATION_RESTART_BUTTON", "Restart").into(),
@@ -155,7 +155,7 @@ impl RenderOnce for UpdateNotification {
                                 }
                             })
                             .child(
-                                button("perform-update")
+                                button("retry-update")
                                     .child(icon_text(
                                         "view-refresh".into(),
                                         tr!("UPDATE_NOTIFICATION_TRY_AGAIN_BUTTON", "Try Again")

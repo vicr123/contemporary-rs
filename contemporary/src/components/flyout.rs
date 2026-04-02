@@ -26,6 +26,7 @@ pub enum FlyoutAnchorPoisition {
     #[default]
     BottomLeft,
     TopRight,
+    BottomRight,
 }
 
 pub fn flyout(anchorer_bounds: Bounds<Pixels>) -> Flyout {
@@ -69,6 +70,11 @@ impl Flyout {
         self
     }
 
+    pub fn anchor_bottom_right(mut self) -> Self {
+        self.anchor_position = FlyoutAnchorPoisition::BottomRight;
+        self
+    }
+
     pub fn anchor_gap(mut self, anchor_gap: Pixels) -> Self {
         self.anchor_gap = anchor_gap;
         self
@@ -93,6 +99,9 @@ impl RenderOnce for Flyout {
             }
             FlyoutAnchorPoisition::TopRight => {
                 self.anchorer_bounds.top_right() + point(self.anchor_gap, px(0.))
+            }
+            FlyoutAnchorPoisition::BottomRight => {
+                self.anchorer_bounds.bottom_right() + point(px(0.), self.anchor_gap)
             }
         };
 
