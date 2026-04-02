@@ -230,7 +230,7 @@ impl SelfUpdate {
             _ => return,
         };
 
-        let update_result = match self_update_type() {
+        let update_result: Result<(), Error> = match self_update_type() {
             #[cfg(target_os = "linux")]
             SelfUpdateType::AppImage => appimage::perform_appimage_self_restart(),
             _ => Ok(()),
