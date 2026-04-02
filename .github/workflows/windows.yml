@@ -43,12 +43,12 @@ jobs:
         working-directory: playground
       - uses: actions/upload-artifact@v4
         with:
-          name: contemporary-playground-linux-${{ env.ARCH }}
+          name: contemporary-playground-windows-${{ env.ARCH }}
           path: "Contemporary_Playground-${{ env.ARCH }}.exe"
       - name: Print build UUID
         env:
           BUILD_UUID: ${{ steps.build_uuid.outputs.BUILD_UUID }}
-        run: echo "$BUILD_UUID" > build_uuid.txt
+        run: echo "$env:BUILD_UUID" > build_uuid.txt
       - uses: actions/upload-artifact@v4
         with:
           name: build_uuid-${{ env.ARCH }}
@@ -69,7 +69,7 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v4
         with:
-          name: contemporary-playground-linux-${{ env.ARCH }}
+          name: contemporary-playground-windows-${{ env.ARCH }}
       - name: Download build UUID
         uses: actions/download-artifact@v4
         with:
