@@ -38,6 +38,6 @@ rustc-hash = "2"
 chrono = "0.4"
 directories = "6"
 smallvec = "1"
-isahc = { version = "1", features = ["default", "json", "static-curl"] }
+isahc = { version = "1", features = ["default", "json", "static-curl", "static-ssl"] }
 minisign-verify = "0.2"
 base64 = "0.22"
