@@ -7,7 +7,6 @@ use cntp_i18n::tr;
 use gpui::{
     App, BorrowAppContext, IntoElement, ParentElement, RenderOnce, Styled, Window, div, px,
 };
-use objc2::sel;
 
 #[derive(IntoElement)]
 pub struct SelfUpdateStatus;
