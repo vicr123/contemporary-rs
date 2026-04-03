@@ -41,3 +41,8 @@ smallvec = "1"
 isahc = { version = "1", features = ["default", "json", "static-curl", "static-ssl"] }
 minisign-verify = "0.2"
 base64 = "0.22"
+zed-reqwest = { version = "0.12.15-zed", default-features = false, features = [
+    "json",
+    "macos-system-configuration",
+    "rustls-tls-webpki-roots",
+] }

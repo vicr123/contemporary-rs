@@ -3,8 +3,6 @@ use base64::Engine;
 use base64::prelude::BASE64_STANDARD;
 use gpui::http_client::anyhow;
 use gpui::private::anyhow;
-use isahc::http::{StatusCode, Uri};
-use isahc::{AsyncReadResponseExt, HttpClient};
 use minisign_verify::{PublicKey, Signature};
 use serde::Deserialize;
 use smol::fs;
@@ -16,6 +14,7 @@ use std::path::PathBuf;
 use std::str::FromStr;
 use tracing::info;
 use url::Url;
+use zed_reqwest::{Client, StatusCode};
 
 pub struct BinChickenClient {
     working_directory: PathBuf,
@@ -24,7 +23,7 @@ pub struct BinChickenClient {
     our_uuid: &'static str,
     signature_public_key: PublicKey,
 
-    client: HttpClient,
+    client: Client,
 }
 
 #[derive(Deserialize)]
@@ -41,7 +40,7 @@ impl BinChickenClient {
         our_uuid: &'static str,
         signature_public_key: PublicKey,
     ) -> Self {
-        let client = HttpClient::new().unwrap();
+        let client = Client::new();
         Self {
             working_directory,
             url,
@@ -52,14 +51,15 @@ impl BinChickenClient {
             client,
         }
     }
-    
+
     pub fn artifact_local_path(&self, artifact_number: u64) -> PathBuf {
-        self.working_directory.join(format!("update-{}", artifact_number))
+        self.working_directory
+            .join(format!("update-{}", artifact_number))
             .join("update-data.bin")
     }
 
     pub async fn check_for_updates(&self) -> Result<Option<UpdateInformation>, anyhow::Error> {
-        let update_check_url = Uri::from_str(
+        let update_check_url = Url::parse(
             format!(
                 "{}api/repositories/{}/latest/by_uuid/{}",
                 self.url, self.repository, self.our_uuid
@@ -67,9 +67,7 @@ impl BinChickenClient {
             .as_str(),
         )?;
 
-        let x = update_check_url.to_string();
-
-        let mut response = self.client.get_async(update_check_url).await?;
+        let response = self.client.get(update_check_url).send().await?;
 
         match response.status() {
             StatusCode::OK => {
@@ -91,7 +89,7 @@ impl BinChickenClient {
     }
 
     pub async fn download_artifact(&self, artifact_number: u64) -> Result<(), anyhow::Error> {
-        let artifact_url = Uri::from_str(
+        let artifact_url = Url::from_str(
             format!(
                 "{}api/repositories/{}/artifacts/{}",
                 self.url, self.repository, artifact_number
@@ -138,7 +136,7 @@ impl BinChickenClient {
             let update_data_file = update_directory.join("update-data.bin");
             let update_signature_file = update_directory.join("update-data.bin.minisig");
 
-            let response = self.client.get_async(artifact_url).await?;
+            let response = self.client.get(artifact_url).send().await?;
 
             if response.status() != StatusCode::OK {
                 return Err(anyhow!("Unexpected status code: {}", response.status()));
@@ -153,16 +151,16 @@ impl BinChickenClient {
 
             let output_file = File::create(&update_data_file).await?;
 
-            if let Some(len) = response.body().len() {
+            if let Some(len) = response.content_length() {
                 info!("Update package is {} bytes long", len);
                 output_file.set_len(len).await?;
             }
 
             let mut output_file_write = BufWriter::new(output_file);
 
-            let mut bytes_stream = response.into_body().bytes();
+            let mut bytes_stream = response.bytes_stream();
             while let Some(Ok(bytes)) = bytes_stream.next().await {
-                output_file_write.write_all(&[bytes]).await?;
+                output_file_write.write_all(&bytes).await?;
             }
 
             output_file_write.flush().await?;
