@@ -1,3 +1,6 @@
+#[cfg(feature = "self-update")]
+mod self_update_status;
+
 use crate::application::{ApplicationLink, Details, Versions};
 use crate::components::button::button;
 use crate::components::constrainer::constrainer;
@@ -8,6 +11,7 @@ use crate::components::subtitle::subtitle;
 use crate::styling::theme::ThemeStorage;
 use crate::surface::surface;
 use cntp_i18n::{i18n_manager, tr};
+use gpui::prelude::FluentBuilder;
 use gpui::{App, ClickEvent, IntoElement, ParentElement, RenderOnce, Styled, Window, div, img, px};
 
 #[derive(IntoElement)]
@@ -171,6 +175,13 @@ impl RenderOnce for AboutSurface {
                                     ),
                             ),
                         )
+                        .when(cfg!(feature = "self-update"), |david| {
+                            #[cfg(feature = "self-update")]
+                            if cx.has_global::<crate::self_update::SelfUpdate>() {
+                                return david.child(self_update_status::SelfUpdateStatus);
+                            }
+                            david
+                        })
                         .child(
                             layer().child(
                                 div()

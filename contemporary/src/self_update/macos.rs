@@ -19,6 +19,7 @@ fn running_app_path() -> Result<PathBuf, anyhow::Error> {
 }
 
 pub fn can_macos_self_update() -> bool {
+    return true;
     running_app_path().is_ok()
 }
 pub fn perform_macos_self_update(package_path: &PathBuf) -> Result<(), anyhow::Error> {

@@ -13,6 +13,7 @@ use gpui::private::anyhow::Error;
 use gpui::{App, AsyncApp, Global};
 use minisign_verify::PublicKey;
 use std::path::PathBuf;
+use std::rc::Rc;
 use std::time::Duration;
 use tracing::{error, info};
 use url::Url;
@@ -25,7 +26,11 @@ pub struct UpdateInformation {
 
 pub enum SelfUpdateState {
     Idle,
+    UpdateChecking,
     UpdateAvailableBackground {
+        new_update: UpdateInformation,
+    },
+    UpdateDownloadingInBackground {
         new_update: UpdateInformation,
     },
     UpdateDownloaded {
@@ -98,12 +103,14 @@ pub struct SelfUpdate {
 impl Global for SelfUpdate {}
 
 impl SelfUpdate {
-    pub fn check_for_updates(&mut self, cx: &mut App) {
+    pub fn check_for_updates(&mut self, force: bool, cx: &mut App) {
         let Some(bin_chicken_client) = self.create_bin_chicken_client(cx) else {
             return;
         };
 
-        // TODO: Don't download updates on a metered connection or low data mode
+        // TODO: Don't download updates on a metered connection or low data mode unless force is on
+
+        self.state = SelfUpdateState::UpdateChecking;
 
         cx.spawn(async move |cx: &mut AsyncApp| {
             match bin_chicken_client.check_for_updates().await {
@@ -133,11 +140,16 @@ impl SelfUpdate {
             return;
         };
 
-        let update_information = match &self.state {
-            SelfUpdateState::UpdateAvailableBackground { new_update } => new_update,
+        let (update_information, new_state) = match &self.state {
+            SelfUpdateState::UpdateAvailableBackground { new_update } => (
+                new_update.clone(),
+                SelfUpdateState::UpdateDownloadingInBackground {
+                    new_update: new_update.clone(),
+                },
+            ),
             _ => return,
-        }
-        .clone();
+        };
+        self.state = new_state;
 
         cx.spawn(async move |cx: &mut AsyncApp| {
             match bin_chicken_client
@@ -320,7 +332,7 @@ pub fn init_self_update(
         loop {
             if cx
                 .update_global::<SelfUpdate, _>(|self_update, cx| {
-                    self_update.check_for_updates(cx);
+                    self_update.check_for_updates(false, cx);
                 })
                 .is_err()
             {

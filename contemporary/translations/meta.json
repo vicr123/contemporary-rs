@@ -1,37 +1,103 @@
 {
   "ABOUT_ARCH": {
     "context": "about_surface.rs",
-    "definedIn": "src/about_surface.rs:169",
+    "definedIn": "src/about_surface.rs:173",
     "plural": false,
     "description": null
   },
   "ABOUT_CONTEMPORARY": {
     "context": "about_surface.rs",
-    "definedIn": "src/about_surface.rs:155",
+    "definedIn": "src/about_surface.rs:159",
     "plural": false,
     "description": null
   },
   "ABOUT_COPYRIGHT": {
     "context": "about_surface.rs",
-    "definedIn": "src/about_surface.rs:180",
+    "definedIn": "src/about_surface.rs:191",
     "plural": false,
     "description": null
   },
   "ABOUT_PLATFORM": {
     "context": "about_surface.rs",
-    "definedIn": "src/about_surface.rs:162",
+    "definedIn": "src/about_surface.rs:166",
     "plural": false,
     "description": null
   },
   "ABOUT_SOFTWARE": {
     "context": "about_surface.rs",
-    "definedIn": "src/about_surface.rs:138",
+    "definedIn": "src/about_surface.rs:142",
     "plural": false,
     "description": null
   },
   "ABOUT_TITLE": {
     "context": "about_surface.rs",
-    "definedIn": "src/about_surface.rs:81",
+    "definedIn": "src/about_surface.rs:85",
+    "plural": false,
+    "description": null
+  },
+  "ABOUT_UPDATE_AVAILABLE": {
+    "context": "self_update_status.rs",
+    "definedIn": "src/about_surface/self_update_status.rs:39",
+    "plural": false,
+    "description": null
+  },
+  "ABOUT_UPDATE_CHECKING": {
+    "context": "self_update_status.rs",
+    "definedIn": "src/about_surface/self_update_status.rs:35",
+    "plural": false,
+    "description": null
+  },
+  "ABOUT_UPDATE_CHECK_AGAIN": {
+    "context": "self_update_status.rs",
+    "definedIn": "src/about_surface/self_update_status.rs:25",
+    "plural": false,
+    "description": null
+  },
+  "ABOUT_UPDATE_DOWNLOAD": {
+    "context": "self_update_status.rs",
+    "definedIn": "src/about_surface/self_update_status.rs:43",
+    "plural": false,
+    "description": null
+  },
+  "ABOUT_UPDATE_DOWNLOADING": {
+    "context": "self_update_status.rs",
+    "definedIn": "src/about_surface/self_update_status.rs:56",
+    "plural": false,
+    "description": null
+  },
+  "ABOUT_UPDATE_DOWNLOADING_VERSION": {
+    "context": "self_update_status.rs",
+    "definedIn": "src/about_surface/self_update_status.rs:62",
+    "plural": false,
+    "description": null
+  },
+  "ABOUT_UPDATE_FAILED": {
+    "context": "self_update_status.rs",
+    "definedIn": "src/about_surface/self_update_status.rs:105",
+    "plural": false,
+    "description": null
+  },
+  "ABOUT_UPDATE_INSTALLED": {
+    "context": "self_update_status.rs",
+    "definedIn": "src/about_surface/self_update_status.rs:90",
+    "plural": false,
+    "description": null
+  },
+  "ABOUT_UPDATE_INSTALLING": {
+    "context": "self_update_status.rs",
+    "definedIn": "src/about_surface/self_update_status.rs:86",
+    "plural": false,
+    "description": null
+  },
+  "ABOUT_UPDATE_NONE": {
+    "context": "self_update_status.rs",
+    "definedIn": "src/about_surface/self_update_status.rs:21",
+    "plural": false,
+    "description": null
+  },
+  "ABOUT_UPDATE_READY": {
+    "context": "self_update_status.rs",
+    "definedIn": "src/about_surface/self_update_status.rs:72",
     "plural": false,
     "description": null
   },
