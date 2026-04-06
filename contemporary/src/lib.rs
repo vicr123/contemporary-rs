@@ -20,3 +20,6 @@ pub mod window;
 
 #[cfg(feature = "self-update")]
 pub mod self_update;
+
+#[cfg(feature = "tokio")]
+mod tokio;

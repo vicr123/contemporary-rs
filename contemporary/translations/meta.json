@@ -37,67 +37,67 @@
   },
   "ABOUT_UPDATE_AVAILABLE": {
     "context": "self_update_status.rs",
-    "definedIn": "src/about_surface/self_update_status.rs:39",
+    "definedIn": "src/about_surface/self_update_status.rs:38",
     "plural": false,
     "description": null
   },
   "ABOUT_UPDATE_CHECKING": {
     "context": "self_update_status.rs",
-    "definedIn": "src/about_surface/self_update_status.rs:35",
+    "definedIn": "src/about_surface/self_update_status.rs:34",
     "plural": false,
     "description": null
   },
   "ABOUT_UPDATE_CHECK_AGAIN": {
     "context": "self_update_status.rs",
-    "definedIn": "src/about_surface/self_update_status.rs:25",
+    "definedIn": "src/about_surface/self_update_status.rs:24",
     "plural": false,
     "description": null
   },
   "ABOUT_UPDATE_DOWNLOAD": {
     "context": "self_update_status.rs",
-    "definedIn": "src/about_surface/self_update_status.rs:43",
+    "definedIn": "src/about_surface/self_update_status.rs:42",
     "plural": false,
     "description": null
   },
   "ABOUT_UPDATE_DOWNLOADING": {
     "context": "self_update_status.rs",
-    "definedIn": "src/about_surface/self_update_status.rs:56",
+    "definedIn": "src/about_surface/self_update_status.rs:55",
     "plural": false,
     "description": null
   },
   "ABOUT_UPDATE_DOWNLOADING_VERSION": {
     "context": "self_update_status.rs",
-    "definedIn": "src/about_surface/self_update_status.rs:62",
+    "definedIn": "src/about_surface/self_update_status.rs:61",
     "plural": false,
     "description": null
   },
   "ABOUT_UPDATE_FAILED": {
     "context": "self_update_status.rs",
-    "definedIn": "src/about_surface/self_update_status.rs:105",
+    "definedIn": "src/about_surface/self_update_status.rs:104",
     "plural": false,
     "description": null
   },
   "ABOUT_UPDATE_INSTALLED": {
     "context": "self_update_status.rs",
-    "definedIn": "src/about_surface/self_update_status.rs:90",
+    "definedIn": "src/about_surface/self_update_status.rs:89",
     "plural": false,
     "description": null
   },
   "ABOUT_UPDATE_INSTALLING": {
     "context": "self_update_status.rs",
-    "definedIn": "src/about_surface/self_update_status.rs:86",
+    "definedIn": "src/about_surface/self_update_status.rs:85",
     "plural": false,
     "description": null
   },
   "ABOUT_UPDATE_NONE": {
     "context": "self_update_status.rs",
-    "definedIn": "src/about_surface/self_update_status.rs:21",
+    "definedIn": "src/about_surface/self_update_status.rs:20",
     "plural": false,
     "description": null
   },
   "ABOUT_UPDATE_READY": {
     "context": "self_update_status.rs",
-    "definedIn": "src/about_surface/self_update_status.rs:72",
+    "definedIn": "src/about_surface/self_update_status.rs:71",
     "plural": false,
     "description": null
   },

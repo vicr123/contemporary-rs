@@ -238,6 +238,9 @@ pub fn setup_contemporary(cx: &mut App, mut application: Contemporary) {
     cx.set_global(WindowGlobals::new());
 
     setup_platform(cx);
+
+    #[cfg(feature = "tokio")]
+    crate::tokio::init(cx);
 }
 
 fn quit(_: &Quit, cx: &mut App) {

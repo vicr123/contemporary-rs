@@ -12,6 +12,7 @@ use smol::stream::StreamExt;
 use std::io::BufReader;
 use std::path::PathBuf;
 use std::str::FromStr;
+use std::sync::OnceLock;
 use tracing::info;
 use url::Url;
 use zed_reqwest::{Client, StatusCode};

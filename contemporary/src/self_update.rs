@@ -6,8 +6,12 @@ pub mod appimage;
 #[cfg(target_os = "macos")]
 mod macos;
 
+#[cfg(target_os = "windows")]
+mod win;
+
 use crate::application::Details;
 use crate::self_update::bin_chicken_client::BinChickenClient;
+use crate::tokio::tokio_helper::TokioHelper;
 use gpui::private::anyhow;
 use gpui::private::anyhow::Error;
 use gpui::{App, AsyncApp, Global};
@@ -113,7 +117,10 @@ impl SelfUpdate {
         self.state = SelfUpdateState::UpdateChecking;
 
         cx.spawn(async move |cx: &mut AsyncApp| {
-            match bin_chicken_client.check_for_updates().await {
+            match cx
+                .spawn_tokio(async move { bin_chicken_client.check_for_updates().await })
+                .await
+            {
                 Ok(Some(update_information)) => {
                     let _ = cx.update_global::<SelfUpdate, _>(|this, cx| {
                         this.state = SelfUpdateState::UpdateAvailableBackground {
@@ -152,8 +159,12 @@ impl SelfUpdate {
         self.state = new_state;
 
         cx.spawn(async move |cx: &mut AsyncApp| {
-            match bin_chicken_client
-                .download_artifact(update_information.artifact_number)
+            match cx
+                .spawn_tokio(async move {
+                    bin_chicken_client
+                        .download_artifact(update_information.artifact_number)
+                        .await
+                })
                 .await
             {
                 Ok(_) => {
@@ -221,6 +232,7 @@ impl SelfUpdate {
             SelfUpdateType::MacApplicationBundle => {
                 macos::perform_macos_self_update(&artifact_path)
             }
+            SelfUpdateType::WindowsPortable => win::perform_win_self_update(&artifact_path),
             SelfUpdateType::NotSupported => Ok(()),
         };
 
@@ -285,6 +297,8 @@ pub enum SelfUpdateType {
     AppImage,
     #[cfg(target_os = "macos")]
     MacApplicationBundle,
+    #[cfg(target_os = "windows")]
+    WindowsPortable,
     NotSupported,
 }
 
@@ -295,6 +309,8 @@ impl SelfUpdateType {
             SelfUpdateType::AppImage => true,
             #[cfg(target_os = "macos")]
             SelfUpdateType::MacApplicationBundle => false,
+            #[cfg(target_os = "windows")]
+            SelfUpdateType::WindowsPortable => false,
             SelfUpdateType::NotSupported => false,
         }
     }
@@ -365,6 +381,11 @@ pub fn self_update_type() -> SelfUpdateType {
     #[cfg(target_os = "macos")]
     if macos::can_macos_self_update() {
         return SelfUpdateType::MacApplicationBundle;
+    }
+
+    #[cfg(target_os = "windows")]
+    if win::can_self_update() {
+        return SelfUpdateType::WindowsPortable;
     }
 
     SelfUpdateType::NotSupported
