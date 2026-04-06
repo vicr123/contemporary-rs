@@ -232,6 +232,7 @@ impl SelfUpdate {
             SelfUpdateType::MacApplicationBundle => {
                 macos::perform_macos_self_update(&artifact_path)
             }
+            #[cfg(target_os = "windows")]
             SelfUpdateType::WindowsPortable => win::perform_win_self_update(&artifact_path),
             SelfUpdateType::NotSupported => Ok(()),
         };
