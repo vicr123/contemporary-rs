@@ -163,7 +163,7 @@
   },
   "COMPONENTS_BUTTON": {
     "context": "main_surface.rs",
-    "definedIn": "src/main_surface.rs:81",
+    "definedIn": "src/main_surface.rs:83",
     "plural": false,
     "description": null
   },
@@ -787,7 +787,7 @@
   },
   "PATTERNS_BUTTON": {
     "context": "main_surface.rs",
-    "definedIn": "src/main_surface.rs:90",
+    "definedIn": "src/main_surface.rs:92",
     "plural": false,
     "description": null
   },
@@ -919,7 +919,7 @@
   },
   "SKELETONS_TITLE": {
     "context": "skeletons.rs",
-    "definedIn": "src/components/skeletons.rs:54",
+    "definedIn": "src/components/skeletons.rs:52",
     "plural": false,
     "description": null
   },

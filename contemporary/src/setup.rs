@@ -153,6 +153,7 @@ pub fn setup_contemporary(cx: &mut App, mut application: Contemporary) {
             .resolve_languages_or_default(&locale.messages)
             .into(),
         items: application_menu_items,
+        disabled: false,
     }];
     let window_menu = application
         .menus
@@ -172,6 +173,7 @@ pub fn setup_contemporary(cx: &mut App, mut application: Contemporary) {
             )
             .into(),
             items: vec![],
+            disabled: false,
         })
     }
 
@@ -219,6 +221,7 @@ pub fn setup_contemporary(cx: &mut App, mut application: Contemporary) {
         )
         .into(),
         items: help_menu_items,
+        disabled: false,
     });
 
     cx.set_menus(menus);

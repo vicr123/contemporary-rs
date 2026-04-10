@@ -16,7 +16,6 @@ impl ApplicationLog {
                 cx.update_global::<ApplicationLog, ()>(|application_log, _| {
                     application_log.log_entries.push(entry);
                 })
-                .unwrap()
             }
         })
         .detach();

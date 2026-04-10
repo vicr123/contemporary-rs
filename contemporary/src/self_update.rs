@@ -347,14 +347,9 @@ pub fn init_self_update(
 
     cx.spawn(async move |cx: &mut AsyncApp| {
         loop {
-            if cx
-                .update_global::<SelfUpdate, _>(|self_update, cx| {
-                    self_update.check_for_updates(false, cx);
-                })
-                .is_err()
-            {
-                return;
-            }
+            cx.update_global::<SelfUpdate, _>(|self_update, cx| {
+                self_update.check_for_updates(false, cx);
+            });
 
             cx.background_executor()
                 .timer(Duration::from_hours(1))

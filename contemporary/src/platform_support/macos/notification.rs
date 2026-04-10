@@ -308,29 +308,22 @@ pub fn setup_apple_notifications(cx: &mut App) {
                 return;
             };
 
-            if cx
-                .update_global::<AppleNotificationGlobal, _>(|apple_notification_global, cx| {
-                    match trigger {
-                        NotificationActionActivation::Trigger(uuid) => {
-                            if let Some(handler) =
-                                apple_notification_global.action_handlers.get(&uuid)
-                            {
-                                handler(None, cx)
-                            }
-                        }
-                        NotificationActionActivation::TriggerReply(uuid, reply) => {
-                            if let Some(handler) =
-                                apple_notification_global.action_handlers.get(&uuid)
-                            {
-                                handler(Some(reply), cx)
-                            }
+            cx.update_global::<AppleNotificationGlobal, _>(|apple_notification_global, cx| {
+                match trigger {
+                    NotificationActionActivation::Trigger(uuid) => {
+                        if let Some(handler) = apple_notification_global.action_handlers.get(&uuid)
+                        {
+                            handler(None, cx)
                         }
                     }
-                })
-                .is_err()
-            {
-                return;
-            };
+                    NotificationActionActivation::TriggerReply(uuid, reply) => {
+                        if let Some(handler) = apple_notification_global.action_handlers.get(&uuid)
+                        {
+                            handler(Some(reply), cx)
+                        }
+                    }
+                }
+            })
         }
     })
     .detach();

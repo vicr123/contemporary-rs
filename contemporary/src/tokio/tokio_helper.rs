@@ -1,9 +1,8 @@
+use crate::tokio::Tokio;
 use gpui::http_client::anyhow;
-use gpui::private::anyhow;
 use gpui::private::anyhow::Error;
 use gpui::{AppContext, AsyncApp};
 use std::fmt::{Debug, Display};
-use crate::tokio::Tokio;
 
 pub trait TokioHelper {
     #[allow(async_fn_in_trait)]
@@ -24,10 +23,11 @@ impl TokioHelper for AsyncApp {
         Self: AppContext + Sized,
     {
         Tokio::spawn_result(self, async move { f.await.map_err(|e| anyhow!(e)) })
-            .unwrap()
             .await
-            .map_err(|e| e.downcast::<E>().unwrap_or_else(|e| {
-                panic!("error should be an anyhow error downcastable to E: {e:?}");
-            }))
+            .map_err(|e| {
+                e.downcast::<E>().unwrap_or_else(|e| {
+                    panic!("error should be an anyhow error downcastable to E: {e:?}");
+                })
+            })
     }
 }

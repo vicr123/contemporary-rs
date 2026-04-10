@@ -2,7 +2,6 @@
 pub mod update_notification;
 
 use crate::application::{ApplicationLink, Details};
-use crate::components::admonition::admonition;
 use crate::components::button::button;
 use crate::components::icon::icon;
 use crate::components::icon_text::icon_text;
@@ -41,10 +40,10 @@ impl ApplicationMenu {
         self.focus_handle = focus_handle;
     }
 
-    pub fn close(&mut self, window: &mut Window) {
+    pub fn close(&mut self, window: &mut Window, cx: &mut Context<Self>) {
         self.is_open = false;
         if let Some(focus_handle) = self.focus_handle.as_ref() {
-            focus_handle.focus(window);
+            focus_handle.focus(window, cx);
         };
         self.menu_stack.clear();
     }
@@ -67,7 +66,7 @@ impl Render for ApplicationMenu {
             scrim("application-menu")
                 .visible(self.is_open)
                 .on_click(cx.listener(|this, _, window, cx| {
-                    this.close(window);
+                    this.close(window, cx);
                     cx.notify();
                 }))
                 .child(
@@ -127,7 +126,7 @@ impl Render for ApplicationMenu {
                                 cx.notify();
                             }))
                             .on_menu_should_close(cx.listener(|this, _, window, cx| {
-                                this.close(window);
+                                this.close(window, cx);
                                 cx.notify();
                             })),
                         )
@@ -203,6 +202,7 @@ impl Render for ApplicationMenu {
                                                     Menu {
                                                         name: "Help".into(),
                                                         items: menu_items,
+                                                        disabled: false,
                                                     }
                                                     .owned(),
                                                 ));
@@ -325,6 +325,7 @@ impl RenderOnce for MenuList {
                 OwnedMenuItem::Action {
                     name,
                     action,
+                    disabled, checked,
                     os_action: _os_action,
                 } => {
                     let button_id: SharedString = format!("menu-item-{name}").into();
@@ -363,6 +364,8 @@ impl RenderOnce for MenuList {
                         .unwrap_or_default();
 
                     button(button_id)
+                        .when(disabled, |button| button.disabled())
+                        // TODO: when checked
                         .child(
                             div()
                                 .w_full()
@@ -374,7 +377,7 @@ impl RenderOnce for MenuList {
                         .flat()
                         .on_click(move |event, window, cx| {
                             if let Some(focus_handle) = focus_handle.as_ref() {
-                                focus_handle.focus(window);
+                                focus_handle.focus(window, cx);
                             };
 
                             let action = action.boxed_clone();

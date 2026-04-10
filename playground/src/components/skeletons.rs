@@ -26,12 +26,10 @@ impl Skeletons {
         cx.spawn(async move |cx: &mut AsyncApp| {
             loop {
                 cx.background_executor().timer(Duration::from_secs(1)).await;
-                skeletons_clone
-                    .update(cx, |skeletons, cx| {
-                        skeletons.skeleton_5_visible = !skeletons.skeleton_5_visible;
-                        cx.notify();
-                    })
-                    .unwrap()
+                skeletons_clone.update(cx, |skeletons, cx| {
+                    skeletons.skeleton_5_visible = !skeletons.skeleton_5_visible;
+                    cx.notify();
+                })
             }
         })
         .detach();

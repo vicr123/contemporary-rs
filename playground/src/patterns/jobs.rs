@@ -81,7 +81,7 @@ impl Render for Jobs {
                                                                 10000,
                                                             );
                                                             cx.notify();
-                                                        }).unwrap();
+                                                        });
                                                         cx.background_executor().timer(Duration::from_millis(10)).await;
                                                     }
                                                     job_clone.update(cx, |_, cx| {
@@ -90,7 +90,7 @@ impl Render for Jobs {
                                                             JobStatus::Completed
                                                         );
                                                         cx.notify();
-                                                    }).unwrap();
+                                                    });
                                                 }).detach();
                                                 cx.update_global::<JobManager, ()>(|job_manager, cx| {
                                                     job_manager.track_job(job_entity, cx);
@@ -116,7 +116,7 @@ impl Render for Jobs {
                                                             JobStatus::Completed
                                                         );
                                                         cx.notify();
-                                                    }).unwrap();
+                                                    });
                                                 }).detach();
                                                 cx.update_global::<JobManager, ()>(|job_manager, cx| {
                                                     job_manager.track_job(job_entity, cx);
@@ -143,7 +143,7 @@ impl Render for Jobs {
                                                                 10000,
                                                             );
                                                             cx.notify();
-                                                        }).unwrap();
+                                                        });
                                                         cx.background_executor().timer(Duration::from_millis(10)).await;
                                                     }
                                                     job_clone.update(cx, |_, cx| {
@@ -152,7 +152,7 @@ impl Render for Jobs {
                                                             JobStatus::Completed
                                                         );
                                                         cx.notify();
-                                                    }).unwrap();
+                                                    });
                                                 }).detach();
                                                 cx.update_global::<JobManager, ()>(|job_manager, cx| {
                                                     job_manager.track_job(job_entity, cx);
@@ -179,7 +179,7 @@ impl Render for Jobs {
                                                                 10000,
                                                             );
                                                             cx.notify();
-                                                        }).unwrap();
+                                                        });
                                                         cx.background_executor().timer(Duration::from_millis(10)).await;
                                                     }
                                                     job_clone.update(cx, |_, cx| {
@@ -188,7 +188,7 @@ impl Render for Jobs {
                                                             JobStatus::Failed
                                                         );
                                                         cx.notify();
-                                                    }).unwrap();
+                                                    });
                                                 }).detach();
                                                 cx.update_global::<JobManager, ()>(|job_manager, cx| {
                                                     job_manager.track_job(job_entity, cx);
@@ -241,7 +241,7 @@ impl Render for Jobs {
                                                                 500,
                                                             );
                                                             cx.notify();
-                                                        }).unwrap();
+                                                        });
                                                         cx.background_executor().timer(Duration::from_millis(10)).await;
                                                     }
                                                     job_clone.update(cx, |_, cx| {
@@ -250,7 +250,7 @@ impl Render for Jobs {
                                                             JobStatus::Completed
                                                         );
                                                         cx.notify();
-                                                    }).unwrap();
+                                                    });
                                                 }).detach();
                                                 cx.update_global::<JobManager, ()>(|job_manager, cx| {
                                                     job_manager.track_job_delayed_default(job_entity, cx);
@@ -277,7 +277,7 @@ impl Render for Jobs {
                                                                 10000,
                                                             );
                                                             cx.notify();
-                                                        }).unwrap();
+                                                        });
                                                         cx.background_executor().timer(Duration::from_millis(10)).await;
                                                     }
                                                     job_clone.update(cx, |_, cx| {
@@ -286,7 +286,7 @@ impl Render for Jobs {
                                                             JobStatus::Completed
                                                         );
                                                         cx.notify();
-                                                    }).unwrap();
+                                                    });
                                                 }).detach();
                                                 cx.update_global::<JobManager, ()>(|job_manager, cx| {
                                                     job_manager.track_job_delayed_default(job_entity, cx);
@@ -313,7 +313,7 @@ impl Render for Jobs {
                                                                 500,
                                                             );
                                                             cx.notify();
-                                                        }).unwrap();
+                                                        });
                                                         cx.background_executor().timer(Duration::from_millis(10)).await;
                                                     }
                                                     job_clone.update(cx, |_, cx| {
@@ -322,7 +322,7 @@ impl Render for Jobs {
                                                             JobStatus::Failed
                                                         );
                                                         cx.notify();
-                                                    }).unwrap();
+                                                    });
                                                 }).detach();
                                                 cx.update_global::<JobManager, ()>(|job_manager, cx| {
                                                     job_manager.track_job_delayed_default(job_entity, cx);

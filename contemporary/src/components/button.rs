@@ -9,6 +9,7 @@ use gpui::{
     Window, canvas, div, px,
 };
 use std::rc::Rc;
+use std::sync::Arc;
 
 #[derive(IntoElement)]
 pub struct Button {
@@ -130,7 +131,7 @@ impl InteractiveElement for Button {
 
 impl RenderOnce for Button {
     fn render(self, window: &mut Window, cx: &mut App) -> impl IntoElement {
-        let id = Box::new(self.id);
+        let id = Arc::new(self.id);
         let focus_handle = window.use_keyed_state(
             ElementId::NamedChild(id.clone(), "focus_handle".into()),
             cx,

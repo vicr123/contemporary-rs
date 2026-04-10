@@ -79,7 +79,6 @@ impl JobManager {
                     this.track_job(job_clone.clone(), cx);
                 }
             })
-            .unwrap()
         })
         .detach();
 

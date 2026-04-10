@@ -9,8 +9,8 @@ use gpui::{
     Entity, EntityInputHandler, FocusHandle, GlobalElementId, Hsla, InspectorElementId,
     InteractiveElement, IntoElement, KeyBinding, LayoutId, MouseButton, MouseDownEvent,
     MouseMoveEvent, MouseUpEvent, PaintQuad, ParentElement, Pixels, Point, Render, Rgba,
-    ShapedLine, Style, Styled, TextRun, TextStyleRefinement, UTF16Selection, UnderlineStyle,
-    Window, actions, div, fill, point, px, relative, size,
+    ShapedLine, Style, Styled, TextAlign, TextRun, TextStyleRefinement, UTF16Selection,
+    UnderlineStyle, Window, actions, div, fill, point, px, relative, size,
 };
 use std::ops::Range;
 use std::panic::Location;
@@ -905,6 +905,8 @@ impl Element for TextFieldElement {
             line.paint(
                 bounds.origin + point(px(0.), window.line_height() * i),
                 window.line_height(),
+                TextAlign::Left,
+                None,
                 window,
                 cx,
             )
@@ -912,9 +914,10 @@ impl Element for TextFieldElement {
         }
 
         if focus_handle.is_focused(window)
-            && let Some(cursor) = prepaint.cursor.take() {
-                window.paint_quad(cursor);
-            }
+            && let Some(cursor) = prepaint.cursor.take()
+        {
+            window.paint_quad(cursor);
+        }
 
         self.input.update(cx, |input, _cx| {
             input.last_layout = Some(prepaint.lines.clone());

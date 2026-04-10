@@ -222,12 +222,7 @@ impl Element for CheckboxBox {
             .clone()
             .and_then(|background| background.color())
             .unwrap_or(transparent_black().into());
-        let foreground = self
-            .style
-            .text
-            .clone()
-            .and_then(|text| text.color)
-            .unwrap_or(white());
+        let foreground = self.style.text.color.clone().unwrap_or(white());
         let theme = cx.theme();
 
         if self.draw_as_radio {

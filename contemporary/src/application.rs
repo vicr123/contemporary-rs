@@ -6,6 +6,7 @@ use cntp_config::LocalisedString;
 use cntp_i18n::tr;
 use directories::ProjectDirs;
 use gpui::{Application, Global, SharedString};
+use gpui_platform::application;
 use indexmap::IndexMap;
 use std::{
     collections::HashMap,
@@ -100,5 +101,5 @@ pub fn new_contemporary_application() -> Application {
         Box::new(WindowControlsAssetSource),
     ]);
 
-    Application::new().with_assets(Manager)
+    application().with_assets(Manager)
 }

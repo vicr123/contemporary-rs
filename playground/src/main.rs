@@ -72,6 +72,7 @@ fn mane() {
                             MenuItem::action(tr!("THEME_LIGHT"), LightTheme),
                             MenuItem::action(tr!("THEME_DARK"), DarkTheme),
                         ],
+                        disabled: false,
                     }],
                     on_about: Rc::new({
                         let outer_window = outer_window.clone();
