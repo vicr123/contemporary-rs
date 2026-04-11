@@ -5,6 +5,8 @@ use quote::quote;
 use syn::parse::{Parse, ParseStream};
 use syn::{Error, LitStr, parse_macro_input};
 
+static APPLICATION_ICON_ASSET_PATH: &str = "contemporary-icon:/application";
+
 struct ApplicationIconMacroInput {
     pub icon_file: LitStr,
 }
@@ -109,7 +111,21 @@ pub fn application_icon(body: TokenStream) -> TokenStream {
 #[proc_macro]
 pub fn application_icon_asset_path(_body: TokenStream) -> TokenStream {
     quote! {
-        "contemporary-icon:/application"
+        #APPLICATION_ICON_ASSET_PATH
+    }
+    .into()
+}
+
+#[proc_macro]
+pub fn application_icon_source(_body: TokenStream) -> TokenStream {
+    quote! {
+        {
+            use gpui::{ImageSource, Resource, SharedString};
+
+            ImageSource::Resource(Resource::Embedded(
+                SharedString::new_static(#APPLICATION_ICON_ASSET_PATH)
+            ))
+        }
     }
     .into()
 }
