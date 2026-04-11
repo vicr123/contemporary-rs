@@ -15,6 +15,7 @@
     "other": "You have clicked the default button {{count}} times (shift-click to reset)"
   },
   "BUTTONS_DEFAULT_BUTTON": "Default Button",
+  "BUTTONS_DEFAULT_BUTTON_TOOLTIP": "Click here to increment the click count",
   "BUTTONS_DISABLED_BUTTON": "Disabled Button",
   "BUTTONS_FLAT_BUTTON": "Flat Button",
   "BUTTONS_FLAT_CHECKABLE_BUTTON": "Flat Checkable Button",

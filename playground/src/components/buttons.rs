@@ -6,6 +6,7 @@ use contemporary::components::grandstand::grandstand;
 use contemporary::components::icon::icon;
 use contemporary::components::layer::layer;
 use contemporary::components::subtitle::subtitle;
+use contemporary::components::tooltip::simple_tooltip;
 use contemporary::platform_support::cx_platform_extensions::CxPlatformExtensions;
 use contemporary::styling::theme::ThemeStorage;
 use gpui::prelude::FluentBuilder;
@@ -153,7 +154,11 @@ impl Render for Buttons {
                                                         }
                                                         cx.notify()
                                                     },
-                                                )),
+                                                ))
+                                                .tooltip(simple_tooltip(tr!(
+                                                    "BUTTONS_DEFAULT_BUTTON_TOOLTIP",
+                                                    "Click here to increment the click count"
+                                                ))),
                                         ),
                                     )
                                     .child(div().flex_grow().child(

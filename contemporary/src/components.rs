@@ -26,3 +26,4 @@ pub mod subtitle;
 pub mod switch;
 pub mod text_field;
 pub mod toast;
+pub mod tooltip;

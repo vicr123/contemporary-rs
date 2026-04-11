@@ -4,9 +4,9 @@ use crate::components::raised::raised;
 use crate::styling::theme::{ThemeStorage, VariableColor, variable_transparent};
 use gpui::prelude::FluentBuilder;
 use gpui::{
-    AnyElement, App, ClickEvent, Div, ElementId, InteractiveElement, IntoElement, MouseButton,
-    ParentElement, RenderOnce, Rgba, Stateful, StatefulInteractiveElement, StyleRefinement, Styled,
-    Window, canvas, div, px,
+    AnyElement, AnyView, App, ClickEvent, Div, ElementId, InteractiveElement, IntoElement,
+    MouseButton, ParentElement, RenderOnce, Rgba, Stateful, StatefulInteractiveElement,
+    StyleRefinement, Styled, Window, canvas, div, px,
 };
 use std::rc::Rc;
 use std::sync::Arc;
@@ -25,6 +25,9 @@ pub struct Button {
 
     menu_items: Option<Vec<ContextMenuItem>>,
     menu_open_policy: ButtonMenuOpenPolicy,
+
+    tooltip: Option<Box<dyn Fn(&mut Window, &mut App) -> AnyView>>,
+    hoverable_tooltip: Option<Box<dyn Fn(&mut Window, &mut App) -> AnyView>>,
 
     on_click: Option<Rc<Box<dyn Fn(&ClickEvent, &mut Window, &mut App)>>>,
     id: ElementId,
@@ -58,6 +61,8 @@ pub fn button(id: impl Into<ElementId>) -> Button {
         menu_items: None,
         menu_open_policy: ButtonMenuOpenPolicy::AnyClick,
         on_click: None,
+        tooltip: None,
+        hoverable_tooltip: None,
     }
 }
 
@@ -113,6 +118,19 @@ impl Button {
 
     pub fn not_focusable(mut self) -> Self {
         self.focusable = false;
+        self
+    }
+
+    pub fn tooltip(mut self, tooltip: impl Fn(&mut Window, &mut App) -> AnyView + 'static) -> Self {
+        self.tooltip = Some(Box::new(tooltip));
+        self
+    }
+
+    pub fn hoverable_tooltip(
+        mut self,
+        tooltip: impl Fn(&mut Window, &mut App) -> AnyView + 'static,
+    ) -> Self {
+        self.hoverable_tooltip = Some(Box::new(tooltip));
         self
     }
 }
@@ -262,6 +280,12 @@ impl RenderOnce for Button {
                     }
                     .into_any_element()
                 }))
+            })
+            .when_some(self.tooltip, |david, build_tooltip| {
+                david.tooltip(build_tooltip)
+            })
+            .when_some(self.hoverable_tooltip, |david, build_tooltip| {
+                david.hoverable_tooltip(build_tooltip)
             })
     }
 }
