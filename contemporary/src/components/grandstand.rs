@@ -72,7 +72,7 @@ impl RenderOnce for Grandstand {
                         div.child(
                             button("back-button")
                                 .flat()
-                                .child(icon("go-previous".into()))
+                                .child(icon("go-previous"))
                                 .on_click(move |ev, window, cx| {
                                     on_click(ev, window, cx);
                                 }),

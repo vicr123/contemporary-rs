@@ -20,8 +20,8 @@ impl RenderOnce for SelfUpdateStatus {
                 tr!("ABOUT_UPDATE_NONE", "You are up to date."),
                 button("check-for-updates-again")
                     .child(icon_text(
-                        "view-refresh".into(),
-                        tr!("ABOUT_UPDATE_CHECK_AGAIN", "Check for updates").into(),
+                        "view-refresh",
+                        tr!("ABOUT_UPDATE_CHECK_AGAIN", "Check for updates"),
                     ))
                     .on_click(|_, _, cx| {
                         cx.update_global::<SelfUpdate, _>(|self_update, cx| {
@@ -38,8 +38,8 @@ impl RenderOnce for SelfUpdateStatus {
                 tr!("ABOUT_UPDATE_AVAILABLE", "An update is available."),
                 button("download")
                     .child(icon_text(
-                        "cloud-download".into(),
-                        tr!("ABOUT_UPDATE_DOWNLOAD", "Download Update").into(),
+                        "cloud-download",
+                        tr!("ABOUT_UPDATE_DOWNLOAD", "Download Update"),
                     ))
                     .on_click(|_, _, cx| {
                         cx.update_global::<SelfUpdate, _>(|self_update, cx| {
@@ -71,8 +71,8 @@ impl RenderOnce for SelfUpdateStatus {
                 tr!("ABOUT_UPDATE_READY", "An update is ready to install."),
                 button("download")
                     .child(icon_text(
-                        "package-upgrade".into(),
-                        tr!("UPDATE_NOTIFICATION_INSTALL_BUTTON").into(),
+                        "package-upgrade",
+                        tr!("UPDATE_NOTIFICATION_INSTALL_BUTTON"),
                     ))
                     .on_click(|_, _, cx| {
                         cx.update_global::<SelfUpdate, _>(|self_update, cx| {
@@ -89,8 +89,8 @@ impl RenderOnce for SelfUpdateStatus {
                 tr!("ABOUT_UPDATE_INSTALLED", "An update has been installed."),
                 button("download")
                     .child(icon_text(
-                        "system-reboot".into(),
-                        tr!("UPDATE_NOTIFICATION_RESTART_BUTTON").into(),
+                        "system-reboot",
+                        tr!("UPDATE_NOTIFICATION_RESTART_BUTTON"),
                     ))
                     .on_click(|_, _, cx| {
                         cx.update_global::<SelfUpdate, _>(|self_update, cx| {
@@ -106,8 +106,8 @@ impl RenderOnce for SelfUpdateStatus {
                 ),
                 button("retry-update")
                     .child(icon_text(
-                        "view-refresh".into(),
-                        tr!("UPDATE_NOTIFICATION_TRY_AGAIN_BUTTON").into(),
+                        "view-refresh",
+                        tr!("UPDATE_NOTIFICATION_TRY_AGAIN_BUTTON"),
                     ))
                     .on_click(|_, _, cx| {
                         cx.update_global::<SelfUpdate, _>(|self_update, cx| {

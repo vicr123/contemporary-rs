@@ -112,8 +112,7 @@ fn mane() {
             cx,
         );
 
-        let default_window_options =
-            contemporary_window_options(cx, "Contemporary Playground".into());
+        let default_window_options = contemporary_window_options(cx, "Contemporary Playground");
         register_actions(cx);
         cx.open_window(
             WindowOptions {

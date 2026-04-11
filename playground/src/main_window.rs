@@ -5,9 +5,7 @@ use contemporary::components::dialog_box::{StandardButton, dialog_box};
 use contemporary::components::pager::lift_animation::LiftAnimation;
 use contemporary::components::pager::pager;
 use contemporary::window::contemporary_window;
-use gpui::{
-    App, AppContext, Context, Entity, IntoElement, ParentElement, Render, Styled, Window,
-};
+use gpui::{App, AppContext, Context, Entity, IntoElement, ParentElement, Render, Styled, Window};
 
 pub struct MainWindow {
     main_surface: Entity<MainSurface>,
@@ -56,7 +54,7 @@ impl Render for MainWindow {
             .child(
                 dialog_box("settings-surface")
                     .visible(self.is_settings_surface_open)
-                    .title(tr!("SETTINGS", "Settings").into())
+                    .title(tr!("SETTINGS", "Settings"))
                     .content(tr!(
                         "SETTINGS_DESCRIPTION",
                         "The Settings surface would ordinarily display now."

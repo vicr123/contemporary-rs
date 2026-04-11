@@ -21,18 +21,15 @@ impl Render for Interstitials {
             .w_full()
             .h_full()
             .bg(theme.background)
-            .icon("sim-card-none".into())
-            .title(tr!("INTERSTITIAL_TITLE", "This is an interstitial!").into())
-            .message(
-                tr!(
-                    "INTERSTITIAL_MESSAGE",
-                    "Interstitials can be used to welcome the user, or to surface an error."
-                )
-                .into(),
-            )
+            .icon("sim-card-none")
+            .title(tr!("INTERSTITIAL_TITLE", "This is an interstitial!"))
+            .message(tr!(
+                "INTERSTITIAL_MESSAGE",
+                "Interstitials can be used to welcome the user, or to surface an error."
+            ))
             .child(button("interstitial-button").child(icon_text(
-                "sim-card".into(),
-                tr!("SIM_CARD_SETTINGS", "SIM Card Settings").into(),
+                "sim-card",
+                tr!("SIM_CARD_SETTINGS", "SIM Card Settings"),
             )))
     }
 }

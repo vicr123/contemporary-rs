@@ -8,10 +8,10 @@ pub struct IconText {
     icon_size: f32,
 }
 
-pub fn icon_text(icon: SharedString, text: SharedString) -> IconText {
+pub fn icon_text(icon: impl Into<SharedString>, text: impl Into<SharedString>) -> IconText {
     IconText {
-        icon,
-        text,
+        icon: icon.into(),
+        text: text.into(),
         icon_size: 16.,
     }
 }

@@ -91,8 +91,8 @@ impl RenderOnce for ContextMenuPopup {
                                                 .p(px(4.))
                                                 .when_some(icon.as_ref(), |div, icon| {
                                                     div.child(icon_text(
-                                                        icon.clone().into(),
-                                                        label.clone().into(),
+                                                        icon.clone(),
+                                                        label.clone(),
                                                     ))
                                                 })
                                                 .when_none(icon, |david| {

@@ -10,9 +10,9 @@ pub struct Icon {
     foreground: Option<Rgba>,
 }
 
-pub fn icon(name: SharedString) -> Icon {
+pub fn icon(name: impl Into<SharedString>) -> Icon {
     Icon {
-        name,
+        name: name.into(),
         size: 16.,
         foreground: None,
     }

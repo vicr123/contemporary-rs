@@ -212,7 +212,7 @@ impl Render for Buttons {
                                             )
                                             .child(
                                                 button("joined-button-menu")
-                                                    .child(icon("arrow-down".into()))
+                                                    .child(icon("arrow-down"))
                                                     .with_menu(context_menu_items.clone()),
                                             ),
                                     )

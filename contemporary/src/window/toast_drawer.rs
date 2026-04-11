@@ -198,7 +198,7 @@ impl Render for ToastDrawer {
                                                 .child(
                                                     button("close-button")
                                                         .flat()
-                                                        .child(icon("window-close".into()))
+                                                        .child(icon("window-close"))
                                                         .on_click(cx.listener(|this, _, _, cx| {
                                                             // Immediately start the dismiss animation
                                                             this.toast_animation_state =

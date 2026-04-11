@@ -197,7 +197,7 @@ impl Notifications {
                     .child(
                         button("dismiss-button")
                             .destructive()
-                            .child(icon("edit-delete".into()))
+                            .child(icon("edit-delete"))
                             .when(metadata.dismissed, |button| button.disabled())
                             .on_click(move |_, _, cx| {
                                 notification.dismiss(cx);
@@ -265,7 +265,7 @@ impl Render for Notifications {
                                                     .child(
                                                         button("delete-button")
                                                             .destructive()
-                                                            .child(icon("list-remove".into()))
+                                                            .child(icon("list-remove"))
                                                             .on_click(cx.listener(
                                                                 move |this, _, _, cx| {
                                                                     this.pending_actions.remove(i);
@@ -279,8 +279,8 @@ impl Render for Notifications {
                                     .child(
                                         button("add-action-button")
                                             .child(icon_text(
-                                                "list-add".into(),
-                                                tr!("NOTIFICATION_ADD_ACTION", "Add Action").into(),
+                                                "list-add",
+                                                tr!("NOTIFICATION_ADD_ACTION", "Add Action"),
                                             ))
                                             .on_click(cx.listener(|this, _, _, cx| {
                                                 this.pending_actions.push(
@@ -353,9 +353,8 @@ impl Render for Notifications {
                                     .child(
                                         button("send-notification-button")
                                             .child(icon_text(
-                                                "mail-send".into(),
-                                                tr!("NOTIFICATION_SEND", "Post Notification")
-                                                    .into(),
+                                                "mail-send",
+                                                tr!("NOTIFICATION_SEND", "Post Notification"),
                                             ))
                                             .on_click(cx.listener(Self::trigger_notification)),
                                     ),

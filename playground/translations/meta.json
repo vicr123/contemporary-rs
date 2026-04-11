@@ -559,7 +559,7 @@
   },
   "INTERSTITIAL_MESSAGE": {
     "context": "interstitials.rs",
-    "definedIn": "src/components/interstitials.rs:28",
+    "definedIn": "src/components/interstitials.rs:27",
     "plural": false,
     "description": null
   },
@@ -847,13 +847,13 @@
   },
   "POSTED_NOTIFICATIONS_DESCRIPTION": {
     "context": "notifications.rs",
-    "definedIn": "src/patterns/notifications.rs:380",
+    "definedIn": "src/patterns/notifications.rs:379",
     "plural": false,
     "description": null
   },
   "POSTED_NOTIFICATIONS_TITLE": {
     "context": "notifications.rs",
-    "definedIn": "src/patterns/notifications.rs:371",
+    "definedIn": "src/patterns/notifications.rs:370",
     "plural": false,
     "description": null
   },
@@ -889,13 +889,13 @@
   },
   "SETTINGS": {
     "context": "main_window.rs",
-    "definedIn": "src/main_window.rs:59",
+    "definedIn": "src/main_window.rs:57",
     "plural": false,
     "description": null
   },
   "SETTINGS_DESCRIPTION": {
     "context": "main_window.rs",
-    "definedIn": "src/main_window.rs:61",
+    "definedIn": "src/main_window.rs:59",
     "plural": false,
     "description": null
   },
@@ -919,7 +919,7 @@
   },
   "SIM_CARD_SETTINGS": {
     "context": "interstitials.rs",
-    "definedIn": "src/components/interstitials.rs:35",
+    "definedIn": "src/components/interstitials.rs:32",
     "plural": false,
     "description": null
   },

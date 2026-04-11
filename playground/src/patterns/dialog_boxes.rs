@@ -93,7 +93,7 @@ impl Render for DialogBoxes {
             )
             .child(dialog_box("informational-dialog-box").visible(self.informational_dialog_open)
                 .title(
-                    tr!("DIALOG_BOX_INFORMATIONAL_TITLE", "Message Box Title").into()
+                    tr!("DIALOG_BOX_INFORMATIONAL_TITLE", "Message Box Title")
                 )
                 .content(
                     tr!("DIALOG_BOX_INFORMATIONAL_CONTENT", "This is the main text of the message box. It conveys the primary information or message that needs to be communicated to the user.")
@@ -132,7 +132,7 @@ The Goblin King leans forward, his putrid breath washing over you as he awaits y
             )
             .child(dialog_box("nuclear-reactor-dialog-box").visible(self.nuclear_reactor_dialog_box_open)
                 .title(
-                    tr!("DIALOG_BOX_NUCLEAR_REACTOR_TITLE", "Danger! Extremely Hazardous Operation!").into()
+                    tr!("DIALOG_BOX_NUCLEAR_REACTOR_TITLE", "Danger! Extremely Hazardous Operation!")
                 )
                 .content_text_informational(tr!("DIALOG_BOX_NUCLEAR_REACTOR_CONTENT", r#"You are attempting to perform an extremely hazardous operation that could result in catastrophic consequences if not executed with extreme caution.
 
@@ -142,10 +142,10 @@ This operation has the potential to cause:
 - Breach of security protocols
 - Unrecoverable corruption
 
-Only proceed if you are an expert user and fully understand the risks involved. Improper handling could lead to disastrous and irreparable results."#).into(),
+Only proceed if you are an expert user and fully understand the risks involved. Improper handling could lead to disastrous and irreparable results."#),
                                             tr!("DIALOG_BOX_NUCLEAR_REACTOR_INFORMATIONAL",
                                                     "This is the informative text displayed in grey below the main text. It provides additional context and warnings about the dangerous operation. Attempting this operation without proper expertise and precautions could lead to permanent and devastating damage to your systems and data. Proceed at your own risk."
-                                                ).into(),
+                                                ),
                 )
                 .standard_button(StandardButton::Cancel, cx.listener(|this, _, _, cx| {
                     this.nuclear_reactor_dialog_box_open = false;
@@ -168,11 +168,11 @@ Only proceed if you are an expert user and fully understand the risks involved. 
             )
             .child(dialog_box("error-dialog-box").visible(self.error_dialog_box_open)
                 .title(
-                    tr!("DIALOG_BOX_ERROR_TITLE", "This disc can't be erased.").into()
+                    tr!("DIALOG_BOX_ERROR_TITLE", "This disc can't be erased.")
                 )
                 .content_text_informational(
-                    tr!("DIALOG_BOX_ERROR_CONTENT", "The disc in the drive is not rewritable, so it cannot be erased.").into(),
-                    tr!("DIALOG_BOX_ERROR_INFO", "If you need to destroy the data on the disc, you should physically break it in half.").into()
+                    tr!("DIALOG_BOX_ERROR_CONTENT", "The disc in the drive is not rewritable, so it cannot be erased."),
+                    tr!("DIALOG_BOX_ERROR_INFO", "If you need to destroy the data on the disc, you should physically break it in half.")
                 )
                 .standard_button(StandardButton::Sorry, cx.listener(|this, _, _, _cx| {
                     this.error_dialog_box_open = false;

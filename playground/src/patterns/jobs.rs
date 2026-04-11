@@ -65,7 +65,7 @@ impl Render for Jobs {
                                         button("job-normal")
                                             .child(tr!("JOB_NORMAL_START", "Start Normal Job"))
                                             .on_click(cx.listener(|_this, _, _, cx| {
-                                                let job = Rc::new(RefCell::new(StandardJob::new(tr!("STANDARD_JOB_TITLE", "Standard Job").into(), tr!("STANDARD_JOB_IN_PROGRESS_DESCRIPTION", "A description of the current task can go here.").into())));
+                                                let job = Rc::new(RefCell::new(StandardJob::new(tr!("STANDARD_JOB_TITLE", "Standard Job"), tr!("STANDARD_JOB_IN_PROGRESS_DESCRIPTION", "A description of the current task can go here."))));
                                                 let job_entity_source = job.clone();
                                                 let job_entity = cx.new::<Jobling>(|_| {
                                                     job_entity_source
@@ -86,7 +86,7 @@ impl Render for Jobs {
                                                     }
                                                     job_clone.update(cx, |_, cx| {
                                                         job.borrow_mut().update_job_status(
-                                                            tr!("STANDARD_JOB_COMPLETE_DESCRIPTION", "This job is now complete.").into(),
+                                                            tr!("STANDARD_JOB_COMPLETE_DESCRIPTION", "This job is now complete."),
                                                             JobStatus::Completed
                                                         );
                                                         cx.notify();
@@ -101,7 +101,7 @@ impl Render for Jobs {
                                         button("job-indeterminate")
                                             .child(tr!("JOB_INDETERMINATE_START", "Start Indeterminate Processing Job"))
                                             .on_click(cx.listener(|_this, _, _, cx| {
-                                                let job = Rc::new(RefCell::new(StandardJob::new_indeterminate(tr!("INDETERMINATE_JOB_TITLE", "Indeterminate Job").into(), tr!("INDETERMINATE_JOB_IN_PROGRESS_DESCRIPTION", "This job has an indeterminate progress bar.").into())));
+                                                let job = Rc::new(RefCell::new(StandardJob::new_indeterminate(tr!("INDETERMINATE_JOB_TITLE", "Indeterminate Job"), tr!("INDETERMINATE_JOB_IN_PROGRESS_DESCRIPTION", "This job has an indeterminate progress bar."))));
                                                 let job_entity_source = job.clone();
                                                 let job_entity = cx.new::<Jobling>(|_| {
                                                     job_entity_source
@@ -112,7 +112,7 @@ impl Render for Jobs {
                                                     cx.background_executor().timer(Duration::from_secs(10)).await;
                                                     job_clone.update(cx, |_, cx| {
                                                         job.borrow_mut().update_job_status(
-                                                            tr!("STANDARD_JOB_COMPLETE_DESCRIPTION").into(),
+                                                            tr!("STANDARD_JOB_COMPLETE_DESCRIPTION"),
                                                             JobStatus::Completed
                                                         );
                                                         cx.notify();
@@ -127,7 +127,7 @@ impl Render for Jobs {
                                         button("job-transient")
                                             .child(tr!("JOB_TRANSIENT_START", "Start Transient Job"))
                                             .on_click(cx.listener(|_this, _, _, cx| {
-                                                let job = Rc::new(RefCell::new(StandardJob::new_transient(tr!("TRANSIENT_JOB_TITLE", "Transient Job").into(), tr!("TRANSIENT_JOB_IN_PROGRESS_DESCRIPTION", "This job is transient and so will disappear automatically once it is complete.").into())));
+                                                let job = Rc::new(RefCell::new(StandardJob::new_transient(tr!("TRANSIENT_JOB_TITLE", "Transient Job"), tr!("TRANSIENT_JOB_IN_PROGRESS_DESCRIPTION", "This job is transient and so will disappear automatically once it is complete."))));
                                                 let job_entity_source = job.clone();
                                                 let job_entity = cx.new::<Jobling>(|_| {
                                                     job_entity_source
@@ -148,7 +148,7 @@ impl Render for Jobs {
                                                     }
                                                     job_clone.update(cx, |_, cx| {
                                                         job.borrow_mut().update_job_status(
-                                                            tr!("STANDARD_JOB_COMPLETE_DESCRIPTION").into(),
+                                                            tr!("STANDARD_JOB_COMPLETE_DESCRIPTION"),
                                                             JobStatus::Completed
                                                         );
                                                         cx.notify();
@@ -163,7 +163,7 @@ impl Render for Jobs {
                                         button("job-failing")
                                             .child(tr!("JOB_FAILING_START", "Start Failing Job"))
                                             .on_click(cx.listener(|_this, _, _, cx| {
-                                                let job = Rc::new(RefCell::new(StandardJob::new(tr!("FAILING_JOB_TITLE", "Failing Job").into(), tr!("FAILING_JOB_IN_PROGRESS_DESCRIPTION", "This job will fail halfway through processing.").into())));
+                                                let job = Rc::new(RefCell::new(StandardJob::new(tr!("FAILING_JOB_TITLE", "Failing Job"), tr!("FAILING_JOB_IN_PROGRESS_DESCRIPTION", "This job will fail halfway through processing."))));
                                                 let job_entity_source = job.clone();
                                                 let job_entity = cx.new::<Jobling>(|_| {
                                                     job_entity_source
@@ -184,7 +184,7 @@ impl Render for Jobs {
                                                     }
                                                     job_clone.update(cx, |_, cx| {
                                                         job.borrow_mut().update_job_status(
-                                                            tr!("FAILING_JOB_COMPLETE_DESCRIPTION", "This job has failed.").into(),
+                                                            tr!("FAILING_JOB_COMPLETE_DESCRIPTION", "This job has failed."),
                                                             JobStatus::Failed
                                                         );
                                                         cx.notify();
@@ -225,7 +225,7 @@ impl Render for Jobs {
                                         button("delayed-tracking-quick")
                                             .child(tr!("JOB_DELAYED_TRACKING_QUICK", "Start Quick Job with Delayed Tracking"))
                                             .on_click(cx.listener(|_this, _, _, cx| {
-                                                let job = Rc::new(RefCell::new(StandardJob::new(tr!("JOB_DELAYED_TRACKING_QUICK_TITLE", "Quick Delayed Tracking").into(), tr!("JOB_DELAYED_TRACKING_QUICK_IN_PROGRESS_DESCRIPTION", "This job won't show up in the job menu because it finishes too quickly.").into())));
+                                                let job = Rc::new(RefCell::new(StandardJob::new(tr!("JOB_DELAYED_TRACKING_QUICK_TITLE", "Quick Delayed Tracking"), tr!("JOB_DELAYED_TRACKING_QUICK_IN_PROGRESS_DESCRIPTION", "This job won't show up in the job menu because it finishes too quickly."))));
                                                 let job_entity_source = job.clone();
                                                 let job_entity = cx.new::<Jobling>(|_| {
                                                     job_entity_source
@@ -246,7 +246,7 @@ impl Render for Jobs {
                                                     }
                                                     job_clone.update(cx, |_, cx| {
                                                         job.borrow_mut().update_job_status(
-                                                            tr!("STANDARD_JOB_COMPLETE_DESCRIPTION").into(),
+                                                            tr!("STANDARD_JOB_COMPLETE_DESCRIPTION"),
                                                             JobStatus::Completed
                                                         );
                                                         cx.notify();
@@ -261,7 +261,7 @@ impl Render for Jobs {
                                         button("delayed-tracking-slow")
                                             .child(tr!("JOB_DELAYED_TRACKING_SLOW", "Start Slow Job with Delayed Tracking"))
                                             .on_click(cx.listener(|_this, _, _, cx| {
-                                                let job = Rc::new(RefCell::new(StandardJob::new(tr!("JOB_DELAYED_TRACKING_SLOW_TITLE", "Slow Delayed Tracking").into(), tr!("JOB_DELAYED_TRACKING_SLOW_IN_PROGRESS_DESCRIPTION", "This job will show up in the job menu because it takes some time to finish.").into())));
+                                                let job = Rc::new(RefCell::new(StandardJob::new(tr!("JOB_DELAYED_TRACKING_SLOW_TITLE", "Slow Delayed Tracking"), tr!("JOB_DELAYED_TRACKING_SLOW_IN_PROGRESS_DESCRIPTION", "This job will show up in the job menu because it takes some time to finish."))));
                                                 let job_entity_source = job.clone();
                                                 let job_entity = cx.new::<Jobling>(|_| {
                                                     job_entity_source
@@ -282,7 +282,7 @@ impl Render for Jobs {
                                                     }
                                                     job_clone.update(cx, |_, cx| {
                                                         job.borrow_mut().update_job_status(
-                                                            tr!("STANDARD_JOB_COMPLETE_DESCRIPTION").into(),
+                                                            tr!("STANDARD_JOB_COMPLETE_DESCRIPTION"),
                                                             JobStatus::Completed
                                                         );
                                                         cx.notify();
@@ -297,7 +297,7 @@ impl Render for Jobs {
                                         button("delayed-tracking-quick-fail")
                                             .child(tr!("JOB_DELAYED_TRACKING_QUICK_FAIL", "Start Failing Job with Delayed Tracking"))
                                             .on_click(cx.listener(|_this, _, _, cx| {
-                                                let job = Rc::new(RefCell::new(StandardJob::new(tr!("JOB_DELAYED_TRACKING_QUICK_FAIL_TITLE", "Failing Job with Delayed Tracking").into(), tr!("JOB_DELAYED_TRACKING_QUICK_FAIL_IN_PROGRESS_DESCRIPTION", "This job shows up in the job menu before the specified delay because it fails before then.").into())));
+                                                let job = Rc::new(RefCell::new(StandardJob::new(tr!("JOB_DELAYED_TRACKING_QUICK_FAIL_TITLE", "Failing Job with Delayed Tracking"), tr!("JOB_DELAYED_TRACKING_QUICK_FAIL_IN_PROGRESS_DESCRIPTION", "This job shows up in the job menu before the specified delay because it fails before then."))));
                                                 let job_entity_source = job.clone();
                                                 let job_entity = cx.new::<Jobling>(|_| {
                                                     job_entity_source
@@ -318,7 +318,7 @@ impl Render for Jobs {
                                                     }
                                                     job_clone.update(cx, |_, cx| {
                                                         job.borrow_mut().update_job_status(
-                                                            tr!("FAILING_JOB_COMPLETE_DESCRIPTION").into(),
+                                                            tr!("FAILING_JOB_COMPLETE_DESCRIPTION"),
                                                             JobStatus::Failed
                                                         );
                                                         cx.notify();

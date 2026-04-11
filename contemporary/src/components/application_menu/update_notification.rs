@@ -61,12 +61,11 @@ impl RenderOnce for UpdateNotification {
                             .child(
                                 button("perform-update")
                                     .child(icon_text(
-                                        "package-upgrade".into(),
+                                        "package-upgrade",
                                         tr!(
                                             "UPDATE_NOTIFICATION_INSTALL_BUTTON",
                                             "Install Update and Restart"
-                                        )
-                                        .into(),
+                                        ),
                                     ))
                                     .on_click(|_, _, cx| {
                                         cx.update_global::<SelfUpdate, _>(|self_update, cx| {
@@ -116,8 +115,8 @@ impl RenderOnce for UpdateNotification {
                             .child(
                                 button("restart-after-update")
                                     .child(icon_text(
-                                        "system-reboot".into(),
-                                        tr!("UPDATE_NOTIFICATION_RESTART_BUTTON", "Restart").into(),
+                                        "system-reboot",
+                                        tr!("UPDATE_NOTIFICATION_RESTART_BUTTON", "Restart"),
                                     ))
                                     .on_click(|_, _, cx| {
                                         cx.update_global::<SelfUpdate, _>(|self_update, cx| {
@@ -157,9 +156,8 @@ impl RenderOnce for UpdateNotification {
                             .child(
                                 button("retry-update")
                                     .child(icon_text(
-                                        "view-refresh".into(),
-                                        tr!("UPDATE_NOTIFICATION_TRY_AGAIN_BUTTON", "Try Again")
-                                            .into(),
+                                        "view-refresh",
+                                        tr!("UPDATE_NOTIFICATION_TRY_AGAIN_BUTTON", "Try Again"),
                                     ))
                                     .on_click(|_, _, cx| {
                                         cx.update_global::<SelfUpdate, _>(|self_update, cx| {

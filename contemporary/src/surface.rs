@@ -162,7 +162,7 @@ impl RenderOnce for WindowTitle {
                                         .flat()
                                         .w(px(40.))
                                         .h(px(40.))
-                                        .child(icon("cloud-download".into()).size(24.))
+                                        .child(icon("cloud-download").size(24.))
                                         .on_click({
                                             let update_flyout_open_state =
                                                 update_flyout_open_state.clone();

@@ -262,12 +262,15 @@ fn resize_edge(
     Some(edge)
 }
 
-pub fn contemporary_window_options(cx: &mut App, window_title: SharedString) -> WindowOptions {
+pub fn contemporary_window_options(
+    cx: &mut App,
+    window_title: impl Into<SharedString>,
+) -> WindowOptions {
     let bounds = Bounds::centered(None, size(px(500.), px(500.0)), cx);
     WindowOptions {
         window_bounds: Some(WindowBounds::Windowed(bounds)),
         titlebar: Some(TitlebarOptions {
-            title: Some(window_title),
+            title: Some(window_title.into()),
             appears_transparent: true,
             traffic_light_position: Some(point(px(10.0), px(10.0))),
         }),

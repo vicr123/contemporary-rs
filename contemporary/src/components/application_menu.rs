@@ -109,8 +109,8 @@ impl Render for ApplicationMenu {
                                 div.child(
                                     button("back-button")
                                         .child(icon_text(
-                                            "go-previous".into(),
-                                            tr!("MENU_GO_BACK", "Back").into(),
+                                            "go-previous",
+                                            tr!("MENU_GO_BACK", "Back"),
                                         ))
                                         .on_click(cx.listener(|this, _, _, cx| {
                                             this.menu_stack.pop();
@@ -145,7 +145,7 @@ impl Render for ApplicationMenu {
                                     .child(
                                         button("menu-help-button")
                                             .flat()
-                                            .child(icon("help-contents".into()))
+                                            .child(icon("help-contents"))
                                             .size(px(32.))
                                             .on_click(cx.listener(|this, _, _, cx| {
                                                 let details = cx.global::<Details>();
@@ -218,7 +218,7 @@ impl Render for ApplicationMenu {
                                     .child(
                                         button("menu-exit-button")
                                             .flat()
-                                            .child(icon("application-exit".into()))
+                                            .child(icon("application-exit"))
                                             .size(px(32.))
                                             .on_click(|_, _, cx| {
                                                 cx.quit();
@@ -315,7 +315,7 @@ impl RenderOnce for MenuList {
                                 .text_ellipsis()
                                 .overflow_hidden()
                                 .child(menu.name.clone())
-                                .child(icon("go-next".into())),
+                                .child(icon("go-next")),
                         )
                         .flat()
                         .on_click(move |_event, window, cx| {

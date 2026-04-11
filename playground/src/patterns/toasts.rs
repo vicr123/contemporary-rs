@@ -159,8 +159,8 @@ impl Render for Toasts {
                                     .child(
                                         button("send-toast-button")
                                             .child(icon_text(
-                                                "mail-send".into(),
-                                                tr!("TOAST_SEND", "Post Toast").into(),
+                                                "mail-send",
+                                                tr!("TOAST_SEND", "Post Toast"),
                                             ))
                                             .on_click(cx.listener(Self::trigger_toast)),
                                     ),

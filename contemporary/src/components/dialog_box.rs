@@ -47,7 +47,7 @@ impl StandardButton {
             StandardButton::Sorry => ("sorry-button", "dialog-ok", tr!("DIALOG_SORRY", "Sorry")),
         };
 
-        button(id).child(icon_text(icon.into(), text.into()))
+        button(id).child(icon_text(icon, text))
     }
 }
 
@@ -66,8 +66,8 @@ pub fn dialog_box(id: impl Into<ElementId>) -> DialogBox {
 }
 
 impl DialogBox {
-    pub fn title(mut self, title: SharedString) -> Self {
-        self.title = Some(title);
+    pub fn title(mut self, title: impl Into<SharedString>) -> Self {
+        self.title = Some(title.into());
         self
     }
 
@@ -78,12 +78,12 @@ impl DialogBox {
 
     pub fn content_text_informational(
         mut self,
-        text: SharedString,
-        informational_text: SharedString,
+        text: impl Into<SharedString>,
+        informational_text: impl Into<SharedString>,
     ) -> Self {
         self.content = DialogBoxContent {
-            content: text,
-            informational_content: informational_text,
+            content: text.into(),
+            informational_content: informational_text.into(),
         }
         .into_any_element();
         self

@@ -29,16 +29,16 @@ pub fn interstitial() -> Interstitial {
 }
 
 impl Interstitial {
-    pub fn icon(mut self, icon: SharedString) -> Self {
-        self.icon = Some(icon);
+    pub fn icon(mut self, icon: impl Into<SharedString>) -> Self {
+        self.icon = Some(icon.into());
         self
     }
-    pub fn title(mut self, title: SharedString) -> Self {
-        self.title = Some(title);
+    pub fn title(mut self, title: impl Into<SharedString>) -> Self {
+        self.title = Some(title.into());
         self
     }
-    pub fn message(mut self, message: SharedString) -> Self {
-        self.message = Some(message);
+    pub fn message(mut self, message: impl Into<SharedString>) -> Self {
+        self.message = Some(message.into());
         self
     }
     pub fn icon_size(mut self, icon_size: f32) -> Self {

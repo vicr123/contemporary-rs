@@ -271,31 +271,31 @@
   },
   "UPDATE_NOTIFICATION_ERROR": {
     "context": "update_notification.rs",
-    "definedIn": "src/components/application_menu/update_notification.rs:149",
+    "definedIn": "src/components/application_menu/update_notification.rs:148",
     "plural": false,
     "description": null
   },
   "UPDATE_NOTIFICATION_ERROR_NO_VERSION": {
     "context": "update_notification.rs",
-    "definedIn": "src/components/application_menu/update_notification.rs:141",
+    "definedIn": "src/components/application_menu/update_notification.rs:140",
     "plural": false,
     "description": null
   },
   "UPDATE_NOTIFICATION_ERROR_TITLE": {
     "context": "update_notification.rs",
-    "definedIn": "src/components/application_menu/update_notification.rs:132",
+    "definedIn": "src/components/application_menu/update_notification.rs:131",
     "plural": false,
     "description": null
   },
   "UPDATE_NOTIFICATION_INSTALLING": {
     "context": "update_notification.rs",
-    "definedIn": "src/components/application_menu/update_notification.rs:86",
+    "definedIn": "src/components/application_menu/update_notification.rs:85",
     "plural": false,
     "description": null
   },
   "UPDATE_NOTIFICATION_INSTALLING_TITLE": {
     "context": "update_notification.rs",
-    "definedIn": "src/components/application_menu/update_notification.rs:82",
+    "definedIn": "src/components/application_menu/update_notification.rs:81",
     "plural": false,
     "description": null
   },
@@ -307,19 +307,19 @@
   },
   "UPDATE_NOTIFICATION_RESTART": {
     "context": "update_notification.rs",
-    "definedIn": "src/components/application_menu/update_notification.rs:109",
+    "definedIn": "src/components/application_menu/update_notification.rs:108",
     "plural": false,
     "description": null
   },
   "UPDATE_NOTIFICATION_RESTART_BUTTON": {
     "context": "update_notification.rs",
-    "definedIn": "src/components/application_menu/update_notification.rs:120",
+    "definedIn": "src/components/application_menu/update_notification.rs:119",
     "plural": false,
     "description": null
   },
   "UPDATE_NOTIFICATION_RESTART_NO_VERSION": {
     "context": "update_notification.rs",
-    "definedIn": "src/components/application_menu/update_notification.rs:102",
+    "definedIn": "src/components/application_menu/update_notification.rs:101",
     "plural": false,
     "description": null
   },
@@ -343,7 +343,7 @@
   },
   "UPDATE_NOTIFICATION_TRY_AGAIN_BUTTON": {
     "context": "update_notification.rs",
-    "definedIn": "src/components/application_menu/update_notification.rs:161",
+    "definedIn": "src/components/application_menu/update_notification.rs:160",
     "plural": false,
     "description": null
   },

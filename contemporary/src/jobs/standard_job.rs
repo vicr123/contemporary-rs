@@ -16,34 +16,40 @@ pub struct StandardJob {
 }
 
 impl StandardJob {
-    pub fn new(title: SharedString, description: SharedString) -> Self {
+    pub fn new(title: impl Into<SharedString>, description: impl Into<SharedString>) -> Self {
         Self {
             progress: 0,
             max_progress: 100,
-            title,
-            description,
+            title: title.into(),
+            description: description.into(),
             status: JobStatus::InProgress,
             cancellation_callback: None,
             transient: false,
         }
     }
 
-    pub fn new_indeterminate(title: SharedString, description: SharedString) -> Self {
+    pub fn new_indeterminate(
+        title: impl Into<SharedString>,
+        description: impl Into<SharedString>,
+    ) -> Self {
         Self {
             max_progress: 0,
             ..Self::new(title, description)
         }
     }
 
-    pub fn new_transient(title: SharedString, description: SharedString) -> Self {
+    pub fn new_transient(
+        title: impl Into<SharedString>,
+        description: impl Into<SharedString>,
+    ) -> Self {
         Self {
             transient: true,
             ..Self::new(title, description)
         }
     }
 
-    pub fn update_job_status(&mut self, description: SharedString, status: JobStatus) {
-        self.description = description;
+    pub fn update_job_status(&mut self, description: impl Into<SharedString>, status: JobStatus) {
+        self.description = description.into();
         self.status = status;
     }
 

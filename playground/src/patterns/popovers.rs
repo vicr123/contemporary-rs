@@ -151,8 +151,8 @@ impl Render for Popovers {
                                                 .child(
                                                     button("informational-dialog-box")
                                                         .child(icon_text(
-                                                            "dialog-ok".into(),
-                                                            tr!("CLOSE", "Close").into(),
+                                                            "dialog-ok",
+                                                            tr!("CLOSE", "Close"),
                                                         ))
                                                         .on_click(cx.listener(|this, _, _, cx| {
                                                             this.informational_popover_open = false;
