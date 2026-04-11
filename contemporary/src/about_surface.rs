@@ -12,7 +12,10 @@ use crate::styling::theme::ThemeStorage;
 use crate::surface::surface;
 use cntp_i18n::{i18n_manager, tr};
 use gpui::prelude::FluentBuilder;
-use gpui::{App, ClickEvent, IntoElement, ParentElement, RenderOnce, Styled, Window, div, img, px};
+use gpui::{
+    App, ClickEvent, ImageSource, IntoElement, ParentElement, RenderOnce, Resource, SharedString,
+    Styled, Window, div, img, px,
+};
 
 #[derive(IntoElement)]
 struct AboutSurfaceButtons;
@@ -105,7 +108,14 @@ impl RenderOnce for AboutSurface {
                                         .flex()
                                         .items_center()
                                         .gap(px(12.))
-                                        .child(img("contemporary-icon:/application").w(px(40.))) // TODO: Icon goes here
+                                        .child(
+                                            img(ImageSource::Resource(Resource::Embedded(
+                                                SharedString::new_static(
+                                                    "contemporary-icon:/application",
+                                                ),
+                                            )))
+                                            .w(px(40.)),
+                                        ) // TODO: Icon goes here
                                         .child(
                                             div().text_size(px(35.)).child(
                                                 details

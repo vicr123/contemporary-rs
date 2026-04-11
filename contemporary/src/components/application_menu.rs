@@ -11,9 +11,9 @@ use crate::styling::theme::{ThemeStorage, VariableColor};
 use cntp_i18n::{i18n_manager, tr};
 use gpui::prelude::FluentBuilder;
 use gpui::{
-    App, AppContext, ClickEvent, Context, Div, Entity, FocusHandle, InteractiveElement,
-    IntoElement, Menu, MenuItem, OwnedMenu, OwnedMenuItem, ParentElement, Render, RenderOnce,
-    SharedString, Styled, Window, div, img, px,
+    App, AppContext, ClickEvent, Context, Div, Entity, FocusHandle, ImageSource,
+    InteractiveElement, IntoElement, Menu, MenuItem, OwnedMenu, OwnedMenuItem, ParentElement,
+    Render, RenderOnce, Resource, SharedString, Styled, Window, div, img, px,
 };
 use std::rc::Rc;
 
@@ -84,7 +84,13 @@ impl Render for ApplicationMenu {
                                 .flex()
                                 .p(px(7.))
                                 .gap(px(6.))
-                                .child(img("contemporary-icon:/application").w(px(24.)).h(px(24.)))
+                                .child(
+                                    img(ImageSource::Resource(Resource::Embedded(
+                                        SharedString::new_static("contemporary-icon:/application"),
+                                    )))
+                                    .w(px(24.))
+                                    .h(px(24.)),
+                                )
                                 .child(
                                     details
                                         .generatable

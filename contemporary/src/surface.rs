@@ -7,8 +7,9 @@ use crate::jobs::job_button::JobButton;
 use crate::styling::theme::ThemeStorage;
 use gpui::prelude::FluentBuilder;
 use gpui::{
-    AnyElement, App, Entity, InteractiveElement, IntoElement, MouseButton, ParentElement,
-    RenderOnce, Styled, Window, WindowControlArea, div, img, px, rgb, svg,
+    AnyElement, App, Entity, ImageSource, InteractiveElement, IntoElement, MouseButton,
+    ParentElement, RenderOnce, Resource, SharedString, Styled, Window, WindowControlArea, div, img,
+    px, rgb, svg,
 };
 
 #[derive(IntoElement)]
@@ -106,7 +107,13 @@ impl RenderOnce for WindowTitle {
                             .flat()
                             .w(px(40.))
                             .h(px(40.))
-                            .child(img("contemporary-icon:/application").w(px(24.)).h(px(24.)))
+                            .child(
+                                img(ImageSource::Resource(Resource::Embedded(
+                                    SharedString::new_static("contemporary-icon:/application"),
+                                )))
+                                .w(px(24.))
+                                .h(px(24.)),
+                            )
                             .when(is_update_available, |david| {
                                 david.child(
                                     div()
