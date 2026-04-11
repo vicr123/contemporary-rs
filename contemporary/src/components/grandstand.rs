@@ -1,15 +1,16 @@
 use std::rc::Rc;
 
+use crate::components::button::button;
+use crate::components::icon::icon;
+use crate::components::layer::layer;
+use crate::components::tooltip::simple_tooltip;
+use crate::styling::theme::ThemeStorage;
+use cntp_i18n::tr;
 use gpui::{
     AnyElement, App, ClickEvent, Div, ElementId, InteractiveElement, IntoElement, ParentElement,
     RenderOnce, SharedString, Stateful, StyleRefinement, Styled, Window, div,
     prelude::FluentBuilder, px,
 };
-
-use crate::components::button::button;
-use crate::components::icon::icon;
-use crate::components::layer::layer;
-use crate::styling::theme::ThemeStorage;
 
 type ClickHandler = Option<Rc<dyn Fn(&ClickEvent, &mut Window, &mut App)>>;
 
@@ -75,7 +76,8 @@ impl RenderOnce for Grandstand {
                                 .child(icon("go-previous"))
                                 .on_click(move |ev, window, cx| {
                                     on_click(ev, window, cx);
-                                }),
+                                })
+                                .tooltip(simple_tooltip(tr!("GRANDSTAND_BACK", "Back"))),
                         )
                     })
                     .child(

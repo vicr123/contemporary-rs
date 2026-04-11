@@ -191,6 +191,12 @@
     "plural": false,
     "description": null
   },
+  "GRANDSTAND_BACK": {
+    "context": "grandstand.rs",
+    "definedIn": "src/components/grandstand.rs:80",
+    "plural": false,
+    "description": null
+  },
   "HELP": {
     "context": "application.rs",
     "definedIn": "src/application.rs:32",
