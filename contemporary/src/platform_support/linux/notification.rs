@@ -51,16 +51,14 @@ impl PostedNotification for LinuxPostedNotification {
                 .await
                 .unwrap_or_default();
 
-            let Ok(ashpd_notification) = cx.update(|cx| {
+            let ashpd_notification = cx.update(|cx| {
                 contemporary_notification_to_ashpd_notification(
                     notification,
                     supported_categories,
                     supported_button_purpose,
                     cx,
                 )
-            }) else {
-                return;
-            };
+            });
 
             let _ = notification_portal
                 .add_notification(id_clone.as_str(), ashpd_notification)
@@ -88,16 +86,14 @@ pub fn post_notification(notification: Notification, cx: &mut App) -> Box<dyn Po
             .await
             .unwrap_or_default();
 
-        let Ok(ashpd_notification) = cx.update(|cx| {
+        let ashpd_notification = cx.update(|cx| {
             contemporary_notification_to_ashpd_notification(
                 notification,
                 supported_categories,
                 supported_button_purpose,
                 cx,
             )
-        }) else {
-            return;
-        };
+        });
 
         let _ = notification_portal
             .add_notification(id_clone.as_str(), ashpd_notification)
@@ -205,28 +201,23 @@ pub fn setup_linux_notifications(cx: &mut App) {
         };
 
         while let Some(action) = action_invoked.next().await {
-            if cx
-                .update_global::<LinuxNotificationGlobal, _>(|linux_notification_global, cx| {
-                    let Ok(uuid) = Uuid::try_parse(action.name()) else {
-                        return;
-                    };
+            cx.update_global::<LinuxNotificationGlobal, _>(|linux_notification_global, cx| {
+                let Ok(uuid) = Uuid::try_parse(action.name()) else {
+                    return;
+                };
 
-                    let Some(handler) = linux_notification_global.action_handlers.get(&uuid) else {
-                        return;
-                    };
+                let Some(handler) = linux_notification_global.action_handlers.get(&uuid) else {
+                    return;
+                };
 
-                    if let Some(reply_with_text) = action.parameter().get(2)
-                        && let Ok(reply) = reply_with_text.downcast_ref::<String>()
-                    {
-                        handler(Some(reply), cx);
-                    } else {
-                        handler(None, cx);
-                    }
-                })
-                .is_err()
-            {
-                return;
-            }
+                if let Some(reply_with_text) = action.parameter().get(2)
+                    && let Ok(reply) = reply_with_text.downcast_ref::<String>()
+                {
+                    handler(Some(reply), cx);
+                } else {
+                    handler(None, cx);
+                }
+            })
         }
     })
     .detach();
