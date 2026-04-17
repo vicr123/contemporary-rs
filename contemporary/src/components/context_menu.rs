@@ -14,14 +14,6 @@ actions!(context_menu, [Escape]);
 #[derive(IntoElement)]
 pub struct ContextMenu {
     items: Vec<ContextMenuItem>,
-    as_deferred: bool,
-}
-
-impl ContextMenu {
-    pub fn render_as_deferred(mut self, as_deferred: bool) -> Self {
-        self.as_deferred = as_deferred;
-        self
-    }
 }
 
 #[derive(Clone)]
@@ -53,23 +45,20 @@ impl RenderOnce for ContextMenu {
                     }),
                 );
             })
-            .child(
-                raised(move |_, _, cx| {
-                    // Context Menu Popup
-                    let context_menu_open = context_menu_state_2.read(cx);
-                    ContextMenuPopup {
-                        items,
-                        open_position: context_menu_open
-                            .as_ref()
-                            .map(|context_menu| context_menu.open_position),
-                        request_close_listener: Rc::new(Box::new(move |_, _, cx| {
-                            context_menu_state_2.write(cx, None);
-                        })),
-                    }
-                    .into_any_element()
-                })
-                .render_as_deferred(self.as_deferred),
-            )
+            .child(raised(move |_, _, cx| {
+                // Context Menu Popup
+                let context_menu_open = context_menu_state_2.read(cx);
+                ContextMenuPopup {
+                    items,
+                    open_position: context_menu_open
+                        .as_ref()
+                        .map(|context_menu| context_menu.open_position),
+                    request_close_listener: Rc::new(Box::new(move |_, _, cx| {
+                        context_menu_state_2.write(cx, None);
+                    })),
+                }
+                .into_any_element()
+            }))
     }
 }
 
@@ -182,10 +171,6 @@ pub trait ContextMenuExt<E> {
     fn with_context_menu(self, items: impl IntoIterator<Item = ContextMenuItem>) -> E
     where
         Self: Sized;
-
-    fn with_deferred_context_menu(self, items: impl IntoIterator<Item = ContextMenuItem>) -> E
-    where
-        Self: Sized;
 }
 
 impl<E> ContextMenuExt<E> for E
@@ -198,17 +183,6 @@ where
     {
         self.child(ContextMenu {
             items: items.into_iter().collect(),
-            as_deferred: false,
-        })
-    }
-
-    fn with_deferred_context_menu(self, items: impl IntoIterator<Item = ContextMenuItem>) -> E
-    where
-        Self: Sized,
-    {
-        self.child(ContextMenu {
-            items: items.into_iter().collect(),
-            as_deferred: true,
         })
     }
 }

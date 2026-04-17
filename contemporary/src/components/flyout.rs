@@ -18,7 +18,6 @@ pub struct Flyout {
     request_close_listener: Option<Rc<Box<FlyoutRequestCloseListener>>>,
     anchor_position: FlyoutAnchorPoisition,
     anchor_gap: Pixels,
-    as_deferred: bool,
 }
 
 #[derive(Clone, Copy, PartialEq, Default)]
@@ -37,7 +36,6 @@ pub fn flyout(anchorer_bounds: Bounds<Pixels>) -> Flyout {
         request_close_listener: None,
         anchor_position: FlyoutAnchorPoisition::BottomLeft,
         anchor_gap: px(2.),
-        as_deferred: false,
     }
 }
 
@@ -77,11 +75,6 @@ impl Flyout {
 
     pub fn anchor_gap(mut self, anchor_gap: Pixels) -> Self {
         self.anchor_gap = anchor_gap;
-        self
-    }
-
-    pub fn render_as_deferred(mut self, as_deferred: bool) -> Self {
-        self.as_deferred = as_deferred;
         self
     }
 }
@@ -138,7 +131,6 @@ impl RenderOnce for Flyout {
                 )
                 .into_any_element()
         })
-        .render_as_deferred(self.as_deferred)
         .into_any_element()
     }
 }

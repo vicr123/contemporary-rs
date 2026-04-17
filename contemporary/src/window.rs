@@ -1,10 +1,8 @@
-mod raised_draw;
 mod toast_drawer;
 pub(crate) mod window_globals;
 
 use crate::platform_support::platform_settings::PlatformSettings;
 use crate::styling::theme::ThemeStorage;
-use crate::window::raised_draw::RaisedDraw;
 use crate::window::toast_drawer::ToastDrawer;
 use gpui::prelude::FluentBuilder;
 use gpui::{
@@ -217,7 +215,6 @@ impl RenderOnce for ContemporaryWindow {
                     .overflow_hidden(),
             )
             .child(toast_drawer)
-            .child(RaisedDraw)
     }
 }
 

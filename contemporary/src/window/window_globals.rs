@@ -1,5 +1,5 @@
 use crate::components::toast::Toast;
-use gpui::{AnyElement, AnyWindowHandle, App, AppContext, Entity, Global, Window};
+use gpui::{AnyWindowHandle, App, AppContext, Entity, Global, Window};
 use std::cell::RefCell;
 use std::collections::{HashMap, VecDeque};
 
@@ -26,14 +26,12 @@ impl WindowGlobals {
 impl Global for WindowGlobals {}
 
 pub struct WindowGlobal {
-    pub pending_raised_draws: VecDeque<Box<dyn FnOnce((), &mut Window, &mut App) -> AnyElement>>,
     pub pending_toasts: VecDeque<Toast>,
 }
 
 impl WindowGlobal {
     pub fn new() -> Self {
         Self {
-            pending_raised_draws: VecDeque::new(),
             pending_toasts: VecDeque::new(),
         }
     }

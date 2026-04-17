@@ -15,7 +15,6 @@ pub struct Scrim {
     scrim_div: Stateful<Div>,
     child_div: Div,
     visible: bool,
-    as_deferred: bool,
 }
 
 pub fn scrim(id: impl Into<ElementId>) -> Scrim {
@@ -24,7 +23,6 @@ pub fn scrim(id: impl Into<ElementId>) -> Scrim {
         scrim_div: div().id("scrim"),
         child_div: div(),
         visible: false,
-        as_deferred: false,
     }
 }
 
@@ -36,11 +34,6 @@ impl Scrim {
 
     pub fn visible(mut self, visible: bool) -> Self {
         self.visible = visible;
-        self
-    }
-
-    pub fn render_as_deferred(mut self, as_deferred: bool) -> Self {
-        self.as_deferred = as_deferred;
         self
     }
 }
@@ -87,7 +80,6 @@ impl RenderOnce for Scrim {
                 )
                 .into_any_element()
         })
-        .render_as_deferred(self.as_deferred)
     }
 }
 
