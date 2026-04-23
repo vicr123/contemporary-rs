@@ -1,6 +1,6 @@
 use crate::config::{CURRENT_CRATE, I18N_CONFIG};
 use crate::parse_raw_string::I18nStringPartExtensions;
-use crate::translation_file_cache::{ParsedTranslationEntry, TRANSLATION_FILE_CACHE};
+use crate::translation_file_cache::{ParsedTranslationEntry, translation_file_cache};
 use proc_macro::TokenStream;
 use quote::quote;
 
@@ -34,7 +34,7 @@ pub fn tr_load(_body: TokenStream) -> TokenStream {
     let default_language = &config.i18n.default_language;
 
     let mut language_map = Vec::new();
-    for (language, decoded_file) in TRANSLATION_FILE_CACHE.iter() {
+    for (language, decoded_file) in translation_file_cache().iter() {
         let mut strings = Vec::new();
 
         for (key, entry) in decoded_file {

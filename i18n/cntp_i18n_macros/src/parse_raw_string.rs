@@ -1,7 +1,7 @@
 use cntp_i18n_core::{I18nStringPart, string::I18nString};
 use quote::quote;
 
-use crate::translation_file_cache::VARIABLE_LIST;
+use crate::translation_file_cache::variable_list;
 
 fn match_line_endings(string: &str) -> proc_macro2::TokenStream {
     let windows_string = string.replace("\n", "\r\n");
@@ -37,7 +37,7 @@ impl I18nFullStringPart {
         match self {
             I18nFullStringPart::Static(i18n_string) => I18nStringPart::Static(i18n_string.clone()),
             I18nFullStringPart::Variable(i18n_string) => {
-                let variables = &VARIABLE_LIST[this_key];
+                let variables = &variable_list()[this_key];
                 I18nStringPart::Variable(
                     i18n_string.clone(),
                     variables
@@ -47,7 +47,7 @@ impl I18nFullStringPart {
                 )
             }
             I18nFullStringPart::Count => {
-                let variables = &VARIABLE_LIST[this_key];
+                let variables = &variable_list()[this_key];
                 I18nStringPart::Count(
                     variables
                         .iter()

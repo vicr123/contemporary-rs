@@ -1,7 +1,9 @@
-use std::{env, iter, path::Path, sync::LazyLock};
-
 use cntp_i18n_build_core::load::{self, TranslationEntry};
 use rustc_hash::{FxHashMap, FxHashSet};
+use std::borrow::Cow;
+use std::env::args;
+use std::sync::Arc;
+use std::{env, iter, path::Path, sync::LazyLock};
 
 use crate::{
     config::I18N_CONFIG,
@@ -22,9 +24,16 @@ pub enum ParsedTranslationEntry {
     PluralEntry(FxHashMap<String, Vec<I18nFullStringPart>>),
 }
 
-pub static TRANSLATION_FILE_CACHE: LazyLock<
-    FxHashMap<String, FxHashMap<String, ParsedTranslationEntry>>,
-> = LazyLock::new(|| {
+fn is_running_under_rust_analyzer() -> bool {
+    if let Some(application_path) = args().next() {
+        // HACK: Is this really the best way to check if we're running under rust-analyzer?
+        application_path.contains("rust-analyzer")
+    } else {
+        false
+    }
+}
+
+fn read_translation_file() -> FxHashMap<String, FxHashMap<String, ParsedTranslationEntry>> {
     let manifest_dir = env::var("CARGO_MANIFEST_DIR").expect("Failed to get CARGO_MANIFEST_DIR");
 
     let config = &*I18N_CONFIG;
@@ -60,10 +69,22 @@ pub static TRANSLATION_FILE_CACHE: LazyLock<
             )
         })
         .collect()
-});
+}
 
-pub static VARIABLE_LIST: LazyLock<FxHashMap<String, Vec<String>>> = LazyLock::new(|| {
-    let sets: FxHashMap<String, FxHashSet<String>> = TRANSLATION_FILE_CACHE.iter().fold(
+static TRANSLATION_FILE_CACHE: LazyLock<
+    Arc<FxHashMap<String, FxHashMap<String, ParsedTranslationEntry>>>,
+> = LazyLock::new(|| Arc::new(read_translation_file()));
+
+pub fn translation_file_cache() -> Arc<FxHashMap<String, FxHashMap<String, ParsedTranslationEntry>>>
+{
+    if is_running_under_rust_analyzer() {
+        return Arc::new(read_translation_file());
+    }
+    TRANSLATION_FILE_CACHE.clone()
+}
+
+fn create_variable_list() -> FxHashMap<String, Vec<String>> {
+    let sets: FxHashMap<String, FxHashSet<String>> = translation_file_cache().iter().fold(
         FxHashMap::<String, FxHashSet<String>>::default(),
         |mut foldit, (_language, strings)| {
             for (key, entry) in strings.iter() {
@@ -101,4 +122,14 @@ pub static VARIABLE_LIST: LazyLock<FxHashMap<String, Vec<String>>> = LazyLock::n
             vec!["variable".to_string()],
         )))
         .collect()
-});
+}
+
+static VARIABLE_LIST: LazyLock<Arc<FxHashMap<String, Vec<String>>>> =
+    LazyLock::new(|| Arc::new(create_variable_list()));
+
+pub fn variable_list() -> Arc<FxHashMap<String, Vec<String>>> {
+    if is_running_under_rust_analyzer() {
+        return Arc::new(create_variable_list());
+    }
+    VARIABLE_LIST.clone()
+}

@@ -1,10 +1,12 @@
-use crate::{config::CURRENT_CRATE, translation_file_cache::VARIABLE_LIST};
+use crate::config::CURRENT_CRATE;
+use crate::translation_file_cache::variable_list;
 use cntp_i18n_parse::trf::TrfMacroInput;
 use cntp_i18n_parse::{
     MaybeFormattedNamedArg, MaybeNamedFormatterArg, tr::TrMacroInput, trn::TrnMacroInput,
 };
 use proc_macro::TokenStream;
 use quote::quote;
+use std::env::args;
 use std::hash::{Hash, Hasher};
 use syn::{Error, Ident, Path, parse_macro_input, punctuated::Punctuated, token::Comma};
 
@@ -152,12 +154,14 @@ pub fn tr(body: TokenStream) -> TokenStream {
     let mut ssmi_decls = Vec::new();
 
     let mut variables_token = Vec::new();
-    let Some(required_variables) = &VARIABLE_LIST.get(&input.translation_id.value()) else {
+    let variable_list = variable_list();
+    let Some(required_variables) = variable_list.get(&input.translation_id.value()) else {
         return Error::new(
             input.translation_id.span(),
             format!(
-                "Translation key {} does not have any translations defined",
-                input.translation_id.value()
+                "Translation key {:?} does not have any translations defined",
+                // input.translation_id.value()
+                args().next()
             ),
         )
         .to_compile_error()
@@ -184,7 +188,7 @@ pub fn tr(body: TokenStream) -> TokenStream {
         }
     }
 
-    for required_variable in *required_variables {
+    for required_variable in required_variables {
         variables_token.push(if required_variable == "count" {
             match input.variables.iter().find(|v| v.name == "count") {
                 Some(variable) => {
@@ -304,7 +308,8 @@ pub fn trn(body: TokenStream) -> TokenStream {
     let mut ssmi_decls = Vec::new();
 
     let mut variables_token = Vec::new();
-    let Some(required_variables) = &VARIABLE_LIST.get(&input.translation_id.value()) else {
+    let variable_list = variable_list();
+    let Some(required_variables) = variable_list.get(&input.translation_id.value()) else {
         return Error::new(
             input.translation_id.span(),
             format!(
@@ -337,7 +342,7 @@ pub fn trn(body: TokenStream) -> TokenStream {
         }
     }
 
-    for required_variable in *required_variables {
+    for required_variable in required_variables {
         variables_token.push(if required_variable == "count" {
             match input.variables.iter().find(|v| v.name == "count") {
                 Some(variable) => {
