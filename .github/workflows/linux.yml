@@ -38,7 +38,7 @@ jobs:
         uses: actions/checkout@v6
         with:
           repository: theCheeseboard/contemporary-icons
-          path: target/bundle/${{ env.ARCH }}-unknown-linux-gnu/appdir/usr/share/icons/contemporary
+          path: target/bundle/${{ env.ARCH }}-unknown-linux-gnu/release/appdir/usr/share/icons/contemporary
       - name: Deploy
         run: cargo run --package cargo-cntp-deploy --bin cargo-cntp-deploy -- cntp-deploy --output-file "$HOME/Contemporary_Playground-$ARCH.AppImage"
         working-directory: playground
