@@ -16,7 +16,22 @@ use tiff::encoder::{Rational, TiffEncoder, colortype};
 use tiff::tags::ResolutionUnit;
 use tracing::{debug, error, info};
 
-pub fn deploy_macos(setup_data: &ToolSetup, output_file: &str) {
+
+pub fn deploy_macos(setup_data: &ToolSetup, platform_subtype: &Option<String>, output_file: &str) {
+    let subtype = platform_subtype.clone().unwrap_or("disk_image".into());
+    match subtype.as_str() {
+        "disk_image" => {
+            deploy_disk_image(setup_data, output_file);
+        }
+        _ => {
+            error!("Unsupported platform subtype: {}", subtype);
+            error!("Supported platform subtypes: disk_image");
+            exit(1);
+        }
+    }
+}
+
+fn deploy_disk_image(setup_data: &ToolSetup, output_file: &str) {
     let deployment = setup_data
         .contemporary_config
         .deployment(setup_data.targets.first().unwrap());

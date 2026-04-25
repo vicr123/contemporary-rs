@@ -4,7 +4,24 @@ use std::fs::copy;
 use std::process::exit;
 use tracing::error;
 
-pub fn deploy_windows(setup_data: &ToolSetup, output_file: &str) {
+pub fn deploy_windows(setup_data: &ToolSetup, platform_subtype: &Option<String>, output_file: &str) {
+    let subtype = platform_subtype.clone().unwrap_or("self_contained".into());
+    match subtype.as_str() {
+        "self_contained" => {
+            deploy_self_contained(setup_data, output_file);
+        }
+        _ => {
+            error!("Unsupported platform subtype: {}", subtype);
+            error!("Supported platform subtypes: self_contained");
+            exit(1);
+        }
+    }
+}
+
+pub fn deploy_self_contained(
+    setup_data: &ToolSetup,
+    output_file: &str,
+) {
     let deployment = setup_data
         .contemporary_config
         .deployment(setup_data.targets.first().unwrap());

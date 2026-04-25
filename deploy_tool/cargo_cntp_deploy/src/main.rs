@@ -8,7 +8,7 @@ use std::process::exit;
 use tracing::{Level, error, info};
 
 #[cfg(target_os = "linux")]
-use cntp_bundle_lib::linux::deploy_linux;
+use cntp_bundle_lib::linux::deploy::deploy_linux;
 
 #[cfg(target_os = "macos")]
 use cntp_bundle_lib::macos::deploy::deploy_macos;
@@ -42,6 +42,9 @@ struct Args {
     #[clap(long, default_value_t = false)]
     no_open: bool,
 
+    #[clap(short = 's', long)]
+    platform_subtype: Option<String>,
+
     #[arg(short, long)]
     output_file: String,
 }
@@ -74,7 +77,7 @@ fn main() {
     match setup_data.deployment_type {
         DeploymentType::Linux => {
             #[cfg(target_os = "linux")]
-            deploy_linux(&setup_data, &args.output_file);
+            deploy_linux(&setup_data, &args.platform_subtype, &args.output_file);
 
             #[cfg(not(target_os = "linux"))]
             {
@@ -84,7 +87,7 @@ fn main() {
         }
         DeploymentType::MacOS => {
             #[cfg(target_os = "macos")]
-            deploy_macos(&setup_data, &args.output_file);
+            deploy_macos(&setup_data, &args.profile_subtype, &args.output_file);
 
             #[cfg(not(target_os = "macos"))]
             {
@@ -94,7 +97,7 @@ fn main() {
         }
         DeploymentType::Windows => {
             #[cfg(target_os = "windows")]
-            deploy_windows(&setup_data, &args.output_file);
+            deploy_windows(&setup_data, &args.profile_subtype, &args.output_file);
 
             #[cfg(not(target_os = "windows"))]
             {
