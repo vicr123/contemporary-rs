@@ -17,6 +17,8 @@ use std::process::{Command, exit};
 use tempfile::TempDir;
 use tracing::{error, info};
 
+const APPRUN_TEMPLATE: &str = include_str!("linux/apprun.sh");
+
 pub fn bundle_linux(setup_data: &ToolSetup, executable_path: HashMap<String, PathBuf>) {
     let target_triple = setup_data.targets.first().unwrap();
     let executable_path = executable_path.get(target_triple).unwrap();
@@ -77,11 +79,18 @@ pub fn bundle_linux(setup_data: &ToolSetup, executable_path: HashMap<String, Pat
     };
 
     let apprun_path = appdir_root.join("AppRun");
-    let Ok(_) = symlink(
-        PathBuf::from("usr/bin").join(executable_path.file_name().unwrap()),
-        apprun_path,
-    ) else {
-        error!("Failed to create AppRun symlink");
+    let apprun_contents = APPRUN_TEMPLATE.replace(
+        "{{APPLICATION_PAYLOAD}}",
+        &PathBuf::from("usr/bin")
+            .join(executable_path.file_name().unwrap())
+            .to_string_lossy(),
+    );
+    let Ok(_) = write(&apprun_path, apprun_contents) else {
+        error!("Failed to write AppRun");
+        exit(1);
+    };
+    let Ok(_) = set_permissions(&apprun_path, Permissions::from_mode(0o755)) else {
+        error!("Failed to set permissions on AppRun");
         exit(1);
     };
 

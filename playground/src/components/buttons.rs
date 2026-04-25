@@ -60,7 +60,7 @@ impl Render for Buttons {
                 .label(tr!("COUNT_ADD_ONE_HUNDRED", "Add 100"))
                 .remain_open()
                 .on_triggered(cx.listener(|this, _, _, cx| {
-                    this.buttons_click_count += 10;
+                    this.buttons_click_count += 100;
                     cx.notify()
                 }))
                 .build(),
