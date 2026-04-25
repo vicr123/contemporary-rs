@@ -46,7 +46,7 @@ fn mane() {
                 details: Details {
                     generatable: application_details!(),
                     copyright_holder: "Victor Tran",
-                    copyright_year: "2025",
+                    copyright_year: "2026",
                     application_version: "3.0",
                     license: License::Gpl3OrLater,
                     links: IndexMap::from([
