@@ -1,3 +1,4 @@
+use crate::copy_dir_all::copy_dir_all;
 use crate::macos::alias::Alias;
 use crate::macos::disk_image::DiskImage;
 use crate::macos::ds_store::{DSStore, DSStoreEntry};
@@ -15,7 +16,6 @@ use tempfile::TempDir;
 use tiff::encoder::{Rational, TiffEncoder, colortype};
 use tiff::tags::ResolutionUnit;
 use tracing::{debug, error, info};
-
 
 pub fn deploy_macos(setup_data: &ToolSetup, platform_subtype: &Option<String>, output_file: &str) {
     let subtype = platform_subtype.clone().unwrap_or("disk_image".into());
@@ -170,6 +170,7 @@ fn deploy_disk_image(setup_data: &ToolSetup, output_file: &str) {
         editable_disk_image_mount
             .mount_point
             .join(app_root.file_name().unwrap()),
+        |_| true,
     ) else {
         error!("Failed to copy application bundle to temporary disk image");
         exit(1);
@@ -257,18 +258,4 @@ fn center_of_rect(rect: &Rect) -> (u32, u32) {
         rect.x() as u32 + rect.width() as u32 / 2,
         rect.y() as u32 + rect.height() as u32 / 2,
     )
-}
-
-fn copy_dir_all(src: impl AsRef<Path>, dst: impl AsRef<Path>) -> io::Result<()> {
-    create_dir_all(&dst)?;
-    for entry in read_dir(src)? {
-        let entry = entry?;
-        let ty = entry.file_type()?;
-        if ty.is_dir() {
-            copy_dir_all(entry.path(), dst.as_ref().join(entry.file_name()))?;
-        } else {
-            copy(entry.path(), dst.as_ref().join(entry.file_name()))?;
-        }
-    }
-    Ok(())
 }

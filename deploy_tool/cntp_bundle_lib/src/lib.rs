@@ -1,3 +1,4 @@
+pub mod copy_dir_all;
 pub mod icon;
 
 #[cfg(target_os = "linux")]

@@ -1,5 +1,6 @@
 pub mod deploy;
 mod flatpak;
+mod rootdir;
 
 use crate::icon::get_svg_icon_contents;
 use crate::tool_setup::ToolSetup;
