@@ -87,7 +87,7 @@ fn main() {
         }
         DeploymentType::MacOS => {
             #[cfg(target_os = "macos")]
-            deploy_macos(&setup_data, &args.profile_subtype, &args.output_file);
+            deploy_macos(&setup_data, &args.platform_subtype, &args.output_file);
 
             #[cfg(not(target_os = "macos"))]
             {
@@ -97,7 +97,7 @@ fn main() {
         }
         DeploymentType::Windows => {
             #[cfg(target_os = "windows")]
-            deploy_windows(&setup_data, &args.profile_subtype, &args.output_file);
+            deploy_windows(&setup_data, &args.platform_subtype, &args.output_file);
 
             #[cfg(not(target_os = "windows"))]
             {
