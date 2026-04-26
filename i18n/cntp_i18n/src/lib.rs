@@ -114,7 +114,7 @@
 //!
 //! This crate re-exports types from several internal crates:
 //!
-//! - Macros ([`tr!`], [`trn!`], [`tr_load!`]) from `cntp_i18n_macros`
+//! - Macros ([`tr!`], [`trn!`], [`trf!`], [`tr_noop!`], [`trn_noop!`], [`tr_load!`]) from `cntp_i18n_macros`
 //! - Core types ([`I18nSource`], [`I18nEntry`], etc.) from `cntp_i18n_core`
 //! - Locale support ([`Locale`], [`LocaleFormattable`], modifiers) from `cntp_localesupport`
 //!
@@ -129,6 +129,7 @@ use cntp_localesupport::modifiers::ModifierVariable;
 use once_cell::sync::Lazy;
 use quick_cache::sync::Cache;
 use rustc_hash::FxHasher;
+use std::collections::HashMap;
 use std::hash::{Hash, Hasher};
 use std::sync::RwLock;
 
@@ -207,8 +208,8 @@ macro_rules! i18n_manager {
 ///
 /// # Translation Lookup Order
 ///
-/// When looking up a translation, the manager searches through sources in the order
-/// they were loaded. The first source that provides a non-empty translation wins.
+/// When looking up a translation, the manager searches through sources in reverse order based
+/// on when they were loaded. The first source that provides a non-empty translation wins.
 /// If no translation is found, the key itself is returned.
 pub struct I18nManager {
     sources: Vec<Box<dyn I18nSource>>,
@@ -218,6 +219,7 @@ pub struct I18nManager {
     /// locale-specific formatting (numbers, dates, etc.).
     pub locale: Locale,
     cache: Cache<u64, I18nString>,
+    key_hashes: RwLock<HashMap<String, Vec<u64>>>,
 }
 
 /// Internal trait for type-erased string modifier transformations.
@@ -319,9 +321,11 @@ type LookupVariable<'a> = &'a (&'a str, Variable<'a>);
 impl I18nManager {
     /// Load a translation source into the manager.
     ///
-    /// Translation sources are searched in the order they are loaded. This allows
+    /// Translation sources are searched in reverse order of when they are loaded. This allows
     /// you to override translations by loading a more specific source after a
     /// general one.
+    ///
+    /// Loading a new translation source will clear the translation cache.
     ///
     /// # Example
     ///
@@ -347,6 +351,30 @@ impl I18nManager {
     /// ```
     pub fn load_source(&mut self, source: impl I18nSource + 'static) {
         self.sources.push(Box::new(source));
+
+        // Clear the cache because new translations might be available
+        self.clear_cache();
+    }
+
+    /// Clear the translation cache.
+    ///
+    /// This can be used in the event that a dynamic translation provider is used, and the cache
+    /// becomes stale.
+    pub fn clear_cache(&mut self) {
+        self.cache.clear();
+        self.key_hashes.write().unwrap().clear();
+    }
+
+    /// Evicts all translations for a specified key from the cache
+    ///
+    /// This is intended to be used by translation providers to notify the
+    /// translation system when translations for a key have changed or become invalid.
+    pub fn evict_key(&self, key: &str) {
+        if let Some(hashes) = self.key_hashes.read().unwrap().get(key) {
+            for hash in hashes {
+                self.cache.remove(hash);
+            }
+        }
     }
 
     /// Look up a translation with caching.
@@ -382,6 +410,12 @@ impl I18nManager {
         self.cache.get(&full_call_hash).clone().unwrap_or_else(|| {
             let result = self.lookup(key, variables, lookup_crate, locale_override);
             self.cache.insert(full_call_hash, result.clone());
+            self.key_hashes
+                .write()
+                .unwrap()
+                .entry(key.to_string())
+                .or_default()
+                .push(full_call_hash);
             result
         })
     }
@@ -408,7 +442,7 @@ impl I18nManager {
     ) -> I18nString {
         let locale = locale_override.unwrap_or(&self.locale);
 
-        for source in &self.sources {
+        for source in self.sources.iter().rev() {
             let Some(entry) = source.lookup(locale, key, lookup_crate) else {
                 continue;
             };
@@ -554,6 +588,7 @@ impl Default for I18nManager {
             sources: vec![Box::new(HardcodedI18nSource)],
             locale: Locale::current(),
             cache: Cache::new(500),
+            key_hashes: RwLock::new(HashMap::new()),
         }
     }
 }
