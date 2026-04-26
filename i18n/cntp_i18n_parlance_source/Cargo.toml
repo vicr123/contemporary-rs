@@ -8,3 +8,6 @@ cntp_i18n = { path = "../cntp_i18n" }
 zed-reqwest = { workspace = true }
 url = { workspace = true }
 serde = { workspace = true }
+tokio = { workspace = true }
+tracing = { workspace = true }
+signalr-client = "0.3"

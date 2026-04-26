@@ -47,7 +47,7 @@ fn mane() {
             match cx
                 .spawn_tokio(async move {
                     CntpI18nParlanceSource::new(
-                        Url::parse("https://localhost:5173/").unwrap(),
+                        Url::parse("http://127.0.0.1:5173/").unwrap(),
                         "contemporary-rs".into(),
                         "contemporary-playground-rust".into(),
                         "playground".into(),
