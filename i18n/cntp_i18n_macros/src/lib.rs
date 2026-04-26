@@ -153,6 +153,9 @@ mod translation_file_cache;
 ///
 /// Returns an [`I18nString`](cntp_i18n_core::string::I18nString) which implements
 /// `Display`, `Deref<Target=str>`, and can be converted to `String` or `Arc<str>`.
+///
+/// # See Also
+/// [`trf!`](trf) if you want to run a modifier in the absence of a translation
 #[proc_macro]
 pub fn tr(body: TokenStream) -> TokenStream {
     tr::tr(body)
@@ -253,7 +256,7 @@ pub fn trn(body: TokenStream) -> TokenStream {
 
 /// Runs a translation modifier.
 ///
-/// This macro runs a translation modifier on an arbitrary string.
+/// This macro runs a translation modifier on an arbitrary value.
 ///
 /// # Syntax
 ///
