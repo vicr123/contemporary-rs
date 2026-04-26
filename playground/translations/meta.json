@@ -703,7 +703,7 @@
   },
   "MENU_THEME": {
     "context": "main.rs",
-    "definedIn": "src/main.rs:69",
+    "definedIn": "src/main.rs:98",
     "plural": false,
     "description": null
   },
@@ -991,19 +991,19 @@
   },
   "THEME_DARK": {
     "context": "main.rs",
-    "definedIn": "src/main.rs:32",
+    "definedIn": "src/main.rs:38",
     "plural": false,
     "description": null
   },
   "THEME_LIGHT": {
     "context": "main.rs",
-    "definedIn": "src/main.rs:31",
+    "definedIn": "src/main.rs:37",
     "plural": false,
     "description": null
   },
   "THEME_SYSTEM": {
     "context": "main.rs",
-    "definedIn": "src/main.rs:30",
+    "definedIn": "src/main.rs:36",
     "plural": false,
     "description": null
   },

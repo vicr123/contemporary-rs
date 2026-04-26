@@ -22,4 +22,4 @@ pub mod window;
 pub mod self_update;
 
 #[cfg(feature = "tokio")]
-mod tokio;
+pub mod tokio;

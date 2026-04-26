@@ -17,7 +17,7 @@ members = [
     "deploy_tool/cargo_cntp_bundle",
     "deploy_tool/cntp_bundle_lib",
     "deploy_tool/cargo_cntp_deploy",
-    "cntp_macros",
+    "cntp_macros", "i18n/cntp_i18n_parlance_source",
 ]
 
 [workspace.dependencies]
@@ -49,3 +49,4 @@ zed-reqwest = { version = "0.12.15-zed", default-features = false, features = [
     "stream"
 ] }
 tokio = { version = "1.51", features = ["rt-multi-thread"] }
+url = "2"
