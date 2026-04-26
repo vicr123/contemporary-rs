@@ -1,0 +1,10 @@
+[package]
+name = "cntp_i18n_parlance_source"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+cntp_i18n = { path = "../cntp_i18n" }
+zed-reqwest = { workspace = true }
+url = { workspace = true }
+serde = { workspace = true }
