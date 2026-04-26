@@ -251,6 +251,45 @@ pub fn trn(body: TokenStream) -> TokenStream {
     tr::trn(body)
 }
 
+/// Runs a translation modifier.
+///
+/// This macro runs a translation modifier on an arbitrary string.
+///
+/// # Syntax
+///
+/// ```rust,ignore
+/// trf!(modifier, value)
+/// trf!(modifier1, modifier2, value)
+/// trf!(modifier(arg), value)
+/// ```
+///
+/// # Arguments
+///
+/// - `modifier` - A modifier (for example, `quote` or `date` to apply)
+/// - `arg` - Any arguments required by the modifier
+/// - `value` - The string to apply the modifier to
+///
+/// # Examples
+///
+/// ```rust,ignore
+/// // Basic usage
+/// trf!(quote, "Quoted Text");
+/// // English output: "Quoted Text".
+/// // French output: « Quoted Text ».
+///
+/// // Chaining modifiers
+/// trf!(date("YMD"), quote, some_text);
+/// // English output: "Jan 15, 2024."
+/// // French output: « 15/01/2024 ».
+/// ```
+///
+/// # Return Type
+///
+/// Returns an [`I18nString`](cntp_i18n_core::string::I18nString) which implements
+/// `Display`, `Deref<Target=str>`, and can be converted to `String` or `Arc<str>`.
+///
+/// # See Also
+/// [`tr!`](tr) for more information on modifiers
 #[proc_macro]
 pub fn trf(body: TokenStream) -> TokenStream {
     tr::trf(body)
