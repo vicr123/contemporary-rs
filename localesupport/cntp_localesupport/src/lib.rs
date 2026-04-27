@@ -213,6 +213,7 @@ impl Locale {
     /// * `messages` - Locale chain for message translations
     /// * `numeric` - Locale chain for number formatting
     /// * `time` - Locale chain for date/time formatting
+    /// * `collate` - Locale chain for collation (sorting)
     ///
     /// # Example
     ///
@@ -238,6 +239,7 @@ impl Locale {
             .into_iter()
             .chain(numeric.clone())
             .chain(time.clone())
+            .chain(collate.clone())
             .collect::<HashSet<_>>();
 
         Locale {
