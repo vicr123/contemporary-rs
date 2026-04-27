@@ -4,11 +4,11 @@
 use crate::actions::{DarkTheme, LightTheme, SystemTheme, register_actions};
 use crate::main_window::MainWindow;
 use cntp_i18n::{I18N_MANAGER, tr, tr_load, tr_noop};
-use cntp_i18n_parlance_source::{CntpI18nParlanceSource, ParlanceSourceError};
 use cntp_icon_tool_macros::application_icon;
 use contemporary::application::new_contemporary_application;
 use contemporary::macros::application_details;
 use contemporary::self_update::init_self_update;
+use contemporary::setup_parlance::setup_parlance_i18n_if_enabled;
 use contemporary::tokio::tokio_helper::TokioHelper;
 use contemporary::{
     application::{ApplicationLink, Details, License, Versions},
@@ -43,31 +43,16 @@ fn mane() {
         I18N_MANAGER.write().unwrap().load_source(tr_load!());
         let bounds = Bounds::centered(None, size(px(800.0), px(600.0)), cx);
 
-        cx.spawn(async move |cx: &mut AsyncApp| {
-            match cx
-                .spawn_tokio(async move {
-                    CntpI18nParlanceSource::new(
-                        Url::parse("http://127.0.0.1:5173/").unwrap(),
-                        "contemporary-rs".into(),
-                        "contemporary-playground-rust".into(),
-                        "playground".into(),
-                    )
-                    .await
-                })
-                .await
-            {
-                Ok(source) => {
-                    I18N_MANAGER.write().unwrap().load_source(source);
-                }
-                Err(e) => {
-                    error!("Unable to set up Parlance translation source: {:?}", e);
-                }
-            }
-        })
-        .detach();
-
         let outer_window: Rc<RefCell<WeakEntity<MainWindow>>> =
             Rc::new(RefCell::new(WeakEntity::new_invalid()));
+
+        setup_parlance_i18n_if_enabled(
+            Url::parse("https://parlance.vicr123.com/").unwrap(),
+            "contemporary-rust".into(),
+            "contemporary-playground-rust".into(),
+            "playground".into(),
+            cx,
+        );
 
         setup_contemporary(
             cx,

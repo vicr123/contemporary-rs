@@ -5,18 +5,21 @@ use crate::jobs::job_manager::JobManager;
 use crate::platform_support::platform_settings::PlatformSettings;
 use crate::platform_support::setup_platform;
 use crate::styling::theme::Theme;
+use crate::tokio::tokio_helper::TokioHelper;
 use crate::tracing::application_log::ApplicationLog;
 use crate::window::window_globals::WindowGlobals;
 use cntp_i18n::{I18N_MANAGER, i18n_manager, tr, tr_load};
-use gpui::{Action, App, Global, KeyBinding, Menu, MenuItem, SystemMenuType, actions};
+use gpui::{Action, App, AsyncApp, Global, KeyBinding, Menu, MenuItem, SystemMenuType, actions};
 use schemars::JsonSchema;
 use serde::Deserialize;
 use std::collections::HashMap;
 use std::rc::Rc;
 use std::sync::{Arc, Mutex};
+use tracing::error;
 use tracing_subscriber::layer::SubscriberExt;
 use tracing_subscriber::util::SubscriberInitExt;
 use tracing_subscriber::{EnvFilter, Layer};
+use url::Url;
 
 actions!(
     contemporary,
@@ -90,6 +93,24 @@ pub fn setup_contemporary(cx: &mut App, mut application: Contemporary) {
     }
 
     I18N_MANAGER.write().unwrap().load_source(tr_load!());
+
+    let (i18n_cache_eviction_tx, i18n_cache_eviction_rx) = async_channel::bounded(1);
+    cx.spawn(async move |cx: &mut AsyncApp| {
+        while i18n_cache_eviction_rx.recv().await.is_ok() {
+            cx.update(|cx| {
+                // Redraw everything to use the new translations
+                cx.refresh_windows();
+            });
+        }
+    })
+    .detach();
+    I18N_MANAGER
+        .write()
+        .unwrap()
+        .subscribe_to_cache_eviction(move || {
+            let _ = smol::block_on(i18n_cache_eviction_tx.send(()));
+        });
+
     let locale = &i18n_manager!().locale;
 
     let mut application_menu_items = vec![
@@ -244,6 +265,15 @@ pub fn setup_contemporary(cx: &mut App, mut application: Contemporary) {
 
     #[cfg(feature = "tokio")]
     crate::tokio::init(cx);
+
+    #[cfg(feature = "parlance")]
+    crate::setup_parlance::setup_parlance_i18n_if_enabled(
+        Url::parse("https://parlance.vicr123.com/").unwrap(),
+        "contemporary-rust".into(),
+        "contemporary-rust".into(),
+        "contemporary".into(),
+        cx,
+    );
 }
 
 fn quit(_: &Quit, cx: &mut App) {

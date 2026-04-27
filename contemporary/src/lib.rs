@@ -23,3 +23,6 @@ pub mod self_update;
 
 #[cfg(feature = "tokio")]
 pub mod tokio;
+
+#[cfg(feature = "parlance")]
+pub mod setup_parlance;

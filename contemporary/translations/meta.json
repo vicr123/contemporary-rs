@@ -103,43 +103,43 @@
   },
   "APPLE_APP_MENU_ABOUT": {
     "context": "setup.rs",
-    "definedIn": "src/setup.rs:97",
+    "definedIn": "src/setup.rs:118",
     "plural": false,
     "description": "Please use the string that macOS uses for the About action in the application menu."
   },
   "APPLE_APP_MENU_HIDE_OTHERS": {
     "context": "setup.rs",
-    "definedIn": "src/setup.rs:126",
+    "definedIn": "src/setup.rs:147",
     "plural": false,
     "description": "Please use the string that macOS uses for the Hide Others action in the application menu."
   },
   "APPLE_APP_MENU_HIDE_SELF": {
     "context": "setup.rs",
-    "definedIn": "src/setup.rs:120",
+    "definedIn": "src/setup.rs:141",
     "plural": false,
     "description": "Please use the string that macOS uses for the Hide this application action in the application menu."
   },
   "APPLE_APP_MENU_QUIT": {
     "context": "setup.rs",
-    "definedIn": "src/setup.rs:138",
+    "definedIn": "src/setup.rs:159",
     "plural": false,
     "description": "Please use the string that macOS uses for the Quit action in the application menu."
   },
   "APPLE_APP_MENU_SERVICES": {
     "context": "setup.rs",
-    "definedIn": "src/setup.rs:115",
+    "definedIn": "src/setup.rs:136",
     "plural": false,
     "description": "Please use the string that macOS uses for the Services action in the application menu."
   },
   "APPLE_APP_MENU_SETTINGS": {
     "context": "setup.rs",
-    "definedIn": "src/setup.rs:107",
+    "definedIn": "src/setup.rs:128",
     "plural": false,
     "description": "Please use the string that macOS uses for the Settings action in the application menu. Don't forget the ellipsis at the end."
   },
   "APPLE_APP_MENU_SHOW_ALL": {
     "context": "setup.rs",
-    "definedIn": "src/setup.rs:131",
+    "definedIn": "src/setup.rs:152",
     "plural": false,
     "description": "Please use the string that macOS uses for the Show All action in the application menu."
   },
@@ -259,13 +259,13 @@
   },
   "MENU_HELP": {
     "context": "setup.rs",
-    "definedIn": "src/setup.rs:219",
+    "definedIn": "src/setup.rs:240",
     "plural": false,
     "description": "Please use the string that macOS uses for the Help menu."
   },
   "MENU_HELP_CONTENTS": {
     "context": "setup.rs",
-    "definedIn": "src/setup.rs:189",
+    "definedIn": "src/setup.rs:210",
     "plural": false,
     "description": null
   },
@@ -355,7 +355,7 @@
   },
   "WINDOW_MENU": {
     "context": "setup.rs",
-    "definedIn": "src/setup.rs:171",
+    "definedIn": "src/setup.rs:192",
     "plural": false,
     "description": "Please use the string that macOS uses for the Window menu."
   }
