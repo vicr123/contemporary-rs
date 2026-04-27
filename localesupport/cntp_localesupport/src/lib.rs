@@ -153,9 +153,14 @@ pub struct Locale {
     pub numeric: Vec<String>,
     /// The time formatting locale fallback chain.
     pub time: Vec<String>,
+    /// The collation locale fallback chain.
+    pub collate: Vec<String>,
+
     messages_icu: IcuLocale,
     numeric_icu: IcuLocale,
     time_icu: IcuLocale,
+    collate_icu: IcuLocale,
+
     cldr_data: HashMap<String, CldrData>,
 }
 
@@ -164,6 +169,7 @@ impl Hash for Locale {
         self.messages_icu.hash(state);
         self.numeric_icu.hash(state);
         self.time_icu.hash(state);
+        self.collate_icu.hash(state);
     }
 }
 
@@ -223,6 +229,7 @@ impl Locale {
         messages: Vec<String>,
         numeric: Vec<String>,
         time: Vec<String>,
+        collate: Vec<String>,
     ) -> Locale {
         // When we add other lookup areas to this locale we should collect them all here and
         // dedupe the array
@@ -243,6 +250,9 @@ impl Locale {
             time_icu: Self::create_icu_locale(time.first().unwrap())
                 .unwrap_or_else(|| Self::create_icu_locale("en").unwrap()),
             time,
+            collate_icu: Self::create_icu_locale(collate.first().unwrap())
+                .unwrap_or_else(|| Self::create_icu_locale("en").unwrap()),
+            collate,
             cldr_data: required_cldr_data
                 .into_iter()
                 .map(|language| {
@@ -276,6 +286,7 @@ impl Locale {
             extract_language_range("messages"),
             extract_language_range("numeric"),
             extract_language_range("time"),
+            extract_language_range("collate"),
         )
     }
 
@@ -297,6 +308,7 @@ impl Locale {
     pub fn new_from_locale_identifier(identifier: impl Into<String>) -> Locale {
         let identifier = identifier.into();
         Self::new_from_parts(
+            vec![identifier.clone()],
             vec![identifier.clone()],
             vec![identifier.clone()],
             vec![identifier],
@@ -541,6 +553,26 @@ impl Locale {
             Direction::RightToLeft => LayoutDirection::RightToLeft,
             _ => LayoutDirection::LeftToRight,
         }
+    }
+
+    /// Returns the [`IcuLocale`] for messages
+    pub fn icu_messages(&self) -> &IcuLocale {
+        &self.messages_icu
+    }
+
+    /// Returns the [`IcuLocale`] for number formatting
+    pub fn icu_numeric(&self) -> &IcuLocale {
+        &self.numeric_icu
+    }
+
+    /// Returns the [`IcuLocale`] for time formatting
+    pub fn icu_time(&self) -> &IcuLocale {
+        &self.time_icu
+    }
+
+    /// Returns the [`IcuLocale`] for collation
+    pub fn icu_collate(&self) -> &IcuLocale {
+        &self.collate_icu
     }
 }
 
