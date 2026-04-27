@@ -8,6 +8,7 @@ categories = ["development-tools", "gui"]
 
 [features]
 self-update = ["zed-reqwest", "minisign-verify", "base64", "tokio"]
+parlance = ["cntp_i18n_parlance_source", "tokio"]
 default = []
 
 [dependencies]
@@ -36,6 +37,7 @@ minisign-verify = { workspace = true, optional = true }
 base64 = { workspace = true, optional = true }
 anyhow = { workspace = true }
 tokio = { workspace = true, version = "1.0.0", optional = true }
+cntp_i18n_parlance_source = { path = "../i18n/cntp_i18n_parlance_source", optional = true }
 
 [target.'cfg(target_os="linux")'.dependencies]
 freedesktop-icons = "0.4.0"

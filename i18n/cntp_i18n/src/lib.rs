@@ -220,6 +220,8 @@ pub struct I18nManager {
     pub locale: Locale,
     cache: Cache<u64, I18nString>,
     key_hashes: RwLock<HashMap<String, Vec<u64>>>,
+
+    cache_eviction_callbacks: Vec<Box<dyn Fn() + Send + Sync>>,
 }
 
 /// Internal trait for type-erased string modifier transformations.
@@ -375,6 +377,23 @@ impl I18nManager {
                 self.cache.remove(hash);
             }
         }
+
+        for callback in self.cache_eviction_callbacks.iter() {
+            callback();
+        }
+    }
+
+    /// Subscribes a callback to be invoked during cache eviction events.
+    ///
+    /// This method allows users to register a callback function that will be executed
+    /// whenever a cache eviction occurs. This can be used to rerender the UI when
+    /// translations change, for example.
+    ///
+    /// # Parameters
+    /// - `callback`: A closure or function that implements `Fn() + Send + Sync + 'static`.
+    ///   This callback will be called when a cache eviction event is triggered.
+    pub fn subscribe_to_cache_eviction(&mut self, callback: impl Fn() + Send + Sync + 'static) {
+        self.cache_eviction_callbacks.push(Box::new(callback));
     }
 
     /// Look up a translation with caching.
@@ -589,6 +608,7 @@ impl Default for I18nManager {
             locale: Locale::current(),
             cache: Cache::new(500),
             key_hashes: RwLock::new(HashMap::new()),
+            cache_eviction_callbacks: vec![],
         }
     }
 }

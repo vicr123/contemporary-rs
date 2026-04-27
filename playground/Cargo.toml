@@ -8,8 +8,7 @@ categories = ["development-tools", "gui"]
 
 [dependencies]
 cntp_i18n = { path = "../i18n/cntp_i18n", features = ["gpui", "chrono"] }
-cntp_i18n_parlance_source = { path = "../i18n/cntp_i18n_parlance_source" }
-contemporary = { path = "../contemporary", features = ["self-update"] }
+contemporary = { path = "../contemporary", features = ["self-update", "parlance"] }
 gpui = { workspace = true }
 indexmap = { workspace = true }
 cntp_icon_tool_macros = { path = "../icon_tool/cntp_icon_tool_macros" }

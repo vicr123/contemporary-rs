@@ -113,7 +113,6 @@ impl CntpI18nParlanceSource {
         );
 
         let client = Client::builder()
-            .danger_accept_invalid_certs(true)
             .build()?;
         let mut entries = HashMap::new();
 
@@ -133,6 +132,8 @@ impl CntpI18nParlanceSource {
                 ))?)
                 .send()
                 .await?;
+
+            response.error_for_status_ref()?;
 
             let parlance_entries = response.json::<Vec<ParlanceEntry>>().await?;
 
@@ -161,7 +162,9 @@ impl CntpI18nParlanceSource {
                     ),
                     "api/signalr/translator",
                     |c| {
-                        c.unsecure();
+                        if base_url.scheme() == "http" {
+                            c.unsecure();
+                        }
                     },
                 )
                 .await
@@ -306,7 +309,7 @@ impl CntpI18nParlanceSource {
                                 let boxed = Box::new(new_entry);
                                 language_entries
                                     .insert(key.clone(), Box::leak(boxed) as &'static I18nEntry);
-                                
+
                                 I18N_MANAGER.write().unwrap().evict_key(&key);
 
                                 info!("Translation updated: {} {}", language, key);
@@ -412,4 +415,15 @@ impl I18nSource for CntpI18nParlanceSource {
         }
         None
     }
+}
+
+pub async fn install_cntp_i18n_parlance_source(
+    base_url: Url,
+    project: String,
+    subproject: String,
+    crate_name: String,
+) -> Result<(), ParlanceSourceError> {
+    let source = CntpI18nParlanceSource::new(base_url, project, subproject, crate_name).await?;
+    I18N_MANAGER.write().unwrap().load_source(source);
+    Ok(())
 }
