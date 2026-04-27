@@ -145,6 +145,9 @@ pub use phf;
 
 mod hardcoded_i18n_source;
 
+#[cfg(feature = "pseudotranslation")]
+mod pseudotranslation;
+
 /// The global i18n manager instance.
 ///
 /// This is the central point for managing translations in your application. It holds
@@ -504,6 +507,17 @@ impl I18nManager {
                 && let I18nStringPart::Static(s) = &parts[0]
                 && !s.is_empty()
             {
+                #[cfg(feature = "pseudotranslation")]
+                {
+                    if std::env::var("CNTP_I18N_ENABLE_PSEUDOTRANSLATION").is_ok() {
+                        return pseudotranslation::contain(
+                            &pseudotranslation::mangle(&s.to_string()),
+                            s.len(),
+                        )
+                        .into();
+                    }
+                }
+
                 return s.clone();
             }
 
@@ -529,7 +543,7 @@ impl I18nManager {
                     continue;
                 }
 
-                return I18nString::Owned(resolved.into());
+                return resolved.into();
             }
 
             // Slow path: need variable substitution
@@ -555,9 +569,27 @@ impl I18nManager {
     ) -> I18nString {
         let mut result = String::new();
 
+        #[cfg(feature = "pseudotranslation")]
+        let mut len = 0;
+
         for part in parts {
             match part {
-                I18nStringPart::Static(borrowed) => result.push_str(borrowed),
+                I18nStringPart::Static(borrowed) => {
+                    #[cfg(feature = "pseudotranslation")]
+                    {
+                        if std::env::var("CNTP_I18N_ENABLE_PSEUDOTRANSLATION").is_ok() {
+                            len += borrowed.len();
+                            result.push_str(
+                                pseudotranslation::mangle(&borrowed.to_string()).as_ref(),
+                            );
+                        } else {
+                            result.push_str(borrowed)
+                        }
+                    }
+
+                    #[cfg(not(feature = "pseudotranslation"))]
+                    result.push_str(borrowed)
+                }
                 I18nStringPart::Variable(variable, idx) => {
                     let substituted_variable = variables
                         .get(*idx)
@@ -574,15 +606,39 @@ impl I18nManager {
 
                     match substituted_variable {
                         Some(Variable::Modified(initial, subsequent)) => {
-                            result.push_str(
-                                &subsequent
-                                    .iter()
-                                    .fold(initial.transform(locale), |v, modi| {
-                                        modi.0.transform(locale, v, modi.1)
-                                    }),
-                            );
+                            let modify_result = subsequent
+                                .iter()
+                                .fold(initial.transform(locale), |v, modi| {
+                                    modi.0.transform(locale, v, modi.1)
+                                });
+
+                            #[cfg(feature = "pseudotranslation")]
+                            {
+                                if std::env::var("CNTP_I18N_ENABLE_PSEUDOTRANSLATION").is_ok() {
+                                    result.push_str(&pseudotranslation::contain_variable(
+                                        &modify_result,
+                                    ));
+                                } else {
+                                    result.push_str(&modify_result);
+                                }
+                            }
+
+                            #[cfg(not(feature = "pseudotranslation"))]
+                            result.push_str(&modify_result);
                         }
-                        Some(Variable::String(str)) => result.push_str(str),
+                        Some(Variable::String(str)) => {
+                            #[cfg(feature = "pseudotranslation")]
+                            {
+                                if std::env::var("CNTP_I18N_ENABLE_PSEUDOTRANSLATION").is_ok() {
+                                    result.push_str(&pseudotranslation::contain_variable(str))
+                                } else {
+                                    result.push_str(str)
+                                }
+                            }
+
+                            #[cfg(not(feature = "pseudotranslation"))]
+                            result.push_str(str)
+                        }
                         Some(Variable::Count(_)) => {
                             panic!("Unexpected count variable")
                         }
@@ -595,6 +651,11 @@ impl I18nManager {
                 }
                 I18nStringPart::Count(_) => result.push_str("{{count}}"),
             }
+        }
+
+        #[cfg(feature = "pseudotranslation")]
+        if std::env::var("CNTP_I18N_ENABLE_PSEUDOTRANSLATION").is_ok() {
+            return I18nString::Owned(pseudotranslation::contain(&result, len).into());
         }
 
         I18nString::Owned(result.into())
