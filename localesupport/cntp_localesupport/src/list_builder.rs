@@ -1,10 +1,12 @@
-use crate::ListFunction;
 use crate::cldr::ListPatterns;
+use crate::{ListFunction, ListWidth};
 
 pub struct ListBuilder<'patterns, 'strings> {
     patterns: &'patterns ListPatterns,
     parts: Vec<&'strings String>,
+
     list_function: ListFunction,
+    list_width: ListWidth,
 }
 
 impl<'patterns, 'strings> ListBuilder<'patterns, 'strings> {
@@ -13,6 +15,7 @@ impl<'patterns, 'strings> ListBuilder<'patterns, 'strings> {
             patterns,
             parts,
             list_function: Default::default(),
+            list_width: Default::default(),
         }
     }
 
@@ -21,11 +24,28 @@ impl<'patterns, 'strings> ListBuilder<'patterns, 'strings> {
         self
     }
 
+    pub fn with_list_width(mut self, list_width: ListWidth) -> Self {
+        self.list_width = list_width;
+        self
+    }
+
     pub fn build(&self) -> String {
         let pattern = match self.list_function {
-            ListFunction::Standard => &self.patterns.standard,
-            ListFunction::Or => &self.patterns.or,
-            ListFunction::Unit => &self.patterns.unit,
+            ListFunction::Standard => match self.list_width {
+                ListWidth::Wide => &self.patterns.standard,
+                ListWidth::Short => &self.patterns.standard_short,
+                ListWidth::Narrow => &self.patterns.standard_narrow,
+            },
+            ListFunction::Or => match self.list_width {
+                ListWidth::Wide => &self.patterns.or,
+                ListWidth::Short => &self.patterns.or_short,
+                ListWidth::Narrow => &self.patterns.or_narrow,
+            },
+            ListFunction::Unit => match self.list_width {
+                ListWidth::Wide => &self.patterns.unit,
+                ListWidth::Short => &self.patterns.unit_short,
+                ListWidth::Narrow => &self.patterns.unit_narrow,
+            },
         };
 
         match self.parts.len() {

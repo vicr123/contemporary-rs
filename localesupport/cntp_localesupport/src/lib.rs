@@ -122,6 +122,20 @@ pub enum ListFunction {
     Unit,
 }
 
+/// Represents the approximate length of static text used to join items in a list.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+pub enum ListWidth {
+    /// The list will be combined as if any units are spelled out in full (e.g. "1 hour, 45 minutes")
+    #[default]
+    Wide,
+    
+    /// The list will be combined as if any units are spelled out in short form (e.g. "1hr, 45min")
+    Short,
+    
+    /// The list will be combined as if any units are spelled out in narrow form (e.g. "1h 45m")
+    Narrow
+}
+
 /// Represents locale settings for internationalization.
 ///
 /// A `Locale` contains settings for three different categories:
