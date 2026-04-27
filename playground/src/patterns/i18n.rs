@@ -62,10 +62,14 @@ impl Render for I18n {
             tr!("LIST_EXAMPLE_APPLE").to_string(),
             tr!("LIST_EXAMPLE_BANANA").to_string(),
         ];
-        let standard_list = locale.join_list(ListFunction::Standard, &list_items);
-        let or_list = locale.join_list(ListFunction::Or, &list_items);
-        let unit_list = locale.join_list(ListFunction::Unit, &list_items);
-        let standard_two_list = locale.join_list(ListFunction::Standard, &two_list_items);
+        let standard_list = locale.build_list(&list_items);
+        let or_list = locale
+            .build_list(&list_items)
+            .with_list_function(ListFunction::Or);
+        let unit_list = locale
+            .build_list(&list_items)
+            .with_list_function(ListFunction::Unit);
+        let standard_two_list = locale.build_list(&two_list_items);
 
         div()
             .bg(theme.background)

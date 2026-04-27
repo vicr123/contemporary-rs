@@ -67,6 +67,7 @@
 #![warn(missing_docs)]
 
 mod cldr;
+mod list_builder;
 pub mod locale_formattable;
 pub mod modifiers;
 
@@ -77,6 +78,7 @@ use icu::locale::subtags::{Language, Region};
 use icu::locale::{Direction, Locale as IcuLocale, LocaleDirectionality, locale};
 use locale_config::Locale as LocaleConfigLocale;
 
+use crate::list_builder::ListBuilder;
 use smallvec::SmallVec;
 use std::collections::{HashMap, HashSet};
 use std::fmt::Display;
@@ -515,13 +517,12 @@ impl Locale {
         )
     }
 
-    pub fn join_list<'a, TIterable>(
-        &self,
-        list_function: ListFunction,
+    pub fn build_list<'patterns, 'strings, TIterable>(
+        &'patterns self,
         iterable: TIterable,
-    ) -> String
+    ) -> ListBuilder<'patterns, 'strings>
     where
-        TIterable: IntoIterator<Item = &'a String>,
+        TIterable: IntoIterator<Item = &'strings String>,
     {
         let cldr_locale = self.messages.first().unwrap();
         let list_patterns = &self
@@ -530,39 +531,7 @@ impl Locale {
             .expect("CLDR data for messages locale not created.")
             .list_patterns;
 
-        let pattern = match list_function {
-            ListFunction::Standard => &list_patterns.standard,
-            ListFunction::Or => &list_patterns.or,
-            ListFunction::Unit => &list_patterns.unit,
-        };
-
-        let parts = iterable.into_iter().collect::<Vec<_>>();
-        match parts.len() {
-            0 => String::new(),
-            1 => parts[0].clone(),
-            2 => pattern
-                .two
-                .replace("{0}", &parts[0])
-                .replace("{1}", &parts[1]),
-            _ => {
-                let len = parts.len();
-
-                parts
-                    .iter()
-                    .enumerate()
-                    .fold(String::new(), |acc: String, (i, part)| {
-                        if i == 0 {
-                            pattern.start.replace("{0}", part)
-                        } else if i == len - 2 {
-                            acc.replace("{1}", &pattern.end.replace("{0}", part))
-                        } else if i == len - 1 {
-                            acc.replace("{1}", part)
-                        } else {
-                            acc.replace("{1}", &pattern.middle.replace("{0}", part))
-                        }
-                    })
-            }
-        }
+        ListBuilder::new(iterable.into_iter().collect(), list_patterns)
     }
 
     fn create_decimal_formatter(&self) -> DecimalFormatter {

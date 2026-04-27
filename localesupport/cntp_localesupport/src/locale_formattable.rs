@@ -31,6 +31,7 @@
 //! ```
 
 use crate::Locale;
+use crate::list_builder::ListBuilder;
 use icu::decimal::input::Decimal;
 use std::str::FromStr;
 
@@ -138,5 +139,11 @@ impl LocaleFormattable for str {
 impl LocaleFormattable for String {
     fn to_locale_string(&self, locale: &Locale) -> String {
         self.as_str().to_locale_string(locale)
+    }
+}
+
+impl LocaleFormattable for ListBuilder<'_, '_> {
+    fn to_locale_string(&self, locale: &Locale) -> String {
+        self.build()
     }
 }

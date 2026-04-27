@@ -415,37 +415,37 @@
   },
   "I18N_DATE_TIME": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:191",
+    "definedIn": "src/patterns/i18n.rs:195",
     "plural": false,
     "description": null
   },
   "I18N_DATE_TIME_ADV_LONG": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:220",
+    "definedIn": "src/patterns/i18n.rs:224",
     "plural": false,
     "description": null
   },
   "I18N_DATE_TIME_ADV_SHORT": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:214",
+    "definedIn": "src/patterns/i18n.rs:218",
     "plural": false,
     "description": null
   },
   "I18N_DATE_TIME_BASIC_LONG": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:208",
+    "definedIn": "src/patterns/i18n.rs:212",
     "plural": false,
     "description": null
   },
   "I18N_DATE_TIME_BASIC_MEDIUM": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:202",
+    "definedIn": "src/patterns/i18n.rs:206",
     "plural": false,
     "description": null
   },
   "I18N_DATE_TIME_DESCRIPTION": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:198",
+    "definedIn": "src/patterns/i18n.rs:202",
     "plural": false,
     "description": null
   },
@@ -457,115 +457,115 @@
   },
   "I18N_LAYOUT_DIRECTION": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:111",
+    "definedIn": "src/patterns/i18n.rs:115",
     "plural": false,
     "description": null
   },
   "I18N_LISTS": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:234",
+    "definedIn": "src/patterns/i18n.rs:238",
     "plural": false,
     "description": null
   },
   "I18N_LISTS_DESCRIPTION": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:241",
+    "definedIn": "src/patterns/i18n.rs:245",
     "plural": false,
     "description": null
   },
   "I18N_LISTS_OR": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:250",
+    "definedIn": "src/patterns/i18n.rs:254",
     "plural": false,
     "description": null
   },
   "I18N_LISTS_STANDARD": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:245",
+    "definedIn": "src/patterns/i18n.rs:249",
     "plural": false,
     "description": null
   },
   "I18N_LISTS_STANDARD_2": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:260",
+    "definedIn": "src/patterns/i18n.rs:264",
     "plural": false,
     "description": null
   },
   "I18N_LISTS_UNIT": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:255",
+    "definedIn": "src/patterns/i18n.rs:259",
     "plural": false,
     "description": null
   },
   "I18N_NUMERIC_FORMATS": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:155",
+    "definedIn": "src/patterns/i18n.rs:159",
     "plural": false,
     "description": null
   },
   "I18N_NUMERIC_FORMAT_DESCRIPTION": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:162",
+    "definedIn": "src/patterns/i18n.rs:166",
     "plural": false,
     "description": null
   },
   "I18N_NUMERIC_FORMAT_NEGATIVE_E": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:172",
+    "definedIn": "src/patterns/i18n.rs:176",
     "plural": false,
     "description": null
   },
   "I18N_NUMERIC_FORMAT_PI": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:166",
+    "definedIn": "src/patterns/i18n.rs:170",
     "plural": false,
     "description": null
   },
   "I18N_NUMERIC_FORMAT_SPEED_OF_LIGHT": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:178",
+    "definedIn": "src/patterns/i18n.rs:182",
     "plural": false,
     "description": null
   },
   "I18N_QUOTE_STRINGS": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:125",
+    "definedIn": "src/patterns/i18n.rs:129",
     "plural": false,
     "description": null
   },
   "I18N_QUOTE_STRING_DESCRIPTION": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:132",
+    "definedIn": "src/patterns/i18n.rs:136",
     "plural": false,
     "description": null
   },
   "I18N_QUOTE_STRING_QUOTED": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:137",
+    "definedIn": "src/patterns/i18n.rs:141",
     "plural": false,
     "description": null
   },
   "I18N_SELECTED_LANGUAGE": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:106",
+    "definedIn": "src/patterns/i18n.rs:110",
     "plural": false,
     "description": null
   },
   "I18N_SETUP": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:94",
+    "definedIn": "src/patterns/i18n.rs:98",
     "plural": false,
     "description": null
   },
   "I18N_SETUP_DESCRIPTION": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:101",
+    "definedIn": "src/patterns/i18n.rs:105",
     "plural": false,
     "description": null
   },
   "I18N_TITLE": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:78",
+    "definedIn": "src/patterns/i18n.rs:82",
     "plural": false,
     "description": null
   },
@@ -727,13 +727,13 @@
   },
   "LAYOUT_DIRECTION_LTR": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:114",
+    "definedIn": "src/patterns/i18n.rs:118",
     "plural": false,
     "description": null
   },
   "LAYOUT_DIRECTION_RTL": {
     "context": "i18n.rs",
-    "definedIn": "src/patterns/i18n.rs:115",
+    "definedIn": "src/patterns/i18n.rs:119",
     "plural": false,
     "description": null
   },
