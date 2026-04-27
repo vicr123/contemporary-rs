@@ -9,7 +9,7 @@ use std::process::{Command, exit};
 use tempfile::TempDir;
 use tracing::{error, info};
 
-pub fn deploy_flatpak(setup_data: &ToolSetup, output_file: &str) {
+pub fn deploy_appimage(setup_data: &ToolSetup, output_file: &str) {
     let appdir_root = setup_data.output_directory.join("appdir");
     if !appdir_root.exists() {
         error!("AppDir does not exist. Please bundle first.");
