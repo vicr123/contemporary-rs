@@ -140,7 +140,7 @@ pub use cntp_i18n_core::{
 };
 pub use cntp_localesupport::locale_formattable::LocaleFormattable;
 pub use cntp_localesupport::modifiers::{Date, Quote, StringModifier};
-pub use cntp_localesupport::{LayoutDirection, Locale};
+pub use cntp_localesupport::{LayoutDirection, ListFunction, Locale};
 pub use phf;
 
 mod hardcoded_i18n_source;

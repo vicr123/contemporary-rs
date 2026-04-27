@@ -98,11 +98,26 @@ use std::hash::Hash;
 /// let arabic = Locale::new_from_locale_identifier("ar");
 /// assert!(matches!(arabic.layout_direction(), LayoutDirection::RightToLeft));
 /// ```
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum LayoutDirection {
     /// Text flows from left to right (e.g., English, French, German).
     LeftToRight,
     /// Text flows from right to left (e.g., Arabic, Hebrew, Persian).
     RightToLeft,
+}
+
+/// Represents the grammar used to join items in a list.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+pub enum ListFunction {
+    /// The list will be combined to create a conjunctive sentence (e.g. "Apple, Orange and Banana")
+    #[default]
+    Standard,
+
+    /// The list will be combined to create a disjunctive sentence (e.g. "Apple, Orange or Banana")
+    Or,
+
+    /// The list will be combined for measurement units (e.g. "1h 45m")
+    Unit,
 }
 
 /// Represents locale settings for internationalization.
@@ -498,6 +513,56 @@ impl Locale {
             "{}{string}{}",
             delimiters.alternate_quotation_start, delimiters.alternate_quotation_end
         )
+    }
+
+    pub fn join_list<'a, TIterable>(
+        &self,
+        list_function: ListFunction,
+        iterable: TIterable,
+    ) -> String
+    where
+        TIterable: IntoIterator<Item = &'a String>,
+    {
+        let cldr_locale = self.messages.first().unwrap();
+        let list_patterns = &self
+            .cldr_data
+            .get(cldr_locale)
+            .expect("CLDR data for messages locale not created.")
+            .list_patterns;
+
+        let pattern = match list_function {
+            ListFunction::Standard => &list_patterns.standard,
+            ListFunction::Or => &list_patterns.or,
+            ListFunction::Unit => &list_patterns.unit,
+        };
+
+        let parts = iterable.into_iter().collect::<Vec<_>>();
+        match parts.len() {
+            0 => String::new(),
+            1 => parts[0].clone(),
+            2 => pattern
+                .two
+                .replace("{0}", &parts[0])
+                .replace("{1}", &parts[1]),
+            _ => {
+                let len = parts.len();
+
+                parts
+                    .iter()
+                    .enumerate()
+                    .fold(String::new(), |acc: String, (i, part)| {
+                        if i == 0 {
+                            pattern.start.replace("{0}", part)
+                        } else if i == len - 2 {
+                            acc.replace("{1}", &pattern.end.replace("{0}", part))
+                        } else if i == len - 1 {
+                            acc.replace("{1}", part)
+                        } else {
+                            acc.replace("{1}", &pattern.middle.replace("{0}", part))
+                        }
+                    })
+            }
+        }
     }
 
     fn create_decimal_formatter(&self) -> DecimalFormatter {

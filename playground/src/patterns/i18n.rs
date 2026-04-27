@@ -1,5 +1,5 @@
 use chrono::{DateTime, Local};
-use cntp_i18n::{LayoutDirection, Locale, LocaleFormattable, i18n_manager, tr, trf};
+use cntp_i18n::{LayoutDirection, ListFunction, Locale, LocaleFormattable, i18n_manager, tr, trf};
 use contemporary::components::constrainer::constrainer;
 use contemporary::components::grandstand::grandstand;
 use contemporary::components::layer::layer;
@@ -51,6 +51,21 @@ impl Render for I18n {
 
         let local_time: DateTime<Local> = Local::now();
         let layout_direction = locale.layout_direction();
+
+        let list_items = vec![
+            tr!("LIST_EXAMPLE_APPLE", "Apple", #description = "A red fruit").to_string(),
+            tr!("LIST_EXAMPLE_BANANA", "Banana").to_string(),
+            tr!("LIST_EXAMPLE_CHERRY", "Cherry").to_string(),
+            tr!("LIST_EXAMPLE_ORANGE", "Orange", #description = "A citrus fruit").to_string(),
+        ];
+        let two_list_items = vec![
+            tr!("LIST_EXAMPLE_APPLE").to_string(),
+            tr!("LIST_EXAMPLE_BANANA").to_string(),
+        ];
+        let standard_list = locale.join_list(ListFunction::Standard, &list_items);
+        let or_list = locale.join_list(ListFunction::Or, &list_items);
+        let unit_list = locale.join_list(ListFunction::Unit, &list_items);
+        let standard_two_list = locale.join_list(ListFunction::Standard, &two_list_items);
 
         div()
             .bg(theme.background)
@@ -208,6 +223,44 @@ impl Render for I18n {
                                         #locale=&locale
                                     ))
                                     .child(trf!(date(date="MD", length="long", time="microsecond"), quote, local_time))
+                            ),
+                    )
+                    .child(
+                        layer()
+                            .flex()
+                            .flex_col()
+                            .p(px(8.))
+                            .w_full()
+                            .child(subtitle(tr!("I18N_LISTS", "Lists")))
+                            .child(
+                                div()
+                                    .flex()
+                                    .flex_col()
+                                    .gap(px(8.))
+                                    .child(tr!(
+                                        "I18N_LISTS_DESCRIPTION",
+                                        "Lists are compiled in the following manner in this locale:"
+                                    ))
+                                    .child(tr!(
+                                        "I18N_LISTS_STANDARD",
+                                        "Standard: {{list}}",
+                                        list = standard_list
+                                    ))
+                                    .child(tr!(
+                                        "I18N_LISTS_OR",
+                                        "Or: {{list}}",
+                                        list = or_list
+                                    ))
+                                    .child(tr!(
+                                        "I18N_LISTS_UNIT",
+                                        "Unit: {{list}}",
+                                        list = unit_list
+                                    ))
+                                    .child(tr!(
+                                        "I18N_LISTS_STANDARD_2",
+                                        "Standard with two items: {{list}}",
+                                        list = standard_two_list
+                                    ))
                             ),
                     ),
             )
