@@ -11,7 +11,7 @@ description = "Ergonomic i18n library"
 [features]
 gpui = ["cntp_i18n_core/gpui"]
 chrono = ["cntp_localesupport/chrono"]
-pseudotranslation = []
+pseudotranslation = ["cntp_localesupport/pseudotranslation"]
 default = ["pseudotranslation", "chrono"]
 
 [dependencies]

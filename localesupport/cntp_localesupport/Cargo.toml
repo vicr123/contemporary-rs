@@ -9,7 +9,8 @@ description = "Provides information about locales and provides locale-aware form
 
 [features]
 chrono = ["dep:chrono"]
-default = ["chrono"]
+default = ["chrono", "pseudotranslation"]
+pseudotranslation = []
 
 [dependencies]
 icu = { workspace = true, features = ["experimental"] }

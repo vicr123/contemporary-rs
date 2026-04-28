@@ -128,12 +128,12 @@ pub enum ListWidth {
     /// The list will be combined as if any units are spelled out in full (e.g. "1 hour, 45 minutes")
     #[default]
     Wide,
-    
+
     /// The list will be combined as if any units are spelled out in short form (e.g. "1hr, 45min")
     Short,
-    
+
     /// The list will be combined as if any units are spelled out in narrow form (e.g. "1h 45m")
-    Narrow
+    Narrow,
 }
 
 /// Represents locale settings for internationalization.
@@ -593,6 +593,13 @@ impl Locale {
     /// }
     /// ```
     pub fn layout_direction(&self) -> LayoutDirection {
+        #[cfg(feature = "pseudotranslation")]
+        match std::env::var("CNTP_I18N_TEXT_DIRECTION").as_deref() {
+            Ok("rtl") => return LayoutDirection::RightToLeft,
+            Ok("ltr") => return LayoutDirection::LeftToRight,
+            _ => {}
+        }
+        
         let directionality = LocaleDirectionality::new_common();
 
         match directionality
