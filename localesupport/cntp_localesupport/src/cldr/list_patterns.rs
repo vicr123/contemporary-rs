@@ -35,7 +35,7 @@ struct ListPatternsFileEntry {
     list_patterns: ListPatterns,
 }
 
-#[derive(Deserialize, Default)]
+#[derive(Deserialize, Default, Debug)]
 pub struct ListPatterns {
     #[serde(rename = "listPattern-type-standard")]
     pub standard: ListPattern,
@@ -65,7 +65,7 @@ pub struct ListPatterns {
     pub or_short: ListPattern,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct ListPattern {
     pub start: String,

@@ -484,7 +484,7 @@ impl Locale {
             .map(|region_name| region_name.to_string())
     }
 
-    /// Wraps a string in the locale's primary quotation marks.
+    /// Wraps a string in the message locale's primary quotation marks.
     ///
     /// Different locales use different quotation marks. For example:
     /// - English: "Hello"
@@ -513,7 +513,7 @@ impl Locale {
         )
     }
 
-    /// Wraps a string in the locale's alternate (inner) quotation marks.
+    /// Wraps a string in the message locale's alternate (inner) quotation marks.
     ///
     /// These are typically used for quotes within quotes. For example:
     /// - English: 'Hello'
@@ -531,6 +531,55 @@ impl Locale {
         )
     }
 
+    /// Constructs a [`ListBuilder`] for formatting a list of strings in this locale.
+    ///
+    /// This method accepts an iterable of `String` references and returns a `ListBuilder`
+    /// preconfigured with the appropriate list-patterns based on the CLDR data for the
+    /// message locale.
+    ///
+    /// # Type Parameters
+    ///
+    /// - `'patterns`: The lifetime of the reference to the `self` struct containing the
+    ///   localization data.
+    /// - `'strings`: The lifetime of the strings passed in the iterable.
+    /// - `TIterable`: The type of the iterable container which holds references
+    ///   to `String`.
+    ///
+    /// # Parameters
+    ///
+    /// - `iterable`: An iterable that produces references to `String` values, which
+    ///   will be used to create a formatted list.
+    ///
+    /// # Returns
+    ///
+    /// A `ListBuilder` instance containing the collected list of strings and the
+    /// localized list-patterns for formatting.
+    ///
+    /// # Example
+    ///
+    /// ```rust
+    /// use cntp_localesupport::{ListFunction, Locale};
+    ///
+    /// let list = vec![
+    ///     "Stacey".to_string(),
+    ///     "Kevin".to_string(),
+    ///     "Thomas".to_string(),
+    /// ];
+    ///
+    /// let english = Locale::new_from_locale_identifier("en-US");
+    /// let german = Locale::new_from_locale_identifier("de-DE");
+    ///
+    /// println!("{}", english.build_list(&list).build());
+    /// // Stacey, Kevin, and Thomas
+    /// println!("{}", english.build_list(&list).with_list_function(ListFunction::Or).build());
+    /// // Stacey, Kevin, or Thomas
+    /// println!("{}", german.build_list(&list).build());
+    /// // Stacey, Kevin und Thomas
+    /// ```
+    ///
+    /// # See Also
+    ///
+    /// [`ListBuilder`] for options that can be changed
     pub fn build_list<'patterns, 'strings, TIterable>(
         &'patterns self,
         iterable: TIterable,
@@ -599,7 +648,7 @@ impl Locale {
             Ok("ltr") => return LayoutDirection::LeftToRight,
             _ => {}
         }
-        
+
         let directionality = LocaleDirectionality::new_common();
 
         match directionality
