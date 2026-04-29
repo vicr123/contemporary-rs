@@ -48,9 +48,9 @@ fn mane() {
 
         setup_parlance_i18n_if_enabled(
             Url::parse("https://parlance.vicr123.com/").unwrap(),
-            "contemporary-rust".into(),
-            "contemporary-playground-rust".into(),
-            "playground".into(),
+            "contemporary-rust",
+            "contemporary-playground-rust",
+            "playground",
             cx,
         );
 

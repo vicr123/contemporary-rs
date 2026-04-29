@@ -6,11 +6,14 @@ use url::Url;
 
 pub fn setup_parlance_i18n(
     base_url: Url,
-    project: String,
-    subproject: String,
-    crate_name: String,
+    project: impl Into<String>,
+    subproject: impl Into<String>,
+    crate_name: impl Into<String>,
     cx: &mut App,
 ) {
+    let project = project.into();
+    let subproject = subproject.into();
+    let crate_name = crate_name.into();
     cx.spawn(async move |cx: &mut AsyncApp| {
         if let Err(e) = cx
             .spawn_tokio(async move {
@@ -26,9 +29,9 @@ pub fn setup_parlance_i18n(
 
 pub fn setup_parlance_i18n_if_enabled(
     base_url: Url,
-    project: String,
-    subproject: String,
-    crate_name: String,
+    project: impl Into<String>,
+    subproject: impl Into<String>,
+    crate_name: impl Into<String>,
     cx: &mut App,
 ) {
     if std::env::var("CNTP_PARLANCE_ENABLED").is_ok() {

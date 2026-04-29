@@ -269,9 +269,9 @@ pub fn setup_contemporary(cx: &mut App, mut application: Contemporary) {
     #[cfg(feature = "parlance")]
     crate::setup_parlance::setup_parlance_i18n_if_enabled(
         Url::parse("https://parlance.vicr123.com/").unwrap(),
-        "contemporary-rust".into(),
-        "contemporary-rust".into(),
-        "contemporary".into(),
+        "contemporary-rust",
+        "contemporary-rust",
+        "contemporary",
         cx,
     );
 }

@@ -112,8 +112,7 @@ impl CntpI18nParlanceSource {
             "The Parlance translation source leaks memory! Turn off the Parlance source if you are not using it to translate this application."
         );
 
-        let client = Client::builder()
-            .build()?;
+        let client = Client::builder().build()?;
         let mut entries = HashMap::new();
 
         // Find all languages supported by the project
@@ -419,11 +418,17 @@ impl I18nSource for CntpI18nParlanceSource {
 
 pub async fn install_cntp_i18n_parlance_source(
     base_url: Url,
-    project: String,
-    subproject: String,
-    crate_name: String,
+    project: impl Into<String>,
+    subproject: impl Into<String>,
+    crate_name: impl Into<String>,
 ) -> Result<(), ParlanceSourceError> {
-    let source = CntpI18nParlanceSource::new(base_url, project, subproject, crate_name).await?;
+    let source = CntpI18nParlanceSource::new(
+        base_url,
+        project.into(),
+        subproject.into(),
+        crate_name.into(),
+    )
+    .await?;
     I18N_MANAGER.write().unwrap().load_source(source);
     Ok(())
 }
