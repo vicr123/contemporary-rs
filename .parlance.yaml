@@ -1,0 +1,21 @@
+# yaml-language-server: $schema=https://parlance.vicr123.com/schemas/parlance-json.json
+name: Contemporary Rust
+subprojects:
+  - name: Contemporary Rust
+    type: cntp-rs
+    path: /contemporary/translations/{lang}.json
+    baseLang: en
+    liveUpdateSupportInformation: |
+      To preview your translations, set the environment variable
+      `CNTP_PARLANCE_ENABLED=1` and start Contemporary Playground.
+  - name: Contemporary Playground Rust
+    type: cntp-rs
+    path: /playground/translations/{lang}.json
+    baseLang: en
+    liveUpdateSupportInformation: |
+      To preview your translations, set the environment variable
+      `CNTP_PARLANCE_ENABLED=1` and start Contemporary Playground.
+  - name: Contemporary Playground Metadata
+    type: i18next
+    path: /playground/dist/contemporary_toml_translations/{lang}.json
+    baseLang: en
