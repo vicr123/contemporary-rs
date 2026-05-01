@@ -122,7 +122,7 @@ impl SelfUpdate {
                 .await
             {
                 Ok(Some(update_information)) => {
-                    let _ = cx.update_global::<SelfUpdate, _>(|this, cx| {
+                    cx.update_global::<SelfUpdate, _>(|this, cx| {
                         this.state = SelfUpdateState::UpdateAvailableBackground {
                             new_update: update_information,
                         };
@@ -130,9 +130,7 @@ impl SelfUpdate {
                     });
                 }
                 Ok(None) => {
-                    let _ = cx.update_global::<SelfUpdate, _>(|this, cx| {
-                        this.state = SelfUpdateState::Idle
-                    });
+                    cx.update_global::<SelfUpdate, _>(|this, _| this.state = SelfUpdateState::Idle);
                 }
                 Err(e) => {
                     error!("Unable to check for updates: {e}")

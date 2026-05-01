@@ -1,18 +1,16 @@
 use crate::self_update::UpdateInformation;
 use base64::Engine;
 use base64::prelude::BASE64_STANDARD;
-use gpui::http_client::anyhow;
-use gpui::private::anyhow;
 use minisign_verify::{PublicKey, Signature};
 use serde::Deserialize;
 use smol::fs;
 use smol::fs::File;
 use smol::io::{AsyncReadExt, AsyncWriteExt, BufWriter};
 use smol::stream::StreamExt;
-use std::io::BufReader;
+use std::error::Error;
+use std::fmt::Formatter;
 use std::path::PathBuf;
 use std::str::FromStr;
-use std::sync::OnceLock;
 use tracing::info;
 use url::Url;
 use zed_reqwest::{Client, StatusCode};
@@ -31,6 +29,65 @@ pub struct BinChickenClient {
 struct Artifact {
     number: u64,
     version: Option<String>,
+}
+
+#[derive(Debug)]
+pub enum BinChickenError {
+    ReqwestError(zed_reqwest::Error),
+    IoError(std::io::Error),
+    SignatureError(minisign_verify::Error),
+    Base64DecodeError(base64::DecodeError),
+    BadUrl(url::ParseError),
+    BadStatusCode(StatusCode),
+    BadResponse,
+}
+
+impl From<zed_reqwest::Error> for BinChickenError {
+    fn from(err: zed_reqwest::Error) -> Self {
+        BinChickenError::ReqwestError(err)
+    }
+}
+
+impl From<std::io::Error> for BinChickenError {
+    fn from(err: std::io::Error) -> Self {
+        BinChickenError::IoError(err)
+    }
+}
+
+impl From<minisign_verify::Error> for BinChickenError {
+    fn from(err: minisign_verify::Error) -> Self {
+        BinChickenError::SignatureError(err)
+    }
+}
+
+impl From<base64::DecodeError> for BinChickenError {
+    fn from(err: base64::DecodeError) -> Self {
+        BinChickenError::Base64DecodeError(err)
+    }
+}
+
+impl From<url::ParseError> for BinChickenError {
+    fn from(err: url::ParseError) -> Self {
+        BinChickenError::BadUrl(err)
+    }
+}
+
+impl Error for BinChickenError {}
+
+impl std::fmt::Display for BinChickenError {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        match self {
+            BinChickenError::ReqwestError(err) => write!(f, "Reqwest error: {}", err),
+            BinChickenError::IoError(err) => write!(f, "IO error: {}", err),
+            BinChickenError::SignatureError(err) => {
+                write!(f, "Signature verification error: {}", err)
+            }
+            BinChickenError::Base64DecodeError(err) => write!(f, "Base64 decoding error: {}", err),
+            BinChickenError::BadUrl(err) => write!(f, "URL parsing error: {}", err),
+            BinChickenError::BadStatusCode(status) => write!(f, "Bad status code: {}", status),
+            BinChickenError::BadResponse => write!(f, "Bad response from server"),
+        }
+    }
 }
 
 impl BinChickenClient {
@@ -59,7 +116,7 @@ impl BinChickenClient {
             .join("update-data.bin")
     }
 
-    pub async fn check_for_updates(&self) -> Result<Option<UpdateInformation>, anyhow::Error> {
+    pub async fn check_for_updates(&self) -> Result<Option<UpdateInformation>, BinChickenError> {
         let update_check_url = Url::parse(
             format!(
                 "{}api/repositories/{}/latest/by_uuid/{}",
@@ -69,6 +126,8 @@ impl BinChickenClient {
         )?;
 
         let response = self.client.get(update_check_url).send().await?;
+
+        response.error_for_status_ref()?;
 
         match response.status() {
             StatusCode::OK => {
@@ -85,11 +144,11 @@ impl BinChickenClient {
                 // TODO: Remove any old update data
                 Ok(None)
             }
-            _ => Err(anyhow!("Unexpected status code: {}", response.status())),
+            _ => Err(BinChickenError::BadStatusCode(response.status())),
         }
     }
 
-    pub async fn download_artifact(&self, artifact_number: u64) -> Result<(), anyhow::Error> {
+    pub async fn download_artifact(&self, artifact_number: u64) -> Result<(), BinChickenError> {
         let artifact_url = Url::from_str(
             format!(
                 "{}api/repositories/{}/artifacts/{}",
@@ -140,13 +199,13 @@ impl BinChickenClient {
             let response = self.client.get(artifact_url).send().await?;
 
             if response.status() != StatusCode::OK {
-                return Err(anyhow!("Unexpected status code: {}", response.status()));
+                return Err(BinChickenError::BadStatusCode(response.status()));
             }
 
             let signature_header = response
                 .headers()
                 .get("X-Bin-Chicken-Signature")
-                .ok_or(anyhow!("No X-Bin-Chicken-Signature header found"))?;
+                .ok_or(BinChickenError::BadResponse)?;
             let decoded_signature = BASE64_STANDARD.decode(signature_header.as_bytes())?;
             fs::write(&update_signature_file, decoded_signature).await?;
 
@@ -175,7 +234,7 @@ impl BinChickenClient {
         Ok(())
     }
 
-    pub async fn verify_artifact(&self, artifact_number: u64) -> Result<(), anyhow::Error> {
+    pub async fn verify_artifact(&self, artifact_number: u64) -> Result<(), BinChickenError> {
         let update_directory = self
             .working_directory
             .join(format!("update-{}", artifact_number));
