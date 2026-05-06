@@ -3,7 +3,6 @@ use gpui::{
     AnyElement, App, Context, ElementId, IntoElement, ListHorizontalSizingBehavior, Refineable,
     RenderOnce, StyleRefinement, Styled, Window, uniform_list,
 };
-use std::cell::RefCell;
 
 #[derive(IntoElement)]
 pub struct ScrollArea {

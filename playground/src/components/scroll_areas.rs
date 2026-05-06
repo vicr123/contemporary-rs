@@ -1,7 +1,7 @@
-use contemporary::components::scroll_area::{ScrollArea, scroll_area_cx};
+use contemporary::components::scroll_area::scroll_area_cx;
 use contemporary::styling::theme::ThemeStorage;
-use gpui::{App, Context, IntoElement, Render, RenderImage, Styled, Window, div, img};
-use image::{Frame, ImageReader};
+use gpui::{img, Context, IntoElement, Render, RenderImage, Styled, Window};
+use image::Frame;
 use smallvec::smallvec;
 use std::sync::Arc;
 
@@ -19,7 +19,7 @@ impl ScrollAreas {
 }
 
 impl Render for ScrollAreas {
-    fn render(&mut self, window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
+    fn render(&mut self, _window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
         let theme = cx.theme().clone();
         scroll_area_cx("scroll-area", |this, _, _| img(this.image.clone()), cx)
             .bg(theme.background)

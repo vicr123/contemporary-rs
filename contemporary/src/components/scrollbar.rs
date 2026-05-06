@@ -1,19 +1,16 @@
 use crate::styling::theme::{ThemeStorage, VariableColor};
-use ashpd::desktop::print::Orientation;
-use gpui::Overflow::Scroll;
 use gpui::{
-    Along, App, Axis, BorderStyle, Bounds, Context, DefiniteLength, DispatchPhase, Div, Edges,
+    div, point, px, quad, size, transparent_black, Along, App, Axis,
+    BorderStyle, Bounds, DefiniteLength, DispatchPhase, Div, Edges,
     Element, ElementId, GlobalElementId, Hitbox, HitboxBehavior, InspectorElementId,
-    InteractiveElement, IntoElement, LayoutId, Length, MouseDownEvent, MouseMoveEvent,
-    MouseUpEvent, ParentElement, Pixels, Point, Render, RenderOnce, ScrollHandle, Stateful,
-    StatefulInteractiveElement, Style, Styled, UniformList, UniformListScrollHandle, Window, div,
-    point, px, quad, rgb, size, transparent_black,
+    InteractiveElement, IntoElement, LayoutId, Length, MouseDownEvent, MouseMoveEvent, MouseUpEvent,
+    ParentElement, Pixels, Point, RenderOnce, ScrollHandle, Stateful, StatefulInteractiveElement,
+    Style, Styled, UniformList, UniformListScrollHandle, Window,
 };
 use std::cell::RefCell;
 use std::panic::Location;
 use std::rc::Rc;
 use std::sync::Arc;
-use tracing::info;
 
 #[derive(Clone)]
 pub enum ScrollableScrollHandle {
@@ -73,7 +70,7 @@ pub struct ScrollbarContainer {
 }
 
 impl RenderOnce for ScrollbarContainer {
-    fn render(self, window: &mut Window, cx: &mut App) -> impl IntoElement {
+    fn render(self, _window: &mut Window, _cx: &mut App) -> impl IntoElement {
         div()
             .id("scrollbar-container")
             .flex()
@@ -148,8 +145,8 @@ impl Element for Scrollbar {
 
     fn request_layout(
         &mut self,
-        id: Option<&GlobalElementId>,
-        inspector_id: Option<&InspectorElementId>,
+        _id: Option<&GlobalElementId>,
+        _inspector_id: Option<&InspectorElementId>,
         window: &mut Window,
         cx: &mut App,
     ) -> (LayoutId, Self::RequestLayoutState) {
@@ -168,12 +165,12 @@ impl Element for Scrollbar {
 
     fn prepaint(
         &mut self,
-        id: Option<&GlobalElementId>,
-        inspector_id: Option<&InspectorElementId>,
+        _id: Option<&GlobalElementId>,
+        _inspector_id: Option<&InspectorElementId>,
         bounds: Bounds<Pixels>,
-        request_layout: &mut Self::RequestLayoutState,
+        _request_layout: &mut Self::RequestLayoutState,
         window: &mut Window,
-        cx: &mut App,
+        _cx: &mut App,
     ) -> Self::PrepaintState {
         let (current_scroll_offset, max_offset, page_size, available_size, scrollbar_origin) =
             match self.orientation {
@@ -229,9 +226,9 @@ impl Element for Scrollbar {
     fn paint(
         &mut self,
         id: Option<&GlobalElementId>,
-        inspector_id: Option<&InspectorElementId>,
-        bounds: Bounds<Pixels>,
-        request_layout: &mut Self::RequestLayoutState,
+        _inspector_id: Option<&InspectorElementId>,
+        _bounds: Bounds<Pixels>,
+        _request_layout: &mut Self::RequestLayoutState,
         prepaint: &mut Self::PrepaintState,
         window: &mut Window,
         cx: &mut App,
