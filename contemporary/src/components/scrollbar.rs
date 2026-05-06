@@ -1,13 +1,19 @@
-use crate::styling::theme::ThemeStorage;
+use crate::styling::theme::{ThemeStorage, VariableColor};
+use ashpd::desktop::print::Orientation;
+use gpui::Overflow::Scroll;
 use gpui::{
-    App, BorderStyle, Bounds, Context, DefiniteLength, Div, Edges, Element, ElementId,
-    GlobalElementId, InspectorElementId, InteractiveElement, IntoElement, LayoutId, Length,
-    ParentElement, Pixels, Point, Render, RenderOnce, ScrollHandle, Stateful,
+    Along, App, Axis, BorderStyle, Bounds, Context, DefiniteLength, DispatchPhase, Div, Edges,
+    Element, ElementId, GlobalElementId, Hitbox, HitboxBehavior, InspectorElementId,
+    InteractiveElement, IntoElement, LayoutId, Length, MouseDownEvent, MouseMoveEvent,
+    MouseUpEvent, ParentElement, Pixels, Point, Render, RenderOnce, ScrollHandle, Stateful,
     StatefulInteractiveElement, Style, Styled, UniformList, UniformListScrollHandle, Window, div,
     point, px, quad, rgb, size, transparent_black,
 };
+use std::cell::RefCell;
 use std::panic::Location;
+use std::rc::Rc;
 use std::sync::Arc;
+use tracing::info;
 
 #[derive(Clone)]
 pub enum ScrollableScrollHandle {
@@ -38,6 +44,15 @@ impl ScrollableScrollHandle {
             ScrollableScrollHandle::UniformList(handle) => handle.0.borrow().base_handle.bounds(),
         }
     }
+
+    pub fn set_offset(&self, offset: Point<Pixels>) {
+        match self {
+            ScrollableScrollHandle::Interactive(handle) => handle.set_offset(offset),
+            ScrollableScrollHandle::UniformList(handle) => {
+                handle.0.borrow_mut().base_handle.set_offset(offset)
+            }
+        }
+    }
 }
 
 impl From<ScrollHandle> for ScrollableScrollHandle {
@@ -60,6 +75,7 @@ pub struct ScrollbarContainer {
 impl RenderOnce for ScrollbarContainer {
     fn render(self, window: &mut Window, cx: &mut App) -> impl IntoElement {
         div()
+            .id("scrollbar-container")
             .flex()
             .flex_col()
             .size_full()
@@ -69,11 +85,13 @@ impl RenderOnce for ScrollbarContainer {
                     .flex_grow()
                     .child(div().flex_grow())
                     .child(Scrollbar {
+                        id: "vertical".into(),
                         orientation: ScrollbarOrientation::Vertical,
                         handle: self.handle.clone(),
                     }),
             )
             .child(Scrollbar {
+                id: "horizontal".into(),
                 orientation: ScrollbarOrientation::Horizontal,
                 handle: self.handle.clone(),
             })
@@ -87,6 +105,7 @@ enum ScrollbarOrientation {
 }
 
 pub struct Scrollbar {
+    id: ElementId,
     orientation: ScrollbarOrientation,
     handle: ScrollableScrollHandle,
 }
@@ -99,9 +118,20 @@ impl IntoElement for Scrollbar {
     }
 }
 
+#[derive(Clone)]
 pub struct ScrollbarPrepaintState {
     thumb_bounds: Bounds<Pixels>,
     should_draw: bool,
+    hitbox: Hitbox,
+    current_scroll_offset: Pixels,
+    scroll_per_pixel: f32,
+}
+
+#[derive(Default)]
+pub struct ScrollbarState {
+    mouse_down: bool,
+    drag_start_mouse_offset: Pixels,
+    drag_start_scroll_offset: Pixels,
 }
 
 impl Element for Scrollbar {
@@ -109,7 +139,7 @@ impl Element for Scrollbar {
     type PrepaintState = ScrollbarPrepaintState;
 
     fn id(&self) -> Option<ElementId> {
-        None
+        Some(self.id.clone())
     }
 
     fn source_location(&self) -> Option<&'static Location<'static>> {
@@ -174,20 +204,25 @@ impl Element for Scrollbar {
                     0.
                 };
 
+        let thumb_bounds = match self.orientation {
+            ScrollbarOrientation::Vertical => Bounds::new(
+                point(bounds.origin.x, thumb_offset),
+                size(bounds.size.width, thumb_size),
+            ),
+            ScrollbarOrientation::Horizontal => Bounds::new(
+                point(thumb_offset, bounds.origin.y),
+                size(thumb_size, bounds.size.height),
+            ),
+        };
         let should_draw = page_size != total_size;
+        let hitbox = window.insert_hitbox(thumb_bounds, HitboxBehavior::BlockMouseExceptScroll);
 
         ScrollbarPrepaintState {
-            thumb_bounds: match self.orientation {
-                ScrollbarOrientation::Vertical => Bounds::new(
-                    point(bounds.origin.x, thumb_offset),
-                    size(bounds.size.width, thumb_size),
-                ),
-                ScrollbarOrientation::Horizontal => Bounds::new(
-                    point(thumb_offset, bounds.origin.y),
-                    size(thumb_size, bounds.size.height),
-                ),
-            },
+            thumb_bounds,
             should_draw,
+            hitbox,
+            current_scroll_offset,
+            scroll_per_pixel: max_offset / (available_track),
         }
     }
 
@@ -206,17 +241,101 @@ impl Element for Scrollbar {
             return;
         }
 
-        let theme = cx.theme();
-        let thumb_color = theme.button_background;
-        let border_radius = theme.border_radius;
-        window.paint_quad(quad(
-            prepaint.thumb_bounds,
-            border_radius,
-            thumb_color,
-            Edges::default(),
-            transparent_black(),
-            BorderStyle::Solid,
-        ));
+        let orientation = self.orientation;
+        window.with_optional_element_state(id, |state, window| {
+            let state = state
+                .flatten()
+                .unwrap_or_else(|| Rc::new(RefCell::new(ScrollbarState::default())));
+
+            let theme = cx.theme();
+            let mut thumb_color = theme.button_background;
+
+            if state.borrow().mouse_down {
+                thumb_color = thumb_color.active();
+            } else if prepaint.hitbox.is_hovered(window) {
+                thumb_color = thumb_color.hover();
+            }
+
+            window.on_mouse_event({
+                let hitbox = prepaint.hitbox.clone();
+                let current_scroll_offset = prepaint.current_scroll_offset;
+                let state = state.clone();
+                move |event: &MouseDownEvent, phase, window, cx| {
+                    if phase != DispatchPhase::Bubble || !hitbox.is_hovered(window) {
+                        return;
+                    }
+
+                    window.prevent_default();
+                    cx.stop_propagation();
+
+                    let mut state = state.borrow_mut();
+                    state.mouse_down = true;
+                    state.drag_start_mouse_offset = match orientation {
+                        ScrollbarOrientation::Vertical => event.position.y,
+                        ScrollbarOrientation::Horizontal => event.position.x,
+                    };
+                    state.drag_start_scroll_offset = current_scroll_offset;
+                    window.refresh();
+                }
+            });
+            window.on_mouse_event({
+                let scroll_per_pixel = prepaint.scroll_per_pixel;
+                let scroll_handle = self.handle.clone();
+                let state = state.clone();
+                move |event: &MouseMoveEvent, phase, window, cx| {
+                    if phase != DispatchPhase::Bubble {
+                        return;
+                    }
+
+                    let state = state.borrow();
+                    if state.mouse_down {
+                        let delta_scrollbar_pixels_since_start = state.drag_start_mouse_offset
+                            - match orientation {
+                                ScrollbarOrientation::Vertical => event.position.y,
+                                ScrollbarOrientation::Horizontal => event.position.x,
+                            };
+                        let delta_content_pixels_since_start =
+                            delta_scrollbar_pixels_since_start * scroll_per_pixel;
+                        let new_offset =
+                            state.drag_start_scroll_offset + delta_content_pixels_since_start;
+
+                        scroll_handle.set_offset(scroll_handle.offset().apply_along(
+                            match orientation {
+                                ScrollbarOrientation::Vertical => Axis::Vertical,
+                                ScrollbarOrientation::Horizontal => Axis::Horizontal,
+                            },
+                            |_| new_offset,
+                        ))
+                    }
+                    window.refresh();
+                }
+            });
+            window.on_mouse_event({
+                let state = state.clone();
+                move |_: &MouseUpEvent, phase, window, cx| {
+                    if phase != DispatchPhase::Bubble {
+                        return;
+                    }
+
+                    if state.borrow().mouse_down {
+                        state.borrow_mut().mouse_down = false;
+                        window.refresh();
+                    }
+                }
+            });
+
+            let border_radius = theme.border_radius;
+            window.paint_quad(quad(
+                prepaint.thumb_bounds,
+                border_radius,
+                thumb_color,
+                Edges::default(),
+                transparent_black(),
+                BorderStyle::Solid,
+            ));
+
+            ((), Some(state))
+        });
     }
 }
 
