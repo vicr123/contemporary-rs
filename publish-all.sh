@@ -18,6 +18,7 @@ publish_crate i18n/cntp_i18n_gen
 publish_crate i18n/cntp_i18n_macros
 publish_crate i18n/cntp_i18n
 publish_crate i18n/cargo_cntp_i18n
+publish_crate i18n/cntp_i18n_parlance_source
 
 publish_crate cntp_config
 publish_crate icon_tool/cntp_icon_tool_core
