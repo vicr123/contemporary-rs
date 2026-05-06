@@ -297,7 +297,7 @@ impl Element for Scrollbar {
                         let delta_content_pixels_since_start =
                             delta_scrollbar_pixels_since_start * scroll_per_pixel;
                         let new_offset =
-                            state.drag_start_scroll_offset + delta_content_pixels_since_start;
+                            -state.drag_start_scroll_offset + delta_content_pixels_since_start;
 
                         scroll_handle.set_offset(scroll_handle.offset().apply_along(
                             match orientation {
