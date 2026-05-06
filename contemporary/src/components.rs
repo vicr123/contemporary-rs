@@ -19,6 +19,7 @@ pub mod popover;
 pub mod progress_bar;
 pub mod raised;
 pub mod scrim;
+pub mod scroll_area;
 pub mod scrollbar;
 pub mod skeleton;
 pub mod slider;

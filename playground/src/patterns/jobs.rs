@@ -3,6 +3,7 @@ use contemporary::components::button::button;
 use contemporary::components::constrainer::constrainer;
 use contemporary::components::grandstand::grandstand;
 use contemporary::components::layer::layer;
+use contemporary::components::scroll_area::{scroll_area, scroll_area_cx};
 use contemporary::components::scrollbar::{Scrollable, SelfScrollable};
 use contemporary::components::subtitle::subtitle;
 use contemporary::jobs::job::JobStatus;
@@ -11,7 +12,7 @@ use contemporary::jobs::standard_job::StandardJob;
 use contemporary::styling::theme::ThemeStorage;
 use gpui::{
     App, AppContext, AsyncApp, BorrowAppContext, Context, Entity, InteractiveElement, IntoElement,
-    ParentElement, Render, StatefulInteractiveElement, Styled, Window, div, px,
+    ParentElement, Render, StatefulInteractiveElement, Styled, Window, div, px, rgb,
 };
 use std::cell::RefCell;
 use std::rc::Rc;
@@ -414,20 +415,17 @@ impl Render for Jobs {
                     .pt(px(36.)),
             )
             .child(
-                div()
-                    .id("jobs-scrollable")
-                    .flex()
-                    .flex_col()
-                    .flex_grow()
-                    .child(
+                scroll_area_cx(
+                    "jobs-scrollable",
+                    move |this, window, cx| {
                         constrainer("jobs")
                             .flex()
                             .flex_col()
                             .w_full()
                             .p(px(8.))
                             .gap(px(8.))
-                            .child(self.render_jobs_section(window, cx))
-                            .child(self.render_delayed_tracking_section(window, cx))
+                            .child(this.render_jobs_section(window, cx))
+                            .child(this.render_delayed_tracking_section(window, cx))
                             .child(
                                 layer()
                                     .flex()
@@ -460,10 +458,12 @@ impl Render for Jobs {
                                                     })),
                                             ),
                                     ),
-                            ),
-                    )
-                    .overflow_y_scroll()
-                    .self_scrollable(window, cx),
+                            )
+                            .into_any_element()
+                    },
+                    cx,
+                )
+                .flex_grow(),
             )
     }
 }
