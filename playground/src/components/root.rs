@@ -12,6 +12,7 @@ use contemporary::components::layer::layer;
 use contemporary::components::pager::lift_animation::LiftAnimation;
 use contemporary::components::pager::pager;
 use contemporary::components::pager::pager_animation::PagerAnimationDirection;
+use contemporary::components::scrollbar::SelfScrollable;
 use contemporary::styling::theme::ThemeStorage;
 use gpui::prelude::FluentBuilder;
 use gpui::{
@@ -49,7 +50,7 @@ impl ComponentsRoot {
 }
 
 impl Render for ComponentsRoot {
-    fn render(&mut self, _window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
+    fn render(&mut self, window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
         div()
             .id("components")
             .flex()
@@ -107,6 +108,7 @@ impl Render for ComponentsRoot {
                                     items
                                 }),
                             )
+                            .self_scrollable(window, cx)
                             .h_full()
                             .w_full(),
                         ),

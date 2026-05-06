@@ -12,6 +12,7 @@ use contemporary::components::layer::layer;
 use contemporary::components::pager::lift_animation::LiftAnimation;
 use contemporary::components::pager::pager;
 use contemporary::components::pager::pager_animation::PagerAnimationDirection;
+use contemporary::components::scrollbar::SelfScrollable;
 use contemporary::styling::theme::ThemeStorage;
 use gpui::prelude::FluentBuilder;
 use gpui::{
@@ -49,7 +50,7 @@ impl PatternsRoot {
 }
 
 impl Render for PatternsRoot {
-    fn render(&mut self, _window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
+    fn render(&mut self, window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
         div()
             .id("patterns")
             .flex()
@@ -105,6 +106,7 @@ impl Render for PatternsRoot {
                                     items
                                 }),
                             )
+                            .self_scrollable(window, cx)
                             .h_full()
                             .w_full(),
                         ),

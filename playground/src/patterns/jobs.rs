@@ -3,6 +3,7 @@ use contemporary::components::button::button;
 use contemporary::components::constrainer::constrainer;
 use contemporary::components::grandstand::grandstand;
 use contemporary::components::layer::layer;
+use contemporary::components::scrollbar::{Scrollable, SelfScrollable};
 use contemporary::components::subtitle::subtitle;
 use contemporary::jobs::job::JobStatus;
 use contemporary::jobs::job_manager::{JobManager, Jobling};
@@ -417,7 +418,7 @@ impl Render for Jobs {
                     .id("jobs-scrollable")
                     .flex()
                     .flex_col()
-                    .overflow_y_scroll()
+                    .flex_grow()
                     .child(
                         constrainer("jobs")
                             .flex()
@@ -460,7 +461,9 @@ impl Render for Jobs {
                                             ),
                                     ),
                             ),
-                    ),
+                    )
+                    .overflow_y_scroll()
+                    .self_scrollable(window, cx),
             )
     }
 }
