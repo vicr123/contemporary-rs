@@ -175,7 +175,7 @@
   },
   "COMPONENTS_TITLE": {
     "context": "root.rs",
-    "definedIn": "src/components/root.rs:67",
+    "definedIn": "src/components/root.rs:70",
     "plural": false,
     "description": null
   },
@@ -589,7 +589,7 @@
   },
   "INTERSTITIALS_TITLE": {
     "context": "root.rs",
-    "definedIn": "src/components/root.rs:99",
+    "definedIn": "src/components/root.rs:102",
     "plural": false,
     "description": null
   },
@@ -944,6 +944,12 @@
   "RIGHT_CLICK_BUTTON": {
     "context": "buttons.rs",
     "definedIn": "src/components/buttons.rs:221",
+    "plural": false,
+    "description": null
+  },
+  "SCROLL_AREAS_TITLE": {
+    "context": "root.rs",
+    "definedIn": "src/components/root.rs:105",
     "plural": false,
     "description": null
   },

@@ -4,6 +4,7 @@ use crate::components::checkboxes_radio_buttons::CheckboxesRadioButtons;
 use crate::components::interstitials::Interstitials;
 use crate::components::progress_bars::ProgressBars;
 use crate::components::ranges::Ranges;
+use crate::components::scroll_areas::ScrollAreas;
 use crate::components::skeletons::Skeletons;
 use crate::components::text_input::TextInput;
 use cntp_i18n::tr;
@@ -29,6 +30,7 @@ pub struct ComponentsRoot {
     skeletons: Entity<Skeletons>,
     admonitions: Entity<Admonitions>,
     interstitials: Entity<Interstitials>,
+    scroll_areas: Entity<ScrollAreas>,
 
     current_page: usize,
 }
@@ -44,6 +46,7 @@ impl ComponentsRoot {
             skeletons: Skeletons::new(cx),
             admonitions: Admonitions::new(cx),
             interstitials: Interstitials::new(cx),
+            scroll_areas: cx.new(ScrollAreas::new),
             current_page: 0,
         })
     }
@@ -71,7 +74,7 @@ impl Render for ComponentsRoot {
                         div().flex_grow().p(px(2.)).child(
                             uniform_list(
                                 "sidebar-items",
-                                8,
+                                9,
                                 cx.processor(|this, range, _, cx| {
                                     let theme = cx.theme();
                                     let mut items = Vec::new();
@@ -98,6 +101,9 @@ impl Render for ComponentsRoot {
                                                     7 => {
                                                         tr!("INTERSTITIALS_TITLE", "Interstitials")
                                                     }
+                                                    8 => {
+                                                        tr!("SCROLL_AREAS_TITLE", "Scroll Areas")
+                                                    }
                                                     _ => format!("Item {item}").into(),
                                                 })
                                                 .when(this.current_page == ix, |div| {
@@ -119,14 +125,15 @@ impl Render for ComponentsRoot {
                     .flex_grow()
                     .animation(LiftAnimation::new())
                     .animation_direction(PagerAnimationDirection::Forward)
-                    .page(self.buttons.clone().into_any_element())
-                    .page(self.checkboxes_radio_buttons.clone().into_any_element())
-                    .page(self.text_input.clone().into_any_element())
-                    .page(self.progress_bars.clone().into_any_element())
-                    .page(self.ranges.clone().into_any_element())
-                    .page(self.skeletons.clone().into_any_element())
-                    .page(self.admonitions.clone().into_any_element())
-                    .page(self.interstitials.clone().into_any_element()),
+                    .page(self.buttons.clone())
+                    .page(self.checkboxes_radio_buttons.clone())
+                    .page(self.text_input.clone())
+                    .page(self.progress_bars.clone())
+                    .page(self.ranges.clone())
+                    .page(self.skeletons.clone())
+                    .page(self.admonitions.clone())
+                    .page(self.interstitials.clone())
+                    .page(self.scroll_areas.clone()),
             )
     }
 }

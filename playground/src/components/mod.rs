@@ -5,5 +5,6 @@ mod interstitials;
 mod progress_bars;
 mod ranges;
 pub mod root;
+pub mod scroll_areas;
 mod skeletons;
 mod text_input;

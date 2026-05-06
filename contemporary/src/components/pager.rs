@@ -37,7 +37,7 @@ pub fn pager(id: impl Into<ElementId>, page: usize) -> Pager {
 }
 
 impl Pager {
-    pub fn page(mut self, element: AnyElement) -> Pager {
+    pub fn page(mut self, element: impl IntoElement) -> Pager {
         self.elements.push(Some(
             div().absolute().w_full().h_full().occlude().child(element),
         ));

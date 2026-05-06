@@ -459,7 +459,6 @@ impl Render for Jobs {
                                             ),
                                     ),
                             )
-                            .into_any_element()
                     },
                     cx,
                 )
