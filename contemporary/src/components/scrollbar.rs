@@ -1,16 +1,17 @@
+use crate::lerp::Lerpable;
 use crate::styling::theme::{ThemeStorage, VariableColor};
 use gpui::{
-    div, point, px, quad, size, transparent_black, Along, App, Axis,
-    BorderStyle, Bounds, DefiniteLength, DispatchPhase, Div, Edges,
-    Element, ElementId, GlobalElementId, Hitbox, HitboxBehavior, InspectorElementId,
-    InteractiveElement, IntoElement, LayoutId, Length, MouseDownEvent, MouseMoveEvent, MouseUpEvent,
-    ParentElement, Pixels, Point, RenderOnce, ScrollHandle, Stateful, StatefulInteractiveElement,
-    Style, Styled, UniformList, UniformListScrollHandle, Window,
+    Along, App, Axis, BorderStyle, Bounds, DefiniteLength, DispatchPhase, Div, Edges, Element,
+    ElementId, GlobalElementId, Hitbox, HitboxBehavior, InspectorElementId, InteractiveElement,
+    IntoElement, LayoutId, Length, MouseDownEvent, MouseMoveEvent, MouseUpEvent, ParentElement,
+    Pixels, Point, RenderOnce, ScrollHandle, Stateful, StatefulInteractiveElement, Style, Styled,
+    UniformList, UniformListScrollHandle, Window, div, point, px, quad, size, transparent_black,
 };
 use std::cell::RefCell;
 use std::panic::Location;
 use std::rc::Rc;
 use std::sync::Arc;
+use std::time::Instant;
 
 #[derive(Clone)]
 pub enum ScrollableScrollHandle {
@@ -115,6 +116,10 @@ impl IntoElement for Scrollbar {
     }
 }
 
+pub struct ScrollbarRequestLayoutState {
+    animation_timer: f32,
+}
+
 #[derive(Clone)]
 pub struct ScrollbarPrepaintState {
     thumb_bounds: Bounds<Pixels>,
@@ -124,15 +129,26 @@ pub struct ScrollbarPrepaintState {
     scroll_per_pixel: f32,
 }
 
-#[derive(Default)]
 pub struct ScrollbarState {
     mouse_down: bool,
     drag_start_mouse_offset: Pixels,
     drag_start_scroll_offset: Pixels,
+    last_interaction: Instant,
+}
+
+impl Default for ScrollbarState {
+    fn default() -> Self {
+        ScrollbarState {
+            mouse_down: false,
+            drag_start_mouse_offset: Pixels::default(),
+            drag_start_scroll_offset: Pixels::default(),
+            last_interaction: Instant::now(),
+        }
+    }
 }
 
 impl Element for Scrollbar {
-    type RequestLayoutState = ();
+    type RequestLayoutState = ScrollbarRequestLayoutState;
     type PrepaintState = ScrollbarPrepaintState;
 
     fn id(&self) -> Option<ElementId> {
@@ -145,22 +161,42 @@ impl Element for Scrollbar {
 
     fn request_layout(
         &mut self,
-        _id: Option<&GlobalElementId>,
+        id: Option<&GlobalElementId>,
         _inspector_id: Option<&InspectorElementId>,
         window: &mut Window,
         cx: &mut App,
     ) -> (LayoutId, Self::RequestLayoutState) {
+        let animation_timer = window.with_optional_element_state(id, |state, window| {
+            let state = state
+                .flatten()
+                .unwrap_or_else(|| Rc::new(RefCell::new(ScrollbarState::default())));
+
+            let time_since_last_interaction =
+                state.borrow().last_interaction.elapsed().as_secs_f32();
+            let animation_timer = ((time_since_last_interaction - 0.5) * 4.).clamp(0., 1.);
+
+            if time_since_last_interaction < 0.75 {
+                window.request_animation_frame();
+            }
+
+            (animation_timer, Some(state))
+        });
+
+        let scrollbar_width = px(8_f32.lerp(&4., animation_timer));
+
         let mut style = Style::default();
         match self.orientation {
             ScrollbarOrientation::Vertical => {
-                style.size.width = Length::Definite(DefiniteLength::Absolute(px(4.).into()));
+                style.size.width =
+                    Length::Definite(DefiniteLength::Absolute(scrollbar_width.into()));
             }
             ScrollbarOrientation::Horizontal => {
-                style.size.height = Length::Definite(DefiniteLength::Absolute(px(4.).into()));
+                style.size.height =
+                    Length::Definite(DefiniteLength::Absolute(scrollbar_width.into()));
             }
         }
         let layout_id = window.request_layout(style, [], cx);
-        (layout_id, ())
+        (layout_id, ScrollbarRequestLayoutState { animation_timer })
     }
 
     fn prepaint(
@@ -228,7 +264,7 @@ impl Element for Scrollbar {
         id: Option<&GlobalElementId>,
         _inspector_id: Option<&InspectorElementId>,
         _bounds: Bounds<Pixels>,
-        _request_layout: &mut Self::RequestLayoutState,
+        request_layout: &mut Self::RequestLayoutState,
         prepaint: &mut Self::PrepaintState,
         window: &mut Window,
         cx: &mut App,
@@ -243,14 +279,25 @@ impl Element for Scrollbar {
             let state = state
                 .flatten()
                 .unwrap_or_else(|| Rc::new(RefCell::new(ScrollbarState::default())));
+            
+            let is_hovered = prepaint.hitbox.is_hovered(window);
 
             let theme = cx.theme();
             let mut thumb_color = theme.button_background;
 
             if state.borrow().mouse_down {
                 thumb_color = thumb_color.active();
-            } else if prepaint.hitbox.is_hovered(window) {
+            } else if is_hovered {
                 thumb_color = thumb_color.hover();
+            }
+
+            let thumb_opacity = 1_f32
+                .lerp(&0.6, request_layout.animation_timer)
+                .clamp(0.6, 1.);
+            thumb_color.a = thumb_opacity;
+            
+            if is_hovered {
+                state.borrow_mut().last_interaction = Instant::now();
             }
 
             window.on_mouse_event({
@@ -272,10 +319,12 @@ impl Element for Scrollbar {
                         ScrollbarOrientation::Horizontal => event.position.x,
                     };
                     state.drag_start_scroll_offset = current_scroll_offset;
+                    state.last_interaction = Instant::now();
                     window.refresh();
                 }
             });
             window.on_mouse_event({
+                let hitbox = prepaint.hitbox.clone();
                 let scroll_per_pixel = prepaint.scroll_per_pixel;
                 let scroll_handle = self.handle.clone();
                 let state = state.clone();
@@ -284,7 +333,7 @@ impl Element for Scrollbar {
                         return;
                     }
 
-                    let state = state.borrow();
+                    let mut state = state.borrow_mut();
                     if state.mouse_down {
                         let delta_scrollbar_pixels_since_start = state.drag_start_mouse_offset
                             - match orientation {
@@ -302,8 +351,13 @@ impl Element for Scrollbar {
                                 ScrollbarOrientation::Horizontal => Axis::Horizontal,
                             },
                             |_| new_offset,
-                        ))
+                        ));
+
+                        state.last_interaction = Instant::now();
+                    } else if hitbox.is_hovered(window) {
+                        state.last_interaction = Instant::now();
                     }
+
                     window.refresh();
                 }
             });
@@ -314,8 +368,9 @@ impl Element for Scrollbar {
                         return;
                     }
 
-                    if state.borrow().mouse_down {
-                        state.borrow_mut().mouse_down = false;
+                    let mut state = state.borrow_mut();
+                    if state.mouse_down {
+                        state.mouse_down = false;
                         window.refresh();
                     }
                 }
